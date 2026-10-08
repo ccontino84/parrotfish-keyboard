@@ -15,11 +15,15 @@
 // - a tap that starts on one letter key and lifts on another types the
 //   letter that makes the more likely word;
 // - the real key geometry and the text before the cursor go to the engine;
-// - experiment: the spacebar shows the typing language ("EN · it");
+// - the spacebar shows the typing language;
 // - swiping to another layout can be switched off
 //   (dconf /apps/parrotfish-keyboard/swipe: normal, off);
 // - an empty field leans towards the language the last text was in
-//   (dconf /apps/parrotfish-keyboard/last-language).
+//   (dconf /apps/parrotfish-keyboard/last-language);
+// - thin dividers between the suggestions (dconf
+//   /apps/parrotfish-keyboard/dividers: true, false); the suggestion
+//   delegates are those of HorizontalPredictionListView.qml and
+//   VerticalPredictionListView.qml (Jolla Ltd., BSD-3-Clause) plus a divider.
 import QtQuick 2.6
 import com.meego.maliitquick 1.0
 import Sailfish.Silica 1.0
@@ -34,6 +38,8 @@ InputHandler {
     property var engine: predictionEngine
 
     readonly property string language: keyboard.language
+    readonly property bool showDividers: dividersConfig.value !== false && dividersConfig.value !== "false"
+    readonly property int dividerWidth: Math.max(1, Math.round(Theme.pixelRatio))
     property int candidateSpaceIndex: -1
     property string preedit
 
@@ -56,9 +62,11 @@ InputHandler {
     // True while commit() runs: an emptied preedit is then a committed word,
     // not a word deleted with Backspace.
     property bool _committing: false
-    // The layout whose keys the engine has, and its width (rotation).
+    // The layout whose keys the engine has, its width (rotation) and its
+    // keysRevision (bumped when the Parrotfish layout rebuilds its keys).
     property Item _keysLayout: null
     property real _keysWidth: 0
+    property int _keysRevision: -1
     property Item _spacebar: null
     // The spacebar's text item, switched to styled text so that the language
     // can be shown in italics; null if it can't be found.
@@ -88,6 +96,12 @@ InputHandler {
         key: "/apps/parrotfish-keyboard/swipe"   // normal, off
         defaultValue: "normal"
         onValueChanged: inputHandler._applySwipe()
+    }
+
+    ConfigurationValue {
+        id: dividersConfig
+        key: "/apps/parrotfish-keyboard/dividers"   // true, false
+        defaultValue: true
     }
 
     ConfigurationValue {
@@ -433,7 +447,10 @@ InputHandler {
 
     function _updateLayout() {
         var layout = keyboard.layout
-        if (!layout || (layout === _keysLayout && layout.width === _keysWidth))
+        if (!layout)
+            return
+        var revision = typeof layout.keysRevision === "number" ? layout.keysRevision : 0
+        if (layout === _keysLayout && layout.width === _keysWidth && revision === _keysRevision)
             return
         var keys = []
         _spacebar = null
@@ -449,6 +466,7 @@ InputHandler {
         if (predictionEngine.setKeys(keys) > 0) {
             _keysLayout = layout
             _keysWidth = layout.width
+            _keysRevision = revision
         }
         _updateSpacebar()
     }
@@ -480,25 +498,20 @@ InputHandler {
         }
     }
 
-    // Experiment (plan §13 Q3): on a language layout the spacebar shows the
-    // layout, plus the typing language when the text seems to be in another
-    // one ("EN · it"). On the universal layouts (QWERTY, QWERTZ) it shows the
-    // typing language alone ("it"). While the engine is unsure, the language
-    // is in italics: the handler switches Jolla's label to styled text (it is
-    // plain text by default); without the label, no italics.
+    // The spacebar shows the typing language ("it"; the key arrangement,
+    // "QWERTY", until the engine has one). The layout only gives the keys, so
+    // it has no language of its own to show. While the engine is unsure, the
+    // language is in italics: the handler switches Jolla's label to styled
+    // text (it is plain text by default); without the label, no italics.
     function _updateSpacebar() {
         if (!_spacebar || !keyboard.layout)
             return
-        var code = keyboard.layout.languageCode
         var lead = predictionEngine.leadingLanguage
         var unsure = predictionEngine.confidence < 0.7
-        var shown = unsure && _spacebarLabel ? "<i>" + lead + "</i>" : lead
-        var universal = code.indexOf("QWERT") === 0   // QWERTY, QWERTZ
-        var label = code
-        if (lead !== "" && universal)
-            label = shown
-        else if (lead !== "" && lead.toUpperCase() !== code.toUpperCase())
-            label = code + " · " + shown
+        var label = typeof keyboard.layout.arrangementName === "string"
+                ? keyboard.layout.arrangementName : keyboard.layout.languageCode
+        if (lead !== "")
+            label = unsure && _spacebarLabel ? "<i>" + lead + "</i>" : lead
         if (_spacebar.languageLabel !== label)
             _spacebar.languageLabel = label
     }
@@ -512,6 +525,72 @@ InputHandler {
                 model: inputHandler.showApplicationSuggestions ? suggestionModel: predictionEngine
                 canRemove: inputHandler.showApplicationSuggestions
                            && !!MInputMethodQuick.extensions.autoFillCanRemove
+
+                // Jolla's delegate plus a divider before every suggestion but
+                // the first.
+                delegate: BackgroundItem {
+                    id: delegate
+
+                    width: Theme.paddingLarge + label.width + predictionList._buttonMargin
+                    height: predictionList.height
+                    clip: predictionList.canRemove
+
+                    onClicked: {
+                        if (predictionList.showRemoveButton) {
+                            predictionList.showRemoveButton = false
+                        } else {
+                            predictionList.handler.select(model.text, model.index)
+                        }
+                    }
+
+                    onPressAndHold: {
+                        if (predictionList.canRemove && !predictionList.showRemoveButton) {
+                            predictionList.currentIndex = index
+                            delegate.HorizontalAutoScroll.keepVisible = Qt.binding(function() {
+                                return delegate.ListView.isCurrentItem
+                            })
+                            predictionList.showRemoveButton = true
+                        } else {
+                            predictionList.showRemoveButton = false
+                        }
+                    }
+
+                    Rectangle {
+                        visible: inputHandler.showDividers && model.index > 0
+                        width: inputHandler.dividerWidth
+                        height: Math.round(delegate.height / 2)
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: label.color
+                        opacity: 0.3
+                    }
+
+                    Label {
+                        id: label
+
+                        x: Theme.paddingLarge
+                        width: Math.min(implicitWidth, predictionList._maximumLabelWidth + Theme.paddingLarge
+                                        - predictionList._buttonMargin)
+                        height: delegate.height
+                        text: predictionList.handler.formatText(model.text)
+                        font.pixelSize: Theme.fontSizeSmall
+                        verticalAlignment: Text.AlignVCenter
+                        truncationMode: TruncationMode.Fade
+                        textFormat: Text.StyledText
+                    }
+
+                    IconButton {
+                        x: label.x + label.width
+                        height: delegate.height
+                        width: delegate.height
+                        icon.source: "image://theme/icon-m-input-remove"
+                        enabled: predictionList.showRemoveButton
+                        opacity: predictionList.showRemoveButton ? 1 : 0
+
+                        onClicked: predictionList.handler.remove(model.text, model.index)
+
+                        Behavior on opacity { FadeAnimator { duration: 100 } }
+                    }
+                }
 
                 Connections {
                     target: predictionEngine
@@ -547,6 +626,74 @@ InputHandler {
                 model: inputHandler.showApplicationSuggestions ? suggestionModel: predictionEngine
                 canRemove: inputHandler.showApplicationSuggestions
                         && !!MInputMethodQuick.extensions.autoFillCanRemove
+
+                // Jolla's delegate plus a divider above every suggestion but
+                // the first.
+                delegate: BackgroundItem {
+                    id: verticalDelegate
+
+                    width: parent.width
+                    height: geometry.keyHeightLandscape // assuming landscape!
+
+                    onClicked: {
+                        if (verticalList.showRemoveButton) {
+                            verticalList.showRemoveButton = false
+                        } else {
+                            verticalList.handler.select(model.text, model.index)
+                        }
+                    }
+
+                    onPressAndHold: {
+                        if (verticalList.canRemove && !verticalList.showRemoveButton) {
+                            verticalList.currentIndex = index
+                            verticalDelegate.HorizontalAutoScroll.keepVisible = Qt.binding(function() {
+                                return verticalDelegate.ListView.isCurrentItem
+                            })
+                            verticalList.showRemoveButton = true
+                        } else {
+                            verticalList.showRemoveButton = false
+                        }
+                    }
+
+                    Rectangle {
+                        visible: inputHandler.showDividers && model.index > 0
+                        width: Math.round(verticalDelegate.width / 2)
+                        height: inputHandler.dividerWidth
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: verticalLabel.color
+                        opacity: 0.3
+                    }
+
+                    Label {
+                        id: verticalLabel
+
+                        width: verticalDelegate.width - verticalList._buttonMargin
+                        height: verticalDelegate.height
+
+                        text: verticalList.handler.formatText(model.text)
+                        font.pixelSize: Theme.fontSizeSmall
+
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        elide: Text.ElideRight
+                        textFormat: Text.StyledText
+                        fontSizeMode: Text.HorizontalFit
+                    }
+
+                    IconButton {
+                        x: verticalDelegate.width - width
+                        width: Theme.itemSizeExtraSmall
+                        height: verticalDelegate.height
+                        icon.source: "image://theme/icon-m-input-remove"
+                        enabled: verticalList.showRemoveButton
+                        opacity: verticalList.showRemoveButton ? 1 : 0
+
+                        onClicked: verticalList.handler.remove(model.text, model.index)
+
+                        Behavior on opacity { FadeAnimator { duration: 100 } }
+                    }
+                }
 
                 Connections {
                     target: predictionEngine

@@ -12,8 +12,9 @@ SPDX-License-Identifier: LicenseRef-TBD
 | `engine/` | the typing engine: plain C++17, no Qt, so it builds and tests on the PC |
 | `engine/tools/pf-query.cpp` | try the corrector by hand |
 | `plugin/` | QML module `Parrotfish.Keyboard` (Qt 5.6): the engine as the list model Jolla's `PreeditHandler` expects |
-| `handler/` | `ParrotfishHandler.qml` and its `.conf` (EN, IT, DE; priority 150, above XT9's 100) |
-| `layouts/` | universal layouts "Latin QWERTY" (Jolla's en layout plus a full-width apostrophe at the end of the middle row) and "Latin QWERTZ" (Jolla's de layout unchanged), using our handler (`handler=` in `layouts_parrotfish.conf`) |
+| `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
+| `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys), picked by `/apps/parrotfish-keyboard/layout`; optional key backgrounds in `parrotfish/` |
+| `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does |
 | `rpm/` | RPM spec |
 | `tools/` | Python tools that build and maintain the dictionary data |
 | `data/aosp/` | AOSP wordlists (Apache-2.0), unchanged |
@@ -76,7 +77,16 @@ swiping to another layout can be switched off:
 `/apps/parrotfish-keyboard/swipe` (`normal`, the default; `off` = a full keyboard width; long-press the
 spacebar to pick a layout). An empty field leans towards the language the
 last text was in: `/apps/parrotfish-keyboard/last-language` (written by the
-handler). Hidden tuning is `/apps/parrotfish-keyboard/tuning`, a string of `name=value`
+handler). `/apps/parrotfish-keyboard/dividers` (`true`, the default;
+`false`) switches the dividers between suggestions. `/apps/parrotfish-keyboard/layout` (`qwerty`, the default;
+`qwertz`) picks the keys. The look of the keys of our layouts
+(`layouts/parrotfish/`): `/apps/parrotfish-keyboard/key-fill` (`none` = the
+default, `flat`, `shaded`) and `/apps/parrotfish-keyboard/key-border`
+(`none` = the default, `line`, `raised` = a rim lit from above, drawn by a
+shader), in any combination; both `none` is Jolla's look. Letter keys stay
+fainter than the spacebar. Hidden strengths:
+`/apps/parrotfish-keyboard/key-tuning`, e.g.
+`"'fill=0.03 shade=0.05 border=0.1'"`. All of these are in the settings section (`settings/`). Hidden tuning is `/apps/parrotfish-keyboard/tuning`, a string of `name=value`
 pairs for any engine parameter (`dconf write
 /apps/parrotfish-keyboard/tuning "'gentleConfidence=0.4 pairWeight=0.6'"`).
 With `~/.local/share/parrotfish-keyboard/debug` present, the

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 
 Name:       parrotfish-keyboard
-Version:    0.1.0~alpha18
+Version:    0.1.0~alpha28
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LicenseRef-TBD AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
@@ -16,9 +16,11 @@ Requires:   jolla-keyboard
 Requires:   qt5-qtdeclarative
 
 %description
-Word suggestions for the English, Italian and German layouts of the
-Sailfish OS keyboard, in all three languages at once. Plugs into the
-stock keyboard as a prediction handler; no system files are modified.
+A keyboard layout for the Sailfish OS keyboard (QWERTY or QWERTZ) with
+word suggestions and autocorrect in English, Italian and German at once:
+the typing language follows the text. Plugs into the stock keyboard as a
+layout plus a prediction handler; no system files are modified, and
+Jolla's own layouts are left as they are.
 
 %prep
 %autosetup -n %{name}-%{version}
@@ -48,8 +50,8 @@ fi
 %{_libdir}/qt5/qml/Parrotfish
 %{_datadir}/maliit/plugins/com/jolla/handlers/ParrotfishHandler.qml
 %{_datadir}/maliit/plugins/com/jolla/handlers/parrotfish-keyboard.conf
-%{_datadir}/maliit/plugins/com/jolla/layouts/parrotfish-qwerty.qml
-%{_datadir}/maliit/plugins/com/jolla/layouts/parrotfish-qwertz.qml
+%{_datadir}/maliit/plugins/com/jolla/layouts/parrotfish.qml
 %{_datadir}/maliit/plugins/com/jolla/layouts/layouts_parrotfish.conf
+%{_datadir}/maliit/plugins/com/jolla/layouts/parrotfish
 %{_datadir}/%{name}
 %{_libexecdir}/%{name}

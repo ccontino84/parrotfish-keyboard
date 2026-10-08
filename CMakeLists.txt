@@ -32,9 +32,11 @@ if(PARROTFISH_PLUGIN)
     add_subdirectory(plugin)
     install(FILES handler/ParrotfishHandler.qml handler/parrotfish-keyboard.conf
             DESTINATION ${PARROTFISH_HANDLER_DIR})
-    install(FILES layouts/parrotfish-qwerty.qml layouts/parrotfish-qwertz.qml
-                  layouts/layouts_parrotfish.conf
+    install(FILES layouts/parrotfish.qml layouts/layouts_parrotfish.conf
             DESTINATION ${PARROTFISH_LAYOUT_DIR})
+    install(DIRECTORY layouts/parrotfish DESTINATION ${PARROTFISH_LAYOUT_DIR})
+    # the .conf files name this path for Settings > Text input
+    install(FILES settings/ParrotfishSettings.qml DESTINATION ${PARROTFISH_DATA_DIR}/settings)
 endif()
 
 if(PARROTFISH_TESTS)

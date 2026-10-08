@@ -16,3 +16,7 @@ set_target_properties(parrotfish-engine PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_executable(pf-query tools/pf-query.cpp)
 target_link_libraries(pf-query PRIVATE parrotfish-engine)
+
+if(PARROTFISH_DEVTOOLS)
+    install(TARGETS pf-query DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/parrotfish-keyboard)
+endif()

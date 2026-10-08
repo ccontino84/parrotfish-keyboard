@@ -6,3 +6,8 @@ version = 1
 path = ["data/aosp/*_wordlist.combined.gz", "data/aosp/NOTICE"]
 SPDX-FileCopyrightText = "2008-2014 The Android Open Source Project"
 SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "data/pairs/*.tsv.gz"
+SPDX-FileCopyrightText = "Mozilla Common Voice contributors, Tatoeba contributors"
+SPDX-License-Identifier = "LicenseRef-CC-BY-2.0-FR AND CC0-1.0"

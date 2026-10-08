@@ -13,7 +13,7 @@ namespace parrotfish {
 namespace format {
 
 constexpr char Magic[8] = {'P', 'F', 'D', 'I', 'C', 'T', 0, 0};
-constexpr uint32_t FormatVersion = 1;
+constexpr uint32_t FormatVersion = 2;
 
 struct Header {
     char magic[8];
@@ -27,6 +27,8 @@ struct Header {
     uint32_t attrCount, attrOffset;
     uint32_t ruleCount, ruleOffset;
     uint32_t stringsSize, stringsOffset;
+    uint32_t pairRowCount, pairRowOffset;
+    uint32_t pairEntryCount, pairEntryOffset;
     uint32_t reserved[2];
 };
 
@@ -73,6 +75,25 @@ struct Rule {
     uint32_t in[3];
     uint32_t out;
     uint32_t flags;
+};
+
+// Starting next-word data: for a previous word, its most frequent next
+// words. Rows are sorted by `prev` (a terminal node, PairStart or PairAny);
+// a row's entries are contiguous and sorted by frequency (descending).
+constexpr uint32_t PairStart = 0;            // start of a sentence
+constexpr uint32_t PairAny = 0xFFFFFFFFu;    // fallback: frequent words
+
+struct PairRow {
+    uint32_t prev;
+    uint32_t first;         // index of the first entry
+    uint16_t count;
+    uint16_t reserved;
+};
+
+struct PairEntry {
+    uint32_t word;          // offset of the next word in the strings section
+    uint8_t freq;           // P(next | prev) on the 0..255 scale
+    uint8_t reserved[3];
 };
 
 // AOSP frequencies: 255 is probability 1, each step down divides by 1.15.

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 """Count word tokens in sentence files.
 
-Usage: count-words.py OUT.tsv FILE...
+Usage: count-words.py OUT.tsv FILE... [--exclude TEST_FILE]...
 
 FILE is plain text (one sentence per line), or a Tatoeba export
 (`id<TAB>lang<TAB>sentence`, optionally .bz2). Typographic apostrophes are
@@ -16,6 +16,7 @@ the most frequent spelling not at the start of a sentence, `cased_count`
 its count there, and `inner_count` all occurrences not at the start.
 """
 
+import argparse
 import bz2
 import collections
 import re
@@ -36,12 +37,29 @@ def lines(path):
             yield line
 
 
+def read_excluded(paths):
+    """Sentences of the test sets (tests/data), left out of the counts."""
+    out = set()
+    for path in paths:
+        with open(path, encoding="utf-8") as fh:
+            out.update(l.strip() for l in fh if l.strip() and not l.startswith("#"))
+    return out
+
+
 def main():
-    out, files = sys.argv[1], sys.argv[2:]
+    ap = argparse.ArgumentParser()
+    ap.add_argument("out")
+    ap.add_argument("files", nargs="+")
+    ap.add_argument("--exclude", action="append", default=[])
+    args = ap.parse_args()
+    out, files = args.out, args.files
+    excluded = read_excluded(args.exclude)
     total = collections.Counter()
     cased = collections.Counter()
     for path in files:
         for line in lines(path):
+            if line.strip() in excluded:
+                continue
             line = line.replace("’", "'").replace("ʼ", "'")
             for i, t in enumerate(TOKEN.findall(line)):
                 total[t.lower()] += 1

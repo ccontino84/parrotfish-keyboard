@@ -14,3 +14,12 @@ SPDX-License-Identifier: LicenseRef-TBD
 they're lists of foreign words or names rather than running text.
 
 Used by `tests/bench/lang-bench.cpp` to build mixed-language texts.
+
+`tatoeba-{en,it,de}.txt`: 2000 sentences each of 4–20 words, drawn at
+random (seed 20261008) from the Tatoeba per-language exports downloaded on
+2026-10-08 (CC BY 2.0 FR). Everyday language, unlike the Common Voice
+sentences. Used by `tests/bench/sentence-bench.cpp`.
+
+Both sets are left out of every word count (`--exclude` in
+`tools/regenerate-lists.sh`), so the benchmarks don't test on data the
+dictionaries were built from.

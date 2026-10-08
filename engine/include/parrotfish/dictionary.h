@@ -53,8 +53,16 @@ public:
     // Node of the word typed exactly, ignoring case only (0 if absent).
     // An exact-case match wins; `stored` gets the word as stored.
     uint32_t find(const std::u32string &word, std::u32string *stored = nullptr) const;
+    // Highest frequency of the words starting with `prefix`, ignoring case
+    // (-1 if no word starts with it).
+    int prefixBest(const std::u32string &prefix) const;
     // Node of the word as stored, case-sensitive (0 if absent).
     uint32_t findExact(const std::u32string &word) const;
+
+    // Starting next-word data: the words that most often follow `prev` (a
+    // terminal node, format::PairStart or format::PairAny), most frequent
+    // first, with P(next | prev) on the 0..255 scale. Empty if none.
+    std::vector<std::pair<std::u32string, uint8_t>> nextWords(uint32_t prev) const;
 
     // Calls f(node, word) for every terminal node (tests and tools).
     template<typename F> void forEachWord(F f) const;
@@ -70,6 +78,8 @@ private:
     const format::Attr *m_attrs = nullptr;
     const format::Rule *m_rules = nullptr;
     const char *m_strings = nullptr;
+    const format::PairRow *m_pairRows = nullptr;
+    const format::PairEntry *m_pairEntries = nullptr;
 };
 
 template<typename F>

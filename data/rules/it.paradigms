@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+#
+# Regular Italian verb endings for tools/complete-paradigms.py.
+#   class NAME INFINITIVE-ENDING GERUND-ENDING
+#   tense NAME: endings for io tu lui noi voi loro
+#   spell RULE: spelling adjustments (see the tool)
+# A verb qualifies when its infinitive and gerund are in the wordlist; in
+# each tense with at least two attested forms, the missing ones are added.
+
+spell h-after-cg-before-ei are      # cercare → cerchi, cercherò; pagare → paghi
+spell drop-i-before-i               # mangiare → mangi (not mangii), mangiamo
+spell drop-i-after-cg-before-e      # mangiare → mangerò; lasciare → lascerò
+
+class are are ando
+tense present: o i a iamo ate ano
+tense imperfect: avo avi ava avamo avate avano
+tense past: ai asti ò ammo aste arono
+tense future: erò erai erà eremo erete eranno
+tense conditional: erei eresti erebbe eremmo ereste erebbero
+tense subjunctive: i i i iamo iate ino
+tense subjunctive-past: assi assi asse assimo aste assero
+tense imperative: a ate
+
+class ere ere endo
+tense present: o i e iamo ete ono
+tense imperfect: evo evi eva evamo evate evano
+tense future: erò erai erà eremo erete eranno
+tense conditional: erei eresti erebbe eremmo ereste erebbero
+tense subjunctive: a a a iamo iate ano
+tense subjunctive-past: essi essi esse essimo este essero
+
+class ire ire endo
+tense present: o i e iamo ite ono
+tense imperfect: ivo ivi iva ivamo ivate ivano
+tense past: ii isti ì immo iste irono
+tense future: irò irai irà iremo irete iranno
+tense conditional: irei iresti irebbe iremmo ireste irebbero
+tense subjunctive: a a a iamo iate ano
+tense subjunctive-past: issi issi isse issimo iste issero
+
+class ire-isc ire endo
+tense present: isco isci isce iamo ite iscono
+tense subjunctive: isca isca isca iamo iate iscano

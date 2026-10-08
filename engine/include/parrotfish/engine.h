@@ -7,6 +7,7 @@
 #include "parrotfish/languagetracker.h"
 
 #include <memory>
+#include <unordered_map>
 #include <string>
 #include <vector>
 
@@ -24,14 +25,26 @@ struct EngineParams {
     // (§5: autocorrect confidence). Below it, autocorrect is paused.
     double autocorrectConfidence = 0.7;
     // Share of the probability the best correction needs.
-    double gentleConfidence = 0.7;
+    double gentleConfidence = 0.5;
     double normalConfidence = 0.5;
     // Gentle leaves shorter input alone (plan §6: short words are Normal only).
     size_t gentleMinLength = 3;
+    // Gentle changes at most this many letters: one in words of up to
+    // gentleShortLength letters, two in longer ones.
+    size_t gentleShortLength = 5;
+    // An uncertain tap takes the touch-down key only if that makes the word
+    // this many nats more likely than the lift key.
+    double tapSwitchMargin = 2.0;
+    // Weight of the previous word when ranking corrections: P(word) is
+    // pairWeight × P(word | previous word) + (1 - pairWeight) × P(word),
+    // from the starting word-pair data (interpolated word-pair model).
+    double pairWeight = 0.5;
     // Cost of "the typed letters are an intended word missing from the
     // dictionaries": unknownBase + unknownPerLetter × letters, plus the taps.
     double unknownBase = 6.0;
     double unknownPerLetter = 0.5;
+    // Normal: an unknown word is less likely, so fixes apply more often.
+    double normalUnknownBase = 8.0;
     Strength strength = Strength::Gentle;
 };
 
@@ -43,6 +56,8 @@ struct Suggestion {
     uint32_t languages = 0;   // bit i: a word of language i
     uint32_t attrs = 0;       // format::AttrFlag (of the best language)
     int edits = 0;
+    int changes = 0;          // letters changed, added, removed or swapped
+    bool completion = false;  // longer than the taps (only with completions on)
 };
 
 struct Result {
@@ -64,10 +79,14 @@ public:
     bool addLanguage(const std::string &dictPath, std::string *error = nullptr);
     size_t languageCount() const { return m_dicts.size(); }
     std::string language(size_t i) const { return m_dicts[i]->language(); }
+    int languageIndex(const std::string &code) const;   // -1 if not loaded
     const Dictionary &dictionary(size_t i) const { return *m_dicts[i]; }
 
     void setLayout(const KeyModel &keys);
     const EngineParams &params() const { return m_params; }
+    void setStrength(Strength strength) { m_params.strength = strength; }
+    // Replaces all parameters (the language weights start over).
+    void setParams(const EngineParams &params);
 
     // Starts a text: optional starting weights, then the words already in
     // the field before the cursor.
@@ -77,10 +96,35 @@ public:
 
     Result process(const std::vector<Tap> &taps) const;
 
+    // Next-word suggestions for the text before the cursor, when no word is
+    // being typed: sentence starters at the start of a sentence (capitalised),
+    // otherwise the usual next words of the last word. Empty when the text
+    // ends inside a word. Uses the current language weights.
+    std::vector<Suggestion> predict(const std::u32string &textBefore, size_t max = 10) const;
+
+    // An uncertain tap: the finger went down on `initial` and lifted on
+    // `lifted`. Returns the letter that makes `word` (typed so far) the more
+    // likely beginning of a word in the likely languages; `lifted` unless
+    // `initial` is clearly better.
+    char32_t resolveTap(const std::u32string &word, char32_t lifted, char32_t initial) const;
+
     const LanguageTracker &tracker() const { return m_tracker; }
 
 private:
     void rebuild();
+
+    // Where the word being typed stands in the text.
+    struct Context {
+        bool sentenceStart = true;
+        bool insideWord = false;     // the text ends with letters (no space)
+        std::u32string prev;         // the previous word, if any
+    };
+    static Context parseContext(const std::u32string &textBefore);
+    Context m_context;
+
+    // Lowercase without accents, via the dictionaries' letter tables.
+    std::u32string fold(const std::u32string &word) const;
+    std::unordered_map<char32_t, char32_t> m_base;
 
     EngineParams m_params;
     std::vector<std::unique_ptr<Dictionary>> m_dicts;

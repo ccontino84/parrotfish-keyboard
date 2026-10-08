@@ -13,7 +13,9 @@ CV.tsv and TATOEBA.tsv are count-words.py counts of the Common Voice (CC0)
 and Tatoeba (CC BY 2.0 FR) sentences. A word is added when:
 
 1. it occurs in both sources (--min-each) and often enough (--min-total);
-2. it is not an accent or ß variant of a word already in the list (daß);
+2. it is not in the list yet (for languages with `capitalised-nouns`, in
+   that spelling: the list has `dank` but not the noun `Dank`), and not an
+   accent or ß variant of a word already in it (daß);
 3. it is not a common word of another language (--other, --other-freq),
    so `the` doesn't become Italian;
 4. for languages without `capitalised-nouns` in LANG.rules, it is not
@@ -87,7 +89,9 @@ def main():
     lower = {}
     for w, f in words.items():
         lower[w.lower()] = max(f, lower.get(w.lower(), 0))
-    folded = {fold(w) for w in words}
+    folded = {}
+    for w in words:
+        folded.setdefault(fold(w), set()).add(w.lower())
     others = {}
     for path in args.other:
         for w, f in read_wordlist(path).items():
@@ -125,9 +129,15 @@ def main():
         c2, cased2, cc2, inner2 = tat[w]
         if c1 < args.min_each or c2 < args.min_each or c1 + c2 < args.min_total:
             continue
-        if w in lower or len(w) < 2 or w.endswith("'"):
+        if len(w) < 2 or w.endswith("'"):
             continue
-        if fold(w) in folded:
+        # Spelling: the most frequent form inside sentences, in both sources.
+        cased = cased1 if cv[w][2] >= cc2 else cased2
+        # Where nouns are capitalised, case tells words apart (dank, Dank):
+        # compare the spelling; elsewhere, compare in lowercase.
+        if (cased in words) if capitalised_nouns else (w in lower):
+            continue
+        if any(v != w for v in folded.get(fold(w), ())):
             skipped["variant"] += 1
             continue
         if others.get(w, 0) >= args.other_freq:
@@ -136,8 +146,6 @@ def main():
         if w in stop:
             skipped["stop"] += 1
             continue
-        # Spelling: the most frequent form inside sentences, in both sources.
-        cased = cased1 if cv[w][2] >= cc2 else cased2
         inner = inner1 + inner2
         if inner == 0:
             continue   # seen only at sentence starts: case unknown
@@ -145,7 +153,7 @@ def main():
         if cased[0].isupper() and not capitalised_nouns:
             skipped["name"] += 1
             continue
-        if cased[0].isupper() and capital_share < 0.9 * inner:
+        if cased[0].isupper() and capital_share < 0.9 * inner and not capitalised_nouns:
             cased = w   # mixed case: keep it lowercase
         f = max(1, min(args.max_freq, round(a + b * math.log(rate(w)))))
         added.append((cased, f, f"cv {c1} tatoeba {c2}"))

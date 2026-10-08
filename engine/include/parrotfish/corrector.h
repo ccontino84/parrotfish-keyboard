@@ -37,6 +37,7 @@ struct CorrectorParams {
     size_t maxResults = 12;
     bool completions = false;      // also return longer words (prefix match)
     float completionCost = 0.3f;   // per letter added beyond the taps
+    float completionSlack = 2.5f;  // completions only for prefixes this close to the taps
 };
 
 struct Candidate {
@@ -45,9 +46,11 @@ struct Candidate {
     double tapCost = 0;    // -log P(taps | word)
     double wordCost = 0;   // -log P(word) in its language, incl. language prior
     int edits = 0;
+    int changes = 0;       // letters changed, added, removed or swapped (accents don't count)
     int extraLetters = 0;  // > 0 for completions
     uint32_t attrs = 0;    // format::AttrFlag of the dictionary entry
     bool viaTarget = false;   // produced from a misspelling/shortcut entry
+    uint8_t freq = 0;      // the word's frequency (0..255) behind wordCost
 };
 
 // Finds the words that best explain a sequence of taps in one dictionary
@@ -61,6 +64,12 @@ public:
     std::vector<Candidate> search(const std::vector<Tap> &taps, double logPrior = 0.0) const;
 
     const CorrectorParams &params() const { return m_params; }
+
+    // -log P(taps | word) for one given word of the typed length (missing,
+    // extra and swapped letters within the edit budget); infinity if the
+    // taps can't be this word. For words suggested by the context.
+    double matchCost(const std::vector<Tap> &taps, const std::u32string &word, int *edits = nullptr,
+                     int *changes = nullptr) const;
 
 private:
     struct Search;

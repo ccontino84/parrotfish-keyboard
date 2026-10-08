@@ -1,0 +1,2005 @@
+# SPDX-FileCopyrightText: Tatoeba contributors (tatoeba.org)
+# SPDX-License-Identifier: LicenseRef-CC-BY-2.0-FR
+# 2000 random sentences of 4-20 words from the Tatoeba export ita_sentences.tsv.bz2
+# downloaded 2026-10-08 (tests/data/README.md); used only by the tests and
+# left out of all word counts.
+Ammise che conosceva il segreto.
+Tom è venuto appena prima di cena.
+Se esci, stacca la corrente.
+È dietro la palestra, in pratica.
+Tom disse che eri buono.
+Ha mai mangiato cibo indiano?
+Prese il martello da lui.
+Fu un bel viaggio.
+Questo è il vero tocco di classe.
+Andiamo a fare amicizie in Norvegia?
+Mary dice che farà la stessa cosa che facciamo noi.
+Sediamoci qui per prendere il gelato.
+Questa sarà la nostra fine.
+Tom pagò il cassiere.
+Tom e Mary lo sanno?
+Tom mi guardò con occhi così lindi e sinceri che era impossibile non credergli.
+Mio nonno è morto cinque anni fa.
+Non vai a insegnare in Ucraina.
+I soldi non sono tutto.
+Volevo solo dirti che arrivo in ritardo perché ho perso i pantaloni.
+Studierò francese questo pomeriggio.
+Io vorrei sedermi più indietro.
+"Di che nazionalità sono i vostri amici?" "Ungherese."
+Chi di loro è Tom?
+Tom è quasi basso come Mary.
+Ziri lavora al mercato.
+Io voglio suonare la chitarra.
+Tom ha circa la tua età.
+Tom potrebbe fare qualcosa di brutto.
+Voi non frastornerete gli studenti.
+Il buon cibo stuzzica l'appetito.
+Ci può dare questo?
+Me ne occupo di persona.
+Mary non ci ha ancora detto ciò che vuole.
+Sami ha cominciato a lavorare in una palestra.
+Lasciò la festa con lei.
+L'aperitivo ci gusta molto!
+Non mi piace Tom, però mi piace il suo cane.
+Andiamo a costruire grattacieli in Argentina.
+Non penso che Tom stia facendo del suo meglio.
+L'azienda pubblicò una nuova rivista.
+Posso prendere altro caffè?
+Non farlo mangiare troppo.
+Tom non andrà al mercato.
+Vorreste un altro bicchiere di vino?
+Io odio le sveglie.
+La Grecia è in bancarotta.
+La mia scrivania è vecchia.
+Benvenuto nel club degli imbecilli, Dan.
+Eri gelosa di lui?
+Mi è stato detto che Tom mi voleva vedere.
+È semplicemente una tradizione.
+Il rammendo delle tende era un compito noioso, ma era essenziale per mantenerle in buone condizioni.
+Perché non ha aperto la porta?
+A me piace il gelato all'ananas.
+La Croce Rossa porta degli aiuti senza ritardo alle vittime di disastri.
+Andate a fare soldi in Uruguay?
+Io ho proprio bisogno di fare una doccia.
+"Di che nazionalità sono i nostri nonni?" "Bulgara."
+Stava bollendo di rabbia.
+Se lo ha colpito, un motivo ci deve pur essere.
+Tom lavora alla biblioteca.
+Prenderemo il treno delle otto.
+Non andiamo a costruire birrerie in Germania?
+Ieri non era lunedì?
+Sono passati veloci questi anni, purtroppo.
+Tutto mi è arrivato facilmente.
+Salvate le foreste pluviali!
+Non c'è nessuno che si occupi di questo paziente.
+Finisci questa frase per me.
+Mary si dovrebbe fare esaminare gli occhi.
+Non posso venirti a trovare ogni giorno.
+Va a costruire birrerie in Niger?
+Tom mangiò l'ultima fetta di pizza.
+Ma fan così solo con gli italiani?
+Tom non sa come si chiama questa in inglese.
+Le ha davvero ingannate.
+Sto guidando un camion.
+Tom non ha smesso di vincere.
+Io non posso trovare un lavoro che mi piace.
+Tom digrignò i denti.
+Abbiamo ricevuto una lettera da un vecchio amico ieri.
+Tom e Mary parlano anche delle stesse cose.
+Guadagna in media dieci sterline la settimana.
+Ieri era il nostro giorno libero.
+Lasci la nostra casa!
+"Dove vanno in vacanza?" "In America."
+Tom era molto serio a riguardo.
+Siete sicure che non riusciamo a riparare questa macchina fotografica?
+Dicono che sia diligente.
+Il cappello è tuo.
+È quello che ho visto ieri.
+Non va a costruire mattatoi in Sudafrica?
+I nostri genitori vi adoravano.
+Ha toccato quel porridge?
+Dissero che si sentivano rifiutate.
+Lavora per l'intera giornata.
+Tom disse che non voleva parlare di scuola.
+Dissi che avrei aspettato.
+Pensavo di avertene parlato ieri.
+Kenji raccontò ai suoi amici una storia sul suo viaggio in India.
+Deve adattarsi alle circostanze.
+Le porte della carrozza si aprirono.
+Sto poi a casa stasera.
+Quindi quando lo accoglierete?
+I popoli del passato non coincidono con i popoli attuali.
+Chi non conosce un detto così comune?
+Vanno a imparare qualcosa in Regno Unito?
+Tom deve essere andato da quella parte.
+Ho un sogno in cui mangio sushi in Giappone.
+Suona il piano, vero?
+Mary non chiarì la sua posizione.
+La sua casa è stata venduta per diecimila dollari.
+È l'unica cosa che mi manca.
+In Pascoli si nota la presenza di parole onomatopeiche per poter rappresentare i suoni.
+Lui ebbe un incidente stradale.
+Riempite il secchio d'acqua.
+Mi sento un po' stanco.
+Mi piace fare cose del genere.
+Questo è il mio computer.
+Non è così capiente?
+La maggior parte delle ragazze sono gentili.
+Tom odia il suo insegnante di francese.
+È gentile da parte sua dire così.
+A tutte le mie amiche piace lo stesso genere di musica che piace a me.
+Sarete nel mio cuore per sempre.
+Questa cosa fa parte dell'elaiotecnica.
+Ne sto parlando con lei.
+Io e Tom abbiamo alcune lezioni assieme.
+Non dovreste fidarvi di noi.
+Non andiamo in Lituania?
+Vado a costruire ospedali in Olanda?
+Va a costruire autostrade in Estonia.
+È nel fior fiore degli anni.
+In amore non si scherza.
+Quanta acqua potabile ci rimane?
+Fumare è proibito in questo ristorante.
+Dick ha provato risolvere il problema, invano.
+L'ammodernamento degli edifici storici conserva il patrimonio culturale della comunità.
+Sembro aver fatto qualcosa di sbagliato.
+Hai mai visto un disco volante?
+"Di che nazionalità erano le sue studentesse?" "Statunitense."
+Vai a fare amicizie in Lettonia.
+Non vanno a costruire sinagoghe a Malta?
+È una questione di prezzo.
+Tom non me lo dirà con chi sta uscendo.
+Ha mangiato la mela che gli hai dato.
+Le ho chiesto qualche consiglio.
+Ha finito la sua bevanda.
+Lei è morta poco dopo le sei.
+Io sono ancora sveglio.
+Non andiamo a fare amicizie in Turchia?
+Non vai a cercare qualcosa in Paraguay?
+Pregare per Tom era tutto ciò che potevamo fare.
+Fadil non riusciva a raggiungere Layla.
+Penso che non andremo per svago in Paraguay.
+"Di che nazionalità sono le sue dottoresse?" "Belga."
+Lei va a dormire.
+Così è un po' troppo?
+Dai un dollaro a Tom.
+Per quanto riguarda i cani, i clienti non possono portarli dentro a questo negozio.
+Questa risposta lo ha fatto arrabbiare.
+Tom è un conduttore famoso in tutto il mondo.
+"Che cosa ordineranno al ristorante?" "Penso dei ravioli."
+Non sono pagato per farlo.
+Quello è il suo cavallo.
+Mary disse a Tom che non aveva fame.
+Mi piace camminare di sera.
+I topi si riproducono rapidamente.
+Julia pensa che la pizza sia sopravvalutata.
+Quello presenterà un problema?
+Non sembrano essere sole.
+Scelga una canzone e trascriva il testo.
+Ci scuserete per un momento?
+Comprerò una matita per Tom.
+Ziri ha dato dell'amore a Rima.
+Non ce la faccio più ad aspettare!
+A me piace l'aceto.
+Stai offrendo di aiutare?
+Guardi cosa le è successo.
+Andiamo a costruire ospedali in Russia?
+Una camicia ce l'avrà?
+Siete sicure che Tom stia venendo?
+Tom ha mentito ai suoi genitori.
+La giornata non poteva cominciare peggio?
+Siete soddisfatto della vostra nuova macchina sportiva?
+Qualsiasi cosa diciate, la farà piangere.
+Fareste meglio ad andare a casa ora.
+Voi siete molto egoiste.
+Tom era un bravo ragazzo.
+Non avete le lentiggini.
+Le lacrime riempirono gli occhi di Mary.
+Parli esattamente come lui!
+Mi puzzano i piedi?
+Chi è il fotografo?
+La maggior parte degli studenti si stanno preparando per gli esami finali.
+Magari si aspettava un invito a cena stasera.
+Ziri non ha bisogno d'acqua.
+Io voglio sapere chi sei.
+I prezzi delle case stanno precipitando.
+Lei ha assunto un bravo avvocato difensore.
+Tom non mangerà quella.
+Qual è il tuo pensiero etico?
+Sami lavora nell'altra chiesa.
+Come riesco ad arrivare a Park Street?
+Penso che possiamo andare più veloci.
+Tom deve fare colazione.
+Tu sei molto conservatrice, vero?
+Ha ammesso che era curioso.
+Il mio cane è molto intelligente.
+È nervoso e si spaventa facilmente.
+Il nostro amico Pietro è impazzito.
+Mentre stava dicendo ciò se ne stava già pentendo.
+Lui gioca fingendo di essere qualcun altro.
+Non vai a cercare qualcuno in Uruguay?
+A Ziri serve della carta.
+Mi ha fatto pensare a lei.
+Preferisco concentrarmi sul momento presente.
+Noi siamo a dieta.
+Yanni ama il basket.
+Non vanno a costruire strade negli Stati Uniti.
+C'è uno zoo a Boston?
+I suoi poteri stanno fallendo.
+Sono felice come una pulce.
+Non hanno il passaporto francese.
+Spero di non deludervi.
+Vai a costruire ponti in Islanda?
+Tu non eri qui l'anno scorso.
+Preferirei guardare un film su Netflix.
+Stavo per fartene uno.
+Lei mangiò una ciambella.
+La macchina è nera.
+È morto nell'incidente stradale.
+C'è un adattatore di corrente universale che posso utilizzare?
+Ammisero che non erano coraggiosi.
+Il mio amico è canadese.
+Non voglio complicare inutilmente la cosa.
+Ha mangiato il mio biscotto.
+Perché voleva imparare il francese?
+Noi non vogliamo aprire la finestra.
+Non vado a imparare qualcosa a Malta.
+Ci sono costi aggiuntivi per l'uso all'estero.
+Ho la sensazione che lei verrà oggi.
+Le chiesi di aspettare un momento.
+Non andiamo a costruire università in Egitto.
+Dice che ha studiato francese.
+Ci sono molti cantanti a questo festival canoro.
+Questa scatola non è sufficientemente grande.
+Secondo me non guardarlo è un facile modo di sopravvalutarsi.
+Lei non ha comprato il biglietto, dopo tutto.
+Mennad ordinò un'altra bottiglia di vino.
+Abbiamo raccolto dei fiori nel giardino.
+Noi dobbiamo lavorare più velocemente.
+Non ho comprato a Mary quello che ha chiesto.
+Posso darvi una mano.
+Tom è molto empatico, vero?
+Le ho detto di lui.
+Sapevo che Tom avrebbe accettato il nostro invito.
+Non andate a costruire scuole in Ucraina.
+Il nostro salotto è soleggiato.
+Noi le siamo grati per il suo aiuto.
+Non c'è nessun pericolo.
+Scordarono i loro appuntamenti.
+La giornata è finita.
+L'ambulanza è arrivata velocemente.
+Perché Tom ti ha portata qua?
+Andiamo a costruire autostrade in Nigeria.
+Tom non aveva alcun alibi.
+Tom non sa che sta succedendo qui.
+Vanno a insegnare qualcosa in Lituania?
+Ci sono cinquanta chilometri fino a Parigi.
+A me non piace questa macchina fotografica.
+Il parco è di fronte a casa mia.
+Rubò il suo diario.
+Vidi Tom al supermercato, mentre comprava del pane.
+Tom ha ucciso il drago.
+Vogliamo che lei sia felice.
+Neanche Tom ha ancora uno di questi.
+Per lavoro vai in Portogallo.
+Ho avuto una giornata difficile.
+Mi sono fermata per fumare.
+Mi ha aiutato molto.
+Tom ha preso in prestito una grande quantità di soldi da Mary.
+Il ladro ha chiuso il bambino nell'armadio.
+Vorrei guadagnare più denaro.
+Va a costruire allevamenti in Estonia.
+Non credo che Tom abbia già finito di scrivere questo rapporto.
+Le piacciono i vini francesi?
+Non vorremmo distoglierti dal lavoro.
+George il Solitario è deceduto.
+Ne so più di quanto tu pensi.
+"Di che nazionalità sono le vostre insegnanti?" "Austriaca."
+Ha parlato con sua moglie?
+Per ora è solo fuffa.
+Tu ti sei arreso.
+Per fortuna non è morto nell'incidente.
+Voi l'avete spinto fuori dalla finestra.
+Non mi avete sentito chiamare?
+Non mi piacerebbe affatto fare un lavoro a turni.
+Lei vuole essere bello?
+Ha una bella casa.
+Tom è molto ambizioso.
+Mary dice di non volere ferire Tom.
+Tom ha salvato la vita del mio cane.
+Non posso vivere con te.
+Può comprarlo a mille yen o giù di lì.
+A loro piace cucinare i pasti insieme.
+Gli serve dello zucchero.
+Non vai a cercare qualcuno in Etiopia.
+Von Caprivi pensa che Bismark sia stato saggio.
+Lo zucchero è nella zuccheriera.
+Tu non leggi libri in inglese.
+Senti da che pulpito viene la predica!
+Si è asciugato gli occhi.
+Matthew era triste di lasciare Linda.
+Avete visto Tom questa notte?
+Io non riesco a dimenticare Marika.
+Leggere l'ultimo capitolo non è necessario.
+Andate a costruire mattatoi in India.
+Fai il lavoro prima di domani, se va bene.
+Forse vide la gatta?
+Mi avete mai visto farlo?
+Non andiamo a studiare a Malta.
+Tom ha tre anni in più di me, ma è più basso di me.
+Mary sa che lo deve fare.
+Sono soltanto un po' sorpresa.
+Noi stiamo cercando qualcuno che possa occuparsi di questi tipi di problemi.
+Loro amano la musica algerina.
+Abbiamo tutte brutte giornate.
+Un virus infettò il computer di Tom.
+Gli eritrociti sono cellule del sangue.
+Non dovete essere nervose per l'esame di domani.
+Vidi Tom al ristorante.
+Cosa sono gli uccelli?
+È meglio di loro.
+Dovevate proprio impedirmi di tornare a casa in macchina?
+Tom è un insegnante d'arte.
+Ho riscaldato il cibo.
+Tu comprendi quel libro.
+Le istruzioni erano tutte in cinese.
+Tom non è potuto venire con noi.
+Tom non vi ha mai voluti qui.
+Cerca di fermare l'epidemia?
+Probabilmente perderà un po' di peso se segue questa dieta.
+Tornerò in un batter d'occhio.
+Va a costruire case in Australia?
+Non vado a costruire cimiteri in Ucraina.
+Per lavoro vanno in Uruguay?
+Sarebbe anche ora che lo capissero!
+La mia auto sta venendo riparata.
+Come hai ottenuto quell'informazione?
+Vorrebbe un po' di caffè?
+Questo è il ristorante in cui mangio spesso.
+È occupata a preparare il viaggio.
+A me piace veramente la pallacanestro.
+Il telaio della bici è rotto?
+Vuole andare in Romania.
+Voglio che trovi Tom.
+Le chiavi di Sami non erano dove le aveva lasciate.
+Domani sera ho un appuntamento.
+Penso che andrete per lavoro in Nigeria.
+Chi lo ha detto a lei?
+A Tom piace veramente il suo nuovo lavoro.
+Sa molte cose sulle bestie selvagge.
+Domani festeggiamo il Natale.
+Sei incredibilmente di talento.
+Dobbiamo fare qualcosa, Tom.
+Di quale libro avete bisogno?
+Non ho mai visitato il Canada.
+Non sapevo che voi aveste così tanto denaro.
+Io non posso rischiarla.
+L'insulina è nell'armadietto dei medicinali.
+Non lo farei mai per Tom.
+Ha detto che è timida.
+Non sono un genio.
+Le scarpe che ho dato a Tom e Mary erano troppo piccole per loro.
+Il suo inglese non è malvagio, sapendo che non lo studia che da que anni.
+Per quale ragione non volete imparare l'inglese?
+Il corriere è appena arrivato.
+Perché Tom è là?
+Sto facendo le pulizie.
+Mary mi ha detto che non verrà a scuola domani.
+Va a costruire ospedali in Messico?
+Non gli hanno creduto?
+Andate a costruire mattatoi in Arabia Saudita?
+La famiglia di Rodrigo è andata al canile per adottare un cane.
+Mary è davvero aggressiva, vero?
+Gunter era diverso questa volta.
+Te lo sto ripetendo da un po' ormai.
+Nuvole grigio acciaio, dal vento frustate, corrono verso mete sconosciute.
+Non ha finito i suoi compiti.
+Non vado a costruire arene in Vietnam?
+Mi hai salvato la pelle.
+A me piacerebbe andarmene da questa città e non ritornare mai più.
+Ha detto che non era infastidita.
+Puoi tenerlo per questa estremità ?
+Amleto, tu hai molto offeso tuo padre.
+Sono nato su una nave.
+Vuole andare in Nigeria?
+La biforcazione tra tradizione e modernità è un tema comune nelle opere letterarie che trattano dei cambiamenti culturali.
+Le parole possono infliggere ferite che sono più difficili da curare di quelle inferte con le armi.
+Non posso fare niente per lui.
+Noi non sappiamo come utilizzarla.
+Il mio francese è pessimo.
+È passato dalla padella alla brace.
+Mi piacerebbe sentirti suonare il piano.
+"Di che nazionalità sono le vostre dottoresse?" "Italiana."
+Tutti noi siamo di Boston.
+Andate a costruire palestre in Canada.
+Fosse stato libero, sarebbe andato a pescare.
+Sami ha fatto un incidente.
+Sono solo una persona comune.
+Non ne parla più.
+Lui andò negli Stati Uniti a studiare medicina.
+Posso uscire dalla camera?
+Non posso farmi abbattere così facilmente.
+Per favore, mostratemene un altro.
+Il fuoco si è spento da solo.
+Chiedete a Tom come sta Mary.
+Vado a costruire grattacieli in Svezia?
+Ha scritto uno dei romanzi più famosi di tutti i tempi.
+Il commercio di merci biologiche sta guadagnando popolarità tra i consumatori attenti alla salute.
+La casa di Tom venne distrutta da un tornado.
+Tanto dei primi gruppi non ce ne frega nulla.
+Ma sono dei malati?
+Questa non è una mela. È una pera.
+"Di che nazionalità erano le sue vicine?" "Nigeriana."
+Porti con lei Tom.
+Ha la sua logica!
+Parla da persona competente.
+Venne quando ero già andato via.
+Penso che andrete per soldi in Gran Bretagna.
+La smetta di spaventarlo.
+C'è niente di particolare che vorresti mangiare?
+Io festeggio i miei traguardi e imparo dai fallimenti.
+È irrispettoso nei loro confronti.
+Loro mi hanno ignorato.
+Direi che è stato impegnato stasera.
+Questa è in assoluto tra le più significative.
+Non vanno a costruire edifici in Nigeria?
+Qual è l'ultima cosa che ricordi?
+Ha intenzione di aiutarle?
+Avete il passaporto colombiano?
+Come riusciamo a diffondere l'esperanto?
+Non se lo sognava nemmeno.
+Per favore, scrivete il vostro nome in calce a questo documento.
+Si è vestita ed è uscita.
+Non vado a costruire ospedali a Cipro.
+I nostri genitori mi adoravano.
+L'hai vista alla fine.
+La stiamo cercando adesso.
+Anche lei sta sfruttando la situazione per la propria visibilità?
+Tom è piuttosto timido, vero?
+Mi piacciono le sue gatte.
+Non mi importa se succede o no.
+Mi potete dire l'ora, per favore?
+Ce la farò da solo.
+Tom ha ignorato i nostri avvertimenti.
+"Di che nazionalità sono i suoi vicini?" "Islandese."
+"Di che nazionalità erano i loro studenti?" "Greca."
+Quello non sarà mai il giorno più bello della mia vita.
+Linda accetterà la tua offerta.
+Vanno fermati con ogni mezzo?
+Lui non ha avuto il tempo di finire il suo rapporto.
+Mangia spesso i funghi?
+Dan imparò l'ungherese in sei mesi.
+Hanno fatto bene il loro lavoro.
+Non vanno a costruire case in Niger?
+Il vezzo di esagerare le storie lo rende meno credibile.
+Eravamo tutte presenti alla riunione.
+Ti do una badilata in testa!
+Se n'è andato dopo pranzo.
+Tom conosce il suo impiego.
+Lei è stata all'altezza delle nostre richieste.
+Non è stato facile per me ammettere che avevo torto.
+E facciamone un articolo di giornale!
+Mi dispiace, non posso aiutare.
+È ora che ti svegli.
+Io mi chiedo perché sono così assonnato.
+Mi fa piacere che voi lo abbiate fatto.
+Donammo più di cento libri alla biblioteca scolastica.
+Il film era un po' forte.
+Ha detto di aver rotto il vetro.
+Il criminale è stato mandato in esilio.
+Il DNA è la molecola dell'ereditarietà.
+Me ne porti un po' da sentire?
+Voglio restare qui con Tom.
+Io avevo appena finito di pranzare quando suonò il campanello.
+Ha detto che era arrivato lì quella mattina.
+L'uso della macchina fotocopiatrice è riservato a docenti e personale interno.
+Lui tornò a vivere con i suoi genitori.
+Si appoggia alla sua famiglia per un sostegno.
+Shanghai è la città che ci manca di più.
+"Di che nazionalità sono i loro parenti?" "Greca."
+Sono appena tornato dall'ufficio postale.
+Lei si è lavato oggi?
+Ha detto che si stava divertendo.
+Sta solo facendo il suo lavoro.
+Io non sono mai ozioso di domenica.
+Lui incolpa sempre se stesso.
+Scordò tutto su di lui.
+Tom passa molto del suo tempo libero a leggere.
+A te piace il purè?
+Ziri ha comprato un nuovo libro ieri.
+Diteci che cosa pensate.
+Se solo fossi partita da casa cinque minuti prima.
+Ha un appuntamento alle undici.
+Tom ha la tendenza a esagerare.
+Tom e Mary hanno detto che si stavano divertendo.
+A tavola non si invecchia.
+Quante ce ne sono nella sua classe?
+Penso che Tom abbia bisogno di una vacanza.
+Non vado a costruire moschee in Olanda.
+L'aria è meno inquinata in campagna.
+Quando hai conosciuto Tom?
+Noi abbiamo una cucina grande.
+Abbiamo aspettato molto tempo per questo giorno.
+Il coccodrillo non si mosse.
+Quelle studentesse sono coreane.
+Tom ha chiesto a Mary perché fosse in ritardo.
+A Roma, nel quartiere di Rebibbia, è presente un grande carcere.
+Sono insoddisfatto del mio nuovo appartamento.
+Quando pensava di tornare negli Stati Uniti?
+Lo sanno tutti che sei ricca.
+Il vecchio albero aveva una forma torva che sembrava quasi minacciosa contro il cielo grigio.
+Io penso che Tom e John siano belli.
+I programmatori non sono riusciti a trovare la causa del bug.
+Sono così diversa da lei?
+Giocheranno a baseball dopo la scuola.
+Cosa lo può trattenere?
+Tom e Mary mi dissero che non erano convinti.
+Non voglio avere niente a che fare con lei.
+Qui è tutto in ordine.
+Appartieni a un posto migliore di questo.
+Avete bisogno di mangiare la colazione.
+Lei si sta proteggendo.
+Abbiamo bisogno di lei.
+Quello non mi lascia con molte opzioni.
+Mio padre è troppo bello.
+Lui sta andando d'accordo con tutti i suoi compagni di classe.
+Voglio comprare un'auto nuova.
+Ziri preferiva giocare a tennis.
+Non vanno a fare amicizie in Spagna.
+Ho degli ottimi ricordi.
+"Dove andrai domani?" "In Lituania."
+Posso aiutarti a fare questo, se vuoi.
+Tom ora è parte della mia vita.
+Dicono di non essere colpevoli.
+Che lingue si parlano in America?
+Lo avete pulito a modo?
+Nessuno gli presta attenzione.
+Tom è già alla sua scrivania.
+Noi abbiamo meno di un'ora.
+I ratti hanno invaso la città.
+Se fossero stati gli spagnoli a colonizzare il Brasile, e non i portoghesi, in che lingua parleremmo?
+Questa poesia è stata scritta da lui la scorsa notte.
+Non dici mai grazie a nessuno.
+È una giornata fredda al Cairo.
+Dan non si è neanche preso la briga di rispondere.
+Vai a insegnare a Cipro?
+Layla aveva dei problemi a scuola.
+Pranza spesso con lei.
+Tom parla davvero bene il francese.
+Le lingue straniere possono essere difficili da imparare.
+Non devi ritrovarti a farlo all'ultimo.
+Tom quando ha preso quelle scarpe?
+Dopo buttiamo via gli avanzi?
+Ha partecipato alla conferenza come nostro rappresentante aziendale.
+È il mio ultimo progetto?
+Lo fece in realtà.
+Il presidente dichiara aperta la riunione.
+Mi devo iniziare a preoccupare?
+Per favore, utilizzi questo computer.
+Chiedete a un poliziotto!
+Vorrei annullare la mia prenotazione.
+Non hai ancora condiviso?
+Era ora di cambiare!
+Tom non la voleva nemmeno.
+Prosegue bene la serata?
+Lui adorava la sua scuola.
+I suoi genitori sono divorziati?
+Non potreste sottoscrivere la mia petizione?
+Di chi è questa matita?
+Gliela farò pagare per questo.
+C'è il Wi-Fi nel suo campus?
+Tom si servì da bere.
+"Di che nazionalità sono i vostri amici?" "Islandese."
+Tom è uno psicopatico.
+Darà loro dei consigli.
+Sei il nuovo segretario?
+Si comprò un nuovo costume da bagno.
+Senza il tuo calore, il mondo sembra vuoto e privo di gioia.
+Ho bisogno di trascorrere più tempo con la mia famiglia.
+Noi abbiamo guadagnato molti soldi.
+Noi stiamo giocando bene come squadra.
+Tom non ha lavorato lunedì sera.
+Flavio ordinò del cibo.
+Ce ne andremo domani, meteo permettendo.
+Prenoto questo dizionario berbero per lei.
+"Di che nazionalità sono i tuoi nonni?" "Argentina."
+Le piacerà il vino.
+Ti dispiacerebbe tradurre questo in francese per me?
+Il mio cuore sanguina per lei.
+Il melograno è un albero.
+Sareste stati capaci di scrivere queste frasi insensate?
+Vado a costruire arene in Regno Unito.
+Inizio a preparare da cena?
+Ho messo il tuo nome sulla piastrella.
+Tom, che cos'è successo la scorsa notte?
+Prometto che non ti deluderò.
+Stavate gridando contro mia moglie?
+Non potrei mai immaginare una vita in cui non ci sei tu.
+Dovresti andare a letto ora.
+Mi dissero che erano malati.
+Ne presi due al prezzo di una.
+Qual è il vostro cantante preferito?
+Ziri ha perso il treno.
+Mary dice che non è impegnata domani.
+La tua storia è agli sgoccioli.
+Voi non siete necessari.
+Voglio vivere per sempre.
+Mary si sta intrattenendo.
+Ancora dieci minuti e poi me ne vado.
+Tom è piuttosto elusivo, vero?
+Non possono che scomparire.
+Gli ostaggi verranno rilasciati prima di Natale.
+Tom e Mary sono grassi?
+Sono andata alla biblioteca per leggere dei libri.
+La fitta al fianco mi costrinse a piegarmi.
+Questo Natale voglio la tua presenza, non regali.
+Non vivo in questo quartiere.
+Ora questo non ha alcun senso.
+Lasciarono le loro chiavi sul tavolo.
+Per lavoro andate a Belfast?
+Lo abbiamo incontrato qua.
+Ardis è il supermercato più grande di Algeri.
+Lei sembra sorpresa di vedermi.
+Sono sceso al parco.
+Deve credermi. Io sono innocente!
+Non lo faccio mai da solo.
+Il contadino ha installato uno spaventapasseri nel campo per tenere lontani gli uccelli che danneggiano i raccolti.
+Penso che non andrò per amore in Brasile.
+Mi sono schiarito la gola, però non sono arrivate parole.
+Qualcosa mi dice che Tom ha torto.
+Con chi è venuto?
+Quello potrebbe risolvere molti problemi.
+Al prossimo che ci prova amputiamo le mani.
+Questo è proprio quello che ha detto.
+Ormai sei diventata una professionista.
+Vogliamo che dica di sì.
+Forse c'è qualcosa che riesco a fare.
+C'è un topo sotto il letto.
+Mary si sta prendendo il suo tempo.
+Tom è stato il primo a finire di mangiare.
+Gli atti sessuali tra due uomini continuano a essere argomento di scandalo.
+Ti rode il culo che ti sfotto?
+La mia ragazza è incinta e vuole tenere il bambino.
+La penicillina ha contribuito molto al benessere del genere umano.
+Sono praticamente un adulto.
+La tua parola mi fa temere la morte.
+Restano solo due giorni.
+Io spero che Tom e Mary rimangano a scuola.
+Andate a studiare in Cina?
+Il pasticcio era delizioso.
+L'arabo viene scritto da destra verso sinistra.
+Tom sparò per primo.
+Aprì il suo laptop.
+Non è proprio così?
+Dovunque vi saranno molte macchine per sostituire gli uomini, vi saranno sempre molti uomini che non sono altro che macchine.
+Voi siete preoccupati per il riscaldamento globale?
+È dolce e innocente.
+Vanno a costruire allevamenti in Spagna.
+È solo un raffreddore.
+Perché ci hai mentito?
+Tom viveva con noi.
+Legga il metro, per favore.
+Non andiamo a costruire cimiteri in Islanda?
+Tom ha preso tutto il mio denaro.
+Avrò bisogno di una ricetta?
+Non devi aspettare fino alla fine.
+In generale i giapponesi sono diligenti.
+Vado a fare carriera in Libano.
+La comprai per Tom.
+Lui ha annotato tutto.
+Ho un regalino per loro.
+Lucidai le scarpe di Mary per lei.
+Giocate a calcio o a rugby?
+Dissero a tutti che erano nervose.
+Ha ricevuto dei regali?
+Eppure tra cani non si mordono.
+Qual è il salario minimo in Pakistan?
+Al contadino non far sapere quanto è buono il formaggio con le pere.
+Perché è così riservata?
+Mary non è loquace com'era una volta.
+Io penso che Tom sia egoista.
+Tom era veramente sfortunato.
+Vai a costruire basi militari in Etiopia.
+Tom sa che Mary sta bluffando.
+Non so così tanto su di voi.
+Tom ha una sorella che ha circa la sua età.
+La sfida è accettata.
+Loro sono ancora delle bambine.
+Tom è migliore di me.
+Non mangiare in classe.
+UFO sta per "unidentified flying object".
+Amo la mia patria.
+Io ho pianto per tutta la notte.
+Sarebbe tutto più bello?
+Io mi sto solo divertendo un po'.
+Lei non aveva problemi.
+Io non mi arrendo.
+Porti di sopra Tom.
+Il mio amico non era australiano.
+State facendo delle amicizie qui?
+Ha sfruttato la sua posizione per accumulare la sua fortuna.
+Ma non c'è proprio dubbio!
+Tom spezzò la sua matita.
+Gli piace la Cina?
+Ho sentito dire che è un professore dell'Università di Tokyo.
+L'esperienza grandi cose insegna.
+Non ti ho mai vista così tesa.
+Tom e Mary devono rimanere sposati per il bene dei figli.
+Ma sai cosa vuol dire?
+La sua casa è la mia casa.
+Non vado a costruire banche in Nigeria?
+Gli influencer sono pagati per promuovere prodotti, come i marchi di bellezza e moda.
+Sta piovendo a catinelle.
+Non vorrà danzare con lui.
+È del tutto impossibile.
+Solo dell'acqua, per favore.
+Mary disse che era veramente infelice.
+È amato in Giappone?
+Il thè è un bene molto richiesto dagli europei.
+Noi lottiamo in continuo.
+Non vai a costruire allevamenti in Francia?
+Lei scaricò un antivirus.
+Tom si guardò attorno.
+Il Natale è un momento magico.
+Solo i tuoi baffi ti salveranno!
+Mary ti aveva avvertito.
+Sembra che tu non abbia capito chiaramente l'essenza del mio messaggio.
+Vado a costruire banche in Romania?
+Pensavo che Tom e Mary fossero disoccupati.
+Si rasò la barba.
+Perché le vostre gambe stanno tremando?
+Ha sorseggiato il suo caffè.
+Il sogno di Tom è andare in una università in Australia.
+Tom e Mary non erano lì.
+Adoro ascoltare la musica classica.
+La biblioteca ha fatto molte nuove acquisizioni.
+Pure io ci pensavo!
+Le sue barzellette ci hanno fatto ridere.
+Vado a costruire mausolei in Somalia.
+Partecipai ad alcune riunioni.
+Quel sabato scorreva lento come non mai.
+Dopo pranzo andrebbe bene per te?
+Mary non lo fa mai da sola.
+Ho trovato esattamente ciò che cercavi.
+Lei ha una lavatrice automatica.
+Questo candidato al Senato gioca anche a World of Warcraft.
+Te lo dico chiaramente.
+È sicura che fosse un fantasma?
+A lei non piace il suo nome.
+Sono sicura che è vera.
+Non conosco bene questa parte della città.
+L'acqua del mare è salata, mentre quella del lago è dolce.
+Siamo nati più o meno nello stesso periodo.
+Voglio andare a pesarmi.
+Questo è un fiume?
+È molto importante aggiungere delle frasi in lingue minoritarie su Tatoeba.
+Lei ha corso fino al piano.
+Ero a Boston il mese scorso.
+Vado a costruire mattatoi in Danimarca?
+Dove li hai sciacquati?
+A Tom piace la pasta.
+Perché non vuole farlo oggi?
+Tom cominciò a vedere delle allucinazioni.
+Che ti piace fare?
+Mi piace anche l'Australia.
+Tu parli a vuoto.
+E' presuntuoso chiamarlo un palazzo. In fondo, e' una casa grande.
+Utilizzare Tatoeba è come avere un'incredibile biblioteca di esempi linguistici a portata di mano.
+Conosco tutti i posti in cui nascondersi.
+Non posso esserci sempre; non sono obbligato ad aiutare tutti.
+Tom uccise Mary soffocandola.
+Non lo mangerebbe, vero?
+Non andate a costruire ospedali in Nuova Zelanda.
+Tu non hai l'abitudine di mostrare i tuoi sentimenti.
+"Di che nazionalità sono le vostre nonne?" "Peruviana."
+A me piacerebbe conoscere suo padre.
+Mia sorella ha un cane.
+Avevo un piano per lei.
+Dio salvi la Regina.
+Non cada dalla sedia.
+Galileo è il tuo vero nome?
+Non andiamo a imparare qualcosa in Bielorussia.
+Mary disse a Tom di non farlo, vero?
+Sa cosa fare adesso.
+Sta finendo il denaro.
+Non vanno a costruire autostrade in Somalia.
+Semplicemente non ditelo a nessuno.
+Mary disse che aveva una sorpresa per lei.
+Vado a costruire ponti in Libia?
+È stato un momento di risate in una giornata altrimenti normale.
+Mi sono divertito a scuola oggi.
+Non tutto gira intorno a te.
+Non voglio più avere a che fare con te.
+Cammini sulle acque sulle mani?
+È il problema, penso.
+Le piacciono le linguine?
+Aprite il vostro libro a pagina dieci.
+Quali altre lingue parla?
+Andarono alla moschea insieme.
+Io non voglio offendere Tom.
+Ha visto Tom senza occhiali prima?
+"Di che nazionalità erano le loro insegnanti?" "Boliviana."
+E pensare che il male nel mondo è iniziato per colpa di una mela...
+È più giovane di Tom?
+Ditegli che avete mentito.
+È un veleno letale.
+Ne manca ancora uno?
+È un vecchio racconto.
+Non andiamo a costruire negozi in Messico.
+I tuoi genitori ci adorano.
+Non potete più scrivere.
+Il mio vizio peggiore è il fumo.
+Finalmente ho ritrovato la mia macchina.
+Vado a insegnare in Olanda?
+Mi disse che pianse.
+Non ho capito la dinamica dei fatti.
+Io penso che Tom sarà in grado di vincere.
+Venne qui alla moschea.
+Non ci sono tovaglie nella stanza quindici.
+Cercherò di tornare a casa prima.
+Accetteremo solamente a questa condizione.
+Andate a prendere del caffè.
+Vorrei un sandwich, per piacere.
+Dove le avete pesate?
+Lui era molto insistente.
+La vita è l'inizio della morte.
+L'ipnotismo non è magia; si basa su principi scientifici che coinvolgono la mente e la suggestibilità.
+L'articolo che hai scritto non è in conformità con gli standard del nostro giornale.
+Era in grado di comprare ciò di cui aveva bisogno.
+Il ragazzo cominciò a piangere.
+Ho bisogno di altri cinque minuti.
+Voleva decisamente iniziare una rissa.
+Vai a costruire biblioteche in Canada?
+Quanto tempo passi online?
+Entrambi sono grandi gruppi.
+Sono le dieci e mezza.
+L'ufficiale di polizia fa rispettare le leggi civili.
+Gli dissi quello che facesti.
+Preparati a rimanere piacevolmente sorpreso.
+Di che colore sono i quaderni?
+Provengo da una famiglia numerosa.
+Lei vuole sapere il perché?
+Avrò finito fra qualche minuto.
+Questi sono i vostri gatti?
+Pensa che dovrei fermarlo?
+Penso di avere mangiato abbastanza sano.
+Disse che aveva trovato le sue chiavi.
+L'articolo ha sottolineato l'eccezionalità dell'evento.
+Io ho una domanda seria.
+Io avevo il diritto di sapere.
+Merita di essere ricompensata?
+Tom vive in una casa molto grande.
+Non ero molto motivata.
+Mercoledì vanno a scuola?
+Mi mancherete tutte voi.
+Non va a costruire grattacieli in Ucraina?
+Non vanno a costruire scuole in Irlanda?
+Avete venduto delle cartoline.
+Le abbiamo viste tre ore fa.
+Tutto quello che deve fare è seguire il suo consiglio.
+Le devo fare un esame anale.
+È troppo freddo per me.
+Per me è una vittoria.
+Tom non riusciva a trovare il suo passaporto.
+Ho una bottiglia d'acqua.
+Vi sentite minacciate dai semafori?
+Ho un sacco di agganci da queste parti.
+Posso chiederle nome e indirizzo?
+L'ufficiale ha incoraggiato i suoi uomini.
+Non va a costruire baracche in Libia?
+Non andate a costruire moschee in Olanda.
+Lei mi ha catturata.
+Ad ogni modo, quello non è troppo importante.
+Siete sicuri che questa cosa sia sicura?
+Il movimento operaio si è ribellato.
+Tom ha detto a Mary che lunedì sarà impegnato.
+Tom ha detto che ti avrei trovato qui.
+Perché ti piace vivere a Boston?
+Se ci aiutate saremo tutti felici.
+Lei ha mai chiamato Taninna?
+Va a costruire birrerie in Spagna?
+"Di che nazionalità è?" "Francese."
+Non posso dirvi tutto.
+Cerco lavoro, però non si trova nulla.
+Entrò in casa e chiuse la porta alle sue spalle.
+Mary ha detto che Tom era una femminuccia.
+È una spiga di grano.
+Non vuoi provare qualcosa di nuovo?
+Guardate se c'è del succo in frigo.
+La donna rimane a casa con il bambino.
+Li ho fatti arrabbiare molto.
+La pioggia smetterà presto.
+Tom sta guardando dall'altra parte.
+Dovrebbe annullare la sua festa.
+Mary cena alle sette.
+Hanno detto che erano terrorizzati.
+Andate a costruire edifici a Cipro?
+Chi vuole uscire stasera?
+"Di che nazionalità erano le tue alunne?" "Malese."
+Andate a lavorare in Somalia?
+Va a cercare qualcuno in Portogallo.
+Tom ha comprato una barca.
+Non è vero che voi possedete una pistola?
+A questo punto lo hai portato senza motivo!
+Va a costruire banche in Francia.
+Hai dormito bene la scorsa notte, Steve?
+Tom vuole farlo questa sera.
+Sono stata fortunata a trovare le mie chiavi.
+La sterlina era considerata una moneta internazionale.
+Lui aveva un alibi solido.
+Tom è pigro, vero?
+Ci vediamo in giro!
+Per lavoro vanno a Barcellona.
+La sua lingua è la sua religione.
+Fai attenzione! Il coltello è molto affilato.
+Probabilmente rimpiangerà quello che ha fatto.
+Beppe Grillo è anche un politico.
+Credici o no, non sono sarcastica stavolta.
+Penso che la vostra religione è noiosa.
+Il mercato dell'oro è stabile.
+Chi è la sua musicista canadese preferita?
+La motivazione è un elemento fondamentale.
+Al ristorante cinese ho bevuto un'ottima birra.
+I cittadini possono presentare osservazioni e proposte consultando l'albo pretorio comunale.
+Trovai un gatto smarrito che stava venendo cercato dal suo padrone.
+Rimani un mistero per me.
+Cosa vuoi da Tom?
+Prese in prestito del denaro da lui.
+A me non piacciono le sorprese.
+Perché Tom è da solo?
+È molto intelligente, come suo fratello.
+Ha delle gambe molto sexy.
+Posso darvi un passaggio?
+I miei genitori lo adorano.
+Indovini cos'ha detto Tom.
+Venni a vedere Tom.
+Non lo potevo aspettare.
+Sto parlando di lei.
+Mi sto sentendo molto emozionato.
+Tom si vuole unire al nostro club.
+Tu vuoi fare affari o no?
+So che hai fame.
+Qual è il tuo argomento di conversazione preferito?
+Mary pitturerà la sua automobile.
+Il problema non può essere risolto.
+Dice che doveva farlo.
+Ho visto Tom lavare la sua macchina questa mattina.
+Perché non fa verniciare la sua automobile?
+Quando i miei genitori mi dicono di fare qualcosa, di solito obbedisco prontamente.
+La tenaglia ha permesso di staccare la vecchia piastrella dal muro senza troppa fatica.
+Qualunque cosa lui dica, non cambierò idea.
+Vanno a costruire ristoranti in Libia.
+Tom sta ignorando Mary, vero?
+La mia opinione non ti servirà a niente.
+Disse che era disposta ad aspettare.
+Mi stanno congelando le dita dei piedi.
+Stiamo diventando più intime.
+Io chiesi a Tom di non andarci, però lui ci andò lo stesso.
+So che è spagnola.
+Quanto tempo ci vuole per imparare l'esperanto?
+Tom non è poi così male.
+Andate a costruire baracche in Bielorussia.
+Qua attendiamo da mesi.
+Tom e Mary sono interessanti.
+Per piacere, lo trovi.
+Ricorda solo che dargli una seconda possibilità di parlare potrebbe cambiare tutto.
+I suoi due libri successivi erano dei romanzi.
+Questi parassiti si riproducono molto rapidamente.
+Dovete andarci, anche se non volete.
+Lui non vuole aprire l'auto.
+Cosa c'è per dolce?
+Loro hanno allineato le sedie.
+Lo scirocco è un vento proveniente dal deserto che porta con sé polvere e sabbia.
+Lei era geloso di Tom?
+Sembra che Tom abbia acconsentito a farlo.
+La fondazione di una famiglia solida è costruita su valori condivisi e comunicazione aperta.
+Noi stiamo lavorando il più veloce possibile.
+"Dove pensano di andare in vacanza?" "A Roma."
+Scindiamo questo binomio, per favore.
+Ho aiutato abbastanza; non sono obbligato a continuare.
+L'azienda ha offerto un addestramento addizionale ai dipendenti interessati.
+Tom non dovrebbe essere qui oggi.
+In montagna è sempre inverno.
+È la prima volta che faccio una crostata.
+Mary ha molti libri nella sua stanza.
+Ma nessuno cercava questa donna?
+Io non facevo degli incubi.
+Vai a comprare il pane?
+Va a costruire templi in Portogallo?
+A che ora atterra il vostro aereo?
+Vai a fare amicizie in Australia.
+Domani avrete educazione tecnica.
+Non apra quella porta.
+Sta insegnando qua adesso, vero?
+Chi fa solo del bene può vivere come vuole.
+Se tutti facessero come te, Internet non esisterebbe.
+Quand'è venuto in Giappone?
+Sono finiti i giorni della merla.
+Lui sta reagendo in maniera eccessiva.
+Ha detto che mi voleva vedere.
+Siete state sfortunate, vero?
+È sicura di volere lavorare con me?
+Non sa più cosa fare per consolare la ragazza.
+Non dovrebbe essere un problema.
+Avete iniziato a studiare francese?
+Anche Tom mi sta nascondendo qualcosa.
+Non capisco cosa intendi.
+Mi serve il cacciavite.
+Non ho potuto proteggerli.
+Non ha litigato con lei.
+Farà poco, però qualcosa fa.
+Sami era a letto.
+Lei è andata a fare la spesa con sua madre.
+Siamo al punto cruciale?
+Perché state attribuendo importanza a questo caso?
+Noi impariamo l'inglese a scuola.
+Lei va a comprare i regali di Natale?
+Tom è aggressivo, però Mary non lo è.
+Karl può essere in pericolo.
+Andiamo a costruire templi in Uruguay?
+Qual è il continente più popoloso?
+Gli ho detto che la vidi una settimana fa.
+Il lago si congelò del tutto.
+Ha appena fatto una gaffe tremenda?
+Questa è la vostra prima conferenza a Parigi?
+Io sono interessato a imparare come riparare un tavolo rotto.
+Non hanno mai visitato l'Irlanda.
+Vorrebbe prenotare un viaggio per la Russia?
+Andiamo a fare amicizie in Austria.
+Lui ha insistito sull'importanza della pace.
+Questa mela, me la mangerò subito.
+Vediamo cosa trovo in giro.
+Misurammo la profondità del fiume.
+"Di che nazionalità sono le tue cugine?" "Messicana."
+Chissà dove si trova la tomba di Taras Ševčenko?
+Non voglio giocare a questo gioco.
+Ha progettato la macchina.
+Lei sorrise e accettò il mio piccolo regalo.
+Dovresti andare dal barbiere.
+Sfortunatamente, Nancy aveva ragione.
+"Di che nazionalità sono le tue dottoresse?" "Camerunense."
+Tom fece una doccia fredda.
+Occhi negli occhi, ci lasciamo affascinare.
+"Dove andrete domani?" "In Sicilia."
+Stiamo andando in spiaggia. Vuoi venire?
+Qual è il loro piano?
+Si sfregò gli occhi.
+Andiamo a costruire banche in Albania?
+Ha lasciato il suo ombrello sull'autobus.
+Vorrei parlare ancora con lui.
+Spero che non diventerà mai comunista.
+Questo non riguarda lui, vero?
+Io non vengo pagato a sufficienza.
+Sono bravo a tennis.
+Non ce bisogno che tu sia qui domani.
+Il cantiere del progetto di riqualificazione urbana ha ricevuto l'approvazione del consiglio comunale.
+Lui guida troppo veloce.
+Mi spiace aver perso del tempo per niente.
+Non sono assetata al momento.
+Lasci che le dica delle origini di questa scuola.
+Che cosa fa Tom per Natale?
+Lei è peggio di lui.
+Non andiamo a costruire arene in Albania.
+Non vanno a insegnare in Danimarca.
+Lui cosa vuole fare?
+Non bevo spesso birra.
+Ricordo quel giorno come fosse adesso.
+Era una sagoma umana?
+Negano di essere partite presto.
+Smettere di fumare non è facile.
+Vuole prenotare un viaggio per la Toscana?
+Per peggiorare le cose, ha cominciato a nevicare.
+Mary disse che voleva andare a Boston per visitare Tom.
+Tom e Mary si sono uccisi ieri.
+Non era perché Tom non ha provato.
+Vai a costruire fabbriche in Estonia?
+Perché Lei è sempre così impegnato ?
+La zuppa è calda.
+Tom non è mai stato felice.
+Gli algoritmi di machine learning possono essere utilizzati per riconoscere pattern nei dati.
+Io vorrei un po' di pesce.
+Dica loro che non è colpa mia.
+"Di che nazionalità sono i vostri parenti?" "Svizzera."
+Lei non aveva sonno.
+Tom voleva guardare attraverso il telescopio.
+C'è anche quello per te?
+Perché il cane ha un cattivo odore?
+Voi dovete memorizzare questa frase.
+Tutto avrebbe potuto essere completamente diverso.
+È pericoloso per i bambini uscire da soli di notte.
+Bevette un altro po' di tè.
+Potrei parlare con lui.
+Voglio solo aiutare la squadra a vincere.
+Avete detto che volevate la verità.
+Il cielo era pieno di stelle.
+Hanno vinto i francesi?
+Per piacere, non faccia rumore.
+Tom ti ha offerto una birra?
+Non va a costruire baracche in Pakistan.
+Odio le zanzare, ma loro sembrano amarmi.
+Chi tardi arriva, male alloggia.
+Tali enormi sacrifici richiesero la fondazione della razza romana!
+"Dove andranno fra due settimane?" "In Svizzera."
+Tom stava alla perfezione.
+Sottolineo che anche domenica ero in orario.
+È in biblioteca ora, vero?
+Non lo annusi. Potrebbe essere mutageno.
+Fatto è meglio che perfetto.
+È una giornata dannatamente buona oggi.
+Loro non trovarono la bomba.
+Mary disse a tutti che aveva finito.
+Tu sai giocare a mahjong?
+Non hanno il passaporto inglese?
+Questi libri hanno definito e dato forma alla nostra cultura.
+Abbiamo fatto un sacco di cose divertenti assieme.
+Comprò della cocaina da lui.
+Ma che razza di discorso è?
+Non vado da Tom.
+Mary ha ammesso che non era perfetta.
+Sentii le notizie su di lei.
+"Dove vorresti andare in vacanza?" "In Sudafrica."
+Si comporta come se fosse pazzo.
+Fai sempre troppe domande.
+Il mio gatto non era impressionato.
+Non penso che Tom sappia dove ha parcheggiato la macchina Mary.
+È andato da qualche parte.
+Mi piacerebbe poter vivere in un posto più rilassato, invece di dover sempre guardare l'orologio.
+Va a costruire moschee in Turchia?
+Mi spieghi che ti ho fatto?
+Io ci sarò sempre per aiutarla.
+È meno attivo di suo fratello.
+Dove hai intenzione di mangiare?
+Ti obbligo a lavarti da me.
+Penso che non andremo per salute in America.
+Perché lo devo dire a Tom?
+Perché si studia il francese?
+Dove li avete rotti?
+L'inglese non è la mia lingua nativa.
+Su cosa sarei disinformato?
+Vive in un mondo onirico.
+Mi viene da fingermi morto.
+Sto cercando di fermarli.
+Quale era il gioco a cui avete giocato?
+Tom ha messo giù il suo cucchiaio.
+Vai a costruire ponti in Danimarca.
+Tu non puoi andare a Boston questo weekend.
+Io ho bisogno di una stanza.
+Perché Tom ti ha accusata?
+Si rovinerà gli occhi.
+Disse che sarebbe andato in chiesa.
+Tom è innamorato del migliore amico di Mary.
+Che cosa sta cantando?
+Vado a fare soldi in Albania.
+Voi mi avete frainteso.
+Egli è una persona sfortunata.
+"Dove vuole andare in vacanza?" "Negli Stati Uniti."
+La vita è stata dura con loro.
+Parlano soltanto di musica.
+Lei è stata cresciuta da suo nonno.
+Non sei un cameriere, vero?
+Mi dispiace ma le tue scuse sono inaccettabili.
+Adesso sono assolutemante certo che è stato Tom.
+Tom ha mancato l'uscita.
+Qual è il messaggio principale di questo libro?
+Vennero chiamati dei dottori alla Casa Bianca.
+Dai gli avanzi ai maiali.
+Il cavallo si impenna.
+Molte di queste frasi me le dice quasi giornalmente!
+Hai bisogno di un coltello affilato.
+La nonna si occuperà di voi.
+Lei ha ancora una madre?
+L'atteggiamento di Spencer mi fa impazzire.
+È meglio non iscriversi.
+Io e te abbiamo circa la stessa altezza.
+Il sabato non vado a scuola?
+Parlarono assieme per qualche minuto.
+Hanno il passaporto indiano.
+La chiave non apre questa serratura.
+Avrà anche dei costi non indifferenti?
+Sono sicura che loro stanno parlando di noi.
+Parlate anche in francese?
+Un vero viaggio di scoperta non è cercare nuove terre ma avere nuovi occhi.
+"Dove pensate di andare per lavoro?" "In Irlanda del Nord."
+Voi avete una madre?
+Tom ha mandato dei regali a Mary.
+Tom si deve preparare per il lavoro.
+Penso che andrò per amore in Irlanda del Nord.
+Ho fatto un grande sorriso.
+Riuscite a parlare in francese come lei?
+Le persone mi sorprendono sempre.
+Qualcuno può dirmi l'ora?
+Lo teneva in braccio.
+Io non sono brava a parlare in pubblico.
+Vai a costruire palestre in Somalia?
+Mi sento impotente in questo momento.
+Non ho mai visto un orso in questa zona.
+Preparo bastoncini di carote per la merenda a scuola.
+Vi fidate davvero di lui?
+Sarà dispiaciuta di non averlo fatto.
+Posso darle la mano?
+Rise di se stessa.
+È già da anni che lo faccio.
+Io non riesco a distinguerla dalla sua sorella gemella.
+Andate a costruire università in Italia.
+A me piace il latte nel mio tè.
+Faremo di tutto per rispettare le tue volontà, se ne avremo necessità.
+Stando alle previsioni del tempo...
+Le sue labbra tremarono.
+È la minore delle mie preoccupazioni.
+Andate a costruire basi militari in Paraguay.
+Dovevo andarmene da Boston.
+Pensa che Tom e Mary vadano nella stessa scuola?
+Siete comode in quella sedia?
+Dove potrei comprare delle incudini?
+Tom si vergognava di lei.
+Il piano deve ancora essere approvato.
+Un coccodrillo gli ha morso una gamba.
+Non ho niente da fare questo pomeriggio.
+Vanno a costruire fabbriche in Sudafrica.
+Non ho intenzione di lamentarmi.
+Questo è esattamente quello che vogliamo.
+Voleva impressionare i suoi amici.
+La macellazione degli animali è una pratica comune nell'industria alimentare.
+Perché sta partendo presto?
+Mi vergogno di voi.
+Vado a insegnare in Giappone.
+Mi è stato detto che Tom non sarà qui oggi.
+Io non posso sopportare questo calore.
+Il cigno è un animale oviparo, poiché depone uova che si schiudono in piccoli cignetti.
+Nel frattempo beviamoci un caffè, magari doppio.
+Posso prendere quel libro per voi.
+Suona in una band con lui.
+Mary è sempre stata sola.
+Non dovreste andare a casa?
+Vanno a fare carriera in Austria.
+Sono così stufo di sentirti lamentare in continuazione.
+Ascoltare musica rilassante può allietare le ore di studio.
+Sono appassionata di automobili.
+Il successo del nostro progetto merita di essere celebrato.
+Secondo me l'esperanto è molto importante.
+Il commercio online ha aperto nuove opportunità per vendere merci in tutto il mondo.
+È vero che ha vinto la corsa?
+Non lo faccio da un po'.
+Quando hai comprato questo pane?
+Preghi per tutte noi.
+Non chiedetelo a me. Chiedetelo a Tom.
+Tom ha deciso di non arrendersi.
+La cosa che odio di quando realizzano un film tratto da un libro è quando tagliano dei pezzi.
+Il Regno Unito si chiama "Y Deyrnas Unedig" in gallese.
+Mi hanno detto che erano scettici.
+Io voglio essere sicuro che Tom sia innocente.
+Vado a costruire mattatoi in Nigeria?
+Ti dovrei fare la stessa domanda.
+Io non ne comprerò uno.
+Io resterò là fino alle sei.
+Io non ti tradirò.
+Noi abbiamo tre cani, uno bianco e due neri.
+Tom è diventato famoso in tutto il mondo.
+Dissi loro che non ero pronto.
+Io sono qui solo per lavorare.
+Io sto studiando in biblioteca.
+Non ha poteri di carattere vincolante.
+Io passerò il Natale con la mia famiglia.
+Lui ha il labbro leporino.
+Questo è un messaggio per loro.
+Per studio vanno a Malta?
+Non vanno a costruire allevamenti in Brasile?
+Ziri ha trovato un gatto.
+Si voleva sposare con lei.
+Voglio sapere tutto nei particolari.
+Io amo questa azienda.
+I regali delizieranno i bambini.
+La rivelazione scioccante ha iniziato a sconquassare la stabilità emotiva della famiglia.
+Io non so quanto denaro abbiano speso Tom e Mary.
+Tom sapeva che ero sveglia.
+Alcune persone pensano che la Terra sarà invasa dagli alieni.
+Sono sorpresa che Tom non sia qui.
+Potete telefonarmi in qualsiasi momento vogliate.
+Tom ha conosciuto una ragazza più o meno della sua età.
+Cosa avete fatto lei e Tom?
+Fai come ti dico e basta.
+Lei ha gettato le scarpe fuori dalla finestra.
+Mary non vide niente.
+Non consentono questa cosa.
+Adesso non è il vostro turno.
+A Tom non piace né la birra né il vino.
+Chi la fa l'aspetti.
+"Di che nazionalità sono i suoi insegnanti?" "Portoghese."
+Questo non è necessario.
+Tom era un cattivo ragazzo.
+La prossima volta vieni a spalare la neve te!
+Chi va a Roma perde la poltrona!
+Mia madre è sempre occupata.
+Il sole si era abbassato nel cielo.
+Avete chiesto il permesso?
+Siamo troppo impegnate per quello, Tom.
+Tu non sei ancora morto.
+Se avessi avuto più tempo avrei scritto una lettera più lunga.
+Sto chiamando il mio avvocato.
+Hai appena finito di studiare musica.
+Secondo me, questo va molto bene.
+Sei la donna più bella che io abbia mai tenuto tra le mie braccia.
+Ti darò un laptop.
+Tom coltiva fragole nel suo giardino.
+Io voglio veramente venire in Australia.
+Tom mi ha chiesto di dargli un'occhiata.
+Ho rotto i pantaloni.
+Maria è stata il mio primo amore.
+Perché hai bisogno di un coltello?
+Quel treno si ferma ad ogni stazione.
+Non voglio essere scortese con Tom.
+È stata una cosa molto improvvisata.
+Tom è pigro e viziato.
+Cosa non ci avete detto?
+Non vai a costruire birrerie in Paraguay.
+Hai prestato un libro.
+Sta ancora lavorando sodo, vero?
+Tom e Mary sanno entrambi guidare.
+Vado a fare amicizie in Uruguay?
+Mary disse che voleva andare in pensione.
+Francamente lo trovo brutto.
+Il loro colore preferito è il grigio?
+Sono andato lì per parlare con lei.
+Dici così perché non si beve?
+Vai a costruire ponti in Libia.
+Bacio di bocca spesso cuor non tocca.
+Sono le nove e un quarto.
+Che cosa mangiano le pecore?
+La riesco a trovare su Facebook?
+Non avete mangiato nulla.
+Non vanno a cercare qualcuno in Inghilterra?
+Non so se è vero o no.
+Io ho alcune domande per Tom.
+È proprio l'uomo che sto cercando.
+Tom è alla mano.
+Vai tu per prima. Alla fine è stata una tua idea.
+Vanno a costruire scuole in Libano.
+Non va a costruire autostrade in Niger.
+Dove posso trovare un tatuatore valido?
+È ancora occupato, vero?
+Dove sono i tuoi gatti?
+Noi non l'abbiamo comprata.
+Dici che ho bisogno di dormire.
+Comprendo perché Tom è così popolare.
+Tu come hai trovato Tom?
+Io mi son fatto controllare gli occhi.
+Per me era corretta.
+Yanni non ha mangiato.
+"Dove andranno domani?" "In Russia."
+Perché Tom vuole tutti questi?
+Finirono i loro sandwich.
+Io ho un forte mal di testa.
+No. Non lo so. Sono molte cose.
+Ho studiato mesi per questo esame, non posso arrendermi proprio adesso.
+L'ho imparato la scorsa estate a Boston.
+Va a costruire stadi in Portogallo.
+Si è scusata con lui?
+Mary dice di essere pronta ad andare.
+Mary ha detto che non poteva accettare il lavoro.
+Sami ordinò il suo cibo.
+Perché ha cambiato i suoi piani?
+Non capisco e non sono abituato a non capire. Per favore, spiegala ancora una volta.
+Sta interamente a lei.
+Io so di chi è la colpa.
+Ho insegnato a Tom come sopravvivere.
+Dev'essere stato terribile oggi.
+Vado a imparare qualcosa in Australia.
+Mi sono unito alla squadra di calcio.
+Quindi si discuterà anche in lingua?
+Non vanno a costruire ponti in Bielorussia?
+Hanno detto che si sentivano obbligati ad aiutare.
+Andiamo a costruire templi in Nigeria?
+Ho detto loro che stavate venendo.
+Cosa sono i polimeri?
+È un ordine a cui non puoi sottrarti.
+Penso che andremo per lavoro in Inghilterra.
+Dove potrei comprare dei manuali?
+I suoi lunghi boccoli castani ondeggiavano al vento.
+Mi piacerebbe rimanere anonimo.
+Marie aggravò la situazione.
+Perché Tom e Mary si sono lasciati?
+Non vanno a costruire allevamenti in Bulgaria.
+Io non ero molto popolare alle medie.
+Andiamo in vacanza in Islanda?
+Basterebbe fare come in Inghilterra.
+Dimmi il tuo prezzo.
+Mary sa cosa sta cercando.
+Voi sapete tenere un segreto?
+Tu sarai in grado di giocare a calcio.
+Chi te l'ha fatto?
+Il mio alberello è pronto!
+È Marie che l'ha fatto.
+Fu un errore restare.
+Tutto quello che hai visto era un'illusione.
+Il giocatore ha chiesto dei chiarimenti all'arbitro.
+Il gioco era emozionante.
+Pensi ancora che riuscirai a farlo?
+Non ho fatto niente!
+La direzione dell'azienda prenderà veramente in considerazione il nostro bonus o sono soltanto belle parole?
+Dobbiamo prevenire la guerra ad ogni costo.
+È troppo tardi per visitarlo.
+Lui tiene due gatti.
+Chiama la polizia, per favore.
+Sono divenuti più maturi e aperti al dialogo.
+Dove avete preso quelle?
+Mary vide un coniglio nel suo cortile.
+Non vai a costruire biblioteche in Islanda.
+"Di che nazionalità sono le tue studentesse?" "Siriana."
+Non è andata a scuola ieri.
+Quel partito è neofascista.
+È così stupido a volte.
+Penso che mi dovresti aiutare.
+Voglio contattare i miei parenti a casa.
+"Di che nazionalità sono le nostre sorelle?" "Norvegese."
+"Di che nazionalità sono le nostre nonne?" "Irlandese."
+"Dove andiamo in vacanza?" "In montagna."
+Tom ha detto tutto ai poliziotti.
+La tua scuola è in questa città?
+Sei solamente una puttana.
+Tom è rimasto a casa con Mary.
+Ma non era colpa degli alieni?
+Tom non era molto buono.
+Tom non è solo adesso.
+Tom stava solo scherzando.
+L'enoteca locale offre una vasta selezione di vini italiani e stranieri per soddisfare ogni palato.
+Chi altro andava con voi a Boston?
+Sembra che Tom e Mary stiano piangendo.
+La Coca-Cola contiene caffeina?
+Hanno finito la benzina.
+Mary dice che sa che Tom piangerà.
+Il disco è graffiato.
+Ditemi dove vivono Tom e Mary.
+Lei mi sta dicendo cosa fare?
+Ha detto che si stava sentendo affamato.
+Ho dimenticato i miei sandali.
+Lei scrisse una lettera.
+Non è una ragione sufficientemente buona.
+Questo è un elioscopio.
+Voglio che lei distrugga tutto questo.
+Non c'è nulla che Tom odi di più che mentire.
+Questa variante è migliore.
+Non vanno a costruire sinagoghe in Egitto.
+Ha comprato un appartamento.
+Siamo a Reggio Emilia?
+Il riposo è fondamentale.
+Li riesci a salvare?
+Disse che amava gli animali.
+La bistecca era molto deliziosa.
+Solo circa trenta persone in Australia sanno farlo.
+Andiamo a fare soldi in Turchia.
+Lui poteva superare l'esame, vero?
+Dovrei vedere anche il primo?
+Si prende spesso gioco di lei.
+Noi sappiamo come riparare i computer.
+Il gelato conteneva molti additivi.
+Tom si rade tre volte alla settimana.
+Non sei preoccupata, vero?
+"Di che nazionalità erano le sue vicine?" "Scozzese."
+Mi sono alzato prima del solito.
+Tom non è lì.
+Non vanno a costruire ospedali in Turchia.
+Ho visto più cose in questi due giorni che in tutta la mia vita!
+Vive in una casa piccola da sola.
+La responsabilità di educare i figli in modo adeguato incombe sui genitori.
+Sarò là tra un paio d'ore.
+Sta vivendo una doppia vita?
+Dopodomani non sarà venerdì?
+L'edificio che vede laggiù è una fabbrica di auto.
+Ho un grosso cane.
+I pesci hanno il sangue freddo.
+È una persona patriottica.
+Non preoccupatevi. Vi proteggerò.
+Ho incontrato Tom ieri.
+Voi siete la mia ispirazione.
+Chiedete a loro qualsiasi cosa.
+Mary e sua sorella vogliono imparare l'esperanto.
+Non ci sono sbagli.
+Non ti lasciare sfuggire l'occasione!
+Io ho bisogno della mia privacy.
+Hanno appena varato la sanatoria.
+Ci sono molte uova nella scatola.
+Mi ha comprato un regalo?!
+Controllerò le tue cose quando sarai morto.
+Perché non le lasciate da sole?
+La banca conserva i soldi per le persone.
+Tom è molto più grande di me.
+Andrò con Tom e Mary.
+Vado a imparare qualcosa in Siria.
+"Dove andrete la settimana prossima?" "In Madagascar."
+Ehi ragazzi, penso di aver trovato qualcosa.
+Non le daremo niente.
+Sami è un pericoloso stalker.
+Hanno paura di te.
+Quante persone aveva intenzione di portare?
+Ho chiesto a Tom cosa volesse mangiare.
+Tom ora è in custodia.
+Quando sento questa canzone, ti penso, e mi manchi.
+Abbiamo giocato molto a golf insieme.
+Penso che lui sia un buon autista.
+Non so quanto vuoi camminare.
+Non so dov'è la mia mamma.
+Ho deciso di tornare in Australia con Tom.
+Ho cercato il mio accendino per mari e monti ma non sono riuscito a trovarlo.
+Questo sembra essere il punto cruciale di tutta la faccenda.
+Ora che hai deciso di lasciare il lavoro, sembri felice.
+Mary non si mise a discutere.
+A che ora li ha visti?
+Sono il capitano di questa nave.
+Quando è stata l'ultima volta che avete usato il fax?
+Provate ad amare tutti.
+Anche se l'apocrifo era stato a lungo considerato una fonte poco affidabile, recenti ricerche ne hanno confermato la veridicità.
+Noi eravamo preoccupate per lei.
+Non devo rendere conto a te delle mie azioni.
+Io sto per partire adesso.
+La polizia vi metterà dietro le sbarre.
+I tubi sono intasati.
+L'aria in questa stanza non è buona.
+Qual è il nome di quel ristorante?
+Penso che hai capito male.
+Il mese prossimo andrò al mare.
+Hai visto l'album fotografico di Tom?
+Ha la chiave di questa stanza?
+Un tavolo da dessert presentava dolcetti e biscotti fatti in casa.
+È iniziata la stagione delle piogge.
+È possibile iscriversi ai corsi.
+Stava solo cercando di proteggersi.
+Tom potrebbe essere canadese.
+Possiamo trovare un accordo?
+È arrabbiata con il mondo.
+E' una bellissima giornata.
+Tom non sta preparando dei tacos.
+Le scatole non sono allineate.
+Avete colori che non vi piacciono?
+Tom ha tre figlie.
+Ciò nonostante, un paio di cose buone e giuste sul matrimonio le dice.
+La tua amicizia è preziosa.
+Penso che andrai per salute in Francia.
+È quello che abbiamo sempre usato.
+L'amore è vederla nei sogni.
+Per ora siete solo un testimone.
+Il periodo è questo.
+Eri a Boston l'estate scorsa?
+Ziri ha continuato a suonare la chitarra.
+Mi piace molto francese.
+So che lui sa disegnare.
+Smettetela di picchiare sulla porta!
+Il forno è nella cucina.
+Gli amici di Tom ridevano di lui.
+Lei è la nuova tirocinante.
+Io e Tom siamo entrati in biblioteca nello stesso momento.
+Chi sa fa e chi non sa insegna.
+Voi non sarete mai soli con la schizofrenia.
+Analizzò scrupolosamente la situazione.
+L'innovazione nella robotica assistiva sta aiutando le persone con disabilità a vivere una vita più indipendente e inclusiva.
+Mary mangiò il suo sandwich alla sua scrivania.
+Ho assistito alla riunione di ieri.
+Dovete finire immediatamente i vostri compiti.
+Ha finto di non essere lì.
+Sarò libera domenica prossima.
+Non so davvero come migliorare questa situazione del cazzo!
+Il mio telefono è a portata di mano.
+Voi facevate come se nulla fosse.
+Mary non obbedisce sempre ai suoi genitori.
+Nostra madre ci ha comprato un cucciolo.
+La mia macchina ha bisogno di essere riparata.
+Mary mi ha detto che le piace andare ai concerti.
+Mary è di nuovo nei guai, vero?
+Speriamo che molti di voi verranno.
+Non fingere di non sapere cosa intendo dire.
+La bananicoltura non è tanto diffusa nel mio paese.
+Dobbiamo ridurre il debito nazionale.
+Tom ha applaudito i musicisti.
+Ho appena mangiato un piatto abbondante di lenticchie.
+Io voglio che Tom legga questo.
+Questo non è su di lui.
+Perché sapete tutto questo?
+È già molto tempo che stiamo aspettando.
+Vorrei un bicchiere di vino.
+Mi venne una buona idea.
+Scusate l'intromissione, ma avete provato quel nuovo ristorante in centro?
+È probabile che Tom studi francese.
+Non andare così veloce!
+Va a costruire edifici in Libia.
+Desidererei vedere tuo padre.
+Tom è a casa, ma Mary non lo è.
+Si considera un pacifista.
+Sto imparando ora a farlo.
+Domani giocheranno a calcio.
+Tom ne è ben informato.
+Guardo la vostra bella rosa.
+Mi piace l'eleganza della fotografia in bianco e nero, il gioco di luci e ombre, di rilievi e contrasti.
+Perché il vostro cane non indossa una museruola?
+Tom non si accorse di nulla.
+Lo conosci il ragazzo nella foto?
+"Di che nazionalità erano i nostri pazienti?" "Belga."
+Non andiamo a fare soldi in Danimarca.
+La riproducibilità delle scoperte può essere messa alla prova attraverso revisioni da parte di altri esperti del settore.
+Tom non poteva rispondere alle domande di Mary.
+Io sono con una cliente.
+Mi fa male il mento.
+Dovete solo toccare il bottone.
+Non sono giovane come Tom.
+Io provo a mangiare correttamente.
+Tom accusò Mary di avere rubato i suoi soldi, però lei lo negò.
+Come sempre, non si sa mai quanto costerà un'opera.
+Lei voleva sposarsi immediatamente.
+Perché gli avete detto di farlo?
+Qual è la differenza tra questi concetti?
+Si fida di noi.
+Tu sei quella che amo.
+Io sto cercando un hotel economico.
+In generale, il Giappone ha un clima mite.
+Sami non era felice.
+Non c'è nessun problema da risolvere.
+Ricordate che dormire troppo non è una scusa per essere in ritardo.
+È facile trovare il museo.
+Il suo sogno è diventare biologo.
+Rimane qualche problema grave.
+Non vanno a costruire ponti a Cipro.
+È infelice da quando è morta la sua gatta.
+Questo è qualcosa che devo fare.
+Dato che questa frase è solamente spam, sentiti libero di cancellarla dal database, per piacere.
+Lui era preoccupato per questa notizia.
+È il libro preferito di Tom.
+Lui non è al governo.
+Sami era veramente imbarazzato.
+L'amore a nessuno fa onore e a tutti fa dolore.
+Voi non siete arrabbiati.
+Stasera me lo sarò probabilmente già scordato.
+Ho smesso di fumare per motivi di salute.
+Per studio andiamo in Australia?
+Ziri è nella biblioteca.
+Vai a fare soldi in Inghilterra?
+Maria e Maki sono sorelle.
+Tom e Mary studiano francese ogni sera per trenta minuti.
+Volete giocare a tennis?
+Non va a costruire mattatoi a Cipro.
+Quando ci vediamo ti racconto tutto.
+Mi addormentai mentre stavo facendo i compiti.
+Non sapevate che il tofu fosse così buono?
+Tom ritorna dalla Croazia stanotte.
+Perché non ce ne siamo accorte prima?
+Non sapevo a cosa stavo rinunciando.
+Non andate a costruire ponti in Irlanda.
+Gli ho mandato un po' di denaro.
+I bambini percepiscono che cosa sta succedendo fra i genitori.
+Mi ha tradito. Perché?
+Lo potremmo chiedere a lei.
+Si mise la mano sulla bocca.
+Mary ha perso il suo nuovo ombrello.
+Sai altro su Tom?
+Sami baciò le natiche di Layla.
+Io so esattamente com'è.
+È stata trovata una carcassa nel parco urbano.
+Temo sempre di perdere pezzi.
+Tu non sei ferito, vero?
+Non so se è vera oppure no.
+Siamo stati sposati per quasi trent'anni.
+Metro, treni e tram circolano sulle rotaie.
+Che succede se Tom lo scopre?
+Lo farò per lei.
+Quest'uomo mi ha rubato la borsetta.
+Questa conversazione sta venendo registrata.
+Mi dia il tempo di pensarci.
+Lui mi ha tenuto un posto.
+Io metto del dentifricio sullo spazzolino e mi lavo i denti.
+Lui ha una vita normale?
+Dove le hai corrette?
+Non potete parcheggiare l'automobile qui.
+Penso che andrai per soldi in Irlanda del Nord.
+Mary ha assunto qualcuno che cucinasse per lei.
+Perché hai raccontato quella battuta?
+Ha dei piani per Halloween?
+Tenga gli occhi aperti, siamo alla ricerca di un nuovo tavolo.
+Per quel giocatore segnare gol è divertente.
+Non riesco semplicemente a ignorarle.
+Va a costruire palestre in Russia?
+Non posso rimanere qui con te?
+Chi ti è piaciuto di più?
+Tom ha lasciato tutti i suoi soldi al casinò.
+Ma poi dobbiamo camminare?
+I passeggeri affollavano il treno durante l'ora di punta.
+La smetta di essere pigra.
+Mary è una graphic designer, vero?
+Non va a costruire edifici in Libia.
+Dove suona suo fratello?
+Lui fuma tutto il tempo.
+Lunedì andrò in Germania.
+Sta provando ad umiliarci?
+Non vanno a costruire autostrade in Brasile?
+Il vecchio ha dato rifugio alla bambina.
+Maria adottò un bambino orfano.
+Suo figlio venne espulso dalla scuola.
+Io non ero occupata come Tom.
+Hanno detto che non avevano una macchina.
+Tu riesci a raggiungere lo scaffale più in alto?
+Mi ripeti chi è tuo padre?
+Aggiunga la carota tagliuzzata nel ripieno.
+Tom è un tizio così pigro.
+A qualcuno è importato?
+Quei cani non smetteranno di abbaiare.
+Mary mi ha detto che non voleva vivere a Boston.
+Andate a cercare qualcuno in Romania?
+"Dove vuole andare in vacanza?" "A Roma."
+Sono il suo chaperon.
+Sembra una supposizione ragionevole.
+Trovo i vostri argomenti illogici.
+Dicono che saranno impegnate questa notte.
+A cosa stai pensando?
+Scusami, c'è un bancomat qua vicino?
+Tom ottiene tutto quello che vuole.
+Che cosa mangiano le tartarughe?
+La disciplina è la chiave.
+Perché studi inglese ogni giorno?
+Tom preferirebbe parlare francese.
+È quasi il nostro anniversario.
+Non sia in ritardo.
+Non sono d'accordo con questa proposta?
+Non voglio camminare con lei.
+Aron ha ucciso Elizabeth.
+Io sono stata in grado di nuotare fino all'altra parte del fiume.
+L'anno scorso mi sono piaciuti da morire!
+Ne è rimasto uno.
+Gli studiosi stanno lavorando per preservare e documentare la lingua dei pellerossa.
+Tom e Mary devono lavorare assieme.
+Di che cosa ti interessi?
+Tom dice che gli piace questo tipo di musica.
+Tom sparò al piccione d'argilla.
+Andate a costruire università in Finlandia?
+È la rapina in banca più sanguinosa della storia di questo paese.
+Le dimensioni non contano?
+Sta sudando come un maiale.
+Mi feci controllare gli occhi.
+Tom ha avuto una buona vita.
+Nessuno è mai tornato dall'aldilà.
+Anche se volessi fermarmi, non potrei.
+Vada a prendere il suo casco.
+Mi dissero che erano pessimisti.
+Guai a chi ti prende in giro così!
+Date loro ciò che vogliono.
+Benvenuta al nostro primo corso di italiano.
+So che ti amo.
+La sua casa è pulita?
+Perché è così credulona?
+Non andate a insegnare in Norvegia.
+Guardate l'uccello che canta nell'albero.
+Mi sono deciso a smettere di fumare da ora in poi.
+Come dobbiamo trattare la questione?
+Le responsabilità contrattuali dell'Unione sono di competenza dei giudici nazionali.
+Mary aveva il raffreddore, quindi rimase a letto.
+Io voglio davvero vedervi.
+Ha svuotato la sua scrivania.
+Il paraurti del camion è danneggiato.
+Vai a fare amicizie in Galles?
+Come riesco a tornare indietro?
+Nel cantiere della nuova scuola, sono stati adottati criteri di progettazione sostenibile per ridurre l'impatto ambientale.
+Nel palazzo vivono il re e la regina.
+Di solito pranziamo a mezzogiorno.
+Tu sei bravo a mantenere i segreti?
+Pensate per voi stessi.
+Vi ho dato la casa.
+Tom è obiettivo, vero?
+Sembra che Tom e Mary non lo faranno.
+Tom ha mai nominato Mary?
+Non sembrano così occupati, vero?
+Hai preso qualcosa per loro?
+Tom non sembra più triste.
+Mi piace tutto il cibo.
+Lunedì non c'è francese?
+Tom ha provato a sollevare la scatola.
+Non lo può aiutare.
+Per lavoro vado a Belfast.
+Penso che andrete per svago in Svezia.
+Prenderò volentieri un altro caffè.
+Tom è in chiesa ora.
+Ho visto qualche pecora.
+Tom probabilmente non vinse.
+Molte persone fanno errori simili.
+Puoi chiedere la grazia con l'appoggio popolare.
+Ci ha fatto arrabbiare.
+L'acqua congela a zero gradi.
+Non credo a Tom.
+Non ti ho sentito entrare.
+Tom non deve andarsene.
+Potrei parlarle da sola per un secondo?
+Mennad preparò del tè.
+Invece del francese, cominciò a studiare l'esperanto.
+Tom è stato arrestato.
+Credo alle vostre parole.
+Non andiamo a costruire ponti in Irlanda?
+Va a costruire banche in Nuova Zelanda.
+Tom voleva giocare a poker con noi, però Mary non gliel'avrebbe lasciato fare.
+Sono andata alla libreria ed ho comprato un libro interessante.
+A me piace il colore blu.
+Mary ha detto a tutti che era preparata.
+La situazione non è cambiata per niente.
+Ho sentito dire che è molto ricca.
+Colloca Puerto Rico su una mappa.
+Il fiore grande è blu.
+"Dove pensano di andare per lavoro?" "In Egitto."
+Era la sua nuova ragazza.
+Penso che Mary sarebbe restata più a lungo se avesse potuto.
+Almeno l'hanno scritto bene?
+Tom dovrebbe aprire un ristorante.
+Tu sei mai stata a Tokyo?
+L'innovazione nell'educazione sta integrando nuovi strumenti tecnologici per migliorare l'apprendimento e l'accessibilità.
+Non mi è permesso farlo qua.
+Tom sterzò fuori dalla strada per evitare di colpire un cane.
+Andiamo a costruire mattatoi in Irlanda del Nord.
+Si sono scordate di rinnovare i loro passaporti.
+Il vento forte ha piegato il pennone della barca da vela.
+"Di che nazionalità erano le sue insegnanti?" "Russa."
+Non ho finito con te.
+Cosa dicono a questo proposito?
+Durante la riunione, il direttore ha presentato una sfilza di nuove iniziative aziendali.
+Dice che lo fa.
+Voglio delle uova fresche.
+Non tutti la riescono a fare.
+Che ne dite se compriamo dei manghi per pranzo?
+Tom dice che è molto ricco.
+Chi è il suo dottore?
+Lukas era ad una partita di calcio.
+Fyodor ha visitato il suo insegnante.
+Hai veramente lo spirito da girovaga!
+A volte odio davvero i miei cani.
+Non andate a insegnare in Norvegia?
+Non andate a fare amicizie in Bulgaria.
+Lei si difendeva bene.
+Walid e Karima sono attivisti.
+Mary è venuta con il suo cane.
+La primavera è la stagione più gradevole dell'anno.
+Lei avrebbe voluto essere venuta prima.
+Sono qui per scusarmi per quello che ho fatto l'altro giorno.
+Stava scendendo la notte.
+Voi non siete coerenti.
+Conosce il suo numero di telefono?
+Gli consigliò di andare a casa presto.
+Abbiamo visitato la Svezia.
+Per lavoro vai in Finlandia.
+Io capisco il turco.
+Tom e Mary si conobbero alla biblioteca.
+Dio mi guardi dal finire nelle mani di un medico così!
+Io vorrei un bicchiere di vino.
+Io sono appassionato di sci.
+Pensi che Tom e Mary siano ancora nervosi?
+Crediamo a ciò che vogliamo.
+Sei il benvenuto qua.
+Per chi sta lavorando?
+Mary fu cresciuta da suo nonno.
+Lo paghi bene, vero?
+Sei stata occupata di recente?
+Vanno a costruire baracche in Svezia?
+Ha solo bisogno di concentrarsi.
+Oggi il mio ritmo è quello di un bradipo.
+Ecco il mio biglietto da visita.
+Voi quando smetterete di fumare?
+Probabilmente è il perché.
+Ero preoccupata per te.
+Vai a costruire stadi in Sudafrica?
+"Dove andremo in vacanza?" "In Irlanda."
+Va a cercare qualcuno in Turchia?
+Sono stanco di tutto.
+Ho voglia di starvi accanto e divertirmi.
+Tom accese il fuoco.
+Ora l'esercito di Napoleone è avanzato e inizia una grande battaglia.
+Il telecomando della TV è sotto il divano.
+Ha detto di non preoccuparsi per lui.
+Tom è stato in carcere.
+Non glielo perdonerò mai.
+La mia offerta è ancora valida.
+Avete il passaporto coreano.
+Non vado a fare amicizie negli Stati Uniti?
+Porta sempre il materiale richiesto.
+Per quale motivo è stato invitato?
+Da domani inizia una nuova vita.
+Ditemi che c'è una ragione.
+Fino alla fine dell'anno non farò più nulla.
+Qualcuno l'ha messa lì, ma non so chi.
+Come ci relazioniamo l'un l'altro è ciò che davvero importa.
+Non vado a costruire templi in Spagna.
+Non sembrate troppo felici.
+Scriva loro un appunto.
+Deve aver perso il treno.
+Lei vive in questo quartiere?
+Andiamo a costruire ospedali in Uganda?
+Non vai in vacanza in Libano?
+Di chi dovrei fidarmi?
+Di' loro di venire qui.
+Ma che giocatore è?
+Sei molto buono con me.
+Tom ha cliccato il collegamento.
+Il dottore sta provando a risolvere molti degli indovinelli del cancro.
+Pensavo che Mary mi amasse ancora.
+Mi dispiace di averti colpito.
+Lui mi ha baciato sulla fronte.
+È quello che le è capitato.
+Sembra che io abbia fatto una domanda. Rispondete.
+"Di che nazionalità erano le sue studentesse?" "Tedesca."
+Tom ha sposato Mary senza il consenso dei suoi genitori.
+L'avete detto davvero a Tom?
+L'ho comprata per dieci dollari.
+Solo parte del ponte è stata distrutta.
+Mary dovette lasciare il suo cane a casa.
+Vado a fare affari in Germania?
+Premete questo bottone e la porta si aprirà.
+Non mi piace questo CD.
+Non va a costruire cimiteri in Regno Unito?
+Ho comprato questi biscotti dal droghiere.
+Ha suscitato molto clamore.
+C'è qualcosa che voglio che facciate.
+Andate a costruire grattacieli in Argentina.
+Non va a lavorare in Finlandia?
+Hanno detto che non erano assonnate.
+Se non glielo dici, lo farò io.
+Il suo cuore ha smesso di battere.
+Abbiamo deciso di fare un viaggio a Singapore per le nostre vacanze.
+Lei ha ancora dei sentimenti per lui?
+Andiamo a costruire allevamenti in Portogallo?
+"Di che nazionalità sono le vostre cugine?" "Malese."
+Venga a casa prima che faccia buio.
+Vai a costruire ospedali in Argentina?
+Se non fosse stato per l'iPhone, non sarei riuscito ad imparare il giapponese.
+Il capo della polizia della prefettura tentò di rendere più stretta la disciplina dei propri agenti.
+Servono cibo halal qua.
+Tom è preoccupato per quello, vero?
+Hai mai cantato in pubblico?
+Non ti devi preoccupare.
+I suoi capelli erano abbastanza lunghi da raggiungere il pavimento.
+Spesso mangiano qualcosa insieme nei fine settimana.
+Il mio amico è libanese?
+Cosa c'è di così speciale riguardo a Tom?
+Il cane della vicina ha abbaiato tutta la notte.
+Sami ha fatto un piccolo incidente.
+Nessun altro ragazzo della classe è più alto.
+Tom è uno dei migliori giocatori di poker che conosco.
+L'ho letto su Facebook.
+Per quanto tempo studi l'inglese ogni giorno?
+Tom non è un perfezionista.
+Ascolto musica, e tu?
+Non mangi quella mela.
+La verità è più complicata.
+Ma cosa commentava a riguardo?
+È successo anche a me un mese fa.
+Voi non le riconoscete?
+Vorrei che Tom la piantasse di lamentarsi in continuazione.
+Ha messo i soldi in tasca.
+Tom è alla festa di Mary.
+Questo fa proprio schifo.
+Tom sta cercando di mettersi in contatto con Mary.
+Lei sa andare in bici?
+Voglio sentirti suonare il piano.
+Conosce qualche bravo dottore?
+Devo fare riparare il mio oboe.
+Ci sarà qualcosa da mangiare alla festa?
+Il lago è lungo tre miglia.
+Questo è il pescivendolo?
+Vladimir ricevette dei regali a Natale.
+Io ho appena preparato la cena.
+Mary Jackson lavora qui, vero?
+Credo che le abbia rubate.
+Mi presentò sua sorella.
+Dovremmo portarli a casa.
+Non c'è pericolo che sia finita.
+È ciò che penso.
+Andate a costruire cimiteri in Argentina.
+Non vado a costruire cimiteri a Cipro.
+Dovrebbe prendere il bus navetta.
+Tom e Mary hanno detto che non hanno visto niente.
+Siamo noi il problema?
+Mary ha detto che il cane di Tom l'ha morsa.
+Tom è andato a Boston con un'amica.
+Non ha un aspetto così brutto.
+Vai a costruire edifici in Etiopia?
+Vuole un sandwich al tacchino?
+Suppongo tu ami Tom.
+Non vanno a costruire banche a Malta?
+Do del denaro a Tom ogni settimana.
+Penso che non andremo per svago in Irlanda.
+"Dove andranno l'anno prossimo?" "In Austria."
+Tom vuole che andiamo a trovarlo. Andiamo?
+Dove li ha lasciati?
+Avete trovato le vostre lettere?
+Noi siamo molto felici di essere vive.
+Vai a fare soldi in Scozia.
+Guardo spesso dei documentari.
+Lei suona uno strumento musicale? Se sì, cosa suona?

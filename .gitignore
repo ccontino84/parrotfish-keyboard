@@ -2,3 +2,8 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 /build*/
 __pycache__/
+
+# sfdk builds in the source tree
+/RPMS/
+/.sfdk/
+/documentation.list

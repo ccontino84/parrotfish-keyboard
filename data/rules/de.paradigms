@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+#
+# Regular (weak) German verb endings for tools/complete-paradigms.py; see
+# it.paradigms. Strong verbs change their stem (fahren → fährst, ging):
+# their forms are left as the wordlist has them, and a generated form that
+# differs from an existing word only by an umlaut (fahrst/fährst) is skipped.
+
+spell e-after-dt-before-st-t        # arbeiten → arbeitest, arbeitet
+spell drop-s-after-sz-before-st     # reisen → du reist (not reisst)
+
+class en en end
+tense present: e st t en t en
+tense past: te test te ten tet ten
+
+class ern n nd stem=er|el
+tense present: e st t n t n
+tense past: te test te ten tet ten

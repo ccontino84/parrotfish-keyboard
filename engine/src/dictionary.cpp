@@ -35,6 +35,8 @@ Dictionary &Dictionary::operator=(Dictionary &&other) noexcept
         m_attrs = other.m_attrs;
         m_rules = other.m_rules;
         m_strings = other.m_strings;
+        m_pairRows = other.m_pairRows;
+        m_pairEntries = other.m_pairEntries;
         other.m_data = nullptr;
         other.m_size = 0;
     }
@@ -86,7 +88,9 @@ bool Dictionary::open(const std::string &path, std::string *error)
             || !inRange(h.alphabetOffset, h.alphabetCount, sizeof(format::AlphabetEntry))
             || !inRange(h.attrOffset, h.attrCount, sizeof(format::Attr))
             || !inRange(h.ruleOffset, h.ruleCount, sizeof(format::Rule))
-            || !inRange(h.stringsOffset, h.stringsSize, 1)) {
+            || !inRange(h.stringsOffset, h.stringsSize, 1)
+            || !inRange(h.pairRowOffset, h.pairRowCount, sizeof(format::PairRow))
+            || !inRange(h.pairEntryOffset, h.pairEntryCount, sizeof(format::PairEntry))) {
         close();
         return fail(error, path + ": not a Parrotfish dictionary of version "
                     + std::to_string(format::FormatVersion));
@@ -96,6 +100,12 @@ bool Dictionary::open(const std::string &path, std::string *error)
     m_attrs = reinterpret_cast<const format::Attr *>(m_data + h.attrOffset);
     m_rules = reinterpret_cast<const format::Rule *>(m_data + h.ruleOffset);
     m_strings = reinterpret_cast<const char *>(m_data + h.stringsOffset);
+    m_pairRows = reinterpret_cast<const format::PairRow *>(m_data + h.pairRowOffset);
+    m_pairEntries = reinterpret_cast<const format::PairEntry *>(m_data + h.pairEntryOffset);
+    if (h.stringsSize > 0 && m_strings[h.stringsSize - 1] != 0) {
+        close();
+        return fail(error, path + ": damaged string table");
+    }
     return true;
 }
 
@@ -117,6 +127,22 @@ uint32_t Dictionary::attributes(uint32_t node, std::u32string *target) const
             *target = utf8::decode(m_strings + a->target);
     }
     return a->flags;
+}
+
+std::vector<std::pair<std::u32string, uint8_t>> Dictionary::nextWords(uint32_t prev) const
+{
+    std::vector<std::pair<std::u32string, uint8_t>> out;
+    const format::PairRow *end = m_pairRows + m_header->pairRowCount;
+    const format::PairRow *row = std::lower_bound(m_pairRows, end, prev,
+        [](const format::PairRow &r, uint32_t p) { return r.prev < p; });
+    if (row == end || row->prev != prev)
+        return out;
+    for (uint32_t i = row->first; i < row->first + row->count && i < m_header->pairEntryCount; ++i) {
+        const format::PairEntry &e = m_pairEntries[i];
+        if (e.word < m_header->stringsSize)
+            out.emplace_back(utf8::decode(m_strings + e.word), e.freq);
+    }
+    return out;
 }
 
 double Dictionary::logProb(uint8_t freq) const
@@ -156,6 +182,31 @@ uint32_t Dictionary::find(const std::u32string &word, std::u32string *stored) co
                 next.path.push_back(l.cp);
                 stack.push_back(std::move(next));
             }
+            if (isLastSibling(c))
+                break;
+        }
+    }
+    return best;
+}
+
+int Dictionary::prefixBest(const std::u32string &prefix) const
+{
+    int best = -1;
+    std::vector<std::pair<uint32_t, size_t>> stack{{0, 0}};
+    while (!stack.empty()) {
+        const auto it = stack.back();
+        stack.pop_back();
+        if (it.second == prefix.size()) {
+            best = std::max<int>(best, it.first == 0 ? 255 : m_nodes[it.first].best);
+            continue;
+        }
+        uint32_t c = firstChild(it.first);
+        if (c == 0)
+            continue;
+        const uint32_t want = utf8::toLower(prefix[it.second]);
+        for (;; ++c) {
+            if (m_alphabet[m_nodes[c].ch].lower == want)
+                stack.push_back({c, it.second + 1});
             if (isLastSibling(c))
                 break;
         }

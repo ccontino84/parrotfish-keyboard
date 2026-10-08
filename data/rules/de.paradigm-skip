@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Irregular verbs that tools/complete-paradigms.py must not complete, and
+# single generated forms that are not words. Infinitives:
+sein
+haben
+werden
+tun
+wissen
+können
+müssen
+dürfen
+sollen
+wollen
+mögen
+bringen
+denken
+kennen
+nennen
+rennen
+brennen
+senden
+wenden

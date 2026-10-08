@@ -1,0 +1,2005 @@
+# SPDX-FileCopyrightText: Tatoeba contributors (tatoeba.org)
+# SPDX-License-Identifier: LicenseRef-CC-BY-2.0-FR
+# 2000 random sentences of 4-20 words from the Tatoeba export deu_sentences.tsv.bz2
+# downloaded 2026-10-08 (tests/data/README.md); used only by the tests and
+# left out of all word counts.
+Tom hat sein Haus in Australien verkauft.
+Mein Vater versteht mich nicht.
+Was heute Freund, ist morgen Feind.
+Ich weigere mich, das zu akzeptieren.
+Meine Anfragen liefen ins Leere.
+Tom und Maria wollen euch etwas sagen.
+Tom wird ein großes Haus bauen.
+Du kamst heute Nacht in meinen Träumen vor, Takashi.
+Hast du Tennis gespielt?
+Ein Lächeln ist die schönste Sprache der Welt und gleich darauf kommt Esperanto.
+Diese Kiste wiegt eine Tonne. Was ist da drin?
+Trotz des Wetters arbeiteten sie weiter.
+Brasilien ist das einzige Land auf dem amerikanischen Kontinent, wo man Portugiesisch spricht.
+Es ist schon zu spät.
+Donnerstags und dienstags heiratet man nicht und reist nicht ab.
+Betty las im Urlaub vier Geschichten.
+Ich bin froh, dass ich nicht der einzige im Anzug bin.
+Tom leiht sich sehr oft bei Freunden Geld.
+Ohne Wind gibt es keine Wellen.
+Ich habe sie gebeten, vier Kopien von dem Brief zu machen.
+Was glaubst du, dass ich gerade denke?
+Ich glaube das überhaupt nicht.
+Jetzt ist das Kosovo ein unabhängiges Land.
+Tom und Maria sind alle beide alleinerziehende Eltern.
+Ich dachte, dass es gut sei.
+Urteile nicht über deinen Gefährten, bevor du nicht in seiner Lage gewesen bist.
+Ich denke, du wirst mit diesem Buch bestimmt viel Spaß haben.
+Sie hat die Pflanzen gegossen.
+Die Jungen haben zugegeben, dass sie „einiges an Alkohol getrunken“ haben.
+Ich werde den doppelten Preis zahlen.
+Alle wussten, dass er nicht zurückkommen würde.
+Verachte nur Vernunft und Wissenschaft!
+Wie spät wird es sein, wenn wir aus dem Restaurant kommen?
+Zu dem Unfall kam es durch seine Nachlässigkeit.
+Nichts ist beglückender, als den Menschen zu finden, den man den Rest des Lebens ärgern kann.
+Gab er irgendeinen Hinweis auf seine berufliche Tätigkeit?
+Welche Länder haben das beste Klima?
+Könntest du bitte noch ein kleines bisschen langsamer sprechen?
+Aschgabat ist die Hauptstadt Turkmenistans.
+Verliebte sehen in der Welt nur sich; doch sie vergessen, dass die Welt sie sieht.
+Sie sind die Einzigen, nach denen Tom gefragt hat.
+Als das Eis verschwand, nahmen Pflanzen und Tiere seinen Platz ein.
+Selbst im Kopf des weisesten Mannes gibt es eine törichte Ecke.
+Die älteste islamische Organisation hat sich noch nicht geäußert.
+Ich hatte wahrscheinlich recht.
+Ich habe einige Fehler gemacht.
+Ohne Zucker trinke ich das nicht.
+Wie viele sind Sie noch?
+Von den Männern bleibt der Name, vom Ochsen das Leder.
+Für deutsche Ohren klingt der Satz etwas umständlich.
+Ich würde nicht hineingehen.
+Ich meine, es ist Zeit abzureisen.
+Das wird sich zeigen.
+Ein neues Jahr bringt immer Hoffnung.
+Wir haben eine neue Küche gekauft.
+Ich soll Tom das morgen zurückgeben.
+Gibst du keinen Zucker dazu?
+Seid ihr nun zufrieden?
+Sie haben etwas gefunden.
+Sie ist von der Liebe enttäuscht worden.
+Das Krankenhaus hat gerade angerufen. Der Mann, den Tom überfahren hat, ist vor einer halben Stunde gestorben.
+Mußtest du den Schaden bezahlen?
+Schließlich hat er meinen Wünschen entsprochen.
+Du solltest mehr darauf achten, was du sagst.
+Ich kann euch aufhalten.
+Ich habe gespürt, wie Tom gezittert hat.
+Der Feind kam von hinten.
+Dummheit ist lebenslänglich und hoffnungslos.
+Wie ein Körper von seiner Seele, so scheide ich von Ihnen.
+Geschichte ist mein Hauptfach.
+Es ist notwendig, dass du dort hingehst.
+Tom sagte Maria, er glaube nicht, dass Johannes Angst hätte.
+Wie kommst du darauf, daß ich Alkoholiker wäre?
+Dan hat Lindas Einladung zum Abendessen angenommen.
+„Wie kannst du es wagen, mich ans Ende dieses Satzes zu verbannen?“, fragte Tom.
+Gib ihr noch eine Chance.
+Der Einfluss der Sonne auf den menschlichen Organismus ist noch nicht vollständig erforscht.
+Sie hat im Auto geschlafen.
+Sei mal nicht so gönnerhaft zu mir.
+Ich rede nicht mit anderen über meine Krankheit.
+Er wartete, bis sie gekommen war.
+In den Ferien fahre ich nach Frankreich.
+Haben Sie zu Hause einen Internetzugang?
+Endlich sind wir zu Hause.
+Ich werde dich frühmorgens wecken, Ok?
+Mutti, warum sollte ich adoptiert werden?
+Ich habe nichts dagegen, das zu tun.
+Man muss immer wieder mit Leuten rechnen, auf die man nicht zählen kann.
+Ich werde sie finden.
+Sie kommt aus Italien.
+Wie spricht man den Nachnamen aus?
+Das hat nichts mit Ihnen zu tun.
+Heute Abend wird eine Rakete auf den Mond geschickt.
+Es ist Zeit, dass du mir die ganze Wahrheit sagst.
+Der Klimawandel existiert, und er wird durch den Menschen hervorgerufen.
+Ich habe Tom gesagt, wie stolz ich auf ihn bin.
+Du irrst dich in dieser Angelegenheit.
+Aufhängen möchte man sich bei einem solchen Leben.
+Das lasse ich mir nicht zweimal sagen.
+Es tut mir leid. Ich werde es nie mehr tun.
+Maria fragte Tom, ob er ihr Französisch beibrächte.
+Das Paradies pflegt sich erst dann als Paradies zu erkennen zu geben, wenn wir daraus vertrieben wurden.
+Wenn ich das Geld hätte, gäbe ich es Ihnen.
+Dieses Jahr habe ich einen besseren Notendurchschnitt als du.
+Versucht zu beweisen, dass ihr recht habt!
+Das ist ein günstiger Laden.
+Wie hast du das geschafft?
+Die allgemeine Glaube an die Revolution ist schon der Anfang der Revolution.
+Die Antwort ist „weder noch“.
+Wir sind nicht eure Feinde.
+Ich schlafe jetzt nicht.
+Viele werden geboren, aber wie viele werden geliebt werden?
+Nein, laut Vorhersage wird es morgen regnen!
+Mir gefällt die Stimme der Sängerin auch.
+Die heilige Gertrud wurde oft mit ein oder mehreren Mäusen abgebildet, die an ihrer Spindel hinaufklettern.
+Kinder unter fünf Jahren müssen keinen Eintritt zahlen.
+Kann ich ein Glas Tee haben?
+Kinder machen nicht immer glücklich.
+Tom hat einen Spleen.
+An diesem Schreibtisch sitzt Tom.
+Zu welcher Zeit steht sie auf?
+Der Teufel steckt im Detail, wie ihr alle wisst.
+Tom soll machen, was Maria vorschlägt.
+Kernenergie wird dazu verwendet, Strom zu produzieren.
+Tom hat keine Freizeit.
+Wir waren auf das, was geschah, nicht vorbereitet.
+Ich kann nicht allzu gut Französisch.
+Der Burkini ist ein absolut hässliches Kleidungsstück.
+Da gab es nichts, was Tom hätte tun können.
+Honig wird von Bienen erzeugt.
+In einem Jahr kann viel passieren.
+Tom war der einzige, der mir Hilfe anbot.
+Wenn dein Kind stirbt, verlierst du deine Zukunft.
+Sie sollten Maria sagen, daß sie sich keine Sorgen zu machen braucht.
+Es war sein Schicksal, nie wieder an seinen Heimatort zurückkehren zu können.
+Ich werde bis acht Uhr auf dich warten.
+Ich wurde auf der Straße von einem obdachlosen Mann überfallen.
+Unter ihnen war auch ich.
+Ich hoffe, Sie nicht gestört zu haben.
+Wie ist er überhaupt hierhergekommen?
+Der Tisch ist gedeckt mit allerlei Obst.
+Die Preise steigen seit letztem Jahr.
+Sprachen verändern sich ständig, die einen schnell, die anderen langsam.
+Jedes zu großes Übergewicht von einer Seite stört die Freundschaft.
+Ich werde nie etwas umsonst übersetzen.
+Wir sind nicht so blöd, wie du denkst.
+Ich weiß nur dies: daß ich nichts weiß.
+Wie windig es heute ist!
+Lass uns nicht in Versuchung geraten und erlöse uns von dem Bösen.
+Dieses Gerät wird per Schalter in Gang gesetzt.
+Mit zehn Stempeln auf der Kundenkarte bekommen Sie ein Stück Torte gratis.
+Nehmt dies hier und teilt es unter euch auf!
+Ich weiß nur, dass Tom nicht glücklich ist.
+Hallo! Ich bin Nonong! Viel Vergnügen!
+Werde dir bewusst, dass Erfolg nicht von ungefähr kommt. Du kannst und musst den Erfolg planen.
+Sie hatte ihn irgendwann aus den Augen verloren.
+Ich finde den Schlüssel nicht.
+Ich wusste, dass ihr wiederkämet.
+Wie gäbest du eine Million Dollar aus?
+Der Redakteur kannte den Unterschied zwischen "Lagerraum" und "Zeitschrift" nicht.
+Du kannst mich jederzeit besuchen kommen.
+Tom ist ziemlich unhöflich.
+Hier ist Ihre Münze.
+Ich kann es nicht auflösen.
+Ich habe sie erhalten.
+Im Wald ist es so still, dass man die Blätter fallen hören kann.
+Mein Bruder lebt derzeit in Boston.
+Ich möchte zu dem Laden gehen, wo Tom arbeitet.
+Windenergie ist ein gutes Beispiel einer natürlichen Energiequelle.
+In unserem Hotel bieten wir in der Bar auch Sandwiches zu den Getränken an.
+Bücher, Bücher, nur Bücher enthalten die Seele der Menschheit.
+Russland hat seine Wirtschaft mittlerweile auf Kriegswirtschaft umgestellt und gibt laut Duma im neuen Jahr eine Rekordsumme für Rüstung aus.
+Ich brauche keine Aufenthaltserlaubnis, weil ich aus Island komme.
+Tom ist nicht bereit dafür, oder?
+Wenn ein Mann will, dass seine Frau zuhört, braucht er nur mit einer anderen zu reden.
+Willst du diese Armbanduhr reparieren lassen?
+Weil es bewölkt war, nahm ich meinen Regenschirm mit.
+Lange ließ man uns nicht warten.
+Die Grauen Brüder lebten nach den Regeln des Zisterzienserordens.
+Wenn man ins Ausland geht, ist es nützlich, zumindest ein paar Höflichkeitsformeln in der Sprache vor Ort zu lernen.
+Korrekt eingenommen, wird Ihnen dieses Medikament richtig guttun.
+Ich dachte immer, Tom würde mich überleben.
+Wie du lebst, so stirbst du.
+Wie kommt man auch an Aprikosenmarmelade? - Man schält einen Berliner.
+Kann ich etwas für dich besorgen?
+Auf diesem Bild hat sie noch lange Haare gehabt.
+Tom hat noch nicht die Hoffnung aufgegeben.
+Allein gehen wir unter, aber zusammen siegen wir.
+Er ging an einem Fluss in der Nähe des Dorfes angeln.
+Auf ihrem Teppich beten sie zu den Heiligen.
+Tom braucht jemanden zum Reden.
+Seine Socke hat ein Loch.
+Das Atmen fiel Tom schwer.
+Das war nicht Ihre Schuld.
+Warum taten wir nichts?
+Wenn ich das vorher gewusst hätte, hätte ich anders gehandelt.
+Tom ist ein Freund eines Freundes von mir.
+Übrigens, hast du schon von Suzuki gehört?
+Ich kann ein solches Geschenk nicht annehmen.
+Sie liest den Brief zuhause.
+Die Völker sind einander gleich.
+Gott möchte immer, dass kleine Mädchen ihr Gebet aufsagen.
+Tom und Maria waren über zwei Jahre zusammen, bevor sie sich trennten.
+Könntest du mal hingehen und nachsehen, was da los ist?
+Die Sicherheit in der Unsicherheit zu finden – das fördert die Kreativität.
+Ich glaube, langsam drehen alle durch.
+Du hast die Bahntickets nicht gekauft?
+Sie erreichte einen großen Erfolg in ihrem Geschäft.
+Ich kann dir eine Bar empfehlen.
+Tatsächlich verbraucht der Eisbär bei allen Fortbewegungsarten doppelt so viel Energie wie die meisten anderen Säugetiere.
+Lass uns das nie wieder tun.
+Das ist für niemanden interessant.
+Das Feuer hat sich ausgebreitet, weil ich es nicht geschafft hatte, eine Schneise zu schlagen.
+„Warum tun Sie das?“ „Weil ich es kann. Ich bin der Kaiser der Welt."
+Ich möchte keinerlei Klagen von euch hören!
+Ich bin gerade durch die Zimmer gegangen und habe bemerkt, dass die Maler ihre Arbeiten noch nicht beendet haben.
+Beide Stücke sind aus Porzellan.
+Die Zuweisung ist unzureichend.
+Die Gewalt nahm kurzzeitig ab, während die Anführer beider Seiten verhandelten.
+Tut mir leid, ich mache es nicht ohne Kondom.
+Stimmst du Tom zu?
+Was Sie haben, ist eine Erkältung, nicht die Grippe.
+Je mehr sich eine Gesellschaft von den Wahrheiten entfernt, desto mehr hasst sie diejenigen, die die Wahrheit sagen.
+Wir sollten öfter hierherkommen.
+Juri wurde klar, daß er das fünfte Rad am Wagen war.
+Er war der Anführer der Bewegung.
+Er ist ein Eisenfresser.
+Am zwölften August ist der Internationale Tag der Jugend.
+Die Bananen schälen und mit einer Gabel zerdrücken.
+Wie ihr bereits wisst.
+Hier gibt es nichts zu tun.
+Kaufst du Kleidungsstücke lieber mit oder ohne Kapuze?
+Wir müssen jetzt auf uns selbst aufpassen.
+Ich habe auf dem Schreibtisch einen Laptop gesehen.
+Ich schufte jeden Tag in einem Hotel.
+Die Schiffe waren unbewacht.
+Du bist im günstigsten Augenblick gekommen.
+Meine Hoffnung täuscht mich nie.
+Sag Tom, dass es mir leid tut.
+Du gehst heute besser nicht hin.
+Warst du dann in der Schule?
+Das bekommen Sie in einer Drogerie.
+Hör auf, uns zu quälen.
+Der Spion nahm Kontakt zum Feind auf.
+Sie möchte das Einverständnis ihrer Mutter.
+Hör auf, Tom zu entschuldigen!
+Antibiotika sind verschreibungspflichtige Medikamente.
+Ich werde es gemäß Ihren Anweisungen ausführen.
+Ebendeshalb bin ich auf eure Unterstützung angewiesen.
+Hast du den Bericht durchgelesen?
+Der Fluch ist sehr mächtig.
+Kariöse Zähne schmerzen oft.
+Eine Frau wie Maria kann ich überall finden.
+Scheitern kann gescheiter machen.
+Ich werde es ihm erklären.
+Willst du nicht die Wahrheit über das erfahren, was geschehen ist?
+Tom lebt in der Stadt.
+Er verlangt ständig Geld.
+Deine Sätze zu übersetzen gefällt mir.
+Ich habe die Schule geschwänzt.
+Wenn du dein Buch zu Ende gelesen hast, leg es wieder dorthin, wo du es gefunden hast!
+Sag mir was du willst.
+Tom bleibt nicht hier.
+Ich habe dich als Erster gefragt.
+Was in aller Welt!
+Mama! Tom aß meinen Keks!
+Was seid ihr doch für Flegel!
+Nur ein Blinder sieht nicht, dass du sie liebst.
+Tom denkt schon eine Weile über Auswanderung nach.
+Sie haben mir einen Film versprochen.
+Kann mir irgendjemand dieses Problem lösen?
+Rufen Sie ihn je an?
+An meine Eltern kann ich mich nicht erinnern.
+Die verwendeten Begriffe wurden nicht einmal definiert.
+Beowulf ward in der Schlacht tödlich verwundet.
+Der Obdachlose hat seine Geschichte erzählt.
+Worin unterscheidet sich die Symbiose vom Parasitismus?
+Nicht mit den nassen Haaren nach draußen, sonst erkältest du dich!
+Ich gehe jeden Tag mit einem Gefühl der Beklemmung zur Arbeit.
+Ein- und Ausfahrt Tag und Nacht freihalten!
+Ihr habt den Bericht geschrieben.
+Mein Opa hat keinen Führerschein mehr.
+Ist er in dich verknallt?
+Ich kann weder Französisch noch Englisch.
+Ich bin elend und arm.
+Er wird sich besser fühlen.
+Bitte füllen Sie diesen Bewerbungsbogen aus.
+Dieser Satz ist falsch, aber den Fehler findest du bestimmt selbst.
+Bist du wirklich ein Zauberer?
+Bitte von der Nachricht einen Auszug von hundert Wörtern machen.
+Wir denken, wie wir denken, hauptsächlich weil andere Leute so denken.
+Tatoeba existiert nicht ausschließlich oder hauptsächlich für den Zweck des Projektes.
+Das Auto wird in die Parklücke passen.
+Ich kann mein Bein nicht bewegen.
+Maria und Tom haben kein Hotelzimmer gebucht, sondern eine Ferienwohnung.
+Ich reiste zweimal in meiner Jugend ins Ausland.
+Die Leute haben geschrien.
+Tom redet ziemlich viel.
+Sie schaut nicht jeden Abend Fernsehen.
+Sie ist nur am Meckern.
+Wissen ist nichts, Vorstellung ist alles.
+Ich mag seine Musik.
+Unsere Einstellung der Zukunft gegenüber muss sein: Wir sind jetzt verantwortlich für das, was in der Zukunft geschieht.
+Maria musste sich vor lauter Lampenfieber vor der Aufführung übergeben.
+Ich würde es ihnen geben.
+Ich hatte auf euch als Freiwillige gehofft.
+Wird verbleites Benzin überhaupt noch irgendwo verkauft?
+Sie ist sehr alt.
+Das trifft es genau genug.
+Er sagte nur, er wolle zu einer Frau.
+Was für ein würdevoller Mann!
+Angela Merkel hat mit Tom ein Selfie gemacht.
+Das Schiff ging mit Mann und Maus unter.
+Sie werden viel Geld brauchen.
+Ich kenne mich selber nicht. Ich weiß nicht, wer ich bin.
+Ich brauche auch eins.
+Wir verstanden ihre Logik nicht.
+Ich glaube, ich verstehe, was er uns mitteilen will.
+Ihr habt mich noch nicht bezahlt.
+Ein Kapitän führt sein Schiff und seine Mannschaft.
+Einsiedler sind nicht alle so fromm, wie sie sich stellen.
+Er pustete die Kerze aus.
+Stecke deinen Kopf nie in einen Bienenkorb, um den Honig zu probieren.
+Ich möchte niemanden verletzen.
+Wenn Wasser mehr und mehr ansteigt, ist das Hochwasser.
+Er ist mit dem Bus gefahren.
+Das Mädchen öffnete das Fenster.
+Es ist mir eingefallen, wie diese Frau geheißen hat.
+Es ist nicht möglich, eine Fremdsprache in nur zwei Wochen zu lernen.
+Maria sprach über ihre Gefühle.
+I-Aah, der Esel aus „Pu der Bär“, isst am liebsten Disteln zum Frühstück.
+Da werdet ihr euch irgendwie allein durchschlagen müssen.
+Vielleicht kann Tom französisch.
+Dank für die Hilfe.
+Tom sollte früher gehen.
+Marie hat den Krug bis zum Rand gefüllt.
+Zünden Sie im Spiegelsaal alle Kerzen an!
+Das ist der Zauberbann, womit du alles stillst: Wolle nur, was du sollst, so kannst du, was du willst.
+Ich will die Wahrheit wissen!
+Das Essen war unter aller Kanone.
+In Galapagos leben große Schildkröten.
+Wir müssen auf Zucker verzichten.
+Ich überlasse es dir, das zu entscheiden.
+Wie oft im Jahr üben Sie Ski?
+Ich war nicht bei Tom.
+Ich hätte gedacht, daß dir diese Idee gefallen würde.
+Meine Familie liebte sie.
+Heute früh sah ich, wie ein Schmetterling geboren wurde.
+Maria hat gesagt, daß sie dir schon mehrfach begegnet sei.
+Ich beabsichtige, dich zu begleiten.
+Das Christkind war hier.
+Ich erklärte ihnen die Spielregeln.
+Wissen Sie, wer wir sind?
+Schau nach, ob Herr Wilson zuhause ist.
+Wir sind mit deinen Noten zufrieden.
+Hoffnungen sind auch eine Belastung, weil sie mit Erwartungen verbunden sind.
+Ich gehe jeden Sonntagnachmittag auf den Basar.
+Es ist der psychologisch richtige Moment, um die Katze aus dem Sack zu lassen.
+Ich schätze, ich nehme diese Krawatte.
+Ich möchte dich wirklich sehen.
+Die Scheibenwischerblätter für mein Auto sind sehr teuer.
+Das ist ein Dorf mit zweihundert Einwohnern.
+Ich verstehe nicht, was passiert ist.
+Wer in jener Zeit einen Lada hatte, war reich.
+Ich habe mich ausgeruht.
+Ich bin krank gewesen.
+Ich bitte Sie, sich in meinem Wagen anzuschnallen.
+Tom und seine Freunde spielen oft zusammen etwas.
+Ich hörte, wie in der Menge mein Name gerufen wurde.
+Wir sind einverstanden, während der Arbeit das Rauchen zu unterlassen.
+Das klingt nicht besonders vertrauenerweckend.
+Normalerweise blieben sie nicht lang.
+Alles, was die Sozialisten vom Geld verstehen, ist die Tatsache, daß sie es von anderen haben wollen.
+Ich esse mittags gewöhnlich ein Schinken-Käse-Brot.
+Während der Stalinzeit wurden Häftlinge in den Konzentrationslagern zu Sklaven im Staatsdienst.
+Maria hat das angefangen.
+Sie ist sehr hübsch, wenn auch etwas dürr.
+Ich habe das mit Absicht getan.
+Siehst du den Unterschied zwischen Großbritannien und England sowie Amerika und den Vereinigten Staaten ein?
+Durch den Regen sprossen einige gräuliche Pilze auf dem Baumstamm.
+Metalle können bei tiefen Temperaturen spröde werden.
+Tom hat sich gestern mit seinem Messer geschnitten.
+Kümmere du dich um deine eigenen Sachen!
+Jetzt sind Sie dran mit Bezahlen.
+Maria gibt gerne an.
+Tom mag mich einfach nicht.
+Ich weiß nicht genau, wie ich dieses Wort aussprechen soll.
+Er ist ins Bett gegangen.
+Der Wert der Gesundheit kann nicht überschätzt werden.
+Sie saßen auf einer Bank im Park.
+Mary gibt Nachhilfe in Englisch, um sich ihr Studium finanzieren zu können.
+Yumi hat heute Geburtstag. Hilf mit, dass es ein besonderer Tag für sie wird!
+Tom und ich beabsichtigen, nächstes Frühjahr nach Boston zu ziehen.
+Ich zerbreche mir den Kopf, warum mir der Satz nicht ganz gefällt, aber ich werde es heute nicht sagen können.
+Es ist sehr schnell passiert.
+Er ist weder reich noch arm.
+Sie hat mir unzählige Male aus der Patsche geholfen.
+Man bat mich, die Firma zu verlassen.
+Kann ich in Euro zahlen?
+Ich war in der Lage, über den Fluss zu schwimmen.
+Wir wissen, dass du es warst, der das Fenster eingeschlagen hat.
+Macht nichts, ich kann es selber machen.
+Tom ruft mich nie zurück.
+Hast du viel über die spanische Sprache gelernt?
+Tom ist älter als seine Frau, oder?
+Sie haben mich vermißt.
+Sie wohnte früher am Fluss.
+Algerien muß die Bürokratie zurückfahren.
+Sie lässt sich immer die Haare von einem berühmten Friseur machen.
+Schließlich tauchte er doch auf.
+Die Objektivität ertrinkt im Meer der Vorurteile.
+Tom sagte seine Verabredung mit Mary ab.
+Die Geschichte schreiben die Sieger.
+Achte auf den Ausgang aller Dinge!
+Wegen ihres Postens am Ministerium des Äußeren verbrachte sie mehr Zeit in ausländischen Hotels als bei sich zu Hause.
+Du darfst das Recht nicht missachten.
+Ich weiß nicht, was ich lieber täte, als mir dir picknicken zu gehen.
+Heute wird es wärmer als gestern.
+Dieser Tisch ist rund.
+Er erlegte den Tiger.
+Tom unterzeichnete den Vertrag.
+Es wäre nett gewesen, wenn du früher hier angekommen wärest.
+Du bist jetzt viel stärker.
+Ich hoffe, dass Tom bald heiratet.
+Mögest du nie erfahren, wer du bist!
+Dann verließ der Bus die Stadt und fuhr weiter auf einer Landstraße.
+Es gibt keinen Grund zu der Annahme, dass Tom der Dieb ist.
+Baseball ist der mit Abstand beliebteste Sport in Japan.
+Tom hofft, dass Maria nicht die Wahrheit sagen wird.
+Lass das Schlafzimmerfenster nicht offen.
+Leichtfertigkeit ist Flucht, die sich als Tanz ausgibt.
+Ihr strengt euch nicht sehr an.
+Deine Ideen sind ziemlich altmodisch.
+Es ist mir zu gefährlich.
+Warum isst er nicht mehr mit mir?
+Hast du Finnisch nur gelernt, weil du in sie verliebt warst?
+Scheiße, Mann, was für ein Idiot wagt es, mich mitten in der Nacht anzurufen?
+Zupfst du dir deine Augenbrauen?
+Welches Handwerk beabsichtigst du auszuüben, wenn du erwachsen bist?
+Ich habe Tom heute noch nicht gesehen.
+Für eine Katze ist der Standpunkt einer Maus nicht wichtig.
+Ich zweifle, dass Tom ehrlich sein wird.
+Kartoffeln sind sehr billig.
+Merken Sie sich das, oder besser noch, schreiben Sie es auf.
+Tom war die ganze Nacht auf.
+Die Kriminalpolizei hat angerufen: man bittet um Ihren Besuch.
+Der Bus trifft in etwa dreizehn Minuten ein.
+Er ist alt und dick geworden.
+Sie ist so arrogant.
+Sie sollten Ihre Ziele für das kommende Jahr auflisten.
+Hast du gesagt, daß du Tee willst?
+Nachdem er einen Aggressionsbewältigungskurs absolviert hatte, war es nicht mehr mit soviel Streß verbunden, Tom um sich zu haben.
+Tom griff sich eine der Glasvasen und warf sie nach Mary.
+Wenn die Feuerwehr nicht alarmiert wird, werden in einem brennenden Haus Menschen sterben.
+Sie hat kein Vertrauen mehr in der Bevölkerung.
+Sie gewann einen Preis beim Buchstabierwettbewerb.
+Tom griff Maria mit einem Dolch an.
+Mary ist nicht so intelligent, wie sie behauptet.
+Einen akademischen Titel kann man schnell bekommen, Erfahrung braucht Zeit.
+Es ist nicht viel, was ich für Sie tun kann.
+Um stets gut gelaunt auszusehen, hat sich Tom einen teils konkaven, teils konvexen Lächelnspiegel gekauft.
+Er versuchte, sie nicht anzusehen.
+Ich glaube nicht, dass Tom Kanadier ist.
+Ich bin immer der Letzte der Schlange.
+Frettchen sind verspielt und neugierig.
+Sie sollten die Schule vor neun Uhr erreichen.
+Die haben mir geholfen, den Kühlschrank anzuheben.
+Ich versuche nur, euch zu verstehen.
+Bitte helfen Sie mir, Herrn Nomura willkommen zu heißen.
+Hinten findest du eine Flasche Wasser.
+Rufen Sie Tom an?
+Ich werde Ihre Applikation bestimmt nicht herunterladen! Bei mir werden Sie nicht spionieren!
+Er kommt heute Nacht zu mir.
+Du verlangst zu viel.
+Wir kauften es nicht.
+Du machst dir zu viele Sorgen über sie.
+Wann willst du zum Strand?
+Es ist immer schön, Blumen zu bekommen.
+Sie flehte ihn an, nicht zu gehen.
+Ich erklärte es ihm, doch war er nur verwirrt.
+Jeder von uns hat einen Fehler.
+Tom benimmt sich wie eine Frau.
+Die Sache lässt mich kalt.
+Ich habe vergessen, wie man das schreibt.
+In Zukunft solltet ihr wohl etwas vorsichtiger sein.
+Auf dem Grabstein ist ein Schreibfehler. Wie peinlich!
+Welche Lieder willst du singen?
+Jeder muss seine eigene Familie beschützen.
+Ich zog an der Schnur.
+Ich bat ihn, mich ihr vorzustellen.
+Ich unterrichte Toms Kinder dreimal die Woche in Französisch.
+Er belegte im Turnier den elften Platz.
+Tom will nicht aufgeben.
+Ich kann nicht fassen, dass er mich für dieses Flittchen hat sitzenlassen!
+Ich werde dich hier nicht verlassen.
+Der schwarzgekleidete Typ dort vorne, das ist Tom.
+Keine Sorge! Ich komm schon gut nach Hause.
+Du hast doch nicht etwa etwas durchsickern lassen?
+Hatten wir für morgen irgendwas in Englisch auf?
+Allein Tom weiß, wo die gestohlenen Diamanten versteckt sind.
+Hast du dich schon entschieden, wen du zur Party einladen wirst?
+Wir leben in einer lügnerischen Welt, in der derjenige, der die Wahrheit sagt, zum Narren gehalten wird.
+Wie viele Stunden wird das Ihrer Einschätzung nach dauern?
+Ich habe ihn gefragt, warum er so traurig ist.
+Du machtest den Einkauf.
+Tom wurde schon fast wie ein Popstar gefeiert.
+Wie dankt man ihm auf Türkisch?
+Spotify wird jetzt zwei Euro teurer pro Monat. Das ist eine Preissteigerung von drei Prozent in vier Jahren.
+Sie haben vergessen, die Tür zuzumachen.
+Ist das wirklich so schwer?
+Ich wünschte, Sie wären hier bei mir.
+Er kam nicht aus seinem Zimmer.
+Viele Menschen wollten wegen der Regierung nach Westdeutschland mit dem Auto fahren.
+Sie ist ein bisschen weltfremd.
+Ich denke, du liegst falsch.
+Er wurde dabei erwischt, wie er Süßigkeiten stibitzen wollte.
+Ihr Geheimnis ist sicher.
+Tom gab Maria eine Fahrstunde.
+Der Krieg nahm ihnen die Kindheit.
+Wart ihr heute jagen?
+Kommst du auf die Party morgen?
+Er hat an allem etwas auszusetzen.
+Sie spielt manchmal gern im Regen.
+Sie behandelte ihn sehr gut.
+Wir werden es wohl schon bald erfahren.
+Wenn du ihm wehtust, schneide ich dir die Eier ab.
+Sie sah sich im Spiegel.
+Sie haben es für das Geld getan.
+Das ist seine Meinung.
+Bevor der Mann ertrank, rief er ein letztes Mal um Hilfe.
+Ich kann meine Arbeit nicht ohne Computer erledigen.
+Gestern habe ich den ganzen Tag englische Wörter auswendig gelernt.
+Leben Sie in Athen?
+Sollten wir auf Tom warten?
+In aller Bescheidenheit danke ich euch aus den bescheidenen Tiefen meines bescheidenen Herzens!
+Was einen Deutschen immer nett zum Lachen bringt, führt die russischen Staatsbürger manchmal zur Traurigkeit.
+Du bist fett geworden.
+Ich habe es wirklich vergessen.
+Ich komme nachher zu dir.
+Ich bin hier wahrscheinlich nicht die einzige, die das nicht kann.
+Er hat den Buchstabierwettbewerb gewonnen.
+Ich habe aus alter Gewohnheit alles überprüft.
+Die alte Hütte scheint den Sturm sehr gut überstanden zu haben.
+Wollen Sie damit sagen, daß Tom geheilt ist?
+Der Mann ist im ganzen Dorf gut bekannt.
+Das ist nicht das, was ich sagen wollte.
+Ich wechsele die Kleidung.
+Durch eine sichtliche Neigung zu raschen Bewegungen wirkt sie wie jemand, der viel zu tun hat.
+Ich kann dieses Stück nicht spielen.
+Niemand macht es besser.
+Hat Maria getan, worum ihr sie gebeten habt?
+Ich weiß, dass Tom Ihnen geholfen hat.
+Tradition is nur eine Ausrede für Schlamperei.
+Wir müssen Tom aufhalten, bevor er sich noch verletzt.
+Gehen Sie am Wochenende ins Kino?
+Nach der italienischen Aussprache klingt mein Name angenehm.
+Wer setzte denn dir Läuse in den Pelz ?
+Ich war letztes Jahr in Havanna.
+Ich wartete eine Zeitlang.
+Toms Hühner gehören zu den glücklichen: den Tag verbringen sie mit Fressen auf der Weide.
+Bring mich nicht zum Weinen!
+Das Auto fuhr langsam auf der Straße.
+Es fällt mir schwer, Französisch zu verstehen.
+Tom, du bist ein tapferer Mann.
+An meinem linken Stiefel fehlt der Absatz.
+Ich möchte euch nicht länger quälen.
+Tom ist hinter Gittern.
+Die Täter der illegalen Abholzung wurden von der Polizei verhaftet.
+Gesetzeslücken lassen sich durch beständigen Gebrauch beträchtlich erweitern.
+Er wird in einer Stunde gehen.
+Wie lange dauert es zu Fuß nach Wien?
+Empörend an einem Befehlsverhältnis ist nicht das Befehlen, sondern das Gehorchen.
+Diese Haushaltsgeräte sind schwer.
+In der Schule benimmt er sich gut, aber zu Hause macht er Probleme.
+Ist das alles, was du mitgebracht hast?
+In einem Monat werde ich diese Arbeit erledigt haben.
+Mary wurde krank. Sie hat zu viel gegessen.
+Wir müssen ermitteln, wer das getan hat.
+Die meisten Menschen tun das.
+Hast du mit der Geschäftsführerin gesprochen?
+Ich habe wirklich viel von euch gelernt.
+Wir wollen die Schulordnung ändern.
+Er konnte das Problem lösen.
+Sie hat sich diesbezüglich geirrt.
+Tom bügelte seine Hemden.
+Meg bereitet das Frühstück vor.
+Maria freute sich, ihre Freundin Katrin zu sehen.
+Ihr seid sehr schnell.
+Mein Geburtstag ist erst in einem Monat.
+Du hast nicht zufällig Aspirin da?
+Mein Fahrrad bedarf einer Reparatur.
+Wer am Zoll sitzt, ohne reich zu werden, ist ein Pinsel.
+Ich will dich nicht nur deiner Kochkünste wegen.
+Ist irgendwer von denen, die wir eingeladen haben, noch nicht da?
+Ich brauche einen Arzt.
+Beklagen sie sich nicht!
+Tom schaltete die Kaffeemaschine ein.
+Schön, daß ihr bleibt!
+Warum färbst du dir die Haare?
+Wie heißt das Gebäude, dessen Dach man dort sieht?
+Ich habe schon damit gerechnet.
+Allerdings habe ich kein Geld.
+Tom spricht ganz passabel Hindi und Russisch.
+Der Muttersprachunterricht vermittelt Arbeitsmethoden, die später in anderen Fächern zur Verfügung stehen werden. Man nennt dies einen propädeutischen Effekt.
+Tom hatte früher Angst vor Hunden.
+Er studiert an der Technischen Universität.
+Als er keine Arbeit fand, fühlte sich Tom verzweifelt.
+Man empfängt den Mann nach dem Kleide und entlässt ihn nach dem Verstande.
+Auswanderer sind im neuen Land nicht immer in einer angenehmen Lage, selbst wenn sie materiell erfolgreichsind.
+Was hat Tom dir im Gegenzug gegeben?
+Mein großer Bruder lebt in Boston.
+Man sagt, dass meine Schwester schön ist.
+Tom ist total geistesabwesend und vergisst manchmal, die Kinder von der Schule abzuholen.
+Sie dürfen Tom nichts essen lassen, was Erdnüsse enthält.
+Er prangerte die Unfähigkeit dieser Regierung an.
+Tom isst nichts außer seinem selbstangebauten Gemüse.
+Dieser Joghurt ist süß.
+Ich fühle mich sehr einsam.
+Ich habe gewusst, dass dieser Tag kommen würde.
+Wir haben bloß drei Minuten.
+Ich möchte, dass du gehst.
+Ich habe gehört, was du gesagt hast.
+Das ist nun wirklich nicht schwer!
+Sie hat versprochen, mir einen Ring zu schenken.
+In letzter Zeit habe ich keinen Appetit.
+Wenn sie das bloß früher gewusst hätte.
+Kannst du einen Augenblick warten?
+Sie stottert, wenn sie nervös ist.
+Johannes frißt in letzter Zeit zuviel.
+Ich weiß, es klingt albern.
+Wir leben zu sehr in der Vergangenheit, haben Angst vor der Zukunft und vergessen dabei völlig, die Gegenwart zu genießen.
+Erzählen Sie Tom von sich!
+Tom gab Maria am Tor einen Abschiedskuss.
+Du kannst uns jetzt gehen lassen.
+Drei Menschen wurden leicht verletzt.
+Billionär-Trillionär Tom Jackson hat eine so lange Jacht, dass er auf dem Atlantik kaum wenden kann.
+Tom ist amerikanischer Staatsbürger, aber er kann nicht Englisch sprechen.
+Um Geld zu scheffeln, täte er alles.
+Du wirst Knoblauch essen.
+Wann hatte er Marilla schon einmal so lachen hören?
+Tom ist nicht sehr vertrauenswürdig, nicht wahr?
+Mein Freund wohnt in Fürth bei Nürnberg.
+Gefällt dir das Piano?
+Ihr könnt wählen, was auch immer ihr mögt.
+Der Rechtsanwalt warnte seinen Mandanten eine Aussage zu machen, aber er tat es dennoch.
+Sie verzieh ihm, daß er sein Versprechen gebrochen hatte.
+Hat Tom heute Morgen etwas gegessen?
+Darüber weiß ich absolut nichts.
+Ich gehe wieder nach Algerien.
+Jede Aufgabe sollte dadurch angegangen werden, dass man zuerst besonnen das Wesentliche erfasst.
+„Ich habe einen Fehler gemacht.“ – „Das kommt vor.“
+Ich komme nicht gut mit ihm aus.
+Geht es auch ohne Konflikt?
+Infolge des Sturzes von einer Klippe erlitt Maria multiple Frakturen und eine Gehirnerschütterung, blieb jedoch am Leben.
+Die alten Bücher sind für die Autoren, die neuen für die Leser.
+Wird Ihnen oft schwindlig, wenn Sie schnell vom Bett aufstehen?
+Tom war beeindruckt, wie gut Maria Flöte spielen konnte.
+Er kann mit Mias Spielsachen spielen.
+Ich habe dem Hund einen Knochen gegeben. Das hat ihn vom Bellen abgehalten.
+In unserer Kindheit gab es so etwas nicht.
+Tom und Maria sind weg.
+Wenn man etwas zu beweisen versucht, dann hilft es zu wissen, dass es stimmt.
+Im Herbst werden die Blätter an den Bäumen gelb.
+Tom und Mary entdeckten etwas Wunderbares.
+Tom möchte ein Pokémon-Meister werden.
+Er wünscht sich halt Beachtung.
+Ihr Regenmantel ist violett.
+Ein schöner Tag, stimmt's?
+Als Lehrer ist es sein Job, die Kinder auszubilden.
+Ich zwinkere ihm zu, doch er sieht nicht her.
+Tom glaubt zu wissen, wohin Maria gegangen ist.
+Wenn ein Mensch wirklich sparsam ist, kann er mit einem lächerlichen Minimum von Pflichtgefühl durchs Leben kommen.
+Wenn ich reich wäre, gäbe ich dir Geld.
+Sie verließ die Stadt.
+Was meinst du zu einem Glas Bier?
+Sie hat sich entschlossen zu kündigen.
+Dein Name steht auf der Liste an erster Stelle.
+Eine wahre Liebesgeschichte endet nie.
+Tom arbeitet bei der WHO.
+Keiner weiß, was in der Zukunft passieren wird.
+Ich hatte gedacht, dass viele Leute mit uns zum Wasserski gehen würden, aber nicht einer ist aufgetaucht.
+Ich trage gewöhnlich keine Röcke.
+Wußten Sie nicht, daß Tom gut Französisch kann?
+Ich habe einen Parkplatz gerade vor dem Gebäude gefunden.
+Ich wusste, es würde heute lustig sein.
+Er ist der einzige, der es nicht weiß.
+Komm schon! Spuck’s aus!
+Man fand Tom in nicht ansprechbarem Zustand bei sich zu Hause.
+Tom traf eine weise Entscheidung.
+Als ein Uigure einen Weißrussen traf, welche Sprache haben sie dann miteinander gesprochen?
+Mich duzt Tom; meine Frau aber siezt er.
+Der Weg zum Erfolg ist voll von Frauen, die ihre Männer vorwärtschieben.
+Tom denkt immer noch darüber nach.
+Was hat Tom mit dem ganzen Geld gemacht?
+Ich gab Tom recht.
+Stimmt es, dass du dich beim Direktor beschwertest?
+Tom warf nur einen kurzen Blick auf die Schlagzeilen.
+Wir empfehlen eine Wasserqualitätsuntersuchung bei Leitungswasser einmal im Jahr und, wenn es Brunnenwasser ist, zweimal im Jahr.
+In der Geschichte unseres Planeten gab es Zeiten, in denen er vollständig mit Eis bedeckt war.
+Über deine Untaten könnte ich ganze Bücher schreiben.
+Man hat ihm übel mitgespielt.
+Maria war eifersüchtig, weil Tom so viel Zeit mit ihrer Freundin Conchita verbracht hatte.
+Tom dachte, er träumt.
+Alleinsein ist schön, wenn man allein sein will, nicht, wenn man es muss.
+Wein hat, mehr als Wasser, Menschen ertränkt.
+Wir vertrauen Tom nicht besonders.
+Ich will momentan nicht, dass Tom das erfährt.
+Er hat sich an dem heißen Tee die Zunge verbrüht.
+Morgen geht ihr ins Kino.
+Ich vertrage keine Milch.
+Es ist wichtig, am Verhandlungstisch eine Lösung zu finden.
+Tom hat eine Fensterscheibe im Klassenzimmer kaputtgemacht.
+Er ist dumm wie ein Bund Stroh.
+Ich habe die Angewohnheit, vor dem Frühstück einen Spaziergang zu machen.
+Na gut, nehmen Sie's.
+Sie haben zwei linke Hände.
+Sei höflich und respektvoll!
+Ich habe halt keine Lust.
+Die Strömung ist nicht sehr stark.
+Es ist ein Grad.
+Er versäumt es nie, jeden Tag die Zeitung zu lesen.
+Erzählt uns etwas über euer damaliges Leben!
+Ich kann dir Französisch beibringen, wenn du willst.
+Das Schaubild zeigt, dass ungefähr zwei Drittel der Studienanfänger eine indifferente Einstellung zur Politik haben.
+Sie hat die zulässige Höchstgeschwindigkeit überschritten.
+Auf dem Auto lagen über zehn Zentimeter Schnee.
+Tom bestieg den Berg mit Maria, Johannes und Elke.
+Tom ist in der Waschküche.
+Sie hat den Tag mit ihm zusammen verbracht.
+Wir sind in Gefahr.
+Tom weiß bereits, warum ich hier bin.
+Wir reden nie über Politik.
+Es tut mir leid, dass das Vereinigte Königreich aus der Europäischen Union austritt.
+Das Zimmer ist in einwandfreiem Zustand.
+Wie viele Schüsseln Haferbrei hat Tom gegessen?
+Mein Bruder lebt in der Nähe von Wilna.
+Durch das geöffnete Fenster ist eine Fliege hereingekommen.
+Er war zu beschäftigt, um es zu bemerken.
+Tom wurde durch die Lawine getötet.
+Tom braucht dafür Zeit.
+Der Junge war still.
+Maria hat ihre Kinder um sich.
+Maria sagte, dass sie kein Schweinefleisch isst.
+Es reicht nicht, Reformen anzukündigen und mehr Arbeitsplätze zu versprechen.
+Wo wurde sie veröffentlicht?
+Die Spinne webt ein Netz.
+Ihr solltet alles haben, was ihr braucht.
+Vergiss bitte, was ich geschrieben habe!
+Magst du deinen Körper?
+Schauen Sie in den Himmel!
+Tom wurde von seinen Eltern nicht erlaubt, Harry Potter zu sehen.
+Es tut mir leid, daß ich so gemein war.
+Vielleicht will sie, daß du ihr hilfst.
+Nur du scheinst zu wissen, wie das geht.
+Auf der Welt ist kein anderer so wie sie.
+Die Konferenz findet in dem für diesen Zweck zur Verfügung gestellten Hörsaal statt.
+Ich habe Sie nicht gebeten hierherzukommen.
+Wir sind es leid, daß man uns wie Kinder behandelt.
+Wie hoch ist jener Berg?
+Unser Schiff näherte sich dem Hafen.
+Ich weigere mich, mein ganzes Leben zu arbeiten.
+Auch Enthaltsamkeit hat ihre Grenzen.
+Alles, was Sie sagen, kann vor Gericht gegen Sie verwendet werden.
+Die Philosophie soll nicht die Natur, sie soll sich selbst erklären.
+Tom ist ein Kettenraucher.
+Wir haben Verwandte in Badeseck.
+Ich will nachsehen, wer im Klassenraum ist.
+Nein, ich habe keine Ahnung.
+Ich habe mit Überraschung festgestellt, wie sehr sie ihm verfallen ist.
+Dies ist nicht folgerichtig. Es so zu sehen, wäre falsch.
+Was liegt der Angst zu Grunde?
+Du bist bestimmt müde.
+Sonnabend waren wir im Kino und danach im Restaurant.
+Ihr braucht nur den roten Knopf zu drücken.
+Ich habe dir Nachtisch bestellt.
+Er hatte nicht viel Zeit, um seine Rede vorzubereiten.
+Es gibt keine dummen Fragen, nur dumme Menschen.
+Tom musste auf mich warten.
+Tom fand die Bürotür verschlossen vor.
+Meine Frau ist eine schlechte Autofahrerin.
+Bei der Politik geht es darum, wie man das Volk bzw. die Völker an der Nase herumführen kann.
+Tom begutachtete die Ausrüstung gewissenhaft.
+Die Butter ist ranzig.
+Wenn ich mit den Fingern schnipse, wachst du auf.
+Wenn man nicht gesund ist, dann kann man sich keinen Erfolg erhoffen.
+Ich vermisse meine kleine Schwester.
+Ich kann mir nicht helfen.
+Hast du schon mal im Ausland gearbeitet?
+Mir gefällt es, mit ihm zu sprechen.
+Das ist kein Irrtum.
+Ich hasse dieses Wetter!
+Unser Ziel war die Entwicklung natürlicher Nahrungsergänzungsmittel, die unseren Bedarf an Antioxidantien, Vitaminen, Spurenelementen und Mineralien in entsprechender Menge abdecken.
+Tom ist ein hervorragender Student.
+Ich habe die Prüfung mit knapper Not bestanden.
+Mein Großvater mütterlicherseits mag keinen Kaffee.
+Die Galapagosinseln sind ein Paradies für Naturforscher.
+Ich ärgere mich manchmal über mich selbst, dass ich mich nicht besser auf Englisch ausdrücken kann.
+Was hilft uns überwinden? Die Liebe.
+Ich habe mein Auto komplett zu Schrott gefahren.
+Sollte Tom nicht jemand helfen?
+Maria sagte Tom, sie glaube, Johannes sei enttäuscht.
+Das ist ein Zitat aus „Don Quijote“.
+Wie oft muss ich es euch denn noch sagen?
+Hat dir schon mal jemand gesagt, dass du schön bist?
+Ich muss zugeben, ich bin zum ersten Mal hier.
+Maria isst ungesund, ist aber immer gesund.
+Er ballte seine Faust.
+Du musst dich selber entscheiden.
+Mit wie vielen hast du schon geschlafen?
+Wie viele Male habt ihr das schon gemacht?
+Es überrascht mich, daß Tom dich nie erwähnte.
+Er weiß, worauf er sich einlässt.
+Sie könnten ernsthaft krank werden.
+Die Umfrage zeigt, dass die Lebenszufriedenheit bei Männern und Frauen ähnlich ist.
+Er hat sein Staatsexamen abgelegt und eine eigene Rechtsanwaltskanzlei eröffnet.
+Du kannst hier bleiben, so lange du willst.
+Ich hatte schon langsam meine Zweifel.
+Sie sagten doch, Sie hätten das nicht getan.
+Maria hat sich schnell an die deutsche Lebensart gewöhnt.
+Sie lächeln nicht oft.
+Du weißt, das ist, was ich will.
+Papilio ist ein sehr schönes Wort.
+Tom ist mit dem falschen Fuß zuerst aufgestanden und hat schon den ganzen Tag schlechte Laune.
+Es gibt nun nur noch eine Möglichkeit.
+Man kann die Menschen nur von ihren eigenen Meinungen überzeugen.
+Ich wollte immer ein Baumhaus.
+Ich mache mich mal auf die Suche nach Tom.
+Die Beringstraße trennt Asien von Nordamerika.
+Tom nahm eine Rückfahrkarte nach Boston.
+Katzen sind sehr reinliche Tiere.
+Sie sind schwer bewaffnet.
+Ich glaube, Tom ist eifersüchtig auf dich.
+Sie wollen nicht so lange warten.
+Tom und Maria sagten, dass sie nicht klaustrophobisch wären.
+Kannst du mal kurz warten?
+Ich möchte Gitarre lernen.
+Rufe ein Taxi, das uns fährt.
+Sie verabscheut regnerisches Wetter.
+Ich bin zwar nicht so groß wie mein Bruder, doch größer als mein Vater.
+Tom kam herein und setzte sich aufs Sofa.
+An diesem Tag erinnerte ich mich daran, was ich euch versprochen hatte.
+Ich habe gehört, du hättest Hunger.
+Sie hat ein Auge für das Schöne.
+Was für ein furchtbarer Tag!
+Was wärest du für die Liebe deines Lebens alles zu opfern bereit?
+Wann sind Ihre Handschuhe abhandengekommen?
+Appartements in Tokio sind sehr teuer.
+Möchten Sie wirklich, dass ich Tom Ihren Computer gebe?
+Haben Sie das Schild nicht gelesen?
+Toms Mitbewohner lässt oft schmutziges Geschirr in der Spüle stehen.
+Gestern regnete es, nachdem es lange Zeit trocken geblieben war.
+Tom traf mich unvorbereitet.
+Der Doktor hat ihr Morphin gegeben.
+Ich würde lieber in ein wärmeres Land reisen.
+Manchmal ist es gut, sich selbst herauszufordern und aus seiner Komfortzone herauszutreten.
+Ich habe leider schon etwas anderes vor.
+Laß uns eine rauchen!
+Ich habe Frühstück gemacht.
+So viel ich weiß, nein!
+Habt ihr alles eingepackt, was ihr braucht?
+Wie alt schätzen Sie sie?
+Sind wir auf dem richtigen Weg?
+Die Polizei dementiert damit Gerüchte im Ort.
+Es ist das Beste, für das Schlimmste gewappnet zu sein.
+Von jedem Meisterwerk gibt es eine billige Kopie.
+Ich habe gewisse Bedenken.
+Angela will, dass wir sie Frau Smith nennen.
+Tom hinterließ eine Nachricht, der zufolge er sich verspäten würde.
+Sprich lauter! Opa hört nicht so gut.
+Gerechterweise muss man sagen, dass er einige gute Eigenschaften aufweist.
+Sie war lange Zeit krank.
+„Können wir ein Gespräch führen?“ – „Du kannst mich mal!“
+Du sprichst ja mit mir über nichts. Woher soll ich wissen, was in deinem Kopf vorgeht?
+Ich weiß nicht, wohin ich das hier stellen soll.
+Ich glaube, der Tom steht auf dich.
+Im Radio laufen die neuesten Lieder.
+Bestell ihr Grüße von mir.
+Deine Augen dürfen nicht auf den Boden gucken; schau mich an.
+Sag ihnen, dass sie mich anrufen sollen, bevor sie losgehen.
+Er kann kein Englisch, geschweige denn Französisch.
+Wir haben drei Hunde, einen weißen und zwei schwarze.
+Wollen Sie so liebenswürdig sein, mir zu helfen?
+Können Sie überhaupt schwimmen?
+Tom war schon immer alleinstehend.
+Sie sitzt auf dem Tisch.
+Er erhielt ein Visum, um sein Studium in Frankreich fortzusetzen.
+Ich bin nicht die Besitzerin.
+Beirut ist die Hauptstadt des Libanon.
+Macht die Tür fest zu!
+Möchtet ihr ein Auto?
+Wo du auch hingehst, hat der Himmel überall dieselbe Farbe.
+Habt ihr euch die Zeichnungen angesehen?
+Das kleine Taschenmessser hier ist Gold wert.
+Fallen Ihnen irgendwelche Gründe ein, warum wir das nicht tun sollten?
+Tom und Maria erhoben sich von ihren Stühlen.
+Tom lieh sich ein Buch von Mary.
+Toms Freundin ist Maria.
+Ich hätte meinen Laptop nicht so nah an den Tischrand stellen sollen.
+Wo hast du die Schlüssel das letztemal gesehen?
+Viele junge Leute hören kein Radio mehr.
+Nur zwei der Leute auf diesem Foto leben noch.
+Lehrergehälter sind sehr niedrig.
+Politische Rhetorik ist nichts anderes als Irreführung.
+Er mag Mathematik, aber ich nicht.
+Ich will alles wissen!
+Tom sah auf seine Karten.
+Zuerst einmal werden die Puzzleteile ausgebreitet.
+Ich suche eine möblierte Wohnung in der Nähe des Hauptbahnhofs.
+Tom ist jetzt glücklich, nicht wahr?
+Wie ich, so ist auch er kein Sänger.
+Hallo? Mit wem spreche ich?
+Wir erklommen den Hügel.
+Ich glaube, Tom wird gewinnen.
+Hier ist ein guter Zeltplatz.
+Er hat ein japanisches Auto.
+Es dürfte interessant sein, das zu machen.
+Gehört das nicht Tom?
+Könntest du mir einen Gartenschlauch leihen?
+Niemand will allein sein.
+Ihr Name wird als Absender angezeigt.
+Tom und ich sind wieder beste Freundinnen.
+Sie sehen betrunken aus.
+Ich bin die Stimme dessen, der in der Wüste weint.
+Ich möchte mit Ihnen über morgen reden.
+Sie sagte, es sei wichtig.
+Jeder kann Mitglied werden.
+Haben Sie mich schon vergessen?
+Ich habe viel über die Flora und die Fauna des Nationalparks gelernt.
+Tom ist froh, dass er noch lebt.
+Die Samen wohnen in Nordeuropa.
+Statt über die Nachbarn zu lästern, solltest du lieber Geige üben!
+Das ist bei weitem nicht die beste Option.
+Tom hat seinen Schirm bei Maria im Wagen liegenlassen.
+Die Tabaksteuer soll wieder erhöht werden.
+Warum willst du, dass Esperanto zu einer Lingua franca wird, wenn du dich doch nach wie vor auf Englisch verständigst?
+Er übergab einen Brief.
+Wer sich die Messlatte bis zur Stratosphäre setzt, muss sich nicht wundern wenn die Luft dünner wird.
+Angst zu haben, ist nichts Schlimmes, denn wer sie besitzt, schützt sich vor schrecklichen Dummheiten.
+Wir warten in der Eingangshalle auf dich.
+Ich bin mit Toms Schwester befreundet.
+Er rechnete im Kopf schnell nach.
+Schläfst du in letzter Zeit genug?
+Ich wähle absichtlich die kleinsten Kartoffeln aus. Das verkürzt die Kochzeit.
+Tom muss seine Fehler eingestehen.
+Wo haben Sie Mandarin gelernt?
+Du bist nicht gerade die Bescheidenheit in Person.
+Ich laufe fünf Meilen am Tag.
+Maria wollte Jahrgangssprecherin werden.
+Ich bin es satt, krank zu sein.
+Er war ein großartiger Präsident.
+Wenn ich die Arbeit wechselte, verdiente ich mehr.
+Du hast völlig recht.
+Dass sie für den Eintritt fünfzehn Euro verlangten, kam mir wie eine regelrechte Abzocke vor.
+Ich wünschte nur, ich könnte etwas besser Französisch sprechen.
+Erfolg hat nur, wer etwas tut, während er auf den Erfolg wartet.
+„Ich fahr’ zur Tanke und hol’ Zigaretten.“ – „Bring ’ne Flasche Wodka mit!“
+Führe ein geregeltes und ordentliches Leben, damit du in deinem Werk leidenschaftlich und originell sein kannst.
+Er hat einen ovalen Kopf und eine Glatze – wie ein Ei.
+Er engagiert sich ehrenamtlich.
+Sie trinkt jede Nacht bis zur Bewusstlosigkeit.
+Damit, hier in ein Wespennest zu greifen, hätte normalerweise niemand rechnen können.
+Jeder der drei Jungen bekam einen Preis.
+Der Krieg der Worte geht weiter.
+Es war ein sehr heißer Tag.
+Sie wünscht sich zu ihrem Geburtstag etwas ganz Besonderes.
+Das ist das schlechteste aller Bücher, die ich bisher gelesen habe.
+Mama muss am Nachmittag Wäsche waschen.
+Ich will, dass andere mir zustimmen.
+Es ist ein Anzeichen für ihren Charakter.
+Maria spricht wahrscheinlich gar nicht so gut Französisch, wie du denkst.
+Das ist der Pazifik.
+Hast du davon vielleicht schon gehört?
+Ich glaube nicht, dass Tom und Mary das machen.
+Reicher ist, der Reichtum verachtet, als der, der Reichtum besitzt.
+Takeshi versprach, mir bei den Hausaufgaben zu helfen, aber letzten Endes ließ er mich im Stich.
+Mit wem wollten Sie das tun?
+Jede Jahreszeit hat ihr Gutes.
+Tom ist mit dem Geld abgehauen.
+Die Witwe hatte sich selber das Leben genommen.
+Man sollte sein Versprechen halten.
+Er geht selten ins Kino, wenn überhaupt.
+Man isst kein Korn, das noch nicht reif ist.
+London ist eine der größten Städte der Welt.
+Wir sollten den Bedürftigen beistehen.
+Tom betont beim Sprechen fast jedes Wort.
+Nimm deine Mütze ab, wenn du den Klassenraum betrittst.
+Ich helfe meiner Frau bei der Hausarbeit.
+Tom baut in seinem Garten Tomaten und Salat an.
+Sie hat mit ihm Schluss gemacht, weil sie ihn für einen Trottel hielt.
+In seiner Familie gab es einen Todesfall.
+Ich habe genug von all diesen Apparaten.
+Was ist das für ein Lied?
+Die Bibliothekarin katagolisierte die neuen Bücher.
+Dieses Lied erinnert mich an meinen ersten Liebeskummer.
+Tom spricht etwas Französisch.
+Wählen Sie die Partei, die Ihre Meinung am besten vertritt!
+Sie gaben die Hoffnung nicht auf.
+Tom rannte zurück über die Straße.
+Warum soll ich mich bei Tom entschuldigen?
+Ich bin etwas um die Welt geflogen.
+Gerät man ins Zweifeln, erschwert das immer die Ausführung von Aufgaben.
+Die Schüler müssen während des Unterrichts still sein.
+Wenn du Pech hast, bricht dir der Finger in der Nase ab.
+Ich will Französisch unterrichten.
+Wo immer ein Tier in den Dienst des Menschen gezwungen wird, gehen die Leiden, die es erduldet, uns alle an.
+Ich habe kein Geld, mir ein neues Fahrrad zu kaufen.
+Tom gerät in die Bredouille.
+Tom sagt, es ist heiß.
+Hehe, ich bin völlig unsportlich, also bekomme ich beim Laufen sofort Seitenstiche.
+Tom war äußerst hartnäckig.
+Das ist die Fertigwarenhalle.
+Wirst du unserem Klub beitreten?
+Wollen Sie mich abzocken?
+Tom versucht nur, dir Angst zu machen.
+Wollten Sie mir etwas zeigen?
+Das Brot wird gebacken.
+Wir stehen vor einer schwierigen Entscheidung.
+Meinst du, dass du nicht zu Toms Party gehen willst?
+Früher habe ich keine digitalen Bücher gelesen.
+Welcher Ansicht bist du?
+Das ist ein heikles Thema.
+Es ist dem Rettungsschwimmer nicht gelungen, das ertrinkende Kind zu retten.
+Der Student meldete sich.
+Was ist das Äquinoktium?
+Trotzdem hatte ich Erfolg.
+Macht die Tür zu!
+Kommen Sie doch morgen Nachmittag bei mir vorbei!
+Sein Scheitern ist gewissermaßen auch unser Scheitern.
+Tom erhält eine Auszeichnung.
+Eine Wendeltreppe führt auf die Galerie der Kirche.
+Es gibt keine Rosen ohne Dornen.
+Gib deiner Mutter einen Kuss von mir.
+Ich versuche festzustellen, warum das passiert ist.
+Der beste Weg, einen Satz zu verstehen, besteht darin, ihn zu übersetzen.
+Das Internet verbindet Menschen aus der ganzen Welt.
+Bringen Sie Ihre Kinder mit.
+Wir beginnen mit einer Vorstellungsrunde.
+Eine Brille lässt dich viel klüger aussehen.
+Tom ist fast vollständig genesen.
+Ich schämte mich für meinen Bruder.
+Ich wollte mich bei Ihnen für gestern abend bedanken.
+Das Fenster ist zu.
+Ich habe schon lange keinen Schornsteinfeger mehr gesehen.
+Sand in die Augen streuen.
+Du warst in Berlin.
+Wir haben den Fahrstuhl hinunter in den zweiten Stock genommen.
+Das Brot ist noch warm und weich.
+Bist du mit den Ergebnissen zufrieden?
+Es sieht aus, als wollte der Hund etwas zu fressen haben.
+Wir wissen, dass du nicht Tom heißt.
+Wir haben uns an die neue Situation angepasst.
+Ich halte es nicht aus, ohne etwas zu machen. Ich werde mal ein Mittagsschläfchen machen.
+Ich werde mich ausruhen.
+Wir lieben es, traditionelle kabylische Lieder zu singen.
+Es war einmal ein stiller Wald.
+Tom hat das eigentlich gar nicht gemacht.
+Geh weg. Ich will dich nicht sehen.
+Sein Glück währte nicht lang.
+Du solltest den Rat der Ärztin befolgen.
+Kinder spielen auf der Wiese Krieg.
+Mir gefällt das Tatoeba-Logo.
+Welche Sprache spricht man in Australien?
+Welche Art von Musik mögen Sie?
+Morgens und abends sind zu viele Autos auf den Straßen der Hauptstadt unterwegs.
+Tom fand seine Brille nicht.
+Woher wußten Sie, daß Tom nicht in Boston sein würde?
+Eine Ader ist in seinem Gehirn geplatzt.
+Der Programmierer konnte den Fehler nicht ausfindig machen.
+Er starb aus Mangel an Sauerstoff.
+Ohne dich bin ich verloren.
+Ich möchte, dass Sie einen Arzt aufsuchen.
+Er hat sich noch nicht einmal von mir verabschiedet.
+Du kannst ihn um Hilfe beten.
+Habt ihr nie das Innere eines Mauerseglernests mit Mauerseglerküken drin gesehen?
+Sie brauchte ein Stück Seife auf.
+Schafft ihr es, vor Ostern alle zu entfernen?
+Ich habe einen botanischen Garten.
+Nach dem Tod kommt das Nichts.
+Tom ist ihr Exmann.
+Früher hat man Bücher mit der Schreibmaschine geschrieben.
+Ich kriege diese Melodie nicht mehr aus dem Kopf.
+Der Mann entspricht der Beschreibung.
+Probieren Sie das jetzt aus!
+Glaub nicht alles, was du hörst.
+Sagen Sie mir, wie Sie darüber denken.
+Das bewirkt gewöhnlich nur das Gegenteil.
+Tom sang Maria ein Geburtstagsständchen.
+Wir müssen die Überzeugungen Andersdenkender akzeptieren lernen.
+Eine Fahrkarte hin und zurück nach York bitte.
+Tom wollte sich selbst beweisen, dass er es konnte.
+Ich habe mir ein Hybrid-Auto gekauft.
+Gib mir das grüne Buch.
+Der Lehrer hat mir erlaubt, früher nach Hause zu gehen.
+Tom scheint nie schlafen zu wollen.
+Mein Name ist für Erdlinge unaussprechbar, aber ihr dürft mich Tom nennen.
+Tom wurde sehr nervös, als er plötzlich gebeten wurde, eine Rede zu halten.
+Warum sitzt du auf meinem Stuhl?
+Er hat sich das selbst beigebracht.
+Die russische Sprache ist ein großes Wunder. Es scheint, dass dieses Wunder einfach zu groß ist für meinen kleinen Kopf.
+Maria sagte Tom, sie glaube, Johannes sei tot.
+Ich mache nie mein Bett.
+Ich sagte ihm nicht, was du in diesem Brief geschrieben hattest.
+Ich denke, du kannst uns helfen.
+Er braucht ein scharfes Messer.
+Ist dein Mann zu Hause?
+Natur ist schön, Kunst ist schön, beides gehört zusammen.
+Alles hat sich zum Besten gewendet.
+Vielleicht steht in einem dieser Bücher, was du wissen willst.
+Ich bin Toms Lehrerin.
+Je schöner und voller die Erinnerung, desto schwerer ist die Trennung.
+Suche keine gute Gegend; suche einen guten Nachbarn!
+Das war sehr lustig, und wir haben sehr viel gelacht.
+Tom hat das Problem noch nicht einmal mit Maria besprochen.
+Die Angelegenheit scheint gelöst zu sein; eine Sache lässt mir aber keine Ruhe.
+Sie erwarteten alle sehnsüchtig die Ferien.
+Tom fing an, Müdigkeit zu verspüren.
+Tom ist stark entschlossen, das Projekt zu Ende zu führen.
+Lass dich nicht durch Äußerlichkeiten täuschen.
+Sie ist klein und dick.
+Tom, habe ich dich verärgert?
+Ich spiele oft Volleyball.
+Leute, die finden, man solle sich nicht wegen Kleinigkeiten aufregen, haben noch nie eine Fliege im Schlafzimmer gehabt.
+Maria musste nicht lange überzeugt werden.
+Ich denke oft an euch.
+Er ist bekannt wie ein bunter Hund.
+Ich habe dir etwas sehr Wichtiges zu sagen.
+Toms Hund muss nach draußen.
+Tom wollte seinen Fehler nicht zugeben.
+Ich sehe, du bist soweit.
+Das weckt meine Neugier.
+Ich werde den Hund waschen.
+Hast du meine Schlappen eingepackt?
+Der Kaiser steht vor schweren Entscheidungen, die möglicherweise Krieg bedeuten.
+Die Aufgabe eines Arztes besteht darin, Patienten zu behandeln.
+Tom singt alle Lieder und Maria mag seine Songs.
+Tom musste nicht lange warten.
+Die Wände sind sechzig Zentimeter dick.
+Ich kaufe für meinen Liebsten ein.
+Ich verstehe euch schlecht.
+Da wo Furcht ist, da ist auch Ehre.
+Ich habe das Auto gekauft.
+Sie sprechen mit ihr.
+Wie heißt Ihre Tochter?
+Maria sagte Tom, dass sie glaube, Johannes sei unvorbereitet.
+Sie werden dort auf jeden Fall glücklich sein.
+Es ist eine neue, vollständig überarbeitete Ausgabe der Enzyklopädie erschienen.
+Du hast tatsächlich Recht.
+Alle haben an Ansehen und Vertrauen verloren: Der Amtsinhaber, das Amt selbst sowie die Medien.
+Er zeigt keine Anzeichen von Einschüchterung.
+Pump mal wieder das Hinterrad von deinem Fahrrad auf!
+Wenn Sie einmal angefangen haben, müssen Sie auch weitermachen.
+Er hat wahrscheinlich schon eine Freundin.
+Weil ich sie liebte, heiratete ich sie nicht.
+Tom drehte sich plötzlich um.
+Dumm wird man nicht, dumm bleibt man.
+Kaffee wirkt bei mir nicht. Ich bin immer noch müde, wenn ich ihn getrunken habe.
+Warum bist du zur Arbeit gekommen, wenn du krank bist?
+Tom hat die Frist versäumt.
+Tom hat mich nie vergessen.
+Haben Sie sich entschieden, ob Sie Ihr Haus verkaufen oder nicht?
+Was aus Liebe getan wird, geschieht immer jenseits von Gut und Böse.
+Ibiza ist wahnsinnig teuer.
+Ich bin nicht hergekommen, um mir Blödheiten anzuhören.
+Du hättest gestern Abend kommen sollen.
+Tausend Wege führen zum Irrtum, ein einziger zur Wahrheit.
+Wo sind meine Zigaretten geblieben?
+Ich kann überhaupt nichts sehen.
+Jeder hält sein Kupfer für Gold.
+Dieses Buch gehört Tom.
+Meine Mutter ist die schönste Frau der Welt!
+Ich wusste, dass Du die Latte wieder so hoch legen würdest.
+Ich weiß nicht, was du hören willst.
+Wann wurde dein Haus gebaut?
+Behalte ihn im Blick!
+Tom vergisst nie, seine Mutter an ihrem Geburtstag anzurufen.
+Jeder, der geheimnisvoll von seinem Vorhaben spricht, stimmt seine Mitmenschen ironisch.
+Er hat mir nachspioniert.
+Musik ist eine Sprache, in der man nicht lügen kann.
+Meine Vermutung ist dahingehend, dass das erste Kind deiner Tochter ein Mädchen sein wird.
+Es gibt Menschen, die auf heißen Kohlen gehen können.
+Huch, ist es normal, da einen Fehler zu machen?
+Was willst du, dass geschehe?
+Messi setzte mit dem linken Fuß einen Abstauber in die Maschen.
+Mein Laserdrucker braucht eine neue Patrone.
+Die Jungferninseln sind ein Archipel im Atlantik.
+Sie verspätet sich kaum bei Verabredungen.
+Er hat kein Fieber mehr.
+Schon in vielen Wohnungen gibt es eine Maus — neben dem Computer.
+Ich brauche kein Essen im Restaurant.
+Es war kein Wind.
+Das ist sehr lieb von euch.
+Es ist doch lächerlich, wie du dich benimmst!
+Körper halten Seelen gefangen.
+Gute Nachricht aus der Küche: Nicht alles ist verbrutzelt.
+Ich habe ein neues rotes Auto.
+Wir werden bald abreisen.
+Sei gut — aber sei nicht umsonst.
+Ruft Tom oft seine Eltern an?
+Ich wünsche euch alles Gute.
+Er hat anscheinend in ein Wespennest gegriffen.
+Ihr habt alles richtig gemacht.
+Die Probleme, die deine Frau hat, sind die gleichen, wie sie meine hat.
+Sie beleidigten sich gegenseitig.
+Jeder Mensch hat einen Vater und eine Mutter.
+Mein Mann liest immer im Bett.
+Wir haben die besten Ideen.
+Kann ich Sie bitten, das Fenster zu schließen?
+Du solltest bei der Klausur auf keinen Fall schummeln.
+Tom wäre sehr enttäuscht, wenn er dich dabei sähe.
+Ich spreche gar nicht so gut Französisch, wie Tom und Maria meinen.
+Warum machst du das nicht so wie Tom und Maria?
+Wir versinken nicht in tödlicher Langeweile.
+Du musst etwas wissen.
+Sie hat ungefähr so viele Briefmarken wie ich.
+Ich bin echt stolz auf meine Studenten.
+Treffen Sie mich dort in einer Stunde!
+Ich möchte nicht, dass du gehst.
+Du hast gewiss recht.
+Tom und Mary saßen an einem kleinen Tisch im Garten und spielten Schach.
+Ich habe nicht vor, dich um Erlaubnis zu fragen.
+Tom stieß sich den Kopf.
+Du bist wirklich ein netter Mensch!
+Die Türken drücken ihre Dankbarkeit für erhaltene Speisen mit dem Spruch „Gesundheit für deine Hände“ aus.
+Tom hat nie erfahren, wie reich Marie ist.
+Wieviel Kilo habt ihr eigentlich abgenommen?
+Das sind leere Worte.
+Du bist nicht mehr so jung wie früher.
+Wir bitten um Nachsicht.
+Tom möchte nur reden.
+Nur jede zwanzigste Frau fragt: „Willst Du mich heiraten?“
+Delphine sind sehr intelligente Tiere.
+Hausaufgaben zu machen, ist extrem langweilig.
+Man muss viele Frösche küssen, bevor man einen Prinzen findet.
+Eure Mannschaft ist stärker als unsere.
+Der kleine dicke Mann lachte nicht.
+Ehrlich gesagt ist mir das völlig egal.
+Im Sommer wohnen wir auf dem Land.
+Ich habe den Brief für Tom ins Französische übersetzt.
+Bei diesem Wörterbuch kommt die Aussprache direkt nach dem Stichwort.
+Da dies nun gesagt ist, können wir beginnen.
+Können wir uns das leisten?
+Bitte melden Sie sich bei mir, wenn Sie nach Boston kommen!
+Ich werde mich persönlich darum kümmern.
+Plato glaubte, das Universum bestehe aus Dreiecken.
+Er sieht immer fern.
+Da sind viele Blaubeeren.
+Sie erklärte ihre Vorstellungen mit Zeichnungen.
+Sprechen Sie über etwas anderes!
+Das Mädchen sieht den Jungen.
+Es hat wieder angefangen zu regnen.
+Tom weiß nicht, wie viel Zeit ich dafür aufgewendet habe.
+Tom glaubt nicht, dass Maria Angst hat.
+Mein Portemonnaie ist verschwunden.
+Thomas sitzt nur untätig auf der Veranda herum.
+Genau danach hatte er gesucht.
+Wer wird Karls Tod rächen?
+Tom hat ein sehr freundliches Lächeln.
+Ich versprach ihnen hundert Griwna im Jahr.
+Mir geht es von Tag zu Tag besser.
+Ich schreibe fast jeden Tag.
+Es würde mich überraschen, wenn Tom und Maria heirateten.
+Ich schlafe normalerweise in einem Bett.
+Vielleicht kann ich das reparieren.
+Tom hat keinen Moment gezögert.
+Einem Kameraden hilft man. Einem Kollegen misstraut man. Mit einem Freunde ist man albern
+Sind Sie mit mir fertig?
+Wie schön, dass es Ihnen gefallen hat.
+Da können wir nicht mehr helfen.
+Tom weiß nicht, wann Mary vermutlich kommen wird.
+Sie sind in Ohnmacht gefallen.
+Überlassen Sie das uns!
+Wir hatten viel Schnee letztes Jahr.
+Sie haben die Löhne Ihrer Mitarbeiter erhöht.
+Italien und Spanien sind von dem Ausbruch besonders schwer getroffen worden.
+Einen kleinen Moment bitte.
+Das würde wirklich einen ernsthaften Verkehrskollaps verursachen.
+Zwang erzeugt keine Liebe.
+Schau, was sie tun.
+Ich sehe darin kein Problem.
+Ich fing an, Englisch zu lernen.
+Die Lächerlichkeit tötet mehr als jede Waffe.
+Werden Sie mir Französisch beibringen?
+Dr. Mae Jemison war die erste Afroamerikanerin im All.
+Du kannst eines von diesen auswählen.
+Tom und Mary sind nicht zu Hause.
+Yanni sollte das nicht für selbstverständlich halten.
+Diese Version ist mir lieber.
+Ich fand es ziemlich gut.
+Es verletzte Tom, die unverblümte Wahrheit zu hören. Er sprach danach mit Maria kein Wort mehr.
+Wie schnell können Sie Fahrrad fahren?
+Meine Mutter backt am Wochenende immer Brot und Kekse.
+Bewaffnete Polizisten führten Tom aus dem Gerichtssaal.
+Tom ging zu weit.
+Tom und Maria bewahrten die Ruhe.
+Ich war mit meiner Familie zelten.
+Ich glaube, ich weiß, wie ich das wieder hinkriege.
+Ich habe einen Helfer.
+Sie ist gestern den ganzen Tag zu Hause geblieben.
+Lassen Sie die Kühlschranktür nicht offen!
+Wie kam es zu dem Flugzeugabsturz?
+Wann bist du das letzte Mal wütend gewesen?
+Tom war etwas angetrunken.
+Die Stadt hat sich entschieden, die Trambahn abzuschaffen.
+Allzu schwer sollte das nicht sein.
+Ich könnte dich nicht umbringen.
+Sagen Sie mir, was Sie wollen.
+Das gibt es doch gar nicht!
+Wer kann mir erklären, was ein Hypothekenkredit ist?
+Angesichts der internationalen Kritik haben mehrere Länder aufgehört, Wale zu fangen.
+Frauen können es nicht erwarten, etwas zu erfahren.
+Ich weiß schon nicht mehr, wie viele Leute da waren.
+Verleih dein Geld und verlier deinen Freund.
+Wie viele Eier hat Mama gekauft?
+Biologie ist mein Lieblingsfach.
+Frauen schlafen mehr als Männer.
+Der Gefangene ist verrückt geworden.
+Ein origineller Schriftsteller ist nicht derjenige, der niemanden nachahmt, sondern derjenige, den niemand nachahmen kann.
+Die Klausurbögen sofort abgeben!
+Ich warte hier auf Tom.
+Du brauchst nicht auf Tom zu warten.
+Ich glaube, die Menschheit wird untergehen. Diesmal ist wirklich alles aus.
+Tom verschachert sein Haus in klingende Münze.
+Tom wird bestimmt unvorbereitet sein.
+Tom muss vorsichtig fahren, weil die Straßen vereist sind.
+Warum bist du immer so ungeduldig?
+Tom gab seiner Frau einen Abschiedskuss.
+Kommst du ohne ein englisches Wörterbuch aus?
+Es erscheint mir, dass du an etwas anders gedacht hast.
+Im Kreuzverhör verlor der Zeuge völlig die Fassung. Er begann zu faseln und sich zu widersprechen.
+Niemand sagte mir, was ihr in diesem Brief geschrieben hattet.
+Ich trug meine besten Kleider.
+Ich bürste mir das Haar.
+Ihr müßt dafür bezahlen.
+Du könntest wenigstens so tun, als würde dich das interessieren, was ich sage.
+Ist das wirklich alkoholfreies Bier?
+Ich habe einen guten Job gefunden.
+Tom ist aus seinem Koma nie erwacht.
+Ich habe beschlossen, zu Fuß zu gehen; zum Glück ist es nicht weit von hier.
+Der Redner spricht so laut, als wenn ihn niemand hören würde.
+Ich fragte Tom, was er täte.
+Dem Spieler gelang ein glänzender Wiedereinstieg.
+Ich wünschte, Tom wäre mitgekommen. Du nicht auch?
+Mein Plan ist besser.
+Lesen Sie diese Bücher!
+Entschuldige! Ich war am Tagträumen.
+Jeder hat das getan.
+Sieht nicht so aus, als wär Tom grad da.
+Sie ist außer Haus auf Kyūshū.
+Sie hörten auf, sich zu küssen.
+Oh, ich habe diesen Film gesehen! Der Gärtner ist der Mörder.
+Es war ein Unfall.
+Hat jeder eine Kopie der Tagesordnung erhalten?
+Hier gibt es so viele Toms, dass man nie weiß, von welchem gerade gesprochen wird.
+Ich will auch nach Boston.
+Die gewaltigsten und bekanntesten ägyptischen Grabdenkmäler sind die Pyramiden, deren Abmessungen den Betrachter in Erstaunen versetzen.
+Wenn mein älterer Bruder hier gewesen wäre, hätte er gewusst, was zu tun ist.
+Toms Art zu reden nervt mich.
+Kleinstpartikel sind mit bloßem Auge schwer zu sehen.
+Tom stieg in Maries Auto ein.
+Bist du schon mit allem fertig? So schnell?
+Sag Tom, wo er die Koffer abstellen soll.
+Was für ein Buch ist das?
+Es ist schwer. Aber wir schaffen das!
+Ich habe Bock auf einen Kaffee.
+Ich war der Letzte, der sie gesehen hat.
+Ich verstehe es selbst nicht.
+Ein Herr Sato kam, während Sie weg waren.
+Sehen Sie die goldene Kette?
+Hätten Sie etwas dagegen, wenn ich die Tür schlösse?
+Der Film wird in drei Tagen abgedreht sein.
+Lisa hat einen deliziösen Schokoladenkuchen gebacken.
+Von den Bäumen herabzukommen war ein Fehler.
+Seit der Hochzeit leben sie glücklich zusammen.
+Sie hat sich durchgesetzt.
+Der Einsame erfreut sich am Beobachten von Ameisen.
+Tom und Maria scheinen sich gegenseitig zu ignorieren.
+Ich habe viele moderne Schriftsteller gelesen.
+Danke für die Nachfrage, Tom.
+Es gibt eine riesige Auswahl an Schachcomputern auf dem Markt, für Spieler aller Spielstärken.
+Das kann einen ganz schön verunsichern, was?
+Wann bist du das letzte Mal getaucht?
+Ich hätte gerne, dass du mir meine Haare schneidest.
+Besucher werden üblicherweise gebeten, ihre Schuhe auszuziehen, bevor sie ein japanisches Haus betreten.
+Ich habe das Rätsel gelöst.
+Wie kam es zu diesem Unfall?
+Im Wettkampf holt er alles aus sich heraus.
+Maria sagte Tom, dass sie glaube, dass Johannes beschäftigt sei.
+Ist dies ein Traumbild oder ein Trugbild?
+Ich wollte, Tom hörte mit der Trällerei auf!
+Wir müssen uns daran gewöhnen, das zu tun.
+Wann können wir uns wieder treffen?
+Ich will einen echten Job bekommen.
+Die alte Dame lebt alleine in dem Haus mit den vielen Gemächern.
+Du hast gesagt, du hättest keine Zeit.
+Sie beschlossen, eine Brücke zu bauen.
+Kommt und unterstützt mich!
+Tom wusste nicht, wie alt Maria war.
+Es ist ganz allein meine Schuld.
+Es ist mir egal, was Sie damit tun.
+O je! Das Kindchen hat aufgestöhnt.
+Kirschblüten wehen von den Bäumen.
+Er hat seine eigenen Nachforschungen angestellt.
+Tom will sein Fahrrad blau streichen.
+Eine Frau entscheidet selbst, wer sie erobern wird.
+Das passiert immer öfter.
+Unser Hund ist fast unters Auto gekommen.
+Es gehört sich nicht, jemandem, der gerade spricht, ins Wort zu fallen.
+Letzte Nacht aß ich zwei grüne Äpfel und eine Schale grüne Trauben.
+Zurückkehren bringt meistens nichts, nach vorne gucken, dort steht das Glück.
+Der Hund war eifrig damit beschäftigt, seinen Knochen im Garten zu vergraben.
+Wo haben sie sich in den vergangenen drei Monaten aufgehalten?
+Ich habe Angst hineinzugehen.
+Wann hast du das gemacht?
+Ich sagte nichts, wodurch er noch wütender wurde.
+Ich werde den Bedürftigen helfen.
+Wann soll ich es liefern?
+Sie liebt ihren großen Bruder.
+Freundschaft ist nicht nur ein köstliches Geschenk, sondern auch eine dauerhafte Aufgabe.
+Es war grausam von ihm, seinen Hund zu schlagen.
+Tom ist recht jung.
+Dieses Gebäude gehört zum UNESCO-Weltkulturerbe.
+Die Sicherung ist wahrscheinlich rausgeflogen.
+Die Zähne und Krallen des Monsters waren rasiermesserscharf.
+Tom dachte, dass Perlhühner fliegen können.
+Die Sexualität ist eine Privatsache.
+Leute spielen in der Nähe des Strandes.
+Die Regierung macht das Land kaputt.
+Du kriegst das hin!
+Man braucht keinen großen Hauptsitz.
+Selten wirst du einen Menschen finden, der bei geöffneten Türen ruhig leben könnte.
+Die Übersetzung ist unmöglich.
+Sind Sie mit der Aufgabe fertig?
+Er war mit seinem neuen Wagen zufrieden.
+Was wolltest du schon immer mal lernen?
+Obwohl er gerade erst angefangen hat, Chinesisch zu lernen, kennt er schon viele Schriftzeichen.
+Wann wirst du endlich damit aufhören?
+Als ich meinen Freund besuchte, hatte er seinen Koffer schon gepackt.
+Mit dir ist jeder Ort ein Paradies.
+Bei der Limburgerherstellung kommen die gleichen Bakterien zum Einsatz, die beim Menschen Fußgeruch verursachen.
+Rieche mal an dieser Milch! Glaubst du, die ist schlecht?
+Sie sehen uns nie.
+Tom liest immer wieder, was er schreibt.
+Der Mann ist aus der Stadt entkommen.
+„Regnet es?“ – „Nein. Es schüttet.“
+Es war nicht mein Schicksal, aber ich habe es bis zum Schluss gelebt.
+Ich kann Tom nicht einfach ignorieren.
+Noch blinder als ein Blinder ist, wer nicht sehen will!
+Ich habe vergessen, ihr etwas zu sagen.
+Soweit möglich, arbeite ich nicht am Wochenende.
+Ich finde es seltsam, dass du das seltsam findest.
+Der Arzt riet Maria, Sport zu treiben.
+Wählen Sie ein leicht zu merkendes, aber schwer zu erratendes Paßwort.
+Bist du beschäftigt, vergehen die Tage schnell.
+Tom ist einer von Marias besten Freunden.
+Hast du irgendwelche japanische Zeitschriften?
+Ich habe einen Hamster.
+„Ist hier noch ein Platz frei?“ – „Sicher, setz dich, Tom!“
+Tom schlief mitten während des Filmes ein.
+Für mich schaust du nicht krank aus.
+Von wo aus fährt der Bus ab?
+Es heißt, Golf ist in Japan extrem beliebt.
+Wir müssen Europa wieder einen einen klaren und mobilisierenden Sinn geben, so dass die institutionelle Dynamik weniger belastet voranschreiten kann.
+Tut es weh, wenn ich hier Druck ausübe?
+Woher stammt diese Idee?
+In meiner Kindheit gab es keine Computer.
+Ich habe es falsch verstanden.
+Ist sie ein guter Mensch?
+Tom meinte, Maria müsse das noch erledigen, bevor sie gehe.
+Ich habe eine Liste von Dingen aufgestellt, die ich gerne kaufen möchte.
+Das Wetter ist grau draußen.
+Seid ihr schon wach?
+Das Substantiv nennt man im Deutschen Hauptwort.
+„Nächstesmal ...“ – „Ein nächstes Mal wird es nicht geben.“
+Ich unterscheide drei Stufen der Wahrheit: die einfache Wahrheit, die reine Wahrheit und die lautere Wahrheit.
+Sie bindet uns einen Bären auf.
+Im allgemeinen sind die Bösen die besseren Rollen. Da kann man sich ausleben.
+Sie haben die Passanten angehalten.
+Ich mag Tom wirklich.
+Tom müsste eigentlich längst hier sein.
+Das kann nicht Ihr Ernst sein!
+Du bist ohnmächtig geworden.
+Einen guten Morgen an alle, sagte sie fröhlich.
+Habe ich euch versprochen, das zu tun?
+Wen interessiert denn heute noch die Maifeier?
+Dieser Flug geht ohne Zwischenlandung nach Tōkyō.
+Ich mag es, allein zu sein. Nie begegnete mir ein Mensch, dessen Anwesenheit ich mehr mag als die Einsamkeit.
+Das Kochen obliegt allein ihr.
+Tom sollte man nicht vertrauen.
+Trägt Tom denn nie eine Armbanduhr?
+Eine Sache gewinnt oder verliert durch den Mann, der sich für sie einsetzt, auch ein Gedanke und eine Meinung.
+Elin klettert wie eine Eidechse.
+Es bringt nichts, darüber zu diskutieren.
+Man kann mit Fug und Recht behaupten, er sei ein vom Glück begünstigter Mann gewesen.
+Sie hat eine rote Blume.
+Ich habe ihm einen Pullover gestrickt.
+Wann fängst du an, deine Bibliografie zu schreiben?
+Ich habe Sie kreischen gehört.
+Ich dachte, du würdest danach fragen.
+Eine Wespe hat ihn gestochen und er reagierte allergisch.
+Ich habe den Namen des Designers nicht richtig verstanden.
+Tom ist nicht konservativ.
+Ich weiß, was Tom euch angetan hat.
+Ich werde dir zeigen, dass man aus seiner Asche wiederauferstehen kann.
+Er fragte, ob er reich sei.
+Es ist eine ziemlich große Nummer.
+Nicht in meinem Garten.
+Tom lernt ein Gedicht auswendig.
+Tom schläft unter einem Baum.
+Wieviel habt ihr am allerlängsten mal geschlafen?
+Der Fluss übertrat sein Ufer und schwemmte die Fahrzeuge fort.
+Die Ungeimpften sollen eine Gefahr für die Geimpften darstellen? Was für eine denn?
+Dan konnte die Geiseln nicht retten.
+Reich mir bitte das Wörterbuch.
+Ich meine, dich schon mal gesehen zu haben.
+Ich mag die frische Luft.
+Hättest du Appetit auf ein Stück Kuchen?
+Gibt es noch größere Möhren?
+Ich bin länger geblieben, als ich vorher gedacht hatte.
+Kannst du dieses Wort deklinieren?
+Ich habe Sie vor Tom gewarnt, oder?
+Du fühlst dich depressiv?
+Komm schon! Ich fahre dich nach Hause.
+Er wird in zehn Minuten zurückkommen.
+Manche Leute sind einfach keine großen Leuchten.
+Wir müssen eine passende Person für jeden Posten auswählen.
+Ich möchte hier in der Nähe ein bisschen shoppen gehen.
+Ich war zu müde, um weiterzumachen.
+„Von wem sind diese Kleider?“ — „Sie sind von Nabila.“
+Der Polizeihubschrauber kann alles sehen, was Sie im Auto tun.
+Es sollte drin sein.
+Heute nacht werden wir die Sau rauslassen.
+Ich werde diesen Schrank ausräumen, damit du ihn verwenden kannst.
+Tom hatte keine Ahnung, warum alle lachten.
+Nur weil ein Satz einem Muttersprachler gehört, muss dieser noch lange keine natürliche moderne Alltagssprache sein.
+So kümmerte sich der Hauptmann um ihn.
+Seine Reaktion ist völlig unvorhersehbar.
+Ich verliere die Geduld.
+Bleiben Sie bitte noch angeschnallt sitzen.
+Ich bin unterwegs zum Bahnhof.
+Die Post ist da!
+Ich mag Mathe am wenigsten.
+Tom ist mir böse, oder?
+Ich habe gerade die Teller gewaschen, und jetzt muss ich den Müll hinausbringen.
+Schnallen Sie sich bitte an, und halten Sie sich an das Rauchverbot, bis das Signal erlischt!
+„Haben Sie Erfahrung damit, wie man Spaghetti macht?“ – „Nein. Wozu auch? Die gibt’s ja fertig zu kaufen.“
+Erfolg ist das Gefährlichste aller Rauschgifte.
+Das Fleisch war zart.
+Diese Arbeit kann ich ganz gut alleine machen.
+Wir fahren zum See, um dort mittagzuessen.
+Ihr müßt euch ein bißchen öffnen.
+Weißt du nicht, was du setzen sollst – einen Gedankenstrich, einen Doppelpunkt oder ein Komma –, so setze einen Punkt.
+Mutter ging im Kaufhaus einkaufen.
+Ich war gerade beim Essen, als ihr mich angerufen habt.
+Heiterkeit ist die beste Förderin der Gesundheit und tut dem Geist ebenso wohl wie dem Körper.
+Madame de Pompadour war eine Förderin der Künste.
+Ich habe gerade eine Entscheidung getroffen.
+Manche gingen zu Fuß, manche fuhren mit dem Rad.
+Dieses Mal ist es nicht anders.
+Der Kuchen ist noch im Ofen.
+Ich habe Geschichte unterrichtet.
+Ich ginge dieses Risiko an eurer Stelle nicht ein.
+Herrschte Frieden in der Welt, hätten die Menschen ein besseres Leben.
+Tom plant eine Europareise.
+Tom gibt nicht nach.
+Meine Eltern sind am Leben.
+Dein unschuldiges Getue täuscht mich nicht.
+Glauben Sie, dass Sie klarkommen?
+Brauordnungen waren im Mittelalter weit verbreitet.
+Hattest du schon Mittagessen?
+Vorsicht, stoß dich nicht!
+Wir segeln nach Dänemark.
+Die Häuser entlang der Küste sind sehr teuer.
+Tom kam an dem Tag an, als Maria fortging.
+Wie bereiten Sie Couscous zu?
+Ich werde mich beim Direktor beschweren.
+Es kommt geradewegs auf mich zu!
+Versuche doch mal, Verständnis zu zeigen.
+Die Unrast des Tausendfüßlers tangiert die Langlebigkeit des Karpfens nicht.
+Ich brauche nichts zu bezahlen. Ich habe einen Freifahrschein.
+Lettische Mädchen gehören zu den besten Mädchen auf der Welt!
+Dein Vorschlag klingt gut.
+Geht der Weg über das Gebirge, nimm ein altes Maultier! Vielleicht trägt es dich nicht, aber es kennt den Pfad.
+Der Autor des Essays führt uns auf fesselnde Weise durch das Leben und Werk des Dichters.
+Er hat mehr Bücher, als er jemals lesen kann.
+Tom arbeitet unter der Woche als Bankangestellter und am Wochenende als Teilzeitrettungsschwimmer.
+Mike nannte seinen Hund Spike.
+Ich habe nicht so viel Erfahrung wie Sie.
+Ich werde für dich zahlen.
+Er sollte den Brief per Einschreiben schicken, um sicher zu gehen, dass er ans Ziel gelangt.
+Das sieht großartig aus!
+Alle klatschten am Ende des Konzerts.
+Tom war siebzehn, als er arbeiten ging.
+Hört auf, so emotional zu sein!
+Alexander denkt noch an die gute alte Zeit.
+Maria möchte ihr Kind stillen, aber sie hat nicht genug Milch.
+Du bist ein bisschen spät!
+Tom ist flachgelegt worden.
+Er sagte, dass er müde sei und deswegen früher nach Hause gehen möchte.
+Ich habe gerade eine schlechte Entscheidung getroffen.
+Maria schob sich die Sonnenbrille oben auf den Kopf.
+Es war schwierig für sie, zur Insel zu gelangen.
+Erzählen Sie mir etwas über sie!
+Die Mädchen saßen einander gegenüber.
+Ich spreche ein wenig Niederländisch.
+Wenn ich auf dem Bett liege und lese, schlafe ich unweigerlich ein.
+Das ist der Grund seines Scheiterns.
+Darauf werde ich bestehen.
+Was du für schöne Augen hast!
+Tom ist ein schlaues Kerlchen.
+Du bist der einzige Mensch, der mich jemals nach zehn Uhr abends anruft.
+Jede Konversation beinhaltet die Kodierung und Dekodierung von Information.
+Wir haben die Pflicht zu helfen.
+Ich hätte gerne eine genaue Ortsbeschreibung.
+Ich bin Toms Exfreundin.
+Habt ihr an eurer Schule eine Bücherei?
+Der Hund gehorcht nur mir.
+Ich mag türkische Musik.
+Wir erfüllten getreulich die Verträge und die Versprechen.
+Kennst du den Unterschied zwischen Liebhaberei und allerlei Liebhaber?
+Ich verreise gerne nur mit meiner Frau, ohne irgendjemanden sonst.
+Mach bitte die Tür zu! Was ich sagen will, geht die anderen nichts an.
+Auf der Basis unserer langjährigen Erfahrung haben wir eine nachhaltige ökologische Konzeption ausgearbeitet.
+„Wie kommst du hier rein?“ – „Die Küchentür stand offen. Sehr leichtsinnig in diesen Zeiten!“
+Was essen Sie gerne?
+Wir müssen herausfinden, wo es ist.
+Es tut mir schrecklich leid, daß ich dich zum Weinen gebracht habe.
+Kannst du mir zeigen, was du gestern gekauft hast?
+Geht nicht weg! Bleibt hier bei mir!
+Die Woche fängt gut an, sprach der Zimmermann - da hieb er sich den Daumen ab.
+Diese Theorie ist für mich ein Buch mit sieben Siegeln.
+Bist du immer noch wach? Du musst doch morgen wieder früh raus, oder?
+Tom wollte allein gelassen werden.
+Denken Sie, daß Tom heute abend mit uns zusammen essen wird?
+Niemand bekommt die Haustüre auf.
+Er leugnete diese Tatsache.
+Ich lebe an einem ziemlich warmen Ort.
+Ich glaube nicht, dass Tom und Mary viel über Sport wissen.
+Bitte richten Sie dem Koch unser Kompliment aus!
+Ein Hungriger entdeckt mehr als hundert Juristen.
+Am Samstag betrinken wir uns.
+Dieser Mann ist in Panik.
+Ich bin dreiundneunzig Jahre alt.
+Das ist sehr schwer zu verstehen.
+Auf dem Etikett meines Schales steht: "Auf links waschen und bügeln." Ich bin neugierig, wie ich das machen soll.
+Kauf dir einen Beziehungsratgeber!
+Die kleine Holzhütte badete im Mondlicht.
+Pass auf Taschendiebe auf!
+Das war die Antwort, die ich wollte.
+Ihr müßt nach Hause kommen.
+Da π transzendent ist, ist die Quadratur des Kreises - ein klassisches Problem der Geometrie - unmöglich.
+Es ist schwierig, Esperantosätze ohne Esperantotastatur zu schreiben.
+Darüber werde ich noch einmal nachdenken müssen.
+Der Junge traf den Ball mit seinem neuen Schläger.
+Danke, dass du mir zugehört hast. Ich fühle mich jetzt viel besser!
+Der Wecker hat Tom nicht aufgeweckt.
+Genießt du den Sommer?
+Tom ist ein Kaufmann.
+Was willst du denn, dass ich ihn frage?
+Hoffentlich glaubt Tom nicht, dass wir ihn hassen.
+Ich hätte es selbst nicht besser sagen können.
+Er hat es geschafft, diese schwierige Prüfung zu bestehen.
+Er kommt mich fast jeden Tag besuchen.
+Tom ist in den Fluss gefallen.
+Nie soll man so tief sinken, den Kakao, durch den man gezogen wird, auch noch zu trinken.
+Das ist ein Sprachführer, der einem bei der Verständigung hilft.
+Ich fing Schmetterlinge mit einem Netz.
+Wir werden euch irgendwann einmal besuchen.
+Diese Weide sieht wie ein Mammut aus.
+Glaubst du, dass du je wieder heiraten wirst?
+Komm und besuch uns!
+Sie stehen um mich herum.
+Sind Sie bereit einen ungebetenen Rat anzunehmen?
+Soweit ich weiß, ist das die einzig mögliche Übersetzung.
+Hast du ihn heute gesehen?
+Die Messer sind derart stumpf, sie müssen dringend geschliffen werden.
+Tom ließ sich erschöpft auf einen Stuhl fallen.
+Wie kam in dir der Wunsch auf, ihn zu heiraten?
+Wir müssen unsere Sachen waschen.
+Eine ansteckende Krankheit griff plötzlich in der Stadt um sich.
+Ich habe Angst, dich zu verlieren.
+Es dauerte etwas, bis ich begriff, was sie sagen wollte.
+Kinder haben manchmal keine Geduld.
+Ich habe keine Ahnung, warum Tom plötzlich seine Arbeit an den Nagel gehängt hat.
+Wie lange haben die Sie warten lassen?
+Tom sollte mehr darauf achthaben, Maria nicht bei der Arbeit zu stören.
+Ich meine, sie haben vor fünf Jahren geheiratet.
+Sie müßten schon weg sein.
+Ich habe nichts Schlimmes getan, dass du mich diese Weise behandelst!
+Plötzlich nahm er seine Perücke ab.
+Komm, wir fahren mit dem Zug.
+Die Wände der Wohnung sind weiß.
+Donnerstag Nacht ist Freibiernacht.
+Kannst du das reparieren, oder sollte ich einen Klempner rufen?
+Tom hat das Haus vor Tagesanbruch verlassen.
+Du hättest ihn nicht zur Tür bringen müssen.
+Da gab es keine Probleme.
+Unterdessen wurde es Abend.
+Vorher war unsere Stadt ein Dorf.
+Ein weiterer Stein des Anstoßes sind Preissenkungen, die diverse Provider nur an Neukunden, nicht aber an Bestandskunden weitergeben.
+Ich möchte Ihnen beim Klavierspielen zuhören.
+Ich hatte denen nichts zu sagen.
+Tom will nicht, dass du das tust.
+Erinnern Sie sich überhaupt noch an Tom?
+Ich wollte hinten sitzen.
+Ein Stapel Papiere lag auf dem Tisch.
+Tom sieht jeden Tag dünner aus.
+Ich wäre gerne mitgekommen, aber ich hatte keine Zeit.
+Tom bat Mary, sein Büro aufzuräumen.
+Diese Tiere waren vom Aussterben bedroht.
+Menschenliebe ist das Wesen der Sinnlichkeit, Menschenkenntnis das Wesen der Weisheit.
+Ich werde nicht schon wieder gehen.
+Das ist nicht Ihr Geld, sondern meins.
+Du hast mich durchschaut.
+Ich bin nur der Ersatzlehrer.
+Er fing an, Fragen zu stellen.
+Weder Tom noch Mary leisten sehr gute Arbeit.
+Tom ist so groß wie Jim.
+Nur ein Narr zeigt gleich seinen Zorn.
+Legt euch nicht mit Tom an.
+Ein Freund, der dir schmeichelt, ist dein ärgster Feind.
+Wo finde ich das Postamt?
+Ich werde es nie wieder erwähnen.
+Wie sind wir hierhergekommen?
+In der griechischen Mythologie ist Hypnos der Gott des Schlafes und Bruder des Thanatos, dem Gott des Todes.
+An Kinder dürfen keine Zigaretten abgegeben werden.
+Ich gehe auf unfruchtbarem Boden.
+Ich kann kaum bis morgen warten. Ich bin ja so aufgeregt!
+Wir vergeudeten viel Zeit.
+Wer hat diese Rose abgebrochen?
+Dreimal dürfen Sie raten.
+Tom konnte es nicht verstehen.
+Plötzlich zog er ein Ass aus dem Ärmel.
+Es gibt einige Dinge, die ich sagen möchte, aber hier ins Wort zu fallen wäre taktlos.
+Samara Morgan schläft nie.
+Das ist der leichte Teil.
+Wissen Sie, wie man das schreibt?
+Halt an, die Ampel ist rot!
+Wie könnte ich Sie anlügen?
+Hier ist zu viel Verkehr.
+Wer Glück hat, der bekommt auch vom Wallach ein Fohlen.
+Die Wirtschaft muss jetzt sparen.
+Das kann ich besser als du.
+Erdäpfel sind keine Äpfel.
+Ich wusste nicht, dass ihr früher in Australien gelebt habt.
+Maria erschrak, als sie Tom nach zehn Jahren wiedersah.
+Alles, was ich kann, habe ich mir selbst beigebracht.
+Sie scheint in ihrer Jugend glücklich gewesen zu sein.
+Ich mache das nicht für mich.
+Für das erste Mal hast du dich sehr gut geschlagen.
+Bitte wählt ein Paßwort, das leicht zu merken, aber zugleich schwer zu erraten ist.
+Er sagte, daß er Interesse habe.
+Kommst du von einem anderen Planeten?
+Vorbei ist der Frühling, der Sommer beginnt.
+Tom hat mich übers Ohr gehauen.
+Ich muß dir wohl nicht sagen, was du tun mußt.
+Anna ist die Klassenbeste, aber trotzdem keine Streberin.
+Diese Philosophie hat mein Herz geadelt und die Perspektive meines Lebens verschönert.
+Du solltest dem Rat deiner Mutter Folge leisten.
+Die Reichen und Mächtigen kontrollieren oft die Bildung.
+Können wir jetzt mit Tom sprechen?
+Kaffee ist nur schädlich, wenn Ihnen ein ganzer Sack aus dem fünften Stock auf den Kopf fällt.
+Ist Tom an Bord des Schiffes dort?
+Es war so dunkel in der Fußgängerunterführung, dass wir Angst hatten hinunterzugehen.
+Tom verlor nie die Hoffnung.
+Deine Lippen sind wie Rosen.
+Es ist ein Wunder, daß das jemandem aufgefallen ist.
+Wenn er mich einlädt, gehe ich zu dem Fest.
+Ich wohne gar nicht weit von hier entfernt.
+Wozu ist das hier gut?
+Tom scheint immer sehr viele Mathehausaufgaben zu haben.
+In diesem Zimmer darf man rauchen.
+Immer wieder zogen ungarische Reiterscharen plündernd und mordend durch das Land. Magyaren nannten sie sich.
+Wer nicht das "Wenn" beachtet, wird das "Weh" fühlen.
+Nach welchen Kriterien sortieren Männer ihre Schmutzwäsche? - Dreckig und dreckig, aber noch tragbar.
+Tom umarmte Maria und gab ihr ein Küsschen auf die Wange.
+Wollen Sie nicht die Wahrheit über das erfahren, was geschehen ist?
+Vor vier Jahren starb seine Mutter.
+Tom sagte, ihr kämet nicht.
+Sie ist für gewöhnlich recht schüchtern.
+Ein Jahr nach dem Tod meiner Mutter habe ich ihr Haus versteigern lassen.
+Allein schaffen Tom und Maria das nicht. Da musst du ihnen helfen.
+Maria liest immer ihr Horoskop.
+Sie ist eine Dame mit eisernem Willen.
+Ich dachte, daß euch das glücklich machen würde.
+Sei nicht so streng mit den Kindern.
+Kindern aus Arbeiterfamilien eine gute Bildung zu verwehren ist ebenso falsch, wie Arbeiterfamilien Gesundheits- oder Kinderfürsorge zu verwehren.
+Sie ist in Amerika geboren.
+Es wird immer heftiger.
+Ich muss ein Geschenk für Tom kaufen.
+Bilden Sie einen Kreis und halten Sie sich an den Händen.
+Schwarze Katzen bringen Unglück.
+Wann planen Sie, nach Australien zurückzukommen?
+Ich lebte in Kambodscha.
+Ich sah einen Wolf, einen Fuchs und ein Kaninchen.
+Was ist mit meinem Auto passiert?
+Ich habe keine Webseite.
+Er sagte, er sei arm.
+Du musst die Fenster öffnen und die Klimaanlage ausschalten.
+Thomas ist kein Sexungeheuer.
+Beeil dich, dann bekommst du den Bus.
+Ich bin dem Drachen vor vielen Jahren einmal so nah gewesen, dass mir sein feuriger Odem den Bart versengte.
+Hier, wo diese Häuser stehen, war früher Ackerland.
+Wenn jemand dich verärgert, ist es besser, nicht sofort zu reagieren.
+Welches Salzgebäck isst du am liebsten?
+Ich habe die Löcher vertieft.
+Als ich am Bahnhof ankam, lief der Eilzug soeben ein.
+Dein Haus gefällt mir.
+Kurz vor ihrem fünfzigsten Geburtstag erreichte sie die Nachricht von der Geburt ihres Enkelkindes.
+Du bist der einzige, der den Test nicht geschafft hat.
+Ich schlage vor, du besuchst Boston.
+Die ersten drei Jahre meines Lebens habe ich in Deutschland verbracht.
+Ich hole das Auto.
+Ich gebe zu, dass ich das getan habe.
+Unsere Fußballmannschaft schlägt alle anderen der Stadt.
+Auf wie viel Grad sollte der Backofen gestellt werden?
+Ich habe, nebenbei bemerkt, auch Geld.
+Wo ist der Honig?
+Meine Großmutter betreut die Kinder tagsüber.
+Da er sein ganzes Vermögen verloren hatte, befand er sich in großer Not.
+Die städtische Bevölkerung der meisten Entwicklungsländer steigt sehr schnell.
+Im Schach wie in anderen Sportarten ist niemand unschlagbar.
+Er hasst seinen Nachbarn.
+Tom ist der glücklichste Mensch auf der Welt.
+Es war billiger, als ich dachte.
+Tief im Wald die Bären brummen. Honig duftet. Bienen summen.
+Lassen Sie mich Ihnen helfen, es wegzuwischen.
+Ich habe mich mit dem Unfall befasst.
+Seid ihr genäht worden?
+Tom rasiert sich nicht allzu häufig.
+Wohin ist sie vorgestern gegangen?
+Wo kann ich Geld wechseln?
+Hast du wirklich geglaubt, dass Tom das wollen würde?
+Bis Oktober können wir, denke ich einmal, nicht warten.
+Tom und Maria waren sich sicher, zu dem, worum Johannes sie gebeten hatte, in der Lage zu sein.
+Was sie murmelte, hörte ich nicht.
+Du warst sehr tapfer.
+Warum sind Sie so höflich zu mir?
+Du weißt doch, was ich will.
+Ich habe einen Flug nach Deutschland.
+Sie waren gestern nicht zuhause.
+Mit Hilfe dieser Bücher erlernte ich das lateinische Alphabet und die ersten deutschen Wörter in meinem Leben.
+Tom hat den ganzen Tag nach dem Brief gesucht.
+Habt ihr je Zeit mit Tom verbracht?
+Trinkt doch noch eine Tasse.
+Indem wir unsere Gegenwart umwandeln, verwandeln wir auch unsere Vergangenheit.
+Sie war blind, taub und stumm.
+In der Stadt lebt es sich nicht gut.
+Die meisten finden Maria hübsch, mir gefällt sie aber nicht.
+Ich habe keinen, mit dem ich mein Englisch üben kann.
+Kennst du den Grund?
+Was die Deutschen „Kaffee“ nennen, würde ein Italiener nicht anrühren.
+Denkst du, das ist schlecht?
+Alle Damen trugen ein Abendkleid.
+Darf ich Sie nach Hause begleiten?
+Tom redet gerne über die Frösche, die Nacktschnecken und die Sumpfmonster.
+Das bekomme ich andauernd zu hören.
+Tom lebt auf einem Hausboot.
+Er verletzte sich beim Fallen die Hand.
+Wollen wir wirklich zu Fuß zu Tom?
+Lass ihn dich nicht lecken!
+Ich habe Tom erlaubt, in unserem Garten zu zelten.
+Das Fernsehen schläfert mich oft ein.
+Der nächste Donnerstag ist ein Feiertag und der Freitag ein Brückentag.
+Tom hielt sich mit einer Antwort zurück.
+Dieses Höschen gehört nicht mir.
+Als ich heute Morgen aufwachte, waren meine Eltern beide zur Arbeit gegangen.
+Diese Warnung gilt jetzt wieder.
+Und wenn man tausende Verstande einen Hügel hinunterrollen lassen würde, würde doch jeder seinem eigenen nachrennen.
+Sie schminkte sich ab und wusch sich das Gesicht.
+Der Fisch ist frisch.
+Die Familie schaut sich zusammen einen Film an.
+Monet malte seinen Garten.
+Das Opfer wurde heute Morgen operiert und sein Zustand wird als „stabil“ bezeichnet.
+Dieser Hund ist sozusagen ein Mitglied unserer Familie.
+Gehen Sie zurück ins Haus.
+Vielleicht habe ich meine Schlüssel verloren.
+Er kann alles verstehen, was ihr sagt.
+Wo ist dein jüngerer Bruder?
+Er kaufte gebrannte Mandeln.
+Tom wäre im Schwimmbecken fast ertrunken.
+Sagen Sie ihm: Ich mache die Wäsche auf die Leine.
+Lächeln ist ein billiger Weg um schöner zu sein.
+Gib uns diese Katze!
+Die Ärztin ist unterwegs.
+Ich habe beschlossen, zu Fuß zu gehen.
+Du bist zu parfümiert.
+Einfach ausgedrückt, ein Mensch ist eine Ansammlung von Zellen.
+Oft konnte ich mich nicht durchsetzen.
+Im Wartezimmer lagen Zeitschriften aus.
+Er wies ihre Avancen zurück.
+Erwähnt das bitte niemandem gegenüber!
+Ein Dutzend sind zwölf Einheiten.
+Er kehrte nach Hause zurück.
+Tom trug eine schwarze Lederhose und eine schwarze Lederjacke.
+Stört es dich, wenn ich eine rauche?
+Die Banane da ist faul.
+Ihr saht nicht so aus, als ob ihr Angst hättet.
+Die alte Zigeunerin bewegte ihre Hand über der Kristallkugel, schaute hinein und erblickte meine Zukunft.
+Wer seine Meinung nie zurückzieht, liebt sich selbst mehr als die Wahrheit.
+Du solltest die Sachen nicht nur zur Hälfte erledigen.
+Wir müssen die Nation von Drogen befreien.
+Schwingen wachsen im Fluge.
+Sie hielt an, um zu rauchen.
+Glaubst du, ich sei blind?
+Was er wollte, war weniger Geld als vielmehr ein hohes Ansehen.
+Wäre sie mit mir befreundet gewesen, hätte ich ihr geraten, dies nicht zu tun.
+„Hast du das Taschenmesser gekauft, wie du wolltest?“ – „Nein.“
+Was gebt ihr monatlich für Lebensmittel aus?
+Mein Onkel stiftete ihm ein Geschenk.
+Wir wissen, dass ihr vielbeschäftigte Leute seid.
+Leider ist die Meldung wahr.
+Ich kenne niemanden mit diesem Namen.
+Schön wär’s, aber das wird nicht passieren.
+Ich bin nicht gut im Französischen.
+Seid ihr schon wieder in Schwierigkeiten gekommen?
+Der Zweifel ist der Anfang, nicht das Ende von Weisheit.
+Lass uns mal um die Ecke einen Kaffee trinken gehen.
+Wollen Sie das wirklich?
+Tom mag keine Politik.
+Sie sollten das so machen, wie Tom es Ihnen gezeigt hat.
+Beim fleißigen Menschen schaut die Armut nur zum Fenster herein. Sie wagt nicht einzutreten.
+Du bittest vergebens um Verzeihung; dein Handeln ist unverzeihlich.
+Die Liebe besiegt alles, und auch wir wollen uns der Liebe ergeben.
+Je mehr du studierst, desto neugieriger wirst du werden.
+Hat Tom die Party organisiert?
+Ich wurde in Mexiko geboren und wuchs in Kalifornien auf.
+Seien Sie stolz auf sich!
+Was du sagst, ist in der Regel richtig.
+Dieser Salat schmeckt nach Zitrone.
+Ich bin Schüler, aber er nicht.
+Er wurde in der Mark Brandenburg geboren.
+Die Menschen sind, trotz allen ihren Mängeln, das Liebenswürdigste, was es gibt.
+„Grüß Gott.“ – „Kaffee.“
+Durch wie viele Länder fließt der Euphrat?
+Seine Romane verkauften sich gut.
+Das kann unmöglich stimmen.
+Tom nimmt Bilder auf.
+Es war keine schlechte Idee.
+Ich weiß nicht, ob er uns nächsten Sonntag besuchen wird.
+Sie bekommen jetzt eine örtliche Betäubung.
+Daran habe ich in der Eile nicht gedacht.
+Kyoto ist im Herbst am schönsten.
+Niemand hat je von ihm gehört.
+Tom will Diplomat werden.
+Ich hätte euch nie verlassen dürfen.
+Auf jeden Fall müssen wir dieses Kapitel abschließen, bevor wir mit dem nächsten anfangen.
+Bist du sicher, dass das das ist, was Tom wollte, dass wir kaufen?
+Niemand wollte mit Tom gesehen werden.
+Hier ist eure Milch.
+Johannes hat ein Regal gebaut.
+Seine kleine Schwester ist aber sehr süß!
+Da werden Erinnerungen wach!
+Wir kämpfen für die gleiche Sache.
+Tom hat bei der Erdkundeklassenarbeit gespickt.
+Angekleidet bist du geschützt.
+Man ist nicht Mensch, weil man geboren ist, man muss Mensch werden.
+Rufen Sie bitte einen Krankenwagen.
+Ich verstehe noch immer nicht, wie mir so etwas passieren konnte.
+Tom hat Angst vor mir, nicht wahr?
+Freust du dich schon auf den Zoo?
+Meine Nase läuft wie sonst noch was.
+Sie hat eine ziemlich feuchte Aussprache.
+Dein Traum wird sich dereinst erfüllen.
+Der Text ist zu lang.
+Der Mensch, den du gefangen hast, war nicht der richtige.
+Ich werde jetzt meine Arbeit vollenden, damit sie endlich erledigt ist.
+Wir haben bei Null angefangen.
+Ich war erleichtert, dass man mein gebrochenes Englisch einigermaßen verstehen konnte.
+Ich bin nur der Überbringer der Nachricht.
+Dafür wird Gott schon sorgen, dass die Bäume nicht in den Himmel wachsen.
+Lao Gan Ma und ich sind in Hassliebe verbunden.
+Dieser Stern ist fünf Lichtjahre weit weg.
+Sie ißt am Schreibtisch zu Mittag.
+Ich hoffe, morgen ist schönes Wetter.
+Sie wissen es sicher.
+Er hat einen schlechten Tag.
+Ich weiß, was ich gesehen habe.
+Tom stellte Maria eine ziemlich schwere Frage.
+Betrachten Sie es als freundliche Warnung!
+Es ist eine umfassende und gründliche Reorganisation der Arbeit erforderlich.
+Das Baby trinkt aus der Mutterbrust.
+Das ist der, den wir wollen.
+Ich brachte ihn dazu, mir die Schuhe zu putzen.
+Es ist oft einfacher, eine Lüge zu glauben als die Wahrheit.
+Wir haben eine Aufgabe zu erledigen.
+Er holte den Ball.
+Es gibt keine hässlichere Staatsform als die, in der die Reichsten als die besten gelten.
+Tom erkennt immer noch nicht ganz, was passiert ist.
+Es ist noch zu schade zum Wegwerfen.
+Ich möchte, dass du weißt, dass es Tom gut geht.
+Die Minister sprachen über die Zukunft der Stadt und vieles mehr.
+Dieser Knieschoner kommt aus dem Alpenvorland.
+Tom blickte während der Vorlesung gelangweilt durch die Fenster des Hörsaals nach draußen.
+Tom glaubte sich im Paradies, als er das köstliche Mahl einnahm.
+Welches Gedicht hältst du für dein bestes?
+Du solltest einfach ja sagen.
+Marie nahm Tom als einen Idioten.
+Wir waren unser ganzes Leben lang Freunde.
+Unser Geschäft öffnet wieder im Oktober.
+Bist du schon den ganzen Abend hier?

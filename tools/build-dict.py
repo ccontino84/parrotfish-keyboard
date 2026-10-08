@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 """Build a Parrotfish dictionary (.pfd) from an AOSP LatinIME wordlist.
 
-Usage: build-dict.py LANG WORDLIST.combined.gz RULES_DIR OUT.pfd
+Usage: build-dict.py LANG WORDLIST.combined.gz RULES_DIR OUT.pfd [--pairs PAIRS.tsv.gz]
 
 The output is a little-endian binary file that the engine memory-maps.
 The layout is documented in engine/include/parrotfish/dictformat.h; keep
@@ -11,13 +11,14 @@ both in sync (FORMAT_VERSION).
 """
 
 import argparse
+import collections
 import gzip
 import math
 import struct
 import sys
 import unicodedata
 
-FORMAT_VERSION = 1
+FORMAT_VERSION = 2
 MAGIC = b"PFDICT\0\0"
 
 # Attribute flags (dictformat.h: AttrFlag)
@@ -26,6 +27,10 @@ ATTR_MISSPELLING = 1 << 1    # not a word: corrected to `target`
 ATTR_ABBREVIATION = 1 << 2
 ATTR_NONWORD = 1 << 3        # informal (gonna, kinda): valid, ranked as is
 ATTR_SHORTCUT = 1 << 4       # valid word with an extra suggestion `target`
+
+# Word-pair rows (dictformat.h): previous word = start of a sentence / anything.
+PAIR_START = 0
+PAIR_ANY = 0xFFFFFFFF
 
 # Frequency used for a misspelling whose target is several words (alot → a lot).
 MULTIWORD_TARGET_FREQ = 100
@@ -108,6 +113,18 @@ def add_supplement(words, path):
     return added
 
 
+def apply_boosts(words, path):
+    """Raise frequencies from RULES_DIR/LANG.boost (find-boosts.py)."""
+    raised = 0
+    for line in read_list(path):
+        w, f = line.split("\t")[:2]
+        e = words.get(w)
+        if e is not None and int(f) > e["f"] and not e["attrs"] & ATTR_MISSPELLING:
+            e["f"] = int(f)
+            raised += 1
+    return raised
+
+
 def mark_misspellings(words, path):
     """Apply RULES_DIR/LANG.misspellings (from find-accent-misspellings.py)."""
     marked = 0
@@ -135,6 +152,52 @@ def read_rules(path):
             sys.exit(f"{path}: bad rule {line!r}")
         rules.append((parts[0], parts[1], flags))
     return rules
+
+
+def read_pairs(path, words, order):
+    """Word pairs from count-pairs.py, resolved to trie nodes.
+
+    Returns {prev node: [(next node, f)]}, f on the 0..255 scale of the
+    conditional probability P(next | prev).
+    """
+    by_lower = {}
+    for n in order:
+        if not n.terminal:
+            continue
+        e = words[n.word]
+        if e["attrs"] & (ATTR_MISSPELLING | ATTR_OFFENSIVE):
+            continue
+        k = n.word.lower()
+        best = by_lower.get(k)
+        # Prefer the lowercase spelling, then the most frequent one.
+        rank = (n.word == k, e["f"])
+        if best is None or rank > best[0]:
+            by_lower[k] = (rank, n.index)
+    exact = {n.word: n.index for n in order
+             if n.terminal and not words[n.word]["attrs"] & (ATTR_MISSPELLING | ATTR_OFFENSIVE)}
+    rows = collections.defaultdict(list)
+    totals = {}
+    with gzip.open(path, "rt", encoding="utf-8") as fh:
+        for line in fh:
+            prev, nxt, count = line.rstrip("\n").split("\t")
+            if prev == "<s>":
+                key = PAIR_START
+            elif prev == "<any>":
+                key = PAIR_ANY
+            elif prev in by_lower:
+                key = by_lower[prev][1]
+            else:
+                continue
+            if nxt == "*":
+                totals[key] = int(count)
+                continue
+            # The exact spelling (German nouns), else any case.
+            node = exact.get(nxt) or (by_lower[nxt.lower()][1] if nxt.lower() in by_lower else None)
+            if node is not None and key in totals:
+                p = int(count) / totals[key]
+                f = max(1, min(255, round(255 + math.log(p) / STEP)))
+                rows[key].append((node, f))
+    return rows
 
 
 class Node:
@@ -193,11 +256,14 @@ def main():
     ap.add_argument("wordlist")
     ap.add_argument("rules_dir")
     ap.add_argument("out")
+    ap.add_argument("--pairs")
     args = ap.parse_args()
 
     words = parse_aosp(args.wordlist)
     supplemented = add_supplement(words, f"{args.rules_dir}/{args.lang}.supplement")
+    forms = add_supplement(words, f"{args.rules_dir}/{args.lang}.forms")
     marked = mark_misspellings(words, f"{args.rules_dir}/{args.lang}.misspellings")
+    boosted = apply_boosts(words, f"{args.rules_dir}/{args.lang}.boost")
     rules = read_rules(f"{args.rules_dir}/{args.lang}.rules")
 
     root, order = build_trie(words)
@@ -217,6 +283,11 @@ def main():
         off = len(strings)
         strings.extend(s.encode("utf-8") + b"\0")
         return off
+    string_offsets = {}
+    def word_string(w):
+        if w not in string_offsets:
+            string_offsets[w] = add_string(w)
+        return string_offsets[w]
 
     attrs = []
     for n in order:
@@ -259,12 +330,24 @@ def main():
         cps = [ord(c) for c in inp] + [0] * (3 - len(inp))
         rule_bytes += struct.pack("<IIIII", *cps, ord(out), flags)
 
+    pair_rows = read_pairs(args.pairs, words, order) if args.pairs else {}
+    row_bytes = bytearray()
+    entry_bytes = bytearray()
+    entries = 0
+    for key in sorted(pair_rows):
+        nexts = sorted(pair_rows[key], key=lambda x: -x[1])
+        row_bytes += struct.pack("<IIHH", key, entries, len(nexts), 0)
+        for node, f in nexts:
+            entry_bytes += struct.pack("<IB3x", word_string(order[node].word), f)
+            entries += 1
+
     lang = args.lang.encode()[:7].ljust(8, b"\0")
-    header_fmt = "<8sII8sIfIIIIIIIIIIII"
+    header_fmt = "<8sII8sIfIIIIIIIIIIIIIIII"
     header_size = struct.calcsize(header_fmt)
     off = header_size
     sections = []
-    for blob in (nodes, alpha, attr_bytes, rule_bytes, strings):
+    blobs = (nodes, alpha, attr_bytes, rule_bytes, strings, row_bytes, entry_bytes)
+    for blob in blobs:
         off = (off + 7) & ~7
         sections.append(off)
         off += len(blob)
@@ -277,17 +360,22 @@ def main():
                          len(attrs), sections[2],
                          len(rules), sections[3],
                          len(strings), sections[4],
+                         len(pair_rows), sections[5],
+                         entries, sections[6],
                          0, 0)
     out = bytearray(header)
-    for blob, start in zip((nodes, alpha, attr_bytes, rule_bytes, strings), sections):
+    for blob, start in zip(blobs, sections):
         out += b"\0" * (start - len(out))
         out += blob
     with open(args.out, "wb") as fh:
         fh.write(out)
 
-    print(f"{args.lang}: {len(words)} entries ({supplemented} supplement), {len(order)} nodes, "
+    print(f"{args.lang}: {len(words)} entries ({supplemented} supplement, {forms} verb forms, "
+          f"{boosted} raised), "
+          f"{len(order)} nodes, "
           f"{len(alphabet)} chars, {len(attrs)} attrs ({marked} accent misspellings), "
-          f"{len(rules)} rules, {len(out) / 1e6:.1f} MB")
+          f"{len(rules)} rules, {len(pair_rows)} pair rows ({entries} next words), "
+          f"{len(out) / 1e6:.1f} MB")
 
 
 if __name__ == "__main__":

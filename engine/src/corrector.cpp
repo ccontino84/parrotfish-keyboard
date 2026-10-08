@@ -56,6 +56,16 @@ struct Corrector::Search
     size_t n;
     std::vector<float> tapCost;      // n × alphabet
     std::vector<double> suffixMin;   // lower bound for taps i..n-1
+    double literalCost = 0;          // the taps read exactly as typed
+    std::vector<std::pair<char32_t, char32_t>> bases;   // letter → base letter
+
+    char32_t baseOf(char32_t ch) const
+    {
+        for (const auto &b : bases)
+            if (b.first == ch)
+                return b.second;
+        return ch;
+    }
     std::u32string path;
     std::vector<Candidate> results;
     size_t visits = 0;
@@ -73,6 +83,8 @@ struct Corrector::Search
             return it == baseOf.end() ? ch : it->second;
         };
 
+        for (const auto &kv : baseOf)
+            bases.push_back(kv);
         tapCost.assign(n * a, Inf);
         for (size_t i = 0; i < n; ++i) {
             const Tap &t = taps[i];
@@ -104,6 +116,14 @@ struct Corrector::Search
                     cost = p.accentWrong;
                 }
                 tapCost[i * a + li] = cost;
+            }
+        }
+        for (size_t i = 0; i < n; ++i) {
+            for (uint32_t li = 0; li < a; ++li) {
+                if (d.letter(li).lower == taps[i].ch) {
+                    literalCost += std::min(tapCost[i * a + li], p.farTap);
+                    break;
+                }
             }
         }
         suffixMin.assign(n + 1, 0.0);
@@ -148,14 +168,16 @@ struct Corrector::Search
             results.pop_back();
     }
 
-    void emit(uint32_t node, double cost, int edits, int extra)
+    void emit(uint32_t node, double cost, int edits, int extra, int changes)
     {
         std::u32string target;
         const uint32_t attrs = d.attributes(node, &target);
         const double wc = wordCost(d.node(node).freq);
         Candidate cand;
+        cand.freq = d.node(node).freq;
         cand.tapCost = cost;
         cand.edits = edits;
+        cand.changes = changes;
         cand.extraLetters = extra;
         cand.attrs = attrs;
         if (attrs & format::AttrMisspelling) {
@@ -176,7 +198,8 @@ struct Corrector::Search
             extraCand.word = target;
             extraCand.viaTarget = true;
             const uint32_t tn = d.findExact(target);
-            extraCand.wordCost = wordCost(tn ? d.node(tn).freq : DefaultTargetFreq);
+            extraCand.freq = tn ? d.node(tn).freq : DefaultTargetFreq;
+            extraCand.wordCost = wordCost(extraCand.freq);
             extraCand.cost = cost + extraCand.wordCost + ShortcutPenalty;
             add(std::move(extraCand));
         }
@@ -196,16 +219,16 @@ struct Corrector::Search
         return k > 0;
     }
 
-    void visit(uint32_t node, size_t i, double cost, int edits, int extra)
+    void visit(uint32_t node, size_t i, double cost, int edits, int extra, int changes)
     {
         if (++visits > MaxVisits)
             return;
         if (i == n && node != 0 && d.isTerminal(node) && cost + wordCost(d.node(node).freq) < worst())
-            emit(node, cost, edits, extra);
+            emit(node, cost, edits, extra, changes);
 
         // An extra tap: skip it.
         if (i < n && edits < p.maxEdits)
-            visit(node, i + 1, cost + p.insertion, edits + 1, extra);
+            visit(node, i + 1, cost + p.insertion, edits + 1, extra, changes + 1);
 
         uint32_t ch = d.firstChild(node);
         if (ch == 0)
@@ -219,26 +242,29 @@ struct Corrector::Search
 
             if (i < n) {
                 const float t = tc(i, ch);
+                // A different letter (not just its accent) is a change.
+                const format::AlphabetEntry &l = d.letter(d.node(ch).ch);
+                const int changed = (l.lower != taps[i].ch && l.base != baseOf(taps[i].ch)) ? 1 : 0;
                 if (t <= p.farTap)
-                    visit(ch, i + 1, cost + t, edits, extra);
+                    visit(ch, i + 1, cost + t, edits, extra, changes + changed);
                 else if (t < Inf && edits < p.maxEdits)
-                    visit(ch, i + 1, cost + t, edits + 1, extra);
-            } else if (p.completions && edits == 0) {
-                visit(ch, i, cost + p.completionCost, edits, extra + 1);
+                    visit(ch, i + 1, cost + t, edits + 1, extra, changes + 1);
+            } else if (p.completions && edits == 0 && cost <= literalCost + p.completionSlack) {
+                visit(ch, i, cost + p.completionCost, edits, extra + 1, changes);
             }
 
             for (uint32_t r = 0; r < d.ruleCount(); ++r) {
                 const format::Rule &rule = d.rules()[r];
                 size_t len;
                 if (rule.out == d.letter(d.node(ch).ch).lower && ruleMatches(rule, i, &len))
-                    visit(ch, i + len, cost + p.ruleCost, edits, extra);
+                    visit(ch, i + len, cost + p.ruleCost, edits, extra, changes);
             }
 
             if (letter == U'\'' || letter == U'-' || letter == U'.') {
-                visit(ch, i, cost + p.punctuationSkipped, edits, extra);
+                visit(ch, i, cost + p.punctuationSkipped, edits, extra, changes);
             } else if (edits < p.maxEdits && (i < n || !p.completions)) {
                 // A letter the user left out.
-                visit(ch, i, cost + p.deletion, edits + 1, extra);
+                visit(ch, i, cost + p.deletion, edits + 1, extra, changes + 1);
             }
 
             // Two taps swapped: the next tap is this letter, this tap the one after.
@@ -250,7 +276,7 @@ struct Corrector::Search
                         const float t0 = tc(i, g);
                         if (t0 < Inf) {
                             path.push_back(d.letter(d.node(g).ch).cp);
-                            visit(g, i + 2, cost + p.transposition + t0 + t1, edits + 1, extra);
+                            visit(g, i + 2, cost + p.transposition + t0 + t1, edits + 1, extra, changes + 1);
                             path.pop_back();
                         }
                         if (d.isLastSibling(g))
@@ -265,6 +291,67 @@ struct Corrector::Search
         }
     }
 };
+
+double Corrector::matchCost(const std::vector<Tap> &taps, const std::u32string &word, int *edits,
+                            int *changes) const
+{
+    constexpr double inf = std::numeric_limits<double>::infinity();
+    if (taps.empty() || word.empty())
+        return inf;
+    Search s(*this, taps, 0.0);
+    const uint32_t a = m_dict.alphabetSize();
+    // Alphabet index of each letter of the word.
+    std::vector<int> letters;
+    for (char32_t c : word) {
+        int found = -1;
+        for (uint32_t li = 0; li < a && found < 0; ++li)
+            if (m_dict.letter(li).cp == static_cast<uint32_t>(c))
+                found = static_cast<int>(li);
+        if (found < 0)
+            return inf;
+        letters.push_back(found);
+    }
+    const size_t n = taps.size(), m = letters.size();
+    auto tc = [&](size_t i, size_t j) -> double {
+        const float t = s.tapCost[i * a + letters[j]];
+        return t <= m_params.farTap ? t : inf;
+    };
+    // Damerau-Levenshtein over taps × letters with the tap costs; the edit
+    // count rides along with the cost of each cell.
+    struct Cell { double cost; int edits; int changes; };
+    std::vector<Cell> d((n + 1) * (m + 1), Cell{inf, 0, 0});
+    auto at = [&](size_t i, size_t j) -> Cell & { return d[i * (m + 1) + j]; };
+    at(0, 0) = {0.0, 0, 0};
+    for (size_t i = 0; i <= n; ++i) {
+        for (size_t j = 0; j <= m; ++j) {
+            Cell &c = at(i, j);
+            auto relax = [&](const Cell &from, double add, int e, int ch) {
+                if (from.cost + add < c.cost && from.edits + e <= m_params.maxEdits)
+                    c = {from.cost + add, from.edits + e, from.changes + ch};
+            };
+            if (i > 0 && j > 0) {
+                const format::AlphabetEntry &l = m_dict.letter(letters[j - 1]);
+                const int changed = (l.lower != taps[i - 1].ch && l.base != s.baseOf(taps[i - 1].ch)) ? 1 : 0;
+                relax(at(i - 1, j - 1), tc(i - 1, j - 1), 0, changed);
+            }
+            if (i > 0)
+                relax(at(i - 1, j), m_params.insertion, 1, 1);
+            if (j > 0) {
+                const char32_t letter = m_dict.letter(letters[j - 1]).cp;
+                const bool punct = letter == U'\'' || letter == U'-' || letter == U'.';
+                relax(at(i, j - 1), punct ? m_params.punctuationSkipped : m_params.deletion,
+                      punct ? 0 : 1, punct ? 0 : 1);
+            }
+            if (i > 1 && j > 1)
+                relax(at(i - 2, j - 2), m_params.transposition + tc(i - 1, j - 2) + tc(i - 2, j - 1), 1, 1);
+        }
+    }
+    if (edits)
+        *edits = at(n, m).edits;
+    if (changes)
+        *changes = at(n, m).changes;
+    return at(n, m).cost;
+}
 
 bool setParam(CorrectorParams &p, const std::string &assignment)
 {
@@ -286,6 +373,7 @@ bool setParam(CorrectorParams &p, const std::string &assignment)
         {"ruleCost", &p.ruleCost, nullptr, nullptr},
         {"lmWeight", &p.lmWeight, nullptr, nullptr},
         {"completionCost", &p.completionCost, nullptr, nullptr},
+        {"completionSlack", &p.completionSlack, nullptr, nullptr},
         {"maxEdits", nullptr, &p.maxEdits, nullptr},
         {"maxResults", nullptr, nullptr, &p.maxResults},
     };
@@ -305,7 +393,7 @@ std::vector<Candidate> Corrector::search(const std::vector<Tap> &taps, double lo
     if (taps.empty())
         return {};
     Search s(*this, taps, logPrior);
-    s.visit(0, 0, 0.0, 0, 0);
+    s.visit(0, 0, 0.0, 0, 0, 0);
     return std::move(s.results);
 }
 

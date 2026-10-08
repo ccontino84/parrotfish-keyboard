@@ -211,6 +211,70 @@ void testLanguages()
     CHECK_EQ(mix.space("fur"), "fur");
 }
 
+void testNextWords()
+{
+    Setup s({"en", "it", "de"});
+    auto first = [&](const std::string &text) {
+        s.engine.startText(u(text));
+        const auto p = s.engine.predict(u(text));
+        return p.empty() ? std::string() : s8(p[0].word);
+    };
+    CHECK_EQ(first("Thank "), "you");
+    CHECK_EQ(first("Vielen "), "Dank");          // German nouns keep their capital
+    CHECK(s.engine.predict(u("Hello wor")).empty());   // inside a word: nothing
+    s.engine.startText(u("Ciao, come stai? "));
+    const auto start = s.engine.predict(u("Ciao, come stai? "));
+    CHECK(!start.empty() && utf8::isUpper(start[0].word[0]));   // sentence start
+    // A word without its own pairs falls back to frequent words.
+    CHECK(!s.engine.predict(u("Thank xqzzy ")).empty());
+}
+
+void testContext()
+{
+    // The previous word helps: "we can akso" → "also".
+    Setup en({"en", "it", "de"});
+    en.engine.startText(u("I think that we can "));
+    CHECK_EQ(en.space("akso"), "also");
+    // Complete words only at Space: "vogkio" is "voglio", not "vogliono".
+    Setup it({"it", "en", "de"});
+    it.engine.startText(u("Domani andiamo al mare, io "));
+    CHECK_EQ(it.space("vogkio"), "voglio");
+    // Completed verb forms are words: not corrected (riuscivi ≠ riuscivo).
+    it.engine.startText(u("Ieri non "));
+    CHECK_EQ(it.space("riuscivi"), "riuscivi");
+    CHECK_EQ(it.space("riuscivate"), "riuscivate");
+}
+
+void testOtherLanguageWords()
+{
+    // English text, then the Italian "Mi": a word of a typing language is
+    // never replaced by a different word, not even in Normal mode.
+    EngineParams p;
+    p.strength = Strength::Normal;
+    Engine e(p);
+    for (const char *l : {"en", "it", "de"})
+        e.addLanguage(dictDir + "/" + l + ".pfd");
+    e.setLayout(layout("en"));
+    e.startText(u("I went to the station and waited for the train for an hour. "));
+    const Result r = e.process(tapsFor(u("Mi")));
+    CHECK(r.autocorrect < 0);
+    // Accent fixes stay: "fur" in German text becomes "für".
+    e.startText(u("Ich habe heute keine Zeit, aber morgen komme ich gerne vorbei "));
+    const Result r2 = e.process(tapsFor(u("fur")));
+    CHECK(r2.autocorrect >= 0 && s8(r2.suggestions[r2.autocorrect].word) == "für");
+}
+
+void testUncertainTaps()
+{
+    Setup s({"en"});
+    // Touched e, lifted on w after "qu": only "que..." makes words.
+    CHECK(s.engine.resolveTap(u("qu"), U'w', U'e') == U'e');
+    // The lift key stays when it fits better.
+    CHECK(s.engine.resolveTap(u("th"), U'e', U'r') == U'e');
+    // No word starts either way: the lift key stays.
+    CHECK(s.engine.resolveTap(u("xqz"), U'w', U'e') == U'w');
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -228,6 +292,10 @@ int main(int argc, char **argv)
     testCorrections();
     testOffensive();
     testLanguages();
+    testNextWords();
+    testUncertainTaps();
+    testContext();
+    testOtherLanguageWords();
     if (failures)
         std::printf("%d check(s) failed\n", failures);
     else

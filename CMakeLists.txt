@@ -11,12 +11,31 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif()
 
+include(GNUInstallDirs)
+
 option(PARROTFISH_TESTS "Build the host tests and benchmarks" ON)
+option(PARROTFISH_PLUGIN "Build the QML plugin and install the handler (needs Qt 5)" ON)
+option(PARROTFISH_DEVTOOLS "Install pf-query and the benchmarks (test builds)" OFF)
+set(PARROTFISH_DATA_DIR "${CMAKE_INSTALL_FULL_DATADIR}/parrotfish-keyboard"
+    CACHE PATH "Dictionaries and layouts")
+set(PARROTFISH_QML_DIR "${CMAKE_INSTALL_FULL_LIBDIR}/qt5/qml" CACHE PATH "Qt 5 QML import path")
+set(PARROTFISH_HANDLER_DIR "${CMAKE_INSTALL_FULL_DATADIR}/maliit/plugins/com/jolla/handlers"
+    CACHE PATH "jolla-keyboard handlers")
+set(PARROTFISH_LAYOUT_DIR "${CMAKE_INSTALL_FULL_DATADIR}/maliit/plugins/com/jolla/layouts"
+    CACHE PATH "jolla-keyboard layouts")
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 add_subdirectory(engine)
 add_subdirectory(data)
+if(PARROTFISH_PLUGIN)
+    add_subdirectory(plugin)
+    install(FILES handler/ParrotfishHandler.qml handler/parrotfish-keyboard.conf
+            DESTINATION ${PARROTFISH_HANDLER_DIR})
+    install(FILES layouts/parrotfish-qwerty.qml layouts/parrotfish-qwertz.qml
+                  layouts/layouts_parrotfish.conf
+            DESTINATION ${PARROTFISH_LAYOUT_DIR})
+endif()
 
 if(PARROTFISH_TESTS)
     enable_testing()

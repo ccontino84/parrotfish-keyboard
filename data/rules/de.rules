@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Typed letters that stand for one German letter (fuer -> für, Strasse -> Straße).
+ae ä
+oe ö
+ue ü
+ss ß
+
+# find-accent-misspellings.py: only ß/ss pairs are misspellings. Plain and
+# umlaut forms are often both real words (mochte/möchte, bluten/Blüten).
+only-marks ß
+
+# German nouns are capitalised: find-supplement.py keeps capitalised words.
+capitalised-nouns

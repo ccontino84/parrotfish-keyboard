@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# A final vowel followed by an apostrophe stands for an accented vowel
+# (perche' -> perché, citta' -> città). Real truncations (po', di') are
+# in the dictionary or the keep list and are matched first.
+a' à final
+e' è final
+e' é final
+i' ì final
+o' ò final
+u' ù final
+
+# Paradigm checks for find-accent-misspellings.py: a plain form ending in
+# the unaccented vowel is a real inflection when the stem plus one of these
+# endings is a known word (collaboro/collaborò: collaborare; consenti/
+# consentì: consentire; abilita/abilità: abilitare).
+paradigm ò are ere ire
+paradigm à are
+paradigm ì ire ere are
+paradigm é ere

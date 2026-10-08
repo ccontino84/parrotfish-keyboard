@@ -1,0 +1,4 @@
+Placeholder: the licence of Parrotfish's own files has not been chosen yet
+(options under consideration: LGPL-2.1, Apache-2.0, BSD-3-Clause). Every
+file marked LicenseRef-TBD will get the chosen SPDX identifier before the
+project is published. Until then, no licence is granted.

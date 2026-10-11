@@ -3,7 +3,9 @@
 
 // Typo generator shared by the benchmarks. The noise is deliberately
 // simpler than the engine's model (a uniformly chosen adjacent key), so the
-// tests don't just measure the model against itself.
+// tests don't just measure the model against itself. Adjacent keys are those
+// within 1.25 keys across and up/down, in key widths across and key heights
+// up and down, whatever the engine's tap model.
 
 #pragma once
 
@@ -18,11 +20,14 @@
 
 namespace bench {
 
-enum Kind { Clean, Neighbour, Deletion, Insertion, Transposition, Accent, Double, KindCount };
+// DoubleMissed (aparte for apparte) and DoubleExtra (coomputer) only with
+// the benches' -D: the other kinds already include some of them.
+enum Kind { Clean, Neighbour, Deletion, Insertion, Transposition, Accent, Double, DoubleMissed,
+            DoubleExtra, KindCount };
 inline const char *kindName(int k)
 {
     static const char *names[] = {"clean", "neighbour", "deletion", "insertion", "transposition",
-                                  "accent-less", "two typos"};
+                                  "accent-less", "two typos", "double missed", "tapped twice"};
     return names[k];
 }
 
@@ -44,9 +49,10 @@ public:
     Typos(const parrotfish::KeyModel &keys, const parrotfish::Dictionary &dict, unsigned seed)
         : m_rng(seed)
     {
-        for (size_t k = 0; k < keys.keys().size(); ++k)
-            for (int n : keys.neighbours(static_cast<int>(k)))
-                m_adjacent[keys.keys()[k].ch].push_back(keys.keys()[n].ch);
+        const parrotfish::KeyModel grid(keys.keys(), keys.sigma(), 1.0f);
+        for (size_t k = 0; k < grid.keys().size(); ++k)
+            for (int n : grid.neighbours(static_cast<int>(k)))
+                m_adjacent[grid.keys()[k].ch].push_back(grid.keys()[n].ch);
         for (uint32_t i = 0; i < dict.alphabetSize(); ++i)
             m_base[dict.letter(i).cp] = dict.letter(i).base;
     }
@@ -102,6 +108,23 @@ public:
             const char32_t c = (it == m_adjacent.end() || pos(2) == 0) ? w[i]
                                                                       : it->second[pos(it->second.size())];
             w.insert(w.begin() + i + pos(2), c);
+            return w;
+        }
+        case DoubleMissed: {
+            std::vector<size_t> at;
+            for (size_t i = 0; i + 1 < w.size(); ++i)
+                if (w[i] == w[i + 1] && isLetter(w[i]))
+                    at.push_back(i);
+            if (at.empty())
+                return {};
+            w.erase(at[pos(at.size())], 1);
+            return w;
+        }
+        case DoubleExtra: {
+            const size_t i = pos(w.size());
+            if (!isLetter(w[i]))
+                return {};
+            w.insert(w.begin() + i, w[i]);
             return w;
         }
         case Transposition: {

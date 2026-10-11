@@ -18,7 +18,7 @@ import struct
 import sys
 import unicodedata
 
-FORMAT_VERSION = 2
+FORMAT_VERSION = 3
 MAGIC = b"PFDICT\0\0"
 
 # Attribute flags (dictformat.h: AttrFlag)
@@ -201,13 +201,14 @@ def read_pairs(path, words, order):
 
 
 class Node:
-    __slots__ = ("children", "freq", "terminal", "best", "index", "word")
+    __slots__ = ("children", "freq", "terminal", "best", "height", "index", "word")
 
     def __init__(self):
         self.children = {}
         self.freq = 0
         self.terminal = False
         self.best = 0
+        self.height = 0
         self.index = 0
         self.word = None
 
@@ -226,10 +227,12 @@ def build_trie(words):
             t = words.get(e["target"])
             n.freq = t["f"] if t else MULTIWORD_TARGET_FREQ
 
+    # Best frequency and height (most letters below) of each subtree.
     def best(n):
         n.best = n.freq if n.terminal else 0
         for ch in n.children.values():
             n.best = max(n.best, best(ch))
+            n.height = max(n.height, ch.height + 1)
         return n.best
 
     sys.setrecursionlimit(10000)
@@ -269,7 +272,7 @@ def main():
     root, order = build_trie(words)
 
     alphabet = sorted({c for w in words for c in w})
-    if len(alphabet) > 0xFFFF:
+    if len(alphabet) > 0x100:
         sys.exit("alphabet too large")
     cindex = {c: i for i, c in enumerate(alphabet)}
 
@@ -315,8 +318,8 @@ def main():
         kids = list(n.children.values())
         first = kids[0].index if kids else 0
         link = first | (1 << 30 if n.terminal else 0) | (1 << 31 if n.index in last_sibling else 0)
-        struct.pack_into("<IHBB", nodes, n.index * 8, link,
-                         char_of.get(n.index, 0), n.best, n.freq)
+        struct.pack_into("<IBBBB", nodes, n.index * 8, link,
+                         char_of.get(n.index, 0), min(n.height, 255), n.best, n.freq)
 
     alpha = bytearray()
     for c in alphabet:

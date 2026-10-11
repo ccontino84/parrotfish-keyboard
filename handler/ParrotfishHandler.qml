@@ -204,8 +204,10 @@ InputHandler {
     }
 
     function applyPrediction(replacement, index) {
-        if (preedit !== "" && replacement !== preedit)
+        if (preedit !== "" && replacement !== preedit) {
             predictionEngine.acceptCorrection(preedit)   // forgets earlier undos
+            predictionEngine.logSlips(preedit, replacement, "picked")
+        }
         replacement = replacement + " "
         var before = _textBefore()
         commit(replacement)
@@ -217,8 +219,10 @@ InputHandler {
         var handled = false
         var correction = _correction
         _correction = null   // Backspace can only undo straight after
-        if (correction !== null && !(pressedKey.key === Qt.Key_Backspace && preedit === ""))
+        if (correction !== null && !(pressedKey.key === Qt.Key_Backspace && preedit === "")) {
             predictionEngine.acceptCorrection(correction.typed)   // kept
+            predictionEngine.logSlips(correction.typed, correction.corrected, "kept")
+        }
         var autoSpaced = _autoSpaced
         if (pressedKey.keyType !== KeyType.ShiftKey && pressedKey.keyType !== KeyType.SymbolKey)
             _autoSpaced = ""   // only the next key (after Shift or ?123) may replace it

@@ -4,7 +4,7 @@
 // Correction and autocorrect accuracy on generated typos (milestone 1).
 //
 //   typo-bench -l data/layouts/it.layout -d build/data/it.pfd [-d OTHER.pfd]...
-//              [-o oov-it.txt] [-n 1000] [-s SEED] [-u] [-P name=value]... [-v]
+//              [-o oov-it.txt] [-n 1000] [-s SEED] [-u] [-D] [-P name=value]... [-v]
 //
 // The first dictionary is the language typed. Further dictionaries are
 // loaded as extra typing languages; the text is taken to be clearly in the
@@ -18,6 +18,9 @@
 //
 // -o FILE: real words missing from the dictionaries, one per line (see
 // tools/make-oov-list.py), typed correctly: autocorrect must leave them alone.
+//
+// -D adds two kinds: one letter of a double missed (aparte), a letter tapped
+// twice (coomputer); the other kinds are unchanged.
 
 #include "parrotfish/engine.h"
 #include "parrotfish/utf8.h"
@@ -68,9 +71,10 @@ std::u32string stripAccents(const std::map<char32_t, char32_t> &base, const std:
     return out;
 }
 
-enum Kind { Clean, Neighbour, Deletion, Insertion, Transposition, Accent, Double, KindCount };
+enum Kind { Clean, Neighbour, Deletion, Insertion, Transposition, Accent, Double, DoubleMissed,
+            DoubleExtra, KindCount };
 const char *kindName[] = {"clean", "neighbour", "deletion", "insertion", "transposition",
-                          "accent-less", "two typos"};
+                          "accent-less", "two typos", "double missed", "tapped twice"};
 
 struct Stats {
     int total = 0, realWord = 0, top1 = 0, top3 = 0;
@@ -95,7 +99,7 @@ int main(int argc, char **argv)
     std::vector<std::string> dictPaths;
     int perKind = 1000;
     unsigned seed = 1;
-    bool verbose = false, uniform = false;
+    bool verbose = false, uniform = false, doubles = false;
     EngineParams params;
     for (int i = 1; i < argc; ++i) {
         std::string a = argv[i];
@@ -105,6 +109,7 @@ int main(int argc, char **argv)
         else if (a == "-n" && i + 1 < argc) perKind = std::stoi(argv[++i]);
         else if (a == "-s" && i + 1 < argc) seed = std::stoul(argv[++i]);
         else if (a == "-u") uniform = true;
+        else if (a == "-D") doubles = true;
         else if (a == "-v") verbose = true;
         else if (a == "-P" && i + 1 < argc) {
             if (!setParam(params, argv[++i])) {
@@ -127,7 +132,7 @@ int main(int argc, char **argv)
     }
     if (keys.keys().empty() || engine.languageCount() == 0) {
         std::fprintf(stderr, "usage: typo-bench -l LAYOUT -d DICT [-d DICT]... [-o OOV] [-n N] [-s SEED]"
-                             " [-u] [-P name=value]... [-v]\n");
+                             " [-u] [-D] [-P name=value]... [-v]\n");
         return 2;
     }
     engine.setLayout(keys);
@@ -163,11 +168,13 @@ int main(int argc, char **argv)
     auto pickAccented = sampler(accented);
     std::mt19937 rng(seed);
 
-    // Adjacent keys for the noise model.
+    // Adjacent keys for the noise model (as typos.h: by key widths across and
+    // key heights up and down, whatever the engine's tap model).
     std::map<char32_t, std::vector<char32_t>> adjacent;
-    for (size_t k = 0; k < keys.keys().size(); ++k)
-        for (int n : keys.neighbours(static_cast<int>(k)))
-            adjacent[keys.keys()[k].ch].push_back(keys.keys()[n].ch);
+    const KeyModel grid(keys.keys(), keys.sigma(), 1.0f);
+    for (size_t k = 0; k < grid.keys().size(); ++k)
+        for (int n : grid.neighbours(static_cast<int>(k)))
+            adjacent[grid.keys()[k].ch].push_back(grid.keys()[n].ch);
 
     auto pos = [&](size_t n) { return std::uniform_int_distribution<size_t>(0, n - 1)(rng); };
     auto typo = [&](std::u32string w, Kind kind) -> std::u32string {
@@ -190,6 +197,20 @@ int main(int argc, char **argv)
             auto it = adjacent.find(w[i]);
             const char32_t c = (it == adjacent.end() || pos(2) == 0) ? w[i] : it->second[pos(it->second.size())];
             w.insert(w.begin() + i + pos(2), c);
+            return w;
+        }
+        case DoubleMissed: {
+            std::vector<size_t> at;
+            for (size_t i = 0; i + 1 < w.size(); ++i)
+                if (w[i] == w[i + 1] && isLetter(w[i])) at.push_back(i);
+            if (at.empty()) return {};
+            w.erase(at[pos(at.size())], 1);
+            return w;
+        }
+        case DoubleExtra: {
+            const size_t i = pos(w.size());
+            if (!isLetter(w[i])) return {};
+            w.insert(w.begin() + i, w[i]);
             return w;
         }
         case Transposition: {
@@ -219,6 +240,8 @@ int main(int argc, char **argv)
 
     Stats stats[KindCount];
     for (int kind = 0; kind < KindCount; ++kind) {
+        if (kind >= DoubleMissed && !doubles)
+            break;
         int made = 0;
         while (made < perKind) {
             if (kind == Accent && accented.empty()) break;

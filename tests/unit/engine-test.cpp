@@ -139,6 +139,20 @@ void testKeyModel()
         CHECK(near.find(c) != std::string::npos);
     CHECK(near.find('a') == std::string::npos);
     CHECK(k.probability(g, g) > k.probability(k.indexOf(U'h'), g));
+
+    // Tall keys (`pitch`): up and down far less likely in key widths, as
+    // likely as across in key heights.
+    const std::string tall = "pitch 1.67\n0 1 qwertyuiop\n0 1 asdfghjkl'\n1.5 1 zxcvbnm\n";
+    const KeyModel w = KeyModel::parse(tall), h(w.keys(), w.sigma(), 1.0f);
+    const int l = w.indexOf(U'l'), o = w.indexOf(U'o'), kk = w.indexOf(U'k');
+    CHECK(w.keys().size() == 27 && std::fabs(w.keys()[l].height - 1.67f) < 1e-4);
+    CHECK(w.probability(o, l) < 0.1 * w.probability(kk, l));
+    CHECK(std::fabs(h.probability(o, l) - h.probability(kk, l)) < 1e-4);
+    auto isNear = [](const KeyModel &m, int a, int b) {
+        for (int n : m.neighbours(a)) if (n == b) return true;
+        return false;
+    };
+    CHECK(!isNear(w, l, o) && isNear(h, l, o) && isNear(w, l, kk));
 }
 
 void testCorrections()
@@ -264,6 +278,39 @@ void testOtherLanguageWords()
     CHECK(r2.autocorrect >= 0 && s8(r2.suggestions[r2.autocorrect].word) == "für");
 }
 
+void testFirstWord()
+{
+    // A new text leans towards the language of the last text (×3, as the
+    // plugin does): 0.6 of three languages, below autocorrectConfidence.
+    auto space = [](const std::string &lean, Strength strength, const std::string &text,
+                    const std::string &typed, const std::string &layoutLang = "en") {
+        EngineParams p;
+        p.strength = strength;
+        p.corrector.completions = true;
+        Engine e(p);
+        for (const char *l : {"en", "it", "de"})
+            e.addLanguage(dictDir + "/" + l + ".pfd");
+        e.setLayout(layout(layoutLang));
+        std::vector<double> prior(3, 1.0);
+        if (e.languageIndex(lean) >= 0)
+            prior[e.languageIndex(lean)] *= 3.0;
+        e.startText(u(text), prior);
+        const Result r = e.process(tapsFor(u(typed)));
+        return r.autocorrect >= 0 ? s8(r.suggestions[r.autocorrect].word) : typed;
+    };
+    // The first word is corrected when the lean is right...
+    CHECK_EQ(space("en", Strength::Gentle, "", "Tje"), "The");
+    CHECK_EQ(space("en", Strength::Normal, "", "Exampke"), "Example");
+    CHECK_EQ(space("it", Strength::Normal, "", "Ciap", "it"), "Ciao");
+    // ...but not when it is another language, or there is no lean.
+    CHECK_EQ(space("it", Strength::Gentle, "", "Tje"), "Tje");
+    CHECK_EQ(space("", Strength::Gentle, "", "Tje"), "Tje");
+    CHECK_EQ(space("en", Strength::Normal, "", "Ciap", "it"), "Ciap");
+
+    // Gentle: two letters, one of them a neighbouring key (uj → un).
+    CHECK_EQ(space("it", Strength::Gentle, "Ho visto ", "uj", "it"), "un");
+}
+
 void testUncertainTaps()
 {
     Setup s({"en"});
@@ -296,6 +343,7 @@ int main(int argc, char **argv)
     testUncertainTaps();
     testContext();
     testOtherLanguageWords();
+    testFirstWord();
     if (failures)
         std::printf("%d check(s) failed\n", failures);
     else

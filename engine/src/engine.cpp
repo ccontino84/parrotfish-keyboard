@@ -62,7 +62,8 @@ int Engine::languageIndex(const std::string &code) const
 
 void Engine::setLayout(const KeyModel &keys)
 {
-    m_keys = keys;
+    m_layout = keys.keys();
+    m_layoutSigma = keys.sigma();
     rebuild();
 }
 
@@ -80,6 +81,7 @@ std::u32string Engine::fold(const std::u32string &word) const
 void Engine::rebuild()
 {
     m_correctors.clear();
+    m_keys = KeyModel(m_layout, m_layoutSigma, static_cast<float>(m_params.keyHeightShare));
     m_base.clear();
     for (const auto &d : m_dicts)
         for (uint32_t i = 0; i < d->alphabetSize(); ++i)
@@ -120,12 +122,15 @@ void Engine::startText(const std::u32string &textBefore, const std::vector<doubl
 {
     m_context = parseContext(textBefore);
     m_tracker.reset(prior);
-    for (const std::u32string &w : words(textBefore))
+    const std::vector<std::u32string> ws = words(textBefore);
+    m_textWords = ws.size();
+    for (const std::u32string &w : ws)
         m_tracker.observe(w);
 }
 
 void Engine::commit(const std::u32string &word)
 {
+    ++m_textWords;
     m_tracker.observe(word);
 }
 
@@ -159,7 +164,8 @@ Result Engine::process(const std::vector<Tap> &taps) const
     // Search every language, weighted by its probability, and merge.
     // Spellings that differ only in case (zweiten, Zweiten) are one
     // suggestion, shown in its most likely spelling.
-    struct Merged { Suggestion s; std::u32string key; double prob = 0; double bestCost = 1e300; };
+    // probEqual: the probability with all languages equally likely.
+    struct Merged { Suggestion s; std::u32string key; double prob = 0; double probEqual = 0; double bestCost = 1e300; };
     std::vector<Merged> merged;
     const bool useContext = m_params.pairWeight > 0 && !m_context.insideWord;
     for (size_t i = 0; i < m_dicts.size(); ++i) {
@@ -230,6 +236,7 @@ Result Engine::process(const std::vector<Tap> &taps) const
                 it->key = key;
             }
             it->prob += std::exp(-c.cost);
+            it->probEqual += std::exp(-c.cost) / (w[i] * m_dicts.size());
             it->s.languages |= 1u << i;
             if (c.cost < it->bestCost) {
                 it->bestCost = c.cost;
@@ -305,9 +312,27 @@ Result Engine::process(const std::vector<Tap> &taps) const
     r.confidence = total > 0 ? bestProb / total : 0;
 
     bool languageOk = false;
+    double bestWeight = 0;
     for (size_t i = 0; i < m_dicts.size(); ++i)
-        if ((best.languages & (1u << i)) && w[i] >= m_params.autocorrectConfidence)
-            languageOk = true;
+        if (best.languages & (1u << i))
+            bestWeight = std::max(bestWeight, w[i]);
+    languageOk = bestWeight >= m_params.autocorrectConfidence;
+    if (!languageOk && m_textWords == 0 && bestWeight >= m_params.firstWordConfidence) {
+        // The first word: the same correction whichever language the text
+        // is in, and sure enough with the lean and without it.
+        double totalEqual = unknownProb, bestEqual = 0, topEqual = 0;
+        for (const Merged &m : merged) {
+            if (m.s.completion)
+                continue;
+            totalEqual += m.probEqual;
+            topEqual = std::max(topEqual, m.probEqual);
+            if (m.key == bestLower)
+                bestEqual = m.probEqual;
+        }
+        const double shareEqual = totalEqual > 0 ? bestEqual / totalEqual : 0;
+        languageOk = bestEqual >= topEqual
+                     && std::min(r.confidence, shareEqual) >= m_params.firstWordShare;
+    }
     if (!languageOk || (best.attrs & format::AttrOffensive) || m_params.strength == Strength::Off)
         return r;
 
@@ -326,6 +351,8 @@ Result Engine::process(const std::vector<Tap> &taps) const
         const int maxChanges = taps.size() <= m_params.gentleShortLength ? 1 : 2;
         apply = r.confidence >= m_params.gentleConfidence && best.edits <= 1
                 && best.changes <= maxChanges && taps.size() >= m_params.gentleMinLength;
+        if (!apply && taps.size() == 2 && r.confidence >= m_params.gentleTwoLetterConfidence)
+            apply = neighbourSwap(r.typed, best.word);
     } else {
         apply = r.confidence >= m_params.normalConfidence;
     }
@@ -336,6 +363,27 @@ Result Engine::process(const std::vector<Tap> &taps) const
         r.autocorrect = 0;
     }
     return r;
+}
+
+bool Engine::neighbourSwap(const std::u32string &typed, const std::u32string &word) const
+{
+    const std::u32string a = fold(typed), b = fold(word);
+    if (a.size() != b.size())
+        return false;
+    int k = -1;
+    for (size_t i = 0; i < a.size(); ++i) {
+        if (a[i] == b[i])
+            continue;
+        if (k >= 0)
+            return false;
+        k = static_cast<int>(i);
+    }
+    const int tapped = k < 0 ? -1 : m_keys.indexOf(a[k]);
+    const int meant = k < 0 ? -1 : m_keys.indexOf(b[k]);
+    if (tapped < 0 || meant < 0)
+        return false;
+    const std::vector<int> near = m_keys.neighbours(tapped);
+    return std::find(near.begin(), near.end(), meant) != near.end();
 }
 
 std::vector<Suggestion> Engine::predict(const std::u32string &textBefore, size_t max) const
@@ -466,6 +514,9 @@ bool setParam(EngineParams &p, const std::string &assignment)
     const double v = std::stod(assignment.substr(eq + 1));
     if (name == "validThreshold") p.validThreshold = v;
     else if (name == "autocorrectConfidence") p.autocorrectConfidence = v;
+    else if (name == "firstWordConfidence") p.firstWordConfidence = v;
+    else if (name == "firstWordShare") p.firstWordShare = v;
+    else if (name == "gentleTwoLetterConfidence") p.gentleTwoLetterConfidence = v;
     else if (name == "gentleConfidence") p.gentleConfidence = v;
     else if (name == "normalConfidence") p.normalConfidence = v;
     else if (name == "gentleMinLength") p.gentleMinLength = static_cast<size_t>(v);
@@ -476,6 +527,7 @@ bool setParam(EngineParams &p, const std::string &assignment)
     else if (name == "unknownBase") p.unknownBase = v;
     else if (name == "unknownPerLetter") p.unknownPerLetter = v;
     else if (name == "normalUnknownBase") p.normalUnknownBase = v;
+    else if (name == "keyHeightShare") p.keyHeightShare = v;
     else if (name == "strength") p.strength = v <= 0 ? Strength::Off : v < 2 ? Strength::Gentle : Strength::Normal;
     else return false;
     return true;

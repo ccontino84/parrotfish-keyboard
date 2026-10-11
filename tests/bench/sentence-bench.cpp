@@ -5,12 +5,21 @@
 //
 //   sentence-bench -l data/layouts/it.layout -t tests/data/tatoeba-it.txt
 //                  -d build/data/it.pfd [-d OTHER.pfd]... [-n 2000] [-r 0.3]
-//                  [-s SEED] [-P name=value]... [-v]
+//                  [-s SEED] [-m LANG] [-B] [-F] [-D] [-P name=value]... [-v]
 //
 // Words of real sentences are typed one by one with the earlier words as
 // context, as on the phone (all dictionaries loaded, equal starting weights,
 // completions on). A share -r of the words gets one typo (the kinds of
 // typos.h); the rest are typed correctly and must not be changed.
+//
+// Each sentence is a new text. -m LANG starts it leaning towards LANG, as
+// the plugin does for the language the last text was in (×3); pass the
+// sentences' language or another one (the user switched languages). -B adds
+// the results for the first word of a text, for other words of two typed
+// letters and for the rest (with -v: each word's group and confidence); -F
+// types only the first words (with the same typos). -D adds two kinds of
+// typos: one letter of a double missed, a letter tapped twice (other typos
+// change too).
 
 #include "parrotfish/engine.h"
 #include "typos.h"
@@ -30,6 +39,14 @@ struct Stats {
     int total = 0, realWord = 0, top1 = 0, top3 = 0, fixed = 0, wrong = 0;
 };
 
+// Where a word stands, for -B.
+enum Group { First, Short, Rest, GroupCount };
+const char *const groupNames[] = {"word 1", "2 letters", "rest"};
+
+struct GroupStats {
+    int clean = 0, cleanWrong = 0, fixable = 0, fixed = 0, wrong = 0;
+};
+
 double pct(int a, int b)
 {
     return b ? 100.0 * a / b : 0.0;
@@ -44,7 +61,8 @@ int main(int argc, char **argv)
     int maxSentences = 2000;
     double rate = 0.3;
     unsigned seed = 1;
-    bool verbose = false;
+    bool verbose = false, breakdown = false, firstOnly = false, doubles = false;
+    std::string remembered;
     EngineParams params;
     params.corrector.completions = true;   // as on the phone
     for (int i = 1; i < argc; ++i) {
@@ -55,6 +73,10 @@ int main(int argc, char **argv)
         else if (a == "-n" && i + 1 < argc) maxSentences = std::stoi(argv[++i]);
         else if (a == "-r" && i + 1 < argc) rate = std::stod(argv[++i]);
         else if (a == "-s" && i + 1 < argc) seed = std::stoul(argv[++i]);
+        else if (a == "-m" && i + 1 < argc) remembered = argv[++i];
+        else if (a == "-B") breakdown = true;
+        else if (a == "-F") firstOnly = breakdown = true;
+        else if (a == "-D") doubles = true;
         else if (a == "-v") verbose = true;
         else if (a == "-P" && i + 1 < argc) {
             if (!setParam(params, argv[++i])) {
@@ -78,14 +100,25 @@ int main(int argc, char **argv)
     std::ifstream tf(textPath);
     if (keys.keys().empty() || engine.languageCount() == 0 || !tf) {
         std::fprintf(stderr, "usage: sentence-bench -l LAYOUT -t SENTENCES -d DICT [-d DICT]... [-n N] [-r RATE]"
-                             " [-s SEED] [-P name=value]... [-v]\n");
+                             " [-s SEED] [-m LANG] [-B] [-F] [-D] [-P name=value]... [-v]\n");
         return 2;
+    }
+    std::vector<double> prior;
+    if (!remembered.empty()) {
+        const int k = engine.languageIndex(remembered);
+        if (k < 0) {
+            std::fprintf(stderr, "-m %s: no such language loaded\n", remembered.c_str());
+            return 2;
+        }
+        prior.assign(engine.languageCount(), 1.0);
+        prior[k] *= 3.0;   // as PredictionEngine::setContext
     }
     engine.setLayout(keys);
     Typos typos(keys, engine.dictionary(0), seed);
     std::uniform_real_distribution<double> coin(0.0, 1.0);
 
     Stats stats[KindCount];
+    GroupStats groups[GroupCount];
     double totalUs = 0, maxUs = 0;
     int searches = 0, sentences = 0;
     std::string line;
@@ -102,7 +135,7 @@ int main(int argc, char **argv)
                 Kind kind = Clean;
                 std::u32string typed = target;
                 if (coin(typos.rng()) < rate) {
-                    kind = Kind(Neighbour + typos.pos(Double - Neighbour + 1));
+                    kind = Kind(Neighbour + typos.pos((doubles ? DoubleExtra : Double) - Neighbour + 1));
                     if (kind == Accent && !typos.hasAccents(target))
                         kind = Neighbour;
                     typed = typos.apply(target, kind);
@@ -114,7 +147,11 @@ int main(int argc, char **argv)
                         typed = target;
                     }
                 }
-                engine.startText(context);
+                if (firstOnly && !context.empty()) {
+                    context += target + U" ";
+                    continue;   // the same typos as without -F
+                }
+                engine.startText(context, prior);
                 const auto t0 = std::chrono::steady_clock::now();
                 const Result r = engine.process(tapsFor(typed));
                 const double us = std::chrono::duration<double, std::micro>(
@@ -127,11 +164,24 @@ int main(int argc, char **argv)
                 ++s.total;
                 const bool fired = r.autocorrect >= 0;
                 const std::u32string got = fired ? r.suggestions[r.autocorrect].word : typed;
+                const int group = context.empty() ? First : typed.size() <= 2 ? Short : Rest;
+                GroupStats &g = groups[group];
+                char tag[48] = "";
+                if (breakdown)
+                    std::snprintf(tag, sizeof tag, " [%s, %.2f]", groupNames[group], r.confidence);
+                if (kind == Clean) {
+                    ++g.clean;
+                } else if (!r.typedIsWord) {
+                    ++g.fixable;
+                    if (fired && lower(got) == lower(target)) ++g.fixed;
+                    if (fired && lower(got) != lower(target)) ++g.wrong;
+                }
                 if (kind == Clean) {
                     if (lower(got) != lower(target)) {
                         ++s.wrong;
+                        ++g.cleanWrong;
                         if (verbose)
-                            std::printf("changed  %s → %s\n", utf8::encode(typed).c_str(), utf8::encode(got).c_str());
+                            std::printf("changed  %s → %s%s\n", utf8::encode(typed).c_str(), utf8::encode(got).c_str(), tag);
                     }
                 } else if (r.typedIsWord) {
                     ++s.realWord;
@@ -144,10 +194,10 @@ int main(int argc, char **argv)
                     if (fired && lower(got) == lower(target)) ++s.fixed;
                     if (fired && lower(got) != lower(target)) ++s.wrong;
                     if (verbose && (rank != 0 || !fired || lower(got) != lower(target)))
-                        std::printf("%-13s %-14s → %-14s got %-14s rank %d%s\n", kindName(kind),
+                        std::printf("%-13s %-14s → %-14s got %-14s rank %d%s%s\n", kindName(kind),
                                     utf8::encode(typed).c_str(), utf8::encode(target).c_str(),
                                     r.suggestions.empty() ? "-" : utf8::encode(r.suggestions[0].word).c_str(),
-                                    rank, fired ? " (autocorrected)" : "");
+                                    rank, fired ? " (autocorrected)" : "", tag);
                 }
             }
             context += target + U" ";
@@ -178,6 +228,17 @@ int main(int argc, char **argv)
     std::printf("%-14s %6d %7.1f%% %6.1f%% %6.1f%% %9.1f%% %9.1f%%\n", "all typos", all.total,
                 pct(all.realWord, all.total), pct(all.top1, fixable), pct(all.top3, fixable),
                 pct(all.fixed, fixable), pct(all.wrong, fixable));
+    if (breakdown) {
+        std::printf("start lean: %s\n", remembered.empty() ? "none" : remembered.c_str());
+        std::printf("%-10s %6s %12s %5s %12s %12s\n", "words", "clean", "changed", "typos",
+                    "autofixed", "autowrong");
+        for (int k = 0; k < GroupCount; ++k) {
+            const GroupStats &g = groups[k];
+            std::printf("%-10s %6d %5d %5.2f%% %5d %5d %5.1f%% %5d %5.1f%%\n", groupNames[k], g.clean,
+                        g.cleanWrong, pct(g.cleanWrong, g.clean), g.fixable, g.fixed,
+                        pct(g.fixed, g.fixable), g.wrong, pct(g.wrong, g.fixable));
+        }
+    }
     std::printf("time per word: mean %.0f µs, max %.0f µs\n", totalUs / searches, maxUs);
     return 0;
 }

@@ -24,6 +24,13 @@ struct EngineParams {
     // Autocorrect acts only for a word of a language at least this likely
     // (§5: autocorrect confidence). Below it, autocorrect is paused.
     double autocorrectConfidence = 0.7;
+    // The first word of a text, whose language is only the starting lean
+    // (the language of the last text: 0.6 of three): a correction that is a
+    // word of a language at least this likely may still apply, if it is the
+    // best correction with all languages equally likely too and its share of
+    // the probability (the lower of the two) is at least firstWordShare.
+    double firstWordConfidence = 0.5;
+    double firstWordShare = 0.7;
     // Share of the probability the best correction needs.
     double gentleConfidence = 0.5;
     double normalConfidence = 0.5;
@@ -32,6 +39,9 @@ struct EngineParams {
     // Gentle changes at most this many letters: one in words of up to
     // gentleShortLength letters, two in longer ones.
     size_t gentleShortLength = 5;
+    // Gentle fixes two typed letters when one changes to a neighbouring key
+    // and the correction has at least this share of the probability.
+    double gentleTwoLetterConfidence = 0.7;
     // An uncertain tap takes the touch-down key only if that makes the word
     // this many nats more likely than the lift key.
     double tapSwitchMargin = 2.0;
@@ -45,6 +55,9 @@ struct EngineParams {
     double unknownPerLetter = 0.5;
     // Normal: an unknown word is less likely, so fixes apply more often.
     double normalUnknownBase = 8.0;
+    // Tap distances up and down: 0 = in key widths, 1 = in key heights
+    // (KeyModel heightShare). Also sets which keys are neighbours.
+    double keyHeightShare = 0.0;
     Strength strength = Strength::Gentle;
 };
 
@@ -112,6 +125,8 @@ public:
 
 private:
     void rebuild();
+    // `word` is `typed` with one letter changed to a neighbouring key.
+    bool neighbourSwap(const std::u32string &typed, const std::u32string &word) const;
 
     // Where the word being typed stands in the text.
     struct Context {
@@ -121,6 +136,7 @@ private:
     };
     static Context parseContext(const std::u32string &textBefore);
     Context m_context;
+    size_t m_textWords = 0;   // words in the text so far (startText, commit)
 
     // Lowercase without accents, via the dictionaries' letter tables.
     std::u32string fold(const std::u32string &word) const;
@@ -128,7 +144,9 @@ private:
 
     EngineParams m_params;
     std::vector<std::unique_ptr<Dictionary>> m_dicts;
-    KeyModel m_keys;
+    std::vector<Key> m_layout;   // as passed to setLayout
+    float m_layoutSigma = 0.5f;
+    KeyModel m_keys;             // m_layout with keyHeightShare
     std::vector<std::unique_ptr<Corrector>> m_correctors;
     LanguageTracker m_tracker;
 };

@@ -243,6 +243,61 @@ void PredictionEngine::acceptCorrection(const QString &typed)
         qInfo("parrotfish: undos of an autocorrection forgotten");
 }
 
+void PredictionEngine::logSlips(const QString &typed, const QString &meant, const QString &how)
+{
+    if (!m_debug)
+        return;
+    const std::u32string t = toU32(typed.toLower()), m = toU32(meant.toLower());
+    if (m.size() >= t.size() && m.compare(0, t.size(), t) == 0)
+        return;   // a completion, not a correction
+    auto isKey = [this](char32_t c) {
+        return std::any_of(m_keys.begin(), m_keys.end(), [c](const parrotfish::Key &k) { return k.ch == c; });
+    };
+    auto letter = [](char32_t c) { return fromU32(std::u32string(1, c)); };
+    // `longer` without its letter at j is `shorter`.
+    auto dropped = [](const std::u32string &longer, const std::u32string &shorter) -> int {
+        for (size_t j = 0; j < longer.size(); ++j)
+            if (longer.substr(0, j) + longer.substr(j + 1) == shorter)
+                return static_cast<int>(j);
+        return -1;
+    };
+    // A letter next to an equal one: one of a double.
+    auto doubled = [](const std::u32string &w, int j) {
+        return (j > 0 && w[j - 1] == w[j]) || (j + 1 < static_cast<int>(w.size()) && w[j + 1] == w[j]);
+    };
+    QStringList slips;
+    if (t.size() == m.size()) {
+        std::vector<size_t> diff;
+        for (size_t i = 0; i < t.size(); ++i)
+            if (t[i] != m[i])
+                diff.push_back(i);
+        if (diff.size() == 2 && diff[1] == diff[0] + 1 && t[diff[0]] == m[diff[1]] && t[diff[1]] == m[diff[0]])
+            slips << QStringLiteral("swap");
+        else if (diff.size() > 2)
+            slips << QStringLiteral("other");
+        else
+            for (size_t i : diff)
+                slips << (isKey(t[i]) && isKey(m[i])
+                          ? QStringLiteral("key %1 %2").arg(letter(t[i]), letter(m[i]))
+                          : QStringLiteral("accent"));
+    } else if (m.size() == t.size() + 1) {
+        const int j = dropped(m, t);
+        slips << (j < 0 ? QStringLiteral("other") : doubled(m, j) ? QStringLiteral("missing-double")
+                                                                  : QStringLiteral("missing"));
+    } else if (t.size() == m.size() + 1) {
+        const int j = dropped(t, m);
+        slips << (j < 0 ? QStringLiteral("other") : doubled(t, j) ? QStringLiteral("extra-double")
+                                                                  : QStringLiteral("extra"));
+    } else {
+        slips << QStringLiteral("other");
+    }
+    QFile f(QDir::homePath() + QStringLiteral("/.local/share/parrotfish-keyboard/slips.log"));
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+        return;
+    for (const QString &s : slips)
+        f.write((how + QLatin1Char(' ') + s + QLatin1Char('\n')).toUtf8());
+}
+
 void PredictionEngine::log(const QString &message) const
 {
     if (m_debug)

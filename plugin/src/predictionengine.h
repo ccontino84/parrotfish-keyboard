@@ -78,6 +78,10 @@ public:
     // The user kept an autocorrection of `typed` or picked a correction of it
     // from the bar: its undos are forgotten.
     Q_INVOKABLE void acceptCorrection(const QString &typed);
+    // With the debug file only: the user kept an autocorrection ("kept") or
+    // picked a correction from the bar ("picked"); appends the kind of slip
+    // (a letter pair for a wrong key, never the words) to slips.log.
+    Q_INVOKABLE void logSlips(const QString &typed, const QString &meant, const QString &how);
     // A diagnostic line for the journal, only while debugging is on. Never
     // pass typed text.
     Q_INVOKABLE void log(const QString &message) const;

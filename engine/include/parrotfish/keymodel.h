@@ -18,20 +18,25 @@ struct Key {
 // The keys of the current layout and how likely a tap on one key was
 // meant for another. Taps are modelled per key (handlers don't see touch
 // coordinates): the probability falls off with the distance between key
-// centres as a 2-D Gaussian, measured in key widths.
+// centres as a 2-D Gaussian. Distances across are in key widths; distances
+// up and down in a mix of the key's width and height: heightShare 0 = key
+// widths too, 1 = key heights.
 class KeyModel
 {
 public:
     KeyModel() = default;
-    explicit KeyModel(std::vector<Key> keys, float sigma = 0.5f);
+    explicit KeyModel(std::vector<Key> keys, float sigma = 0.5f, float heightShare = 0.0f);
 
     // Rows of characters, e.g. {"qwertyuiop", "asdfghjkl", "zxcvbnm"}, with
-    // each row's left offset in key widths and its key width (1 = a full key).
+    // each row's left offset in key widths and its key width (1 = a full key);
+    // rows are `pitch` apart and keys `pitch` tall.
     static KeyModel fromRows(const std::vector<std::u32string> &rows,
                              const std::vector<float> &offsets,
                              const std::vector<float> &widths,
-                             float sigma = 0.5f);
-    // Text form: one row per line, `<offset> <width> <characters>`; `#` comments.
+                             float sigma = 0.5f, float pitch = 1.0f);
+    // Text form: one row per line, `<offset> <width> <characters>`; `#` comments;
+    // an optional line `pitch <p>` sets the row distance and key height
+    // (default 1, in the same unit).
     static KeyModel parse(const std::string &text, std::string *error = nullptr,
                           float sigma = 0.5f);
 
@@ -41,15 +46,19 @@ public:
     // P(the tap landed on key `tapped` | the user aimed at key `intended`).
     float probability(int tapped, int intended) const { return m_prob[tapped * m_keys.size() + intended]; }
 
-    // Keys whose centres are within `radius` key widths of key `k` (not `k`).
+    // Keys whose centres are within `radius` of key `k` (not `k`), in the
+    // units of the tap model.
     std::vector<int> neighbours(int k, float radius = 1.25f) const;
 
     float sigma() const { return m_sigma; }
+    float heightShare() const { return m_heightShare; }
 
 private:
     std::vector<Key> m_keys;
     std::vector<float> m_prob;
     float m_sigma = 0.5f;
+    float m_heightShare = 0.0f;
+    float yUnit(const Key &k) const;
 };
 
 } // namespace parrotfish

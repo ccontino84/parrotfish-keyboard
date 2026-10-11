@@ -13,7 +13,7 @@ namespace parrotfish {
 namespace format {
 
 constexpr char Magic[8] = {'P', 'F', 'D', 'I', 'C', 'T', 0, 0};
-constexpr uint32_t FormatVersion = 2;
+constexpr uint32_t FormatVersion = 3;
 
 struct Header {
     char magic[8];
@@ -36,7 +36,8 @@ struct Header {
 // (descending). Node 0 is the root.
 struct Node {
     uint32_t link;          // bits 0-29: first child (0 = none)
-    uint16_t ch;            // index into the alphabet
+    uint8_t ch;             // index into the alphabet
+    uint8_t height;         // most letters below: longest word minus depth (at most 255)
     uint8_t best;           // highest frequency in this subtree
     uint8_t freq;           // own frequency, if terminal
 };

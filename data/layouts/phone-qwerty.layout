@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Parrotfish's QWERTY keys as logged on a phone in portrait (keys 103×172 px,
+# rows 172 px apart, ' a full key after l): units are key widths, rows and
+# keys 1.67 key widths tall.
+pitch 1.67
+0    1 qwertyuiop
+0    1 asdfghjkl'
+1.5  1 zxcvbnm

@@ -7,6 +7,7 @@
 #include "parrotfish/keymodel.h"
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace parrotfish {
@@ -27,9 +28,12 @@ struct CorrectorParams {
     float minTapProb = 2e-4f;      // ignore keys less likely than this
     float accentOmitted = 1.2f;    // typed e, meant é
     float accentWrong = 3.0f;      // typed é, meant e (or another accent)
-    float deletion = 4.5f;         // a letter missing from the taps
-    float insertion = 4.5f;        // an extra tap
-    float transposition = 4.0f;    // two neighbouring taps swapped
+    float deletion = 3.5f;         // a letter missing from the taps
+    float insertion = 6.0f;        // an extra tap
+    float transposition = 2.5f;    // two neighbouring taps swapped
+    float doubledDeletion = 2.0f;  // the second of two equal letters missing (aparte)
+    float doubledInsertion = 2.5f; // an extra tap of the key just tapped (coomputer)
+                                   // (both used only when cheaper than deletion, insertion)
     float punctuationSkipped = 0.8f;   // ' or - of the word not typed
     float ruleCost = 0.4f;         // a spelling rule (ae → ä, e' → è)
     int maxEdits = 2;              // insertions + deletions + transpositions
@@ -78,6 +82,11 @@ private:
     CorrectorParams m_params;
     std::vector<int> m_keyOfLetter;      // per alphabet entry: key index or -1
     std::vector<int> m_keyOfBase;        // key of the base letter, or -1
+    std::unordered_map<char32_t, char32_t> m_baseOf;   // lowercase letter → base letter
+    std::vector<uint8_t> m_punctuation;  // per alphabet entry: ' - . (may be left out)
+    std::vector<uint8_t> m_ruleOutput;   // per alphabet entry: made by a spelling rule
+
+    char32_t baseOf(char32_t ch) const;
 };
 
 // Helpers for tests and tools: taps for a plain string (no noise).

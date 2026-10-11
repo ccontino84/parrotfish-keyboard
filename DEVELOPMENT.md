@@ -19,7 +19,7 @@ SPDX-License-Identifier: LicenseRef-TBD
 | `tools/` | Python tools that build and maintain the dictionary data |
 | `data/aosp/` | AOSP wordlists (Apache-2.0), unchanged |
 | `data/rules/` | per-language rules and reviewed generated lists (below) |
-| `data/layouts/` | approximate letter rows of Jolla's en/it/de layouts, for PC tests |
+| `data/layouts/` | approximate letter rows of Jolla's en/it/de layouts, for PC tests (square keys); `phone-*.layout`: keys as tall as on the phone (`pitch`) |
 | `tests/unit/` | unit tests (ctest) |
 | `tests/bench/` | accuracy benchmarks: typos (`typo-bench`) and mixed languages (`lang-bench`) |
 
@@ -47,6 +47,10 @@ Running text, as on the phone (all languages, previous words as context):
 build/tests/sentence-bench -l data/layouts/en.layout -t tests/data/tatoeba-it.txt \
     -d build/data/it.pfd -d build/data/en.pfd -d build/data/de.pfd [-P strength=2]
 ```
+
+Each sentence is a new text; `-m it` starts it leaning towards a language as
+the plugin does (the last text's), `-B` adds the first word of a text and
+2-letter words separately, `-F` types only the first words.
 
 `-P name=value` overrides any engine parameter (`EngineParams`,
 `CorrectorParams`, `LanguageParams`); the defaults in the headers come from
@@ -90,7 +94,12 @@ fainter than the spacebar. Hidden strengths:
 pairs for any engine parameter (`dconf write
 /apps/parrotfish-keyboard/tuning "'gentleConfidence=0.4 pairWeight=0.6'"`).
 With `~/.local/share/parrotfish-keyboard/debug` present, the
-plugin logs timings (never the typed text) to the journal.
+plugin logs timings (never the typed text) to the journal, and appends to
+`~/.local/share/parrotfish-keyboard/slips.log` the kind of slip behind every
+autocorrection kept and every correction picked from the bar: `kept key k l`
+(typed k, meant l), `picked swap`, `missing`, `missing-double`, `extra`,
+`extra-double`, `accent`, `other`. Letter pairs only, never words; it is the
+real tap data for the key model (which slips are common on the phone).
 
 Plugin test on the PC: install to a staging dir (`DESTDIR=… cmake --install
 build`) and load it in `qmlscene-qt5` with `QML2_IMPORT_PATH` and

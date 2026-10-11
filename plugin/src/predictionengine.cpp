@@ -6,6 +6,7 @@
 #include "parrotfish/utf8.h"
 
 #include <QDir>
+#include <algorithm>
 #include <cmath>
 #include <QElapsedTimer>
 #include <QFile>
@@ -15,6 +16,8 @@ namespace {
 
 const char *const Languages[] = {"en", "it", "de"};
 const int MaxSuggestions = 10;
+// Undos of the same autocorrection that stop it (plan §6).
+const int UndosToStop = 2;
 
 std::u32string toU32(const QString &s)
 {
@@ -142,10 +145,22 @@ int PredictionEngine::setKeys(const QJSValue &keys)
                        static_cast<float>(k.property(QStringLiteral("width")).toNumber()),
                        static_cast<float>(k.property(QStringLiteral("height")).toNumber())});
     }
-    if (m_debug)
-        qInfo("parrotfish: %d of %d keys from the layout", static_cast<int>(out.size()), n);
     if (out.size() < 10)
         return 0;
+    auto same = [](const parrotfish::Key &a, const parrotfish::Key &b) {
+        return a.ch == b.ch && a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height;
+    };
+    if (m_layoutKeys && std::equal(out.begin(), out.end(), m_keys.begin(), m_keys.end(), same))
+        return static_cast<int>(out.size());
+    if (m_debug) {
+        // Key positions only, to check the geometry the engine works with.
+        QString keys;
+        for (const parrotfish::Key &k : out)
+            keys += QStringLiteral(" %1:%2,%3/%4x%5").arg(fromU32(std::u32string(1, k.ch)))
+                    .arg(qRound(k.x)).arg(qRound(k.y)).arg(qRound(k.width)).arg(qRound(k.height));
+        qInfo("parrotfish: %d of %d keys from the layout:%s", static_cast<int>(out.size()), n, qPrintable(keys));
+    }
+    m_keys = out;
     m_engine.setLayout(parrotfish::KeyModel(out));
     m_layoutKeys = true;
     update();
@@ -217,9 +232,15 @@ QString PredictionEngine::resolveTap(const QString &preedit, const QString &lift
 
 void PredictionEngine::rejectCorrection(const QString &typed)
 {
-    m_rejected.insert(typed.toLower());
+    const int undos = ++m_undos[typed.toLower()];
     if (m_debug)
-        qInfo("parrotfish: autocorrection undone");
+        qInfo("parrotfish: autocorrection undone (%d of %d)", undos, UndosToStop);
+}
+
+void PredictionEngine::acceptCorrection(const QString &typed)
+{
+    if (m_undos.remove(typed.toLower()) && m_debug)
+        qInfo("parrotfish: undos of an autocorrection forgotten");
 }
 
 void PredictionEngine::log(const QString &message) const
@@ -264,7 +285,7 @@ void PredictionEngine::update()
                 break;
             items.append(fromU32(s.word));
         }
-        if (r.autocorrect == 0 && !m_rejected.contains(m_preedit.toLower()))
+        if (r.autocorrect == 0 && m_undos.value(m_preedit.toLower()) < UndosToStop)
             autocorrection = items.value(0);
         if (m_debug)
             qInfo("parrotfish: %d letters, %.1f ms, %d suggestions%s, lead %s %.2f",

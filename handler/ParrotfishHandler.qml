@@ -12,6 +12,8 @@
 //   correction, shown first and highlighted in the bar (the typed word
 //   stays in the text field and is not repeated in the bar);
 // - Backspace straight after an autocorrection brings back what was typed;
+// - punctuation straight after a picked suggestion replaces its space with
+//   a Backspace key event (also in Android apps);
 // - a tap that starts on one letter key and lifts on another types the
 //   letter that makes the more likely word;
 // - the real key geometry and the text before the cursor go to the engine;
@@ -40,7 +42,6 @@ InputHandler {
     readonly property string language: keyboard.language
     readonly property bool showDividers: dividersConfig.value !== false && dividersConfig.value !== "false"
     readonly property int dividerWidth: Math.max(1, Math.round(Theme.pixelRatio))
-    property int candidateSpaceIndex: -1
     property string preedit
 
     readonly property bool showApplicationSuggestions: (MInputMethodQuick.surroundingText.length + preedit.length) < 1
@@ -55,6 +56,12 @@ InputHandler {
         return ""
     }
 
+    // What a picked suggestion committed, with the space it added, while
+    // punctuation can still replace that space; "" otherwise. Also the text
+    // before the cursor at the pick: Android apps can report the new text
+    // late, so unchanged text means the cursor is still after the space.
+    property string _autoSpaced: ""
+    property string _autoSpacedBefore: ""
     // The last autocorrection, while Backspace can still undo it:
     // { typed, corrected, suffix }.
     property var _correction: null
@@ -62,11 +69,14 @@ InputHandler {
     // True while commit() runs: an emptied preedit is then a committed word,
     // not a word deleted with Backspace.
     property bool _committing: false
-    // The layout whose keys the engine has, its width (rotation) and its
-    // keysRevision (bumped when the Parrotfish layout rebuilds its keys).
-    property Item _keysLayout: null
-    property real _keysWidth: 0
-    property int _keysRevision: -1
+    // The layout whose keys the engine has, and two of its keys (the first
+    // and the last letter key: opposite corners) with their geometry when
+    // read. If neither moved, the keys are taken as unchanged.
+    property Item _probeLayout: null
+    property Item _probeFirst: null
+    property Item _probeLast: null
+    property string _probeFirstAt: ""
+    property string _probeLastAt: ""
     property Item _spacebar: null
     // The spacebar's text item, switched to styled text so that the language
     // can be shown in italics; null if it can't be found.
@@ -81,8 +91,8 @@ InputHandler {
         tuning: tuningConfig.value
         onLeadingLanguageChanged: inputHandler._updateSpacebar()
         // New parameters reset the engine: pass the keys again.
-        onTuningChanged: inputHandler._keysLayout = null
-        onStrengthChanged: inputHandler._keysLayout = null
+        onTuningChanged: inputHandler._probeLayout = null
+        onStrengthChanged: inputHandler._probeLayout = null
     }
 
     ConfigurationValue {
@@ -194,16 +204,24 @@ InputHandler {
     }
 
     function applyPrediction(replacement, index) {
+        if (preedit !== "" && replacement !== preedit)
+            predictionEngine.acceptCorrection(preedit)   // forgets earlier undos
         replacement = replacement + " "
-        candidateSpaceIndex = MInputMethodQuick.surroundingTextValid
-                ? MInputMethodQuick.cursorPosition + replacement.length : -1
+        var before = _textBefore()
         commit(replacement)
+        _autoSpaced = replacement
+        _autoSpacedBefore = before
     }
 
     function handleKeyClick() {
         var handled = false
         var correction = _correction
         _correction = null   // Backspace can only undo straight after
+        if (correction !== null && !(pressedKey.key === Qt.Key_Backspace && preedit === ""))
+            predictionEngine.acceptCorrection(correction.typed)   // kept
+        var autoSpaced = _autoSpaced
+        if (pressedKey.keyType !== KeyType.ShiftKey && pressedKey.keyType !== KeyType.SymbolKey)
+            _autoSpaced = ""   // only the next key (after Shift or ?123) may replace it
         keyboard.expandedPaste = false
 
         if (pressedKey.key === Qt.Key_Space) {
@@ -275,17 +293,13 @@ InputHandler {
                         commit(preedit + pressedKey.text)
                     }
                 } else {
-                    if (candidateSpaceIndex > 0 && candidateSpaceIndex === MInputMethodQuick.cursorPosition
-                            && ",.?!".indexOf(pressedKey.text) >= 0
-                            && MInputMethodQuick.surroundingText.charAt(MInputMethodQuick.cursorPosition - 1) === " ") {
-                        if (inputHandler.language === "FR" && "?!".indexOf(pressedKey.text) >= 0) {
-                            // follow French grammar rules for ? and !
-                            MInputMethodQuick.sendCommit(pressedKey.text + " ")
-                        } else {
-                            // replace automatically added space from candidate clicking
-                            MInputMethodQuick.sendCommit(pressedKey.text + " ", -1, 1)
-                        }
-                        preedit = ""
+                    if (autoSpaced !== "" && ",.;:?!".indexOf(pressedKey.text) >= 0
+                            && (_endsTextBefore(autoSpaced) || _textBefore() === _autoSpacedBefore)) {
+                        // Replace the space added by a picked suggestion: a
+                        // Backspace key event, as for undo (Jolla's replacing
+                        // commit failed in Android apps).
+                        MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+                        commit(pressedKey.text + " ")
                     } else {
                         commit(pressedKey.text)
                     }
@@ -310,10 +324,6 @@ InputHandler {
             MInputMethodQuick.sendPreedit(word, undefined, -wordLength, wordLength)
             preedit = word
             handled = true
-        }
-
-        if (pressedKey.keyType !== KeyType.ShiftKey && pressedKey.keyType !== KeyType.SymbolKey) {
-            candidateSpaceIndex = -1
         }
 
         return handled
@@ -348,12 +358,17 @@ InputHandler {
     // Only if the correction is right before the cursor (the cursor may have
     // been moved by tapping the text, which is not a key click).
     function _canUndo(correction) {
+        return _endsTextBefore(correction.corrected + correction.suffix)
+    }
+
+    // Whether the text right before the cursor is `text`. True when the app
+    // doesn't tell: the key came straight after the commit.
+    function _endsTextBefore(text) {
         if (!MInputMethodQuick.surroundingTextValid)
-            return true   // the app doesn't tell; Backspace came straight after
+            return true
         var before = _textBefore()
-        var expected = correction.corrected + correction.suffix
-        return before.length >= expected.length
-                && before.substr(before.length - expected.length) === expected
+        return before.length >= text.length
+                && before.substr(before.length - text.length) === text
     }
 
     // The text of the tapped key; for a tap that started on a neighbouring
@@ -413,7 +428,7 @@ InputHandler {
                 && item.visible && item.width > 0
     }
 
-    function _scan(item, root, keys) {
+    function _scan(item, root, keys, items) {
         var children = item.children
         if (!children)
             return
@@ -423,12 +438,13 @@ InputHandler {
                 var p = child.mapToItem(root, child.width / 2, child.height / 2)
                 keys.push({ "ch": child.caption, "x": p.x, "y": p.y,
                             "width": child.width, "height": child.height })
+                items.push(child)
             } else if (child.key === Qt.Key_Space && child.languageLabel !== undefined
                        && child.languageLabel !== "" && _spacebar === null) {
                 _spacebar = child
                 _spacebarLabel = _findLabel(child)
             } else {
-                _scan(child, root, keys)
+                _scan(child, root, keys, items)
             }
         }
     }
@@ -445,28 +461,50 @@ InputHandler {
         return null
     }
 
+    // Where a key is, relative to the layout, and its size.
+    function _geometry(key, layout) {
+        if (!key || !key.visible)
+            return ""
+        var p = key.mapToItem(layout, 0, 0)
+        return p.x + "," + p.y + "," + key.width + "," + key.height
+    }
+
+    // Checks the keys at every new word: a geometry read once and kept could
+    // be stale (alpha28: wrong corrections until a settings change made the
+    // handler read the keys again). Reading them all costs 2-3 ms on the
+    // phone, so only two keys are checked; all are read again if either moved
+    // or is gone (rebuilt keys). The engine is rebuilt only when keys change.
     function _updateLayout() {
         var layout = keyboard.layout
         if (!layout)
             return
-        var revision = typeof layout.keysRevision === "number" ? layout.keysRevision : 0
-        if (layout === _keysLayout && layout.width === _keysWidth && revision === _keysRevision)
+        var started = Date.now()
+        if (layout === _probeLayout && _probeFirstAt !== ""
+                && _geometry(_probeFirst, layout) === _probeFirstAt
+                && _geometry(_probeLast, layout) === _probeLastAt) {
+            predictionEngine.log("layout unchanged, checked in " + (Date.now() - started) + " ms")
             return
+        }
         var keys = []
+        var items = []
         _spacebar = null
         _spacebarLabel = null
         try {
-            _scan(layout, layout, keys)
+            _scan(layout, layout, keys, items)
         } catch (e) {
             predictionEngine.log("scanning the layout failed: " + e)
         }
         predictionEngine.log("layout " + layout.languageCode + ": " + keys.length
-                             + " letter keys, spacebar " + (_spacebar !== null)
-                             + ", spacebar label " + (_spacebarLabel !== null))
+                             + " letter keys in " + (Date.now() - started) + " ms, spacebar "
+                             + (_spacebar !== null) + ", spacebar label " + (_spacebarLabel !== null))
         if (predictionEngine.setKeys(keys) > 0) {
-            _keysLayout = layout
-            _keysWidth = layout.width
-            _keysRevision = revision
+            _probeLayout = layout
+            _probeFirst = items[0]
+            _probeLast = items[items.length - 1]
+            _probeFirstAt = _geometry(_probeFirst, layout)
+            _probeLastAt = _geometry(_probeLast, layout)
+        } else {
+            _probeLayout = null
         }
         _updateSpacebar()
     }

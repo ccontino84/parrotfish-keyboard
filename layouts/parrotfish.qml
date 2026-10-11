@@ -19,8 +19,6 @@ KeyboardLayout {
     readonly property var arrangement: Arrangements.get(arrangementConfig.value)
     // Shown on the spacebar until the engine knows the language.
     readonly property string arrangementName: arrangement.name
-    // Bumped when the keys are rebuilt: the handler then reads them again.
-    property int keysRevision: 0
 
     // Key backgrounds (parrotfish/KeyBackground.qml): fill and border are
     // set separately; keyTuning overrides their strengths.
@@ -110,6 +108,5 @@ KeyboardLayout {
         }
         _createdKeys = created
         updateSizes()
-        keysRevision++
     }
 }

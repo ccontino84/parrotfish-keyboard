@@ -7,7 +7,7 @@
 
 #include <QAbstractListModel>
 #include <QJSValue>
-#include <QSet>
+#include <QHash>
 #include <QString>
 #include <QStringList>
 
@@ -65,15 +65,19 @@ public:
     // next-word suggestions.
     Q_INVOKABLE void setContext(const QString &textBefore);
     // Letter keys of the current layout: [{ch, x, y, width, height}], centres
-    // in any one coordinate system. Returns how many keys were taken.
+    // in any one coordinate system. Returns how many keys were taken. The
+    // engine is rebuilt only when they differ from the keys it has.
     Q_INVOKABLE int setKeys(const QJSValue &keys);
     // An uncertain tap on `lifted` that started on `initial`: the letter to
     // type after `preedit`.
     Q_INVOKABLE QString resolveTap(const QString &preedit, const QString &lifted,
                                    const QString &initial) const;
-    // The user undid the autocorrection of `typed`: don't correct it again
-    // in this session.
+    // The user undid the autocorrection of `typed`. After the second undo
+    // it isn't corrected again in this session.
     Q_INVOKABLE void rejectCorrection(const QString &typed);
+    // The user kept an autocorrection of `typed` or picked a correction of it
+    // from the bar: its undos are forgotten.
+    Q_INVOKABLE void acceptCorrection(const QString &typed);
     // A diagnostic line for the journal, only while debugging is on. Never
     // pass typed text.
     Q_INVOKABLE void log(const QString &message) const;
@@ -102,7 +106,8 @@ private:
     QString m_strength = QStringLiteral("gentle");
     QString m_autocorrection;
     QString m_tuning;
-    QSet<QString> m_rejected;   // lowercase typed words
+    QHash<QString, int> m_undos;   // lowercase typed word → undos in a row
     bool m_layoutKeys = false;   // keys came from the real layout
+    std::vector<parrotfish::Key> m_keys;   // the last keys from the layout
     bool m_debug = false;
 };

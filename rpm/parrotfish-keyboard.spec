@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 
 Name:       parrotfish-keyboard
-Version:    0.1.0~alpha28
+Version:    0.1.0~alpha33
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LicenseRef-TBD AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
@@ -37,12 +37,15 @@ cmake --build build-rpm -- %{?_smp_mflags}
 %install
 DESTDIR=%{buildroot} cmake --install build-rpm
 
-%post
-echo "parrotfish-keyboard: restart the keyboard to load it: systemctl --user restart maliit-server"
+# Restart the keyboard (a systemd user service) so that it loads the new
+# files: systemctl-user (Sailfish's systemd package) runs systemctl --user for
+# the logged-in user. %posttrans: after the whole upgrade, old files removed.
+%posttrans
+systemctl-user try-restart maliit-server.service || :
 
 %postun
 if [ $1 -eq 0 ]; then
-    echo "parrotfish-keyboard: restart the keyboard to unload it: systemctl --user restart maliit-server"
+    systemctl-user try-restart maliit-server.service || :
 fi
 
 %files

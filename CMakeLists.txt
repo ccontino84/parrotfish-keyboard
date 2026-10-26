@@ -21,6 +21,9 @@ set(PARROTFISH_DATA_DIR "${CMAKE_INSTALL_FULL_DATADIR}/parrotfish-keyboard"
 set(PARROTFISH_QML_DIR "${CMAKE_INSTALL_FULL_LIBDIR}/qt5/qml" CACHE PATH "Qt 5 QML import path")
 set(PARROTFISH_HANDLER_DIR "${CMAKE_INSTALL_FULL_DATADIR}/maliit/plugins/com/jolla/handlers"
     CACHE PATH "jolla-keyboard handlers")
+# Sailfish OS before 5.2 loads handlers from the plugin directory itself.
+set(PARROTFISH_OLD_HANDLER_DIR "${CMAKE_INSTALL_FULL_DATADIR}/maliit/plugins/com/jolla"
+    CACHE PATH "jolla-keyboard handlers before Sailfish OS 5.2")
 set(PARROTFISH_LAYOUT_DIR "${CMAKE_INSTALL_FULL_DATADIR}/maliit/plugins/com/jolla/layouts"
     CACHE PATH "jolla-keyboard layouts")
 
@@ -32,6 +35,8 @@ if(PARROTFISH_PLUGIN)
     add_subdirectory(plugin)
     install(FILES handler/ParrotfishHandler.qml handler/parrotfish-keyboard.conf
             DESTINATION ${PARROTFISH_HANDLER_DIR})
+    # One package for all versions: each loads the copy in its own directory.
+    install(FILES handler/ParrotfishHandler.qml DESTINATION ${PARROTFISH_OLD_HANDLER_DIR})
     install(FILES layouts/parrotfish.qml layouts/layouts_parrotfish.conf
             DESTINATION ${PARROTFISH_LAYOUT_DIR})
     install(DIRECTORY layouts/parrotfish DESTINATION ${PARROTFISH_LAYOUT_DIR})

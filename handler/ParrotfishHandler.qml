@@ -334,7 +334,7 @@ InputHandler {
     }
 
     function isInputCharacter(character) {
-        return KeyboardSupport.isLetter(character) || "\'-".indexOf(character) >= 0
+        return predictionEngine.isLetter(character) ||"\'-".indexOf(character) >= 0
     }
 
     function reset() {

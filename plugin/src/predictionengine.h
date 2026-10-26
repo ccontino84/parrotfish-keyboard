@@ -82,6 +82,9 @@ public:
     // picked a correction from the bar ("picked"); appends the kind of slip
     // (a letter pair for a wrong key, never the words) to slips.log.
     Q_INVOKABLE void logSlips(const QString &typed, const QString &meant, const QString &how);
+    // Whether `character` (its first code point) is a letter. Jolla's
+    // KeyboardSupport.isLetter is missing before Sailfish OS 5.2.
+    Q_INVOKABLE bool isLetter(const QString &character) const;
     // A diagnostic line for the journal, only while debugging is on. Never
     // pass typed text.
     Q_INVOKABLE void log(const QString &message) const;

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 
 Name:       parrotfish-keyboard
-Version:    0.1.0~alpha37
+Version:    0.1.0~alpha39
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LicenseRef-TBD AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
@@ -53,6 +53,7 @@ fi
 %{_libdir}/qt5/qml/Parrotfish
 %{_datadir}/maliit/plugins/com/jolla/handlers/ParrotfishHandler.qml
 %{_datadir}/maliit/plugins/com/jolla/handlers/parrotfish-keyboard.conf
+%{_datadir}/maliit/plugins/com/jolla/ParrotfishHandler.qml
 %{_datadir}/maliit/plugins/com/jolla/layouts/parrotfish.qml
 %{_datadir}/maliit/plugins/com/jolla/layouts/layouts_parrotfish.conf
 %{_datadir}/maliit/plugins/com/jolla/layouts/parrotfish

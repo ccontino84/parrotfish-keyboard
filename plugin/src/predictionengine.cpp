@@ -298,6 +298,12 @@ void PredictionEngine::logSlips(const QString &typed, const QString &meant, cons
         f.write((how + QLatin1Char(' ') + s + QLatin1Char('\n')).toUtf8());
 }
 
+bool PredictionEngine::isLetter(const QString &character) const
+{
+    const QVector<uint> ucs4 = character.toUcs4();
+    return !ucs4.isEmpty() && QChar::isLetter(ucs4.first());
+}
+
 void PredictionEngine::log(const QString &message) const
 {
     if (m_debug)

@@ -21,6 +21,7 @@ project is published.
 | Following the language word by word | `engine/src/languagetracker.cpp` | hidden Markov model, forward algorithm | L. R. Rabiner, "A tutorial on hidden Markov models and selected applications in speech recognition", Proc. IEEE 77(2), 1989 |
 | Language evidence from word frequencies | `LanguageTracker::observe` | statistical language identification | T. Dunning, "Statistical identification of language", NMSU tech. report MCCS-94-273, 1994; W. B. Cavnar, J. M. Trenkle, "N-gram-based text categorization", 1994 |
 | Accent-free matching | `corrector.cpp` (`accentOmitted`) | Unicode canonical decomposition, base letter comparison | The Unicode Standard, normalization forms (UAX #15) |
+| Searching the likeliest language first and cutting the others short | `Engine::process` (`searchMargin`), `Corrector::search` (`bound`) | branch and bound: a search drops branches that can't beat the best solution found so far | A. H. Land, A. G. Doig, "An automatic method of solving discrete programming problems", Econometrica 28(3), 1960 |
 
 Not implemented in milestone 1 (listed for later): next-word prediction from
 word pairs (n-gram language models, e.g. Jelinek 1980s; Katz back-off 1987).

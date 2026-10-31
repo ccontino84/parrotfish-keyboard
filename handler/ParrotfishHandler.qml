@@ -8,7 +8,7 @@
 // BSD-3-Clause, see LICENSES/BSD-3-Clause.txt): the word being typed is
 // kept as preedit and committed on Space, punctuation or Return. Changes:
 // - suggestions and next words come from our engine (Parrotfish.Keyboard);
-// - Gentle autocorrect: Space or punctuation commits the engine's
+// - autocorrect (Normal by default; Gentle, Off): Space or punctuation commits the engine's
 //   correction, shown first and highlighted in the bar (the typed word
 //   stays in the text field and is not repeated in the bar);
 // - Backspace straight after an autocorrection brings back what was typed;
@@ -17,6 +17,8 @@
 // - a tap that starts on one letter key and lifts on another types the
 //   letter that makes the more likely word;
 // - the real key geometry and the text before the cursor go to the engine;
+// - the typing languages come from dconf /apps/parrotfish-keyboard/languages
+//   (settings/ParrotfishLanguages.qml);
 // - the spacebar shows the typing language;
 // - swiping to another layout can be switched off
 //   (dconf /apps/parrotfish-keyboard/swipe: normal, off);
@@ -87,8 +89,18 @@ InputHandler {
     PredictionEngine {
         id: predictionEngine
         language: inputHandler.language
+        languages: languagesConfig.value
         strength: strengthConfig.value
         tuning: tuningConfig.value
+        slipsConfig: {
+            var layout = keyboard.layout
+            if (!layout || layout.keyHeightPercent === undefined)
+                return ""
+            return layout.arrangementName.replace(/ /g, "-") + " "
+                    + (keyboard.portraitMode ? "portrait" : "landscape")
+                    + " height=" + layout.keyHeightPercent
+                    + (layout.numberRowOn ? " numbers=" + layout.numberRowPercent : "")
+        }
         onLeadingLanguageChanged: inputHandler._updateSpacebar()
         // New parameters reset the engine: pass the keys again.
         onTuningChanged: inputHandler._probeLayout = null
@@ -97,7 +109,14 @@ InputHandler {
 
     ConfigurationValue {
         id: lastLanguageConfig
-        key: "/apps/parrotfish-keyboard/last-language"   // en, it, de
+        key: "/apps/parrotfish-keyboard/last-language"   // en, it, pt_BR...
+        defaultValue: ""
+    }
+
+    ConfigurationValue {
+        id: languagesConfig
+        // "en it de": the typing languages; "": the system language
+        key: "/apps/parrotfish-keyboard/languages"
         defaultValue: ""
     }
 
@@ -122,8 +141,8 @@ InputHandler {
 
     ConfigurationValue {
         id: strengthConfig
-        key: "/apps/parrotfish-keyboard/autocorrect"   // off, gentle, normal
-        defaultValue: "gentle"
+        key: "/apps/parrotfish-keyboard/autocorrect"   // off, gentle, normal, strong
+        defaultValue: "normal"
     }
 
     onSelect: {
@@ -167,6 +186,7 @@ InputHandler {
             // later; until then, assume the word and a space.
             _setContext(_textBefore() + _lastPreedit + " ")
             _rememberLanguage()
+            predictionEngine.countWord()
         } else if (preedit.length === 0 && _lastPreedit.length > 0) {
             // The word was deleted letter by letter: only the text before it
             // counts (its last letter, say "i", is not a word typed).
@@ -260,6 +280,7 @@ InputHandler {
                 MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
             MInputMethodQuick.sendCommit(correction.typed + correction.suffix)
             predictionEngine.rejectCorrection(correction.typed)
+            predictionEngine.logSlips(correction.typed, correction.corrected, "undone")
             predictionEngine.log("undo: " + length + " characters replaced by "
                                  + (correction.typed.length + correction.suffix.length))
             handled = true
@@ -424,11 +445,14 @@ InputHandler {
         return MInputMethodQuick.surroundingText.substring(Math.max(0, pos - 1000), pos)
     }
 
-    // Letter keys and the apostrophe key: the keys words are typed with.
+    // Letter keys and the apostrophe key: the keys words are typed with. The
+    // sticky key (the layout's apostrophe key) counts as the apostrophe
+    // whatever sign it types, so that the engine's key map stays the same.
     function _isLetterKey(item) {
         return item.keyType !== undefined && typeof item.caption === "string"
                 && item.caption.length === 1
-                && (item.caption.toLowerCase() !== item.caption.toUpperCase() || item.caption === "'")
+                && (item.caption.toLowerCase() !== item.caption.toUpperCase() || item.caption === "'"
+                    || item.sticky === true)
                 && item.visible && item.width > 0
     }
 
@@ -440,7 +464,7 @@ InputHandler {
             var child = children[i]
             if (_isLetterKey(child)) {
                 var p = child.mapToItem(root, child.width / 2, child.height / 2)
-                keys.push({ "ch": child.caption, "x": p.x, "y": p.y,
+                keys.push({ "ch": child.sticky === true ? "'" : child.caption, "x": p.x, "y": p.y,
                             "width": child.width, "height": child.height })
                 items.push(child)
             } else if (child.key === Qt.Key_Space && child.languageLabel !== undefined
@@ -552,8 +576,10 @@ InputHandler {
         var unsure = predictionEngine.confidence < 0.7
         var label = typeof keyboard.layout.arrangementName === "string"
                 ? keyboard.layout.arrangementName : keyboard.layout.languageCode
-        if (lead !== "")
+        if (lead !== "") {
+            lead = lead.split("_")[0]   // pt_BR: pt
             label = unsure && _spacebarLabel ? "<i>" + lead + "</i>" : lead
+        }
         if (_spacebar.languageLabel !== label)
             _spacebar.languageLabel = label
     }

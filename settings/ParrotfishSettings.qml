@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LicenseRef-TBD
 //
-// Parrotfish's section in Settings → Text input. Jolla's text input page
+// Parrotfish's section in Settings → Text input (the typing languages
+// have their own page, ParrotfishLanguages.qml). Jolla's text input page
 // loads it (a Loader per settings= page of the enabled layouts' handlers),
 // so it's a plain Column; Jolla shows it while the Parrotfish layout is
 // enabled. Every value is a dconf key the keyboard watches: changes apply at
@@ -9,21 +10,40 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0
+import "languages.js" as Languages
 
 Column {
     SectionHeader {
         text: "Parrotfish"
     }
 
+    ValueButton {
+        label: qsTr("Typing languages")
+        value: Languages.names(Languages.selected(languagesConfig.value, Qt.locale().name))
+        onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishLanguages.qml"))
+
+        ConfigurationValue {
+            id: languagesConfig
+            key: "/apps/parrotfish-keyboard/languages"
+            defaultValue: ""
+        }
+    }
+
     Repeater {
-        // key: under /apps/parrotfish-keyboard/; the first value is the default
+        // key: under /apps/parrotfish-keyboard/; the default is "default", or
+        // else the first value
         model: [
             { "key": "layout", "label": qsTr("Layout"), "description": "",
-              "values": ["qwerty", "qwertz"],
-              "texts": ["QWERTY", "QWERTZ"] },
+              "values": ["qwerty", "qwertz", "azerty", "nordic"],
+              "default": Languages.layoutFor(Qt.locale().name),
+              "texts": ["QWERTY", "QWERTZ", "AZERTY", "QWERTY ÅÖÄ"] },
             { "key": "autocorrect", "label": qsTr("Autocorrect"), "description": "",
-              "values": ["gentle", "normal", "off"],
-              "texts": [qsTr("Gentle"), qsTr("Normal"), qsTr("Off")] },
+              "values": ["strong", "normal", "gentle", "off"], "default": "normal",
+              "texts": [qsTr("Strong (experimental)"), qsTr("Normal"), qsTr("Gentle"), qsTr("Off")] },
+            { "key": "key-height", "label": qsTr("Key height"),
+              "description": qsTr("In portrait"),
+              "values": ["100", "90", "80"],
+              "texts": ["100%", "90%", "80%"] },
             { "key": "swipe", "label": qsTr("Swipe between keyboards"),
               "description": qsTr("Off: long-press the spacebar to switch"),
               "values": ["normal", "off"],
@@ -35,7 +55,19 @@ Column {
             { "key": "key-border", "label": qsTr("Key border"),
               "description": "",
               "values": ["none", "line", "raised"],
-              "texts": [qsTr("None"), qsTr("Line"), qsTr("Raised")] }
+              "texts": [qsTr("None"), qsTr("Line"), qsTr("Raised")] },
+            { "key": "sticky-side", "label": qsTr("Sticky key"),
+              "description": qsTr("Keeps the last sign picked from its long press"),
+              "values": ["right", "left"],
+              "texts": [qsTr("On the right"), qsTr("On the left")] },
+            { "key": "key-gap", "label": qsTr("Space between keys"),
+              "description": qsTr("Share of the key height"),
+              "values": ["2", "3", "5", "7", "10"], "default": "5",
+              "texts": ["2%", "3%", "5%", "7%", "10%"] },
+            { "key": "long-press-hint", "label": qsTr("Long-press hint"),
+              "description": qsTr("Marks keys with more characters"),
+              "values": ["dot", "line", "off"], "default": "dot",
+              "texts": [qsTr("Dot"), qsTr("Line"), qsTr("Off")] }
         ]
 
         ComboBox {
@@ -61,8 +93,36 @@ Column {
             ConfigurationValue {
                 id: config
                 key: "/apps/parrotfish-keyboard/" + comboBox.setting.key
-                defaultValue: comboBox.setting.values[0]
+                defaultValue: comboBox.setting["default"] !== undefined ? comboBox.setting["default"]
+                                                                        : comboBox.setting.values[0]
             }
+        }
+    }
+
+    TextSwitch {
+        automaticCheck: false
+        checked: numberRowConfig.value === true || numberRowConfig.value === "true"
+        text: qsTr("Number row")
+        onClicked: numberRowConfig.value = !checked
+
+        ConfigurationValue {
+            id: numberRowConfig
+            key: "/apps/parrotfish-keyboard/number-row"
+            defaultValue: false
+        }
+    }
+
+    TextSwitch {
+        visible: numberRowConfig.value === true || numberRowConfig.value === "true"
+        automaticCheck: false
+        checked: String(numberRowHeightConfig.value) !== "100"
+        text: qsTr("Shorter number row")
+        onClicked: numberRowHeightConfig.value = checked ? "100" : "75"
+
+        ConfigurationValue {
+            id: numberRowHeightConfig
+            key: "/apps/parrotfish-keyboard/number-row-height"
+            defaultValue: "100"
         }
     }
 

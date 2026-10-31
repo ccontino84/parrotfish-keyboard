@@ -11,10 +11,13 @@
 //   light top edge, dark bottom edge, as on a raised button).
 // Both "none" is Jolla's look. Letter keys stay fainter than the spacebar
 // (Jolla's 0.07), so that it stands out. The layout's keyTuning
-// ("fill=0.03 shade=0.05 border=0.1", hidden dconf
+// ("fill=0.03 shade=0.05 border=0.1 gap=0.05", hidden dconf
 // /apps/parrotfish-keyboard/key-tuning) overrides the default strengths:
 // alphas of the ambience's primary colour (for "raised", of its white and
 // black edges).
+// functionLook (the sticky key) sets a key apart from the letters, whatever
+// their look: flat and a little stronger, as Jolla's spacebar (0.07; ?123
+// and Enter are 0.17), no border.
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 
@@ -23,8 +26,9 @@ Rectangle {
 
     readonly property Item key: parent
     readonly property Item layout: key && key.parent ? key.parent.parent : null
-    readonly property string fillStyle: _setting("keyFill", ["none", "flat", "shaded"], "none")
-    readonly property string borderStyle: _setting("keyBorder", ["none", "line", "raised"], "none")
+    property bool functionLook: false
+    readonly property string fillStyle: functionLook ? "flat" : _setting("keyFill", ["none", "flat", "shaded"], "none")
+    readonly property string borderStyle: functionLook ? "none" : _setting("keyBorder", ["none", "line", "raised"], "none")
     readonly property bool styled: fillStyle !== "none" || borderStyle !== "none"
     readonly property bool raised: borderStyle === "raised"
     readonly property var strengths: _strengths(fillStyle, borderStyle,
@@ -54,6 +58,8 @@ Rectangle {
             if (pair.length === 2 && result.hasOwnProperty(pair[0]) && !isNaN(value))
                 result[pair[0]] = value
         }
+        if (functionLook)
+            result.fill = 0.07
         if (fill === "none")
             result.fill = 0
         if (fill !== "shaded")
@@ -65,14 +71,16 @@ Rectangle {
 
     visible: styled
     z: -2   // below the label and Jolla's pressed highlight
+    // The layout's gap all round (Jolla's spacebar and function keys get the
+    // same, BottomRow); Jolla's paddings in other layouts.
+    readonly property real _gap: layout && layout.keyGap !== undefined ? layout.keyGap : -1
     anchors {
         fill: parent
         // first and last keys of a row also own the row's indent
-        leftMargin: key.leftPadding + Theme.paddingSmall
-        rightMargin: key.rightPadding + Theme.paddingSmall
-        // as Jolla's spacebar and function keys, so that rows line up
-        topMargin: Theme.paddingMedium
-        bottomMargin: Theme.paddingMedium
+        leftMargin: key.leftPadding + (_gap >= 0 ? _gap : Theme.paddingSmall)
+        rightMargin: key.rightPadding + (_gap >= 0 ? _gap : Theme.paddingSmall)
+        topMargin: _gap >= 0 ? _gap : Theme.paddingMedium
+        bottomMargin: _gap >= 0 ? _gap : Theme.paddingMedium
     }
     radius: geometry.keyRadius
     color: key.pressed ? Theme.rgba(key.palette.highlightBackgroundColor, 0.6)

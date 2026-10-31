@@ -18,6 +18,8 @@ option(PARROTFISH_PLUGIN "Build the QML plugin and install the handler (needs Qt
 option(PARROTFISH_DEVTOOLS "Install pf-query and the benchmarks (test builds)" OFF)
 set(PARROTFISH_DATA_DIR "${CMAKE_INSTALL_FULL_DATADIR}/parrotfish-keyboard"
     CACHE PATH "Dictionaries and layouts")
+# The package version, for the debug logs (the spec passes %{version}).
+set(PARROTFISH_VERSION "dev" CACHE STRING "Package version")
 set(PARROTFISH_QML_DIR "${CMAKE_INSTALL_FULL_LIBDIR}/qt5/qml" CACHE PATH "Qt 5 QML import path")
 set(PARROTFISH_HANDLER_DIR "${CMAKE_INSTALL_FULL_DATADIR}/maliit/plugins/com/jolla/handlers"
     CACHE PATH "jolla-keyboard handlers")
@@ -41,7 +43,8 @@ if(PARROTFISH_PLUGIN)
             DESTINATION ${PARROTFISH_LAYOUT_DIR})
     install(DIRECTORY layouts/parrotfish DESTINATION ${PARROTFISH_LAYOUT_DIR})
     # the .conf files name this path for Settings > Text input
-    install(FILES settings/ParrotfishSettings.qml DESTINATION ${PARROTFISH_DATA_DIR}/settings)
+    install(FILES settings/ParrotfishSettings.qml settings/ParrotfishLanguages.qml settings/languages.js
+            DESTINATION ${PARROTFISH_DATA_DIR}/settings)
 endif()
 
 if(PARROTFISH_TESTS)

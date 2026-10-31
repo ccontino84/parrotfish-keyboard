@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 
 # Dictionaries: <lang>:<AOSP wordlist name>
-set(PARROTFISH_LANGUAGES en:en_US it:it de:de)
+set(PARROTFISH_LANGUAGES en:en_US it:it de:de es:es fr:fr pt_BR:pt_BR pt_PT:pt_PT nl:nl sv:sv da:da nb:nb ro:ro fi:fi)
 
 set(dicts)
 foreach(entry ${PARROTFISH_LANGUAGES})

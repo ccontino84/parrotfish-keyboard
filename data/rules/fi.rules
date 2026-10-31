@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# No spelling rules for this language yet.
+
+# find-accent-misspellings.py: ä and ö are letters of their own, so a plain
+# spelling is often another word (vaara/väärä, saari/sääri).
+no-misspellings
+
+# find-supplement.py: Common Voice has little Finnish text (35k words), so
+# a word form seen this many times in Common Voice and Tatoeba together is
+# enough (a noun has hundreds of forms; most are rare in any corpus).
+one-source 3
+
+# Word forms the list lacks (dictionary.h: isWordForm): typed, they stand;
+# they are never suggested. Clitics attach to any form (onko, tuletkin),
+# -s and the possessives only after a vowel; a possessive replaces a final
+# n or t (talon, talot -> taloni). Up to two endings (talossanikin).
+suffix kaan kään kin han hän ko kö pa pä
+suffix s after=aeiouyäö
+suffix ni si mme nne nsa nsä after=aeiouyäö drop=nt
+# Compounds: up to three words of at least four letters (parkki+paikkaa),
+# and hyphenated parts (juna-asemalta).
+compound 4 3

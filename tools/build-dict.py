@@ -50,8 +50,15 @@ def fold(word):
     return s.replace("ß", "ss")
 
 
+# Letters with no Unicode decomposition that are typed as a plain letter
+# when the keyboard lacks them (Danish/Norwegian ø, æ; French œ).
+BASE_EXTRA = {"ø": "o", "æ": "a", "œ": "o"}
+
+
 def base_char(c):
     """Lowercase base letter of one character, for accent-free matching."""
+    if c.lower() in BASE_EXTRA:
+        return BASE_EXTRA[c.lower()]
     d = unicodedata.normalize("NFD", c.lower())
     b = "".join(x for x in d if unicodedata.category(x) != "Mn")
     return b if len(b) == 1 else c.lower()
@@ -145,13 +152,30 @@ def read_rules(path):
     rules = []
     for line in read_list(path):
         parts = line.split()
-        if parts[0] in ("paradigm", "only-marks", "capitalised-nouns"):
-            continue   # used by find-accent-misspellings.py
+        if parts[0] in ("paradigm", "paradigm-plain", "only-marks", "no-misspellings",
+                        "capitalised-nouns", "min-freq", "one-source", "suffix", "compound"):
+            continue   # settings for the generators (min-freq, suffix, compound: also main())
         flags = RULE_FINAL if "final" in parts[2:] else 0
         if not 1 <= len(parts[0]) <= 3 or len(parts[1]) != 1:
             sys.exit(f"{path}: bad rule {line!r}")
         rules.append((parts[0], parts[1], flags))
     return rules
+
+
+def word_parts(path):
+    """The `suffix` and `compound` lines of a rules file, for the engine
+    (dictformat.h: Header::wordParts), or "" if none."""
+    return "\n".join(" ".join(line.split()) for line in read_list(path)
+                     if line.split()[0] in ("suffix", "compound"))
+
+
+def min_freq(path):
+    """The `min-freq N` setting of a rules file, or 0."""
+    for line in read_list(path):
+        parts = line.split()
+        if parts[0] == "min-freq":
+            return int(parts[1])
+    return 0
 
 
 def read_pairs(path, words, order):
@@ -263,6 +287,14 @@ def main():
     args = ap.parse_args()
 
     words = parse_aosp(args.wordlist)
+    # `min-freq N` in LANG.rules drops the rare entries of a list padded
+    # with generated forms (ro); the supplement adds back those in use.
+    floor = min_freq(f"{args.rules_dir}/{args.lang}.rules")
+    dropped = 0
+    if floor:
+        for w in [w for w, e in words.items() if e["f"] < floor and not e["attrs"] & ATTR_MISSPELLING]:
+            del words[w]
+            dropped += 1
     supplemented = add_supplement(words, f"{args.rules_dir}/{args.lang}.supplement")
     forms = add_supplement(words, f"{args.rules_dir}/{args.lang}.forms")
     marked = mark_misspellings(words, f"{args.rules_dir}/{args.lang}.misspellings")
@@ -299,6 +331,9 @@ def main():
             if e["attrs"]:
                 target = add_string(e["target"]) if e["target"] else 0xFFFFFFFF
                 attrs.append((n.index, e["attrs"], target))
+
+    parts = word_parts(f"{args.rules_dir}/{args.lang}.rules")
+    parts_ref = add_string(parts) + 1 if parts else 0
 
     if len(order) >= 1 << 30:
         sys.exit("too many nodes")
@@ -365,7 +400,7 @@ def main():
                          len(strings), sections[4],
                          len(pair_rows), sections[5],
                          entries, sections[6],
-                         0, 0)
+                         parts_ref, 0)
     out = bytearray(header)
     for blob, start in zip(blobs, sections):
         out += b"\0" * (start - len(out))
@@ -373,7 +408,7 @@ def main():
     with open(args.out, "wb") as fh:
         fh.write(out)
 
-    print(f"{args.lang}: {len(words)} entries ({supplemented} supplement, {forms} verb forms, "
+    print(f"{args.lang}: {len(words)} entries ({dropped} below min-freq dropped, {supplemented} supplement, {forms} verb forms, "
           f"{boosted} raised), "
           f"{len(order)} nodes, "
           f"{len(alphabet)} chars, {len(attrs)} attrs ({marked} accent misspellings), "

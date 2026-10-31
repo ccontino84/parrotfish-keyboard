@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# The AOSP list pads about 1.1 million entries with generated forms at
+# frequency 1; build-dict.py keeps entries from 74 up (about 645,000,
+# real definite forms such as franceza included), and find-supplement.py
+# adds back the rarer ones in use.
+min-freq 74
+
+# The cedilla letters of older keyboards stand for the comma-below ones of
+# the list (aşa -> așa).
+ş ș
+ţ ț

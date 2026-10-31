@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Typed letters for æ, ø, å, as written without those keys (aerlig -> ærlig,
+# oere -> øre, paa -> på).
+ae æ
+oe ø
+aa å
+
+# find-accent-misspellings.py: å, ä, ö, æ, ø are letters of their own, so
+# a plain spelling is often another word (har/här, made/måde).
+no-misspellings

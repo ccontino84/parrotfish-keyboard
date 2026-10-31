@@ -13,6 +13,7 @@ add_library(parrotfishkeyboard MODULE
 target_link_libraries(parrotfishkeyboard PRIVATE parrotfish-engine Qt5::Core Qt5::Qml)
 target_compile_definitions(parrotfishkeyboard PRIVATE
     PARROTFISH_DATA_DIR="${PARROTFISH_DATA_DIR}"
+    PARROTFISH_VERSION="${PARROTFISH_VERSION}"
     QT_NO_CAST_FROM_ASCII)
 target_compile_options(parrotfishkeyboard PRIVATE -Wall -Wextra)
 

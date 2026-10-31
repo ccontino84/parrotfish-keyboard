@@ -59,6 +59,14 @@ public:
     // Node of the word as stored, case-sensitive (0 if absent).
     uint32_t findExact(const std::u32string &word) const;
 
+    // A form of the list's words that the list lacks, by the language's
+    // `suffix` and `compound` rules (<lang>.rules): a word with endings
+    // added (kännykkä → kännykkänsä, talon → taloni), words joined
+    // (parkki + paikkaa), or parts joined by hyphens (juna-asemalta). It
+    // only lets typed text stand; such forms are never suggested.
+    bool isWordForm(const std::u32string &word) const;
+    bool hasWordForms() const { return !m_suffixes.empty() || m_compoundMin > 0; }
+
     // Starting next-word data: the words that most often follow `prev` (a
     // terminal node, format::PairStart or format::PairAny), most frequent
     // first, with P(next | prev) on the 0..255 scale. Empty if none.
@@ -69,6 +77,22 @@ public:
 
 private:
     void close();
+    bool parseWordParts(const std::string &text);
+    bool isPlainWord(const std::u32string &word) const;
+    bool wordForm(const std::u32string &word, int suffixes, size_t parts) const;
+
+    // `suffix ENDING... [after=LETTERS] [drop=LETTERS]`: the endings attach
+    // to a word, after one of LETTERS only, and may replace a final letter
+    // of `drop` (talon → taloni).
+    struct SuffixRule {
+        std::u32string ending;
+        std::u32string after;
+        std::u32string drop;
+    };
+    std::vector<SuffixRule> m_suffixes;
+    // `compound MIN PARTS`: up to PARTS words of at least MIN letters.
+    size_t m_compoundMin = 0;
+    size_t m_compoundParts = 0;
 
     const uint8_t *m_data = nullptr;
     size_t m_size = 0;

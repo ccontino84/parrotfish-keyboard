@@ -46,6 +46,12 @@ bool Engine::addLanguage(const std::string &dictPath, std::string *error)
     return true;
 }
 
+void Engine::clearLanguages()
+{
+    m_dicts.clear();
+    rebuild();
+}
+
 void Engine::setParams(const EngineParams &params)
 {
     m_params = params;
@@ -150,7 +156,8 @@ Result Engine::process(const std::vector<Tap> &taps) const
     for (size_t i = 0; i < m_dicts.size(); ++i) {
         std::u32string stored;
         const uint32_t node = m_dicts[i]->find(r.typed, &stored);
-        if (!node || (m_dicts[i]->attributes(node) & format::AttrMisspelling))
+        if (node ? (m_dicts[i]->attributes(node) & format::AttrMisspelling)
+                 : !m_dicts[i]->isWordForm(typedLower))
             continue;
         wordInSomeLanguage = true;
         if (w[i] < m_params.validThreshold)
@@ -168,11 +175,20 @@ Result Engine::process(const std::vector<Tap> &taps) const
     struct Merged { Suggestion s; std::u32string key; double prob = 0; double probEqual = 0; double bestCost = 1e300; };
     std::vector<Merged> merged;
     const bool useContext = m_params.pairWeight > 0 && !m_context.insideWord;
-    for (size_t i = 0; i < m_dicts.size(); ++i) {
-        if (w[i] <= 1e-6)
+    // Most likely language first, so the others can be cut short.
+    std::vector<size_t> order(m_dicts.size());
+    for (size_t i = 0; i < order.size(); ++i)
+        order[i] = i;
+    std::stable_sort(order.begin(), order.end(), [&](size_t a, size_t b) { return w[a] > w[b]; });
+    const bool prune = m_params.searchMargin > 0;
+    double bestCost = std::numeric_limits<double>::infinity();
+    for (size_t i : order) {
+        if (w[i] <= m_params.searchMinWeight)
             continue;
         const Dictionary &d = *m_dicts[i];
-        std::vector<Candidate> cands = m_correctors[i]->search(taps, std::log(w[i]));
+        std::vector<Candidate> cands = m_correctors[i]->search(
+            taps, std::log(w[i]), prune ? bestCost + m_params.searchMargin
+                                        : std::numeric_limits<double>::infinity());
 
         // The previous word: P(word) = λ P(word | prev) + (1 - λ) P(word).
         if (useContext) {
@@ -201,19 +217,19 @@ Result Engine::process(const std::vector<Tap> &taps) const
             };
             for (Candidate &c : cands)
                 rescore(c);
-            // Likely next words the search didn't reach (it ranks by P(word)).
-            for (const auto &n : next) {
-                const std::u32string key = lower(n.first);
+            // A word the search didn't reach (it ranks by P(word)).
+            auto reach = [&](const std::u32string &word) {
+                const std::u32string key = lower(word);
                 if (std::any_of(cands.begin(), cands.end(),
                                 [&](const Candidate &c) { return lower(c.word) == key; }))
-                    continue;
+                    return;
                 int edits = 0, changes = 0;
-                const double tapCost = m_correctors[i]->matchCost(taps, n.first, &edits, &changes);
+                const double tapCost = m_correctors[i]->matchCost(taps, word, &edits, &changes);
                 if (!std::isfinite(tapCost))
-                    continue;
+                    return;
                 Candidate c;
-                c.word = n.first;
-                const uint32_t node = d.findExact(n.first);
+                c.word = word;
+                const uint32_t node = d.findExact(word);
                 c.freq = node ? d.node(node).freq : 0;
                 c.attrs = node ? d.attributes(node) : 0;
                 c.edits = edits;
@@ -223,10 +239,20 @@ Result Engine::process(const std::vector<Tap> &taps) const
                 c.cost = tapCost + c.wordCost;
                 rescore(c);
                 cands.push_back(c);
+            };
+            for (const auto &n : next)
+                reach(n.first);   // likely next words
+            // Strong weighs the typed word against its fixes: it must be there.
+            if (m_params.strength == Strength::Strong && r.typedIsWord) {
+                std::u32string stored;
+                const uint32_t node = d.find(r.typed, &stored);
+                if (node && !(d.attributes(node) & format::AttrMisspelling))
+                    reach(stored);
             }
         }
 
         for (const Candidate &c : cands) {
+            bestCost = std::min(bestCost, c.cost);
             const std::u32string key = lower(c.word);
             auto it = std::find_if(merged.begin(), merged.end(),
                                    [&](const Merged &m) { return m.key == key; });
@@ -256,8 +282,8 @@ Result Engine::process(const std::vector<Tap> &taps) const
             const int k = m_keys.indexOf(t.ch);
             tapCost += k >= 0 ? -std::log(m_keys.probability(k, k)) : 0.0;
         }
-        const double base = m_params.strength == Strength::Normal ? m_params.normalUnknownBase
-                                                                   : m_params.unknownBase;
+        const double base = m_params.strength >= Strength::Normal ? m_params.normalUnknownBase
+                                                                  : m_params.unknownBase;
         unknownProb = std::exp(-(tapCost + base + m_params.unknownPerLetter * taps.size()));
     }
 
@@ -338,23 +364,46 @@ Result Engine::process(const std::vector<Tap> &taps) const
 
     // A word of any typing language is never replaced by a different word,
     // even when its language seems unlikely (the first words after a switch:
-    // Italian "Mi" after English text). Accents may still be fixed (fur → für
-    // in German text).
-    if (wordInSomeLanguage && !r.typedIsWord && fold(best.word) != fold(r.typed))
+    // Italian "Mi" after English text). Accents and apostrophes may still be
+    // fixed (fur → für in German text, English jai → j'ai in French text).
+    auto letters = [this](const std::u32string &w) {
+        std::u32string out = fold(w);
+        out.erase(std::remove(out.begin(), out.end(), U'\''), out.end());
+        return out;
+    };
+    if (wordInSomeLanguage && !r.typedIsWord && letters(best.word) != letters(r.typed))
         return r;
 
     bool apply = false;
     if (r.typedIsWord) {
-        // Only a capitalisation fix (haus → Haus) replaces a valid word.
+        // Only a capitalisation fix (haus → Haus) replaces a valid word, and
+        // with Strong a much likelier word one slip away (after a word).
         apply = !caseFix.empty() && best.word == caseFix;
+        if (!apply && m_params.strength == Strength::Strong && !m_context.prev.empty()
+                && !m_context.sentenceStart
+                && taps.size() >= m_params.strongMinLength
+                && letters(best.word) != letters(r.typed)
+                && (neighbourSwap(r.typed, best.word) || swapped(r.typed, best.word))) {
+            double typedProb = 0;
+            for (const Merged &m : merged)
+                if (m.key == typedLower)
+                    typedProb += m.prob;
+            if (typedProb > 0 && bestProb > 0) {
+                r.margin = std::log(bestProb / typedProb);
+                apply = r.realWordFix = r.margin >= m_params.strongMargin;
+            }
+        }
     } else if (m_params.strength == Strength::Gentle) {
         const int maxChanges = taps.size() <= m_params.gentleShortLength ? 1 : 2;
         apply = r.confidence >= m_params.gentleConfidence && best.edits <= 1
                 && best.changes <= maxChanges && taps.size() >= m_params.gentleMinLength;
+        // Two letters: a neighbouring key, or only an accent (ca → ça on a
+        // layout without ç), with a higher confidence.
         if (!apply && taps.size() == 2 && r.confidence >= m_params.gentleTwoLetterConfidence)
-            apply = neighbourSwap(r.typed, best.word);
+            apply = neighbourSwap(r.typed, best.word)
+                    || (m_params.gentleTwoLetterAccents && fold(best.word) == fold(r.typed));
     } else {
-        apply = r.confidence >= m_params.normalConfidence;
+        apply = r.confidence >= m_params.normalConfidence && taps.size() >= m_params.normalMinLength;
     }
     if (apply) {
         // What Space will type comes first in the bar.
@@ -363,6 +412,18 @@ Result Engine::process(const std::vector<Tap> &taps) const
         r.autocorrect = 0;
     }
     return r;
+}
+
+bool Engine::swapped(const std::u32string &typed, const std::u32string &word) const
+{
+    const std::u32string a = fold(typed), b = fold(word);
+    if (a.size() != b.size())
+        return false;
+    size_t i = 0;
+    while (i < a.size() && a[i] == b[i])
+        ++i;
+    return i + 1 < a.size() && a[i] == b[i + 1] && a[i + 1] == b[i]
+           && a.compare(i + 2, std::u32string::npos, b, i + 2, std::u32string::npos) == 0;
 }
 
 bool Engine::neighbourSwap(const std::u32string &typed, const std::u32string &word) const
@@ -517,8 +578,13 @@ bool setParam(EngineParams &p, const std::string &assignment)
     else if (name == "firstWordConfidence") p.firstWordConfidence = v;
     else if (name == "firstWordShare") p.firstWordShare = v;
     else if (name == "gentleTwoLetterConfidence") p.gentleTwoLetterConfidence = v;
+    else if (name == "gentleTwoLetterAccents") p.gentleTwoLetterAccents = v != 0;
     else if (name == "gentleConfidence") p.gentleConfidence = v;
     else if (name == "normalConfidence") p.normalConfidence = v;
+    else if (name == "normalMinLength") p.normalMinLength = static_cast<size_t>(v);
+    else if (name == "strongMargin") p.strongMargin = v;
+    else if (name == "strongMinLength") p.strongMinLength = static_cast<size_t>(v);
+
     else if (name == "gentleMinLength") p.gentleMinLength = static_cast<size_t>(v);
     else if (name == "tapSwitchMargin") p.tapSwitchMargin = v;
     else if (name == "pairWeight") p.pairWeight = v;
@@ -528,7 +594,10 @@ bool setParam(EngineParams &p, const std::string &assignment)
     else if (name == "unknownPerLetter") p.unknownPerLetter = v;
     else if (name == "normalUnknownBase") p.normalUnknownBase = v;
     else if (name == "keyHeightShare") p.keyHeightShare = v;
-    else if (name == "strength") p.strength = v <= 0 ? Strength::Off : v < 2 ? Strength::Gentle : Strength::Normal;
+    else if (name == "searchMargin") p.searchMargin = v;
+    else if (name == "searchMinWeight") p.searchMinWeight = v;
+    else if (name == "strength") p.strength = v <= 0 ? Strength::Off : v < 2 ? Strength::Gentle
+                                       : v < 3 ? Strength::Normal : Strength::Strong;
     else return false;
     return true;
 }

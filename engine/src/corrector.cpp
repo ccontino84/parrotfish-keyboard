@@ -66,6 +66,7 @@ struct Corrector::Search
     const CorrectorParams &p;
     const std::vector<Tap> &taps;
     double logPrior;
+    double bound;                    // nothing at or above this cost is wanted
     size_t n;
     uint32_t a;                      // alphabet size
     std::vector<float> tapCost;      // n × alphabet
@@ -84,8 +85,8 @@ struct Corrector::Search
     std::vector<Candidate> results;
     size_t visits = 0;
 
-    Search(const Corrector &c, const std::vector<Tap> &taps, double logPrior)
-        : c(c), d(c.m_dict), p(c.m_params), taps(taps), logPrior(logPrior), n(taps.size()),
+    Search(const Corrector &c, const std::vector<Tap> &taps, double logPrior, double bound)
+        : c(c), d(c.m_dict), p(c.m_params), taps(taps), logPrior(logPrior), bound(bound), n(taps.size()),
           a(d.alphabetSize())
     {
         tapCost.assign(n * a, Inf);
@@ -110,7 +111,8 @@ struct Corrector::Search
                     // with the accent left out (fur → für, perche → perché).
                     cost = spatial(c.m_keyOfLetter[li]);
                     if (l.base != l.lower)
-                        cost = std::min(cost, spatial(c.m_keyOfBase[li]) + p.accentOmitted);
+                        cost = std::min(cost, spatial(c.m_keyOfBase[li])
+                                              + (c.m_keyOfLetter[li] < 0 ? p.accentNoKey : p.accentOmitted));
                     if (l.lower != t.ch && l.base == tbase)
                         cost = std::min(cost, p.accentWrong);   // typed ü, meant u
                 } else if (l.lower == t.ch) {
@@ -177,8 +179,7 @@ struct Corrector::Search
 
     double worst() const
     {
-        return results.size() < p.maxResults ? std::numeric_limits<double>::infinity()
-                                              : results.back().cost;
+        return results.size() < p.maxResults ? bound : std::min(bound, results.back().cost);
     }
 
     void add(Candidate cand)
@@ -353,7 +354,7 @@ double Corrector::matchCost(const std::vector<Tap> &taps, const std::u32string &
     constexpr double inf = std::numeric_limits<double>::infinity();
     if (taps.empty() || word.empty())
         return inf;
-    Search s(*this, taps, 0.0);
+    Search s(*this, taps, 0.0, inf);
     const uint32_t a = m_dict.alphabetSize();
     // Alphabet index of each letter of the word.
     std::vector<int> letters;
@@ -423,6 +424,7 @@ bool setParam(CorrectorParams &p, const std::string &assignment)
         {"farTap", &p.farTap, nullptr, nullptr},
         {"minTapProb", &p.minTapProb, nullptr, nullptr},
         {"accentOmitted", &p.accentOmitted, nullptr, nullptr},
+        {"accentNoKey", &p.accentNoKey, nullptr, nullptr},
         {"accentWrong", &p.accentWrong, nullptr, nullptr},
         {"deletion", &p.deletion, nullptr, nullptr},
         {"insertion", &p.insertion, nullptr, nullptr},
@@ -448,11 +450,11 @@ bool setParam(CorrectorParams &p, const std::string &assignment)
     return false;
 }
 
-std::vector<Candidate> Corrector::search(const std::vector<Tap> &taps, double logPrior) const
+std::vector<Candidate> Corrector::search(const std::vector<Tap> &taps, double logPrior, double bound) const
 {
     if (taps.empty())
         return {};
-    Search s(*this, taps, logPrior);
+    Search s(*this, taps, logPrior, bound);
     s.prepare();
     s.visit(0, 0, 0.0, 0, 0, 0);
     return std::move(s.results);

@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Parrotfish's AZERTY keys, by the same phone geometry as phone-qwerty.layout
+# (not logged on a phone): units are key widths, rows 1.67 key widths
+# tall; ' takes the place of fr.qml's ç after n.
+pitch 1.67
+0    1 azertyuiop
+0    1 qsdfghjklm
+1.5  1 wxcvbn'

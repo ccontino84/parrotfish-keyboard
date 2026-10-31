@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Plain spellings that find-accent-misspellings.py must not mark: real
+# words of their own.
+accidente
+aine
+aines
+congres
+entrecoupe
+essouffle
+foret
+forets
+reparties
+repartissent

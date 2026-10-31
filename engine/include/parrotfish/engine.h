@@ -13,7 +13,9 @@
 
 namespace parrotfish {
 
-enum class Strength { Off, Gentle, Normal };
+// Strong: Normal, and valid words may be fixed from the previous word
+// (plan §6; until that exists, the same as Normal).
+enum class Strength { Off, Gentle, Normal, Strong };
 
 struct EngineParams {
     CorrectorParams corrector;
@@ -34,6 +36,9 @@ struct EngineParams {
     // Share of the probability the best correction needs.
     double gentleConfidence = 0.5;
     double normalConfidence = 0.5;
+    // Normal (and Strong) leave shorter input alone: a single letter is not
+    // replaced (t → it, p → to were; the benches don't type such words).
+    size_t normalMinLength = 2;
     // Gentle leaves shorter input alone (plan §6: short words are Normal only).
     size_t gentleMinLength = 3;
     // Gentle changes at most this many letters: one in words of up to
@@ -42,6 +47,15 @@ struct EngineParams {
     // Gentle fixes two typed letters when one changes to a neighbouring key
     // and the correction has at least this share of the probability.
     double gentleTwoLetterConfidence = 0.7;
+    // ... and also when only an accent differs (ca → ça).
+    bool gentleTwoLetterAccents = true;
+    // Strong: after a previous word (not at a sentence start), a valid word
+    // of at least strongMinLength letters becomes another valid word one slip
+    // away (a neighbouring key or two letters swapped) if that word is at
+    // least strongMargin nats likelier, previous word and taps included
+    // (5: about 150 times; sentence-bench -R, plan §6).
+    double strongMargin = 5.0;
+    size_t strongMinLength = 2;
     // An uncertain tap takes the touch-down key only if that makes the word
     // this many nats more likely than the lift key.
     double tapSwitchMargin = 2.0;
@@ -58,6 +72,16 @@ struct EngineParams {
     // Tap distances up and down: 0 = in key widths, 1 = in key heights
     // (KeyModel heightShare). Also sets which keys are neighbours.
     double keyHeightShare = 0.0;
+    // Languages are searched from the most likely down; a later one only
+    // for words costing less than the best word so far plus this margin
+    // (nats; e^-margin is how much less likely such a word is). 0: every
+    // language is searched in full. The margin must stay well above the
+    // starting leans of the first word (×3 × ×2: 1.8 nats), which the
+    // first-word check takes out again (probEqual).
+    double searchMargin = 6.0;
+    // Languages less likely than this are not searched at all (their
+    // words still count as valid, and the tracker still follows them).
+    double searchMinWeight = 1e-6;
     Strength strength = Strength::Gentle;
 };
 
@@ -79,6 +103,10 @@ struct Result {
     std::vector<Suggestion> suggestions;   // best first; never contains `typed`
     int autocorrect = -1;           // index into suggestions applied on Space, or -1
     double confidence = 0;          // share of probability of suggestions[0]
+    // Strong only: the autocorrection replaces a valid word, this many nats
+    // likelier than it.
+    bool realWordFix = false;
+    double margin = 0;
 };
 
 // The engine for one text field: all typing languages at once, weighted
@@ -90,6 +118,7 @@ public:
     ~Engine();
 
     bool addLanguage(const std::string &dictPath, std::string *error = nullptr);
+    void clearLanguages();
     size_t languageCount() const { return m_dicts.size(); }
     std::string language(size_t i) const { return m_dicts[i]->language(); }
     int languageIndex(const std::string &code) const;   // -1 if not loaded
@@ -127,6 +156,8 @@ private:
     void rebuild();
     // `word` is `typed` with one letter changed to a neighbouring key.
     bool neighbourSwap(const std::u32string &typed, const std::u32string &word) const;
+    // Two neighbouring letters swapped (from → form), accents aside.
+    bool swapped(const std::u32string &typed, const std::u32string &word) const;
 
     // Where the word being typed stands in the text.
     struct Context {

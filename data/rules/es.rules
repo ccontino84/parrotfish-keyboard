@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# No spelling rules for this language yet.
+
+# Paradigm checks for find-accent-misspellings.py: a plain form is a real
+# verb form when its stem plus an infinitive ending is a known word
+# (acelero/aceleró: acelerar; limite/límite: limitar; critico/crítico: criticar).
+paradigm-plain o ar er ir
+paradigm-plain a ar er ir
+paradigm-plain e ar er ir
+paradigm-plain as ar er ir
+paradigm-plain es ar er ir
+paradigm-plain an ar er ir
+paradigm-plain en ar er ir

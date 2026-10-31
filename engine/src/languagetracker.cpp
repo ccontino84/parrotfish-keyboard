@@ -37,8 +37,9 @@ std::vector<double> LanguageTracker::logLikelihoods(const std::u32string &word) 
         const uint32_t node = d.find(word);
         // A misspelling (perche) still says which language it belongs to; its
         // node carries the frequency of the word it stands for.
+        // A form made by the language's rules (kännykkänsä) is a rare word.
         const int freq = node ? std::max<int>(d.node(node).freq, m_params.unknownFreq)
-                              : m_params.unknownFreq;
+                              : d.isWordForm(word) ? m_params.formFreq : m_params.unknownFreq;
         ll[i] = d.logProb(static_cast<uint8_t>(freq));
     }
     return ll;
@@ -93,6 +94,7 @@ bool setParam(LanguageParams &p, const std::string &assignment)
     else if (name == "maxEvidence") p.maxEvidence = v;
     else if (name == "shortWordWeight") p.shortWordWeight = v;
     else if (name == "unknownFreq") p.unknownFreq = static_cast<int>(v);
+    else if (name == "formFreq") p.formFreq = static_cast<int>(v);
     else return false;
     return true;
 }

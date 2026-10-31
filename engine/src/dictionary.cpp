@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <sstream>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -37,8 +38,13 @@ Dictionary &Dictionary::operator=(Dictionary &&other) noexcept
         m_strings = other.m_strings;
         m_pairRows = other.m_pairRows;
         m_pairEntries = other.m_pairEntries;
+        m_suffixes = std::move(other.m_suffixes);
+        m_compoundMin = other.m_compoundMin;
+        m_compoundParts = other.m_compoundParts;
         other.m_data = nullptr;
         other.m_size = 0;
+        other.m_suffixes.clear();
+        other.m_compoundMin = other.m_compoundParts = 0;
     }
     return *this;
 }
@@ -49,6 +55,8 @@ void Dictionary::close()
         munmap(const_cast<uint8_t *>(m_data), m_size);
     m_data = nullptr;
     m_size = 0;
+    m_suffixes.clear();
+    m_compoundMin = m_compoundParts = 0;
 }
 
 static bool fail(std::string *error, const std::string &message)
@@ -106,7 +114,104 @@ bool Dictionary::open(const std::string &path, std::string *error)
         close();
         return fail(error, path + ": damaged string table");
     }
+    if (h.wordParts > h.stringsSize
+            || (h.wordParts > 0 && !parseWordParts(m_strings + h.wordParts - 1))) {
+        close();
+        return fail(error, path + ": damaged word-part rules");
+    }
     return true;
+}
+
+bool Dictionary::parseWordParts(const std::string &text)
+{
+    std::istringstream lines(text);
+    std::string line;
+    while (std::getline(lines, line)) {
+        std::istringstream in(line);
+        std::string kind, item;
+        in >> kind;
+        if (kind == "compound") {
+            if (!(in >> m_compoundMin >> m_compoundParts) || m_compoundMin == 0)
+                return false;
+            continue;
+        }
+        if (kind != "suffix")
+            return false;
+        std::vector<std::u32string> endings;
+        SuffixRule rule;
+        while (in >> item) {
+            if (item.compare(0, 6, "after=") == 0)
+                rule.after = utf8::decode(item.substr(6));
+            else if (item.compare(0, 5, "drop=") == 0)
+                rule.drop = utf8::decode(item.substr(5));
+            else
+                endings.push_back(utf8::decode(item));
+        }
+        for (const std::u32string &e : endings) {
+            rule.ending = e;
+            m_suffixes.push_back(rule);
+        }
+    }
+    return true;
+}
+
+// A stem keeps at least this many letters when an ending is taken off.
+static constexpr size_t MinStem = 3;
+// At most this many endings on one word (a possessive, then a clitic:
+// talossanikin).
+static constexpr int MaxSuffixes = 2;
+
+bool Dictionary::isWordForm(const std::u32string &word) const
+{
+    if (!hasWordForms() || isPlainWord(word))
+        return false;
+    std::u32string lower = word;
+    for (char32_t &c : lower)
+        c = utf8::toLower(c);
+    return wordForm(lower, 0, 1);
+}
+
+bool Dictionary::isPlainWord(const std::u32string &word) const
+{
+    const uint32_t node = find(word);
+    return node && !(attributes(node) & format::AttrMisspelling);
+}
+
+bool Dictionary::wordForm(const std::u32string &w, int suffixes, size_t parts) const
+{
+    if (isPlainWord(w))
+        return true;
+    if (m_compoundMin > 0) {
+        const size_t hyphen = w.find(U'-');
+        if (hyphen != std::u32string::npos)
+            return hyphen > 0 && wordForm(w.substr(0, hyphen), suffixes, parts)
+                   && wordForm(w.substr(hyphen + 1), suffixes, parts);
+    }
+    if (suffixes < MaxSuffixes) {
+        for (const SuffixRule &r : m_suffixes) {
+            const size_t n = r.ending.size();
+            if (w.size() < n + MinStem || w.compare(w.size() - n, n, r.ending) != 0)
+                continue;
+            std::u32string stem = w.substr(0, w.size() - n);
+            if (!r.after.empty() && r.after.find(stem.back()) == std::u32string::npos)
+                continue;
+            if (wordForm(stem, suffixes + 1, parts))
+                return true;
+            for (char32_t d : r.drop)
+                if (wordForm(stem + d, suffixes + 1, parts))
+                    return true;
+        }
+    }
+    if (m_compoundMin > 0 && parts < m_compoundParts) {
+        for (size_t i = m_compoundMin; i + m_compoundMin <= w.size(); ++i) {
+            const std::u32string first = w.substr(0, i);
+            if (prefixBest(first) < 0)
+                break;   // no longer word starts with these letters
+            if (isPlainWord(first) && wordForm(w.substr(i), suffixes, parts + 1))
+                return true;
+        }
+    }
+    return false;
 }
 
 std::string Dictionary::language() const

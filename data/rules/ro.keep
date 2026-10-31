@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Plain spellings that find-accent-misspellings.py must not mark: real
+# words of their own, mostly definite forms in -a next to indefinite -ă
+# (alba "the white one" / albă), or other words (cat "floor", cant "edge").
+alba
+albastra
+arata
+buna
+cant
+cat
+clara
+creste
+deschisa
+diferita
+dificila
+economica
+europeana
+frumoasa
+grija
+joaca
+mana
+neagra
+necesara
+ocupata
+pana
+parul
+plina
+proasta
+puternica
+putina
+reala
+refera
+sa
+sai
+scrisa
+scurta
+sigura
+simpla
+slaba
+sociala
+suficienta
+tara
+trecuta
+umana

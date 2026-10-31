@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Typed oe for œ (coeur -> cœur; both spellings are in the list).
+oe œ
+
+# Paradigm checks for find-accent-misspellings.py: a plain form is a real
+# verb form when its stem plus -er is a known word (ajoutes/ajoutés:
+# ajouter; cote/côté: coter).
+paradigm-plain e er
+paradigm-plain es er
+paradigm-plain ent er

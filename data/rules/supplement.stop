@@ -23,3 +23,25 @@ Boston
 Maria
 costruire
 nazionalità
+# Tatoeba's constructed languages (toki pona).
+toki
+# Old spellings from public-domain books in Common Voice: paa is the
+# typed form of på (da/nb rules), maistre is Middle French.
+paa
+gøede
+maistre
+# Profanity: the AOSP lists flag it (f=0: valid, never suggested), the
+# generated lists can't.
+carajo
+cojones
+puta
+# Finnish case endings written after a colon (TV:ssä, 120:ssa), which the
+# word counts split off, and a squared x.
+ssa
+ssä
+sta
+stä
+lla
+llä
+lle
+x²

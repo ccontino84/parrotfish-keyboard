@@ -311,6 +311,36 @@ void testFirstWord()
     CHECK_EQ(space("it", Strength::Gentle, "Ho visto ", "uj", "it"), "un");
 }
 
+void testStrong()
+{
+    // Strong: a valid word one slip away from a much likelier one is fixed
+    // after a previous word; Normal never replaces a valid word.
+    auto space = [](Strength strength, const std::string &text, const std::string &typed) {
+        EngineParams p;
+        p.strength = strength;
+        p.corrector.completions = true;
+        Engine e(p);
+        for (const char *l : {"en", "it", "de"})
+            e.addLanguage(dictDir + "/" + l + ".pfd");
+        e.setLayout(layout("en"));
+        std::vector<double> prior(3, 1.0);
+        prior[e.languageIndex("en")] *= 3.0;
+        e.startText(u(text), prior);
+        const Result r = e.process(tapsFor(u(typed)));
+        return r.autocorrect >= 0 ? s8(r.suggestions[r.autocorrect].word) : typed;
+    };
+    const std::string text = "I went to the station and waited for the train. I think he ";
+    CHECK_EQ(space(Strength::Normal, text, "wad"), "wad");
+    CHECK_EQ(space(Strength::Strong, text, "wad"), "was");
+    CHECK_EQ(space(Strength::Strong, text, "was"), "was");
+    CHECK_EQ(space(Strength::Strong, text, "said"), "said");
+    // Not the first word of a sentence: there is no previous word.
+    CHECK_EQ(space(Strength::Strong, "I went to the station and waited for the train. ", "Wad"), "Wad");
+    // A single letter is never replaced (t → it was).
+    CHECK_EQ(space(Strength::Normal, "I think ", "t"), "t");
+    CHECK_EQ(space(Strength::Strong, "I think ", "p"), "p");
+}
+
 void testUncertainTaps()
 {
     Setup s({"en"});
@@ -323,6 +353,60 @@ void testUncertainTaps()
 }
 
 } // namespace
+
+void testMoreLanguages()
+{
+    // Danish: aa, oe, ae stand for å, ø, æ, and a plain o reaches ø.
+    Setup da({"da", "en"}, "en");
+    CHECK_EQ(da.space("paa"), "på");
+    CHECK_EQ(da.first("sondag"), "søndag");
+    // Missing from the AOSP list, added by the supplement: never "I".
+    CHECK_EQ(da.space("vi"), "vi");
+    // Romanian: cedilla letters match the comma-below ones of the list.
+    Setup ro({"ro"}, "en");
+    CHECK_EQ(ro.first("aşa"), "așa");
+    // Spanish: a plain verb form stays (acelero, "I accelerate").
+    Setup es({"es"}, "en");
+    CHECK_EQ(es.space("acelero"), "acelero");
+    CHECK_EQ(es.space("manana"), "mañana");
+
+    // French on AZERTY, where ç has no key: typed as c, it comes back.
+    Setup fr({"fr", "en"}, "phone-azerty");
+    fr.engine.startText(u("Je ne sais pas, mais "), {1.0, 0.01});
+    fr.engine.setStrength(Strength::Normal);
+    CHECK_EQ(fr.space("ca"), "ça");
+    CHECK_EQ(fr.space("garcon"), "garçon");
+    CHECK_EQ(fr.space("jai"), "j'ai");   // English has "jai": only an apostrophe added
+
+    // Finnish: forms the list lacks, made by the rules of fi.rules, stand.
+    Setup fi({"fi", "en"}, "phone-nordic");
+    fi.engine.setStrength(Strength::Normal);
+    const Dictionary &fd = fi.engine.dictionary(0);
+    CHECK(fd.isWordForm(u("kännykkänsä")));     // kännykkä + nsä
+    CHECK(fd.isWordForm(u("Professorinsa")));   // professori + nsa
+    CHECK(fd.isWordForm(u("parkkipaikkaa")));   // parkki + paikkaa
+    CHECK(fd.isWordForm(u("juna-asemalta")));
+    CHECK(!fd.isWordForm(u("talo")));           // a word of the list
+    CHECK(!fd.isWordForm(u("vani")));           // stem too short
+    CHECK(!fd.isWordForm(u("tomni")));          // possessive after a consonant
+    CHECK(!fd.isWordForm(u("kirjsn")));
+    CHECK_EQ(fi.space("kännykkänsä"), "kännykkänsä");
+    CHECK_EQ(fi.space("parkkipaikkaa"), "parkkipaikkaa");
+    CHECK_EQ(fi.space("kirjsn"), "kirjan");
+    // Other languages have no such rules.
+    CHECK(!fi.engine.dictionary(1).hasWordForms());
+
+    // The typing languages can be replaced.
+    Engine e;
+    CHECK(e.addLanguage(dictDir + "/en.pfd"));
+    e.clearLanguages();
+    CHECK(e.languageCount() == 0);
+    CHECK(e.process(tapsFor(u("teh"))).suggestions.empty());
+    CHECK(e.addLanguage(dictDir + "/it.pfd"));
+    e.setLayout(layout("it"));
+    CHECK_EQ(e.language(0), "it");
+    CHECK(!e.process(tapsFor(u("ciap"))).suggestions.empty());
+}
 
 int main(int argc, char **argv)
 {
@@ -344,6 +428,8 @@ int main(int argc, char **argv)
     testContext();
     testOtherLanguageWords();
     testFirstWord();
+    testStrong();
+    testMoreLanguages();
     if (failures)
         std::printf("%d check(s) failed\n", failures);
     else

@@ -29,7 +29,11 @@ struct Header {
     uint32_t stringsSize, stringsOffset;
     uint32_t pairRowCount, pairRowOffset;
     uint32_t pairEntryCount, pairEntryOffset;
-    uint32_t reserved[2];
+    // The `suffix` and `compound` lines of the language's rules, one per
+    // line (Dictionary::isWordForm): 1 + their offset in the strings
+    // section, or 0 for none (files made before them).
+    uint32_t wordParts;
+    uint32_t reserved;
 };
 
 // Trie node. Children of a node are contiguous, sorted by `best`
@@ -48,7 +52,7 @@ constexpr uint32_t LinkLastSibling = 1u << 31;
 struct AlphabetEntry {
     uint32_t cp;            // the character as stored
     uint32_t lower;         // lowercase form
-    uint32_t base;          // lowercase without accents (é → e; ß stays ß)
+    uint32_t base;          // lowercase without accents (é → e, ø → o, æ → a, œ → o; ß stays ß)
 };
 
 enum AttrFlag : uint32_t {

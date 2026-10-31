@@ -8,6 +8,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <limits>
 #include <vector>
 
 namespace parrotfish {
@@ -27,6 +28,8 @@ struct CorrectorParams {
     float farTap = 3.5f;           // a tap costing more than this counts as an edit
     float minTapProb = 2e-4f;      // ignore keys less likely than this
     float accentOmitted = 1.2f;    // typed e, meant é
+    float accentNoKey = 0.6f;      // the same when é has no key on the layout:
+                                   // the plain letter is how it is typed
     float accentWrong = 3.0f;      // typed é, meant e (or another accent)
     float deletion = 3.5f;         // a letter missing from the taps
     float insertion = 6.0f;        // an extra tap
@@ -65,7 +68,10 @@ public:
     Corrector(const Dictionary &dict, const KeyModel &keys, CorrectorParams params = {});
 
     // `logPrior` is added to every word's log probability (language weight).
-    std::vector<Candidate> search(const std::vector<Tap> &taps, double logPrior = 0.0) const;
+    // Words costing `bound` or more are not searched for (another language
+    // already has far better ones).
+    std::vector<Candidate> search(const std::vector<Tap> &taps, double logPrior = 0.0,
+                                  double bound = std::numeric_limits<double>::infinity()) const;
 
     const CorrectorParams &params() const { return m_params; }
 

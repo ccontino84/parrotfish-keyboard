@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# No spelling rules for this language yet.
+
+# Paradigm checks for find-accent-misspellings.py: a plain form is a real
+# verb form when its stem plus an infinitive ending is a known word
+# (duvidas/dúvidas: duvidar; media/média: medir; continuara/continuará:
+# continuar).
+paradigm-plain o ar er ir
+paradigm-plain a ar er ir
+paradigm-plain e ar er ir
+paradigm-plain as ar er ir
+paradigm-plain es ar er ir
+paradigm-plain am ar er ir
+paradigm-plain em ar er ir
+paradigm-plain ia er ir
+paradigm-plain ias er ir
+paradigm-plain ara ar
+paradigm-plain era er
+paradigm-plain ira ir

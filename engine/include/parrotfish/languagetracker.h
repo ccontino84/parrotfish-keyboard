@@ -25,6 +25,9 @@ struct LanguageParams {
     double shortWordWeight = 1.0;
     // A word missing from a dictionary counts as this frequency (0..255).
     int unknownFreq = 30;
+    // A form the dictionary lacks but its rules make (Dictionary::isWordForm)
+    // counts as this frequency: about the rarest words of the AOSP lists.
+    int formFreq = 60;
 };
 
 // Follows which typing language the text is in: a two-or-more-state hidden

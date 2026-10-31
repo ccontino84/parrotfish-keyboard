@@ -14,9 +14,12 @@ its accented form only when all of these hold:
    form is common and the plain one rare (--min-count, --ratio);
 3. no paradigm rule in RULES_DIR/LANG.rules says the plain form is a real
    inflection (it: `collaboro` stays, because `collaborare` exists);
+   A `paradigm-plain` rule does the same from the plain form's ending
+   (es: `acelero` stays, because `acelerar` exists: "I accelerate");
 4. if LANG.rules has `only-marks CHARS`, the pair differs in one of them
    (de: `only-marks ß`, since many umlaut pairs are two real words:
-   mochte/möchte, bluten/Blüten);
+   mochte/möchte, bluten/Blüten); `no-misspellings` marks none (sv, da,
+   nb: å, ä, ö, æ, ø are letters of their own, har/här are two words);
 5. the plain form is not an acronym (dell'ETA) and not in RULES_DIR/LANG.keep.
 
 When unsure, the word stays valid and the accented form is only offered as
@@ -81,13 +84,23 @@ def main():
 
     # `paradigm ò are` : a plain form X+o is real if X+are is a known word.
     paradigms = []
+    plain_paradigms = []
     only_marks = None
+    marking = True
     for line in read_list(f"{args.rules_dir}/{args.lang}.rules"):
         parts = line.split()
         if parts[0] == "paradigm":
             paradigms.append((parts[1], parts[2:]))
+        elif parts[0] == "paradigm-plain":
+            plain_paradigms.append((parts[1], parts[2:]))
+        elif parts[0] == "no-misspellings":
+            marking = False
         elif parts[0] == "only-marks":
             only_marks = set("".join(parts[1:]))
+        elif parts[0] == "min-freq":
+            # build-dict.py leaves rarer entries out
+            words = {w: f for w, f in words.items() if f >= int(parts[1])}
+            lower = {w.lower() for w in words}
     keep = set(read_list(f"{args.rules_dir}/{args.lang}.keep"))
 
     def known(w):
@@ -118,8 +131,12 @@ def main():
             elif cp * args.ratio > ca:
                 skipped["ratio"] += 1
             elif any(acc.endswith(end) and any(known(acc[:-len(end)].lower() + s) for s in stems)
-                     for end, stems in paradigms):
+                     for end, stems in paradigms) \
+                    or any(p.lower().endswith(end) and any(known(p[:-len(end)].lower() + s) for s in stems)
+                           for end, stems in plain_paradigms):
                 skipped["paradigm"] += 1
+            elif not marking:
+                skipped["marks"] += 1
             else:
                 marked.append((p, acc, f"dict {words[p]}/{words[acc]} corpus {cp}/{ca}"))
 

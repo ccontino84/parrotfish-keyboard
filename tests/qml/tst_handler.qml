@@ -297,6 +297,95 @@ Item {
             fresh.destroy()
         }
 
+        function test_undosPerLanguage() {
+            var keys = [], items = []
+            handler._scan(keyboard.layout, keyboard.layout, keys, items)
+            var e = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; PredictionEngine { languages: "en it" }', root)
+            e.setKeys(keys)
+            var italian = "Non so se domani posso venire, ", english = "I don't know if I can come tomorrow, "
+            e.setContext(italian)
+            e.preedit = "cpme"
+            compare(e.autocorrection, "come", "corrected in Italian text")
+            e.preedit = ""
+            e.rejectCorrection("cpme")
+            e.rejectCorrection("cpme")
+            e.preedit = "cpme"
+            compare(e.autocorrection, "", "not in Italian after two undos")
+            e.preedit = ""
+            e.setContext(english)
+            // Picked from the bar in English (not autocorrected there): the
+            // Italian undos stay.
+            e.strength = "off"
+            e.preedit = "cpme"
+            compare(e.autocorrection, "")
+            e.acceptCorrection("cpme")
+            e.preedit = ""
+            e.strength = "normal"
+            e.preedit = "cpme"
+            compare(e.autocorrection, "come", "still corrected in English text")
+            e.preedit = ""
+            e.setContext(italian)
+            e.preedit = "cpme"
+            compare(e.autocorrection, "", "still not in Italian")
+            e.destroy()
+        }
+
+        // Backspace into a word whose autocorrection was undone, ended as
+        // the correction again: a redo, however it is ended.
+        function test_redo() {
+            var e = handler.engine
+            var ways = ["space", "pick", "retype"]
+            for (var w = 0; w < ways.length; ++w) {
+                // tgat: no undos (another test leaves two)
+                e.setContext("I think ")
+                e.preedit = "tgat"
+                e.rejectCorrection("tgat")
+                e.acceptCorrection("tgat")
+                e.preedit = ""
+                var count = function(how) { return slips(how).length }
+                var before = [count("undone"), count("redone"), count("kept"), count("picked"), count("manual")]
+                context("I think ")
+                compare(type("tgat "), "that ", ways[w])
+                field("I think that ")
+                backspace()   // undo
+                field("I think tgat ")
+                backspace()   // back into tgat
+                compare(handler.preedit, "tgat")
+                if (ways[w] === "space") {
+                    compare(type(" "), "that ")
+                } else if (ways[w] === "pick") {
+                    handler.applyPrediction("that", 0)
+                } else {
+                    for (var i = 0; i < 3; ++i)
+                        backspace()
+                    type("hat ")
+                }
+                type("x")
+                compare([count("undone") - before[0], count("redone") - before[1], count("kept") - before[2],
+                         count("picked") - before[3], count("manual") - before[4]], [1, 1, 0, 0, 0],
+                        ways[w] + ": undone, redone, kept, picked, manual")
+                compare(slips("redone").slice(-1), ["redone key g h"])
+                // The undo is forgotten: one more doesn't stop the fix.
+                e.preedit = ""
+                e.setContext("I think ")
+                e.preedit = "tgat"
+                e.rejectCorrection("tgat")
+                e.preedit = ""
+                e.preedit = "tgat"
+                compare(e.autocorrection, "that", ways[w] + ": undos forgotten")
+                e.preedit = ""
+            }
+        }
+
+        function test_singleLetter() {
+            context("Yesterday after work ")
+            compare(type("i "), "I ", "English i at Space")
+            context("Yesterday after work ")
+            compare(type("i."), "i.", "i. as in i.e.")
+            context("Yesterday after work ")
+            compare(type("i)"), "i)")
+        }
+
         // Types `before`, closes the keyboard (the word is committed as it
         // is) and opens it again, with the field showing `text`.
         function interrupt(before, text) {
@@ -364,6 +453,20 @@ Item {
             type("t ")
             compare(MInputMethodQuick.committedText, "left ")
             compare(handler.engine.preeditKeys, [])
+        }
+
+        function test_missingSpace() {
+            context("I think ")
+            compare(type("thisis "), "this is ", "two words typed as one")
+            field("I think this is ")
+            MInputMethodQuick.committedText = ""
+            backspace()
+            compare(MInputMethodQuick.committedText, "thisis ", "Backspace brings back what was typed")
+            context("I think ")
+            type("thisis ")
+            type("a")
+            handler.reset()
+            compare(slips("kept").slice(-1), ["kept space missing"])
         }
 
         function test_withoutNumberRow() {

@@ -73,6 +73,15 @@ struct EngineParams {
     // mixed texts (tools/eval/mix-sentences.py; at 8: 0.4 % of single foreign
     // words, un → in).
     double otherLanguageMargin = 12.0;
+    // Two words typed as one (plan §6 fix 6): a string that is no word of a
+    // typing language may be two words of one language, each typed as it
+    // is, with the space left out (thisis: missingSpaceCost nats) or typed
+    // as a key above the spacebar (thisbis: spaceKeyCost), scored like any
+    // other candidate. Each word needs splitMinLength letters. Infinity:
+    // never split.
+    double missingSpaceCost = 3.5;
+    double spaceKeyCost = 4.0;
+    size_t splitMinLength = 2;
     size_t strongMinLength = 2;
     // An uncertain tap takes the touch-down key only if that makes the word
     // this many nats more likely than the lift key.

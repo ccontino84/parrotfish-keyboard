@@ -274,6 +274,82 @@ Result Engine::process(const std::vector<Tap> &taps) const
             }
         }
     }
+    // Two words typed as one: the space left out (thisis) or typed as a key
+    // above the spacebar (thisbis). Both words of one language, each as
+    // typed; never for a word of a typing language (compounds stay whole).
+    if (!wordInSomeLanguage && (std::isfinite(m_params.missingSpaceCost) || std::isfinite(m_params.spaceKeyCost))) {
+        const size_t n = taps.size(), minLen = std::max<size_t>(1, m_params.splitMinLength);
+        // The bottom letter row: its keys border the spacebar.
+        float bottom = -1e30f;
+        for (const Key &k : m_keys.keys())
+            bottom = std::max(bottom, k.y);
+        auto aboveSpace = [&](char32_t c) {
+            const int k = m_keys.indexOf(c);
+            return k >= 0 && m_keys.keys()[k].y > bottom - m_keys.keys()[k].height / 2;
+        };
+        // log P(word), or with the word before it as context.
+        auto logProb = [&](const Dictionary &d, uint32_t node, const std::u32string &word, uint32_t prevNode) {
+            const double uni = d.logProb(d.node(node).freq);
+            if (!useContext || !prevNode)
+                return uni;
+            double pair = 0;
+            const std::u32string key = lower(word);
+            for (const auto &nw : d.nextWords(prevNode))
+                if (lower(nw.first) == key) {
+                    pair = std::exp((static_cast<int>(nw.second) - 255) * format::LogStep);
+                    break;
+                }
+            return std::log(m_params.pairWeight * pair + (1.0 - m_params.pairWeight) * std::exp(uni));
+        };
+        auto trySplit = [&](size_t leftEnd, size_t rightStart, double extra) {
+            const std::vector<Tap> lt(taps.begin(), taps.begin() + leftEnd), rt(taps.begin() + rightStart, taps.end());
+            std::u32string left, right;
+            for (const Tap &t : lt) left.push_back(t.ch);
+            for (const Tap &t : rt) right.push_back(t.ch);
+            for (size_t i = 0; i < m_dicts.size(); ++i) {
+                if (w[i] <= m_params.searchMinWeight)
+                    continue;
+                const Dictionary &d = *m_dicts[i];
+                std::u32string ls, rs;
+                const uint32_t ln = d.find(left, &ls), rn = d.find(right, &rs);
+                if (!ln || !rn || (d.attributes(ln) & format::AttrMisspelling)
+                        || (d.attributes(rn) & format::AttrMisspelling))
+                    continue;
+                const double tapCost = m_correctors[i]->matchCost(lt, ls) + m_correctors[i]->matchCost(rt, rs);
+                if (!std::isfinite(tapCost))
+                    continue;
+                const uint32_t prev = m_context.prev.empty() || m_context.sentenceStart ? 0 : d.find(m_context.prev);
+                const double cost = tapCost + extra - std::log(w[i])
+                        - m_params.corrector.lmWeight * (logProb(d, ln, ls, prev) + logProb(d, rn, rs, ln));
+                const std::u32string word = ls + U' ' + rs;
+                const std::u32string key = lower(word);
+                auto it = std::find_if(merged.begin(), merged.end(), [&](const Merged &m) { return m.key == key; });
+                if (it == merged.end()) {
+                    merged.push_back({});
+                    it = merged.end() - 1;
+                    it->key = key;
+                }
+                it->prob += std::exp(-cost);
+                it->probEqual += std::exp(-cost) / (w[i] * m_dicts.size());
+                it->s.languages |= 1u << i;
+                if (cost < it->bestCost) {
+                    it->bestCost = cost;
+                    it->s.word = word;
+                    it->s.attrs = d.attributes(ln) | d.attributes(rn);
+                    it->s.edits = 1;
+                    it->s.changes = 1;
+                    it->s.completion = false;
+                }
+            }
+        };
+        for (size_t k = minLen; k + minLen <= n; ++k) {
+            if (std::isfinite(m_params.missingSpaceCost))
+                trySplit(k, k, m_params.missingSpaceCost);
+            if (std::isfinite(m_params.spaceKeyCost) && k + 1 + minLen <= n && aboveSpace(taps[k].ch))
+                trySplit(k, k + 1, m_params.spaceKeyCost);
+        }
+    }
+
     // The "intended word missing from the dictionaries" hypothesis.
     double unknownProb = 0;
     if (!r.typedIsWord) {
@@ -413,6 +489,10 @@ Result Engine::process(const std::vector<Tap> &taps) const
             return r;
     }
 
+    // A single letter is never replaced, except by itself in another case:
+    // English i, stored as a misspelling of I (the only one in the
+    // dictionaries). The handler applies it at Space only (i.e. stays).
+    const bool caseOnly = taps.size() == 1 && lower(best.word) == typedLower;
     bool apply = false;
     if (r.typedIsWord) {
         // Only a capitalisation fix (haus → Haus) replaces a valid word, and
@@ -435,7 +515,7 @@ Result Engine::process(const std::vector<Tap> &taps) const
     } else if (m_params.strength == Strength::Gentle) {
         const int maxChanges = taps.size() <= m_params.gentleShortLength ? 1 : 2;
         apply = r.confidence >= m_params.gentleConfidence && best.edits <= 1
-                && best.changes <= maxChanges && taps.size() >= m_params.gentleMinLength;
+                && best.changes <= maxChanges && (taps.size() >= m_params.gentleMinLength || caseOnly);
         // Two letters: a neighbouring key, or only an accent (ca → ça on a
         // layout without ç), with a higher confidence.
         if (!apply && taps.size() == 2 && r.confidence >= m_params.gentleTwoLetterConfidence)
@@ -448,7 +528,7 @@ Result Engine::process(const std::vector<Tap> &taps) const
         const double threshold = sameLetters || taps.size() > 4 ? m_params.normalConfidence
                                  : taps.size() <= 2 ? m_params.normalTwoLetterConfidence
                                                     : m_params.normalShortConfidence;
-        apply = r.confidence >= threshold && taps.size() >= m_params.normalMinLength;
+        apply = r.confidence >= threshold && (taps.size() >= m_params.normalMinLength || caseOnly);
     }
     if (apply) {
         // What Space will type comes first in the bar.
@@ -631,6 +711,9 @@ bool setParam(EngineParams &p, const std::string &assignment)
     else if (name == "normalMinLength") p.normalMinLength = static_cast<size_t>(v);
     else if (name == "strongMargin") p.strongMargin = v;
     else if (name == "otherLanguageMargin") p.otherLanguageMargin = v;
+    else if (name == "missingSpaceCost") p.missingSpaceCost = v;
+    else if (name == "spaceKeyCost") p.spaceKeyCost = v;
+    else if (name == "splitMinLength") p.splitMinLength = static_cast<size_t>(v);
     else if (name == "strongMinLength") p.strongMinLength = static_cast<size_t>(v);
 
     else if (name == "gentleMinLength") p.gentleMinLength = static_cast<size_t>(v);

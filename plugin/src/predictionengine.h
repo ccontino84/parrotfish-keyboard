@@ -97,15 +97,17 @@ public:
                                    const QString &initial) const;
     // The user undid the autocorrection of `typed`. After the second undo
     // (the first for a Strong fix of a valid word) it isn't corrected again
-    // (kept between sessions in learning.db, up to LearningStore::MaxUndos
-    // words).
+    // in text of the same language: the language the text was in when it
+    // was corrected (kept between sessions in learning.db, up to
+    // LearningStore::MaxUndos words).
     Q_INVOKABLE void rejectCorrection(const QString &typed);
     // The user kept an autocorrection of `typed` or picked a correction of it
-    // from the bar: its undos are forgotten.
+    // from the bar: its undos in that language are forgotten.
     Q_INVOKABLE void acceptCorrection(const QString &typed);
     // With the debug file only: the user kept an autocorrection ("kept"),
     // undid it ("undone"; "undone late" when the corrected word was changed
-    // after more typing), picked a correction from the bar ("picked") or
+    // after more typing), took the undo back ("redone"), picked a
+    // correction from the bar ("picked") or
     // changed a word by hand ("manual": slips only, no "other"); a
     // Strong fix of a valid word is "strong kept" or "strong undone", with
     // " margin=5.3" (nats);
@@ -142,6 +144,7 @@ private:
     void update();
     QString slipsHeader() const;
     void appendSlips(QStringList lines);
+    QString fixLanguage(const QString &typed) const;
 
     parrotfish::Engine m_engine;
     QString m_dataDir;
@@ -155,8 +158,12 @@ private:
     QString m_strength = QStringLiteral("normal");
     QString m_autocorrection;
     QString m_tuning;
-    QHash<QString, int> m_undos;   // lowercase typed word → undos in a row
+    // (language, lowercase typed word) → undos in a row
+    QHash<LearningStore::UndoKey, int> m_undos;
     std::unique_ptr<LearningStore> m_store;   // keeps m_undos between sessions
+    // Recent autocorrections: lowercase typed word → the text's leading
+    // language when it was corrected (undos are kept per language).
+    QHash<QString, QString> m_fixLanguages;
     // Strong's autocorrections of valid words: lowercase typed word →
     // (lowercase correction, margin in nats), for slips.log and undo.
     QHash<QString, QPair<QString, double>> m_strongFixes;

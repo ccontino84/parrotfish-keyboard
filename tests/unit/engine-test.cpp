@@ -415,6 +415,31 @@ void testOtherLanguageMargin()
     CHECK_EQ(space(text, "problema"), "problema");
 }
 
+void testSplits()
+{
+    // Two words typed as one: the space left out or typed as a key above
+    // the spacebar. A word of a typing language is never split.
+    EngineParams p;
+    p.strength = Strength::Normal;
+    p.corrector.completions = true;
+    Engine e(p);
+    for (const char *l : {"en", "it", "de"})
+        e.addLanguage(dictDir + "/" + l + ".pfd");
+    e.setLayout(layout("en"));
+    std::vector<double> prior(3, 1.0);
+    prior[e.languageIndex("en")] *= 3.0;
+    auto space = [&](const std::string &text, const std::string &typed) {
+        e.startText(u(text), prior);
+        const Result r = e.process(tapsFor(u(typed)));
+        return r.autocorrect >= 0 ? s8(r.suggestions[r.autocorrect].word) : typed;
+    };
+    const std::string text = "We went to the station and waited for the train. I think ";
+    CHECK_EQ(space(text, "thisis"), "this is");
+    CHECK_EQ(space(text, "thisnis"), "this is");   // n: a key above the spacebar
+    CHECK_EQ(space(text, "into"), "into");          // a word: never split
+    CHECK_EQ(space(text, "together"), "together");
+}
+
 void testUncertainTaps()
 {
     Setup s({"en"});
@@ -497,6 +522,25 @@ void testMoreLanguages()
     CHECK(!e.process(tapsFor(u("ciap"))).suggestions.empty());
 }
 
+void testSingleLetterCase()
+{
+    Setup s({"en", "it", "de"});
+    for (Strength st : {Strength::Normal, Strength::Gentle, Strength::Strong}) {
+        s.engine.setStrength(st);
+        s.engine.startText(u("Yesterday after work "));
+        Result r = s.engine.process(tapsFor(u("i")));
+        CHECK(r.autocorrect == 0 && r.suggestions[0].word == u("I"));
+        // Italian text: i is "the".
+        s.engine.startText(u("Ieri dopo il lavoro con "));
+        r = s.engine.process(tapsFor(u("i")));
+        CHECK(r.autocorrect < 0);
+        // Other single letters stay.
+        s.engine.startText(u("Yesterday after work "));
+        CHECK(s.engine.process(tapsFor(u("u"))).autocorrect < 0);
+    }
+    s.engine.setStrength(Strength::Normal);
+}
+
 int main(int argc, char **argv)
 {
     if (argc < 3) {
@@ -520,6 +564,8 @@ int main(int argc, char **argv)
     testStrong();
     testDigits();
     testOtherLanguageMargin();
+    testSingleLetterCase();
+    testSplits();
     testMoreLanguages();
     if (failures)
         std::printf("%d check(s) failed\n", failures);

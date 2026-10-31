@@ -108,6 +108,10 @@ InputHandler {
     // The last autocorrections ({ typed, corrected }, newest last), to tell
     // a late undo from a manual correction.
     property var _recentCorrections: []
+    // The last undone autocorrections ({ typed, corrected }, newest last):
+    // going back into the restored word and ending it as the correction
+    // again (Space, a pick or retyping it) is a redo.
+    property var _recentUndos: []
     // The layout whose keys the engine has, and two of its keys (the first
     // and the last letter key: opposite corners) with their geometry when
     // read. If neither moved, the keys are taken as unchanged.
@@ -215,6 +219,7 @@ InputHandler {
         _correction = null
         _reopened = null
         _recentCorrections = []
+        _recentUndos = []
         _applySwipe()
         if (active) {
             _updateLayout()
@@ -276,11 +281,12 @@ InputHandler {
     }
 
     function applyPrediction(replacement, index) {
-        if (preedit !== "" && replacement !== preedit) {
-            predictionEngine.acceptCorrection(preedit)   // forgets earlier undos
-            predictionEngine.logSlips(preedit, replacement, "picked")
-        }
-        _checkManual(replacement, true)
+        var typed = preedit
+        var picked = typed !== "" && replacement !== typed
+        if (picked)
+            predictionEngine.acceptCorrection(typed)   // forgets earlier undos
+        if (!_checkManual(replacement, true) && picked)
+            predictionEngine.logSlips(typed, replacement, "picked")
         replacement = replacement + " "
         var before = _textBefore()
         commit(replacement)
@@ -294,7 +300,8 @@ InputHandler {
         _correction = null   // Backspace can only undo straight after
         if (correction !== null && !(pressedKey.key === Qt.Key_Backspace && preedit === "")) {
             predictionEngine.acceptCorrection(correction.typed)   // kept
-            predictionEngine.logSlips(correction.typed, correction.corrected, "kept")
+            if (!correction.redone)   // already logged as redone
+                predictionEngine.logSlips(correction.typed, correction.corrected, "kept")
         }
         var autoSpaced = _autoSpaced
         if (pressedKey.keyType !== KeyType.ShiftKey && pressedKey.keyType !== KeyType.SymbolKey)
@@ -333,6 +340,8 @@ InputHandler {
             for (var n = 0; n < length; ++n)
                 MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
             MInputMethodQuick.sendCommit(correction.typed + correction.suffix)
+            _recentUndos = _recentUndos.slice(-4).concat([{ "typed": correction.typed,
+                                                            "corrected": correction.corrected }])
             predictionEngine.rejectCorrection(correction.typed)
             predictionEngine.logSlips(correction.typed, correction.corrected, "undone")
             predictionEngine.log("undo: " + length + " characters replaced by "
@@ -494,14 +503,18 @@ InputHandler {
     function _commitWord(suffix) {
         var typed = preedit
         var word = predictionEngine.autocorrection !== "" && !_afterDigit ? predictionEngine.autocorrection : typed
+        // A single letter (English i → I) is fixed at Space only: i. (i.e.)
+        // and i) (a list) stay.
+        if (typed.length === 1 && suffix !== " ")
+            word = typed
         // Back in an autocorrected word, the user typed it as before: they
         // meant it (a late undo), don't correct it again.
         if (word !== typed && _reopened !== null && _recentCorrection(_reopened.word, typed))
             word = typed
-        _checkManual(word)
+        var redone = _checkManual(word)
         commit(word + suffix)
         if (word !== typed) {
-            _correction = { "typed": typed, "corrected": word, "suffix": suffix }
+            _correction = { "typed": typed, "corrected": word, "suffix": suffix, "redone": redone }
             _recentCorrections = _recentCorrections.slice(-4).concat([{ "typed": typed, "corrected": word }])
         }
     }
@@ -520,13 +533,25 @@ InputHandler {
     // A word is committed: if Backspace went back into a word and this one
     // differs, the user corrected that word by hand. An autocorrection
     // changed that way was wrong: a late undo (twice stops it, as Backspace
-    // right after it). `picked`: the word came from the bar, already logged
-    // as picked.
+    // right after it). `picked`: the word came from the bar, logged as picked
+    // unless this was a redo. A word whose autocorrection was undone, ended
+    // as that correction again, is a redo: logged as redone, its undos
+    // forgotten. Returns whether it was a redo.
     function _checkManual(word, picked) {
         var reopened = _reopened
         _reopened = null
         if (reopened === null || word.toLowerCase() === reopened.word.toLowerCase())
-            return
+            return false
+        for (var u = _recentUndos.length - 1; u >= 0; --u) {
+            var undo = _recentUndos[u]
+            if (undo.typed.toLowerCase() === reopened.word.toLowerCase()
+                    && undo.corrected.toLowerCase() === word.toLowerCase()) {
+                _recentUndos = _recentUndos.slice(0, u).concat(_recentUndos.slice(u + 1))
+                predictionEngine.acceptCorrection(undo.typed)
+                predictionEngine.logSlips(undo.typed, undo.corrected, "redone")
+                return true
+            }
+        }
         var corrections = _recentCorrections
         for (var i = corrections.length - 1; i >= 0; --i) {
             var c = corrections[i]
@@ -536,11 +561,12 @@ InputHandler {
                 predictionEngine.logSlips(c.typed, c.corrected, "undone late")
                 if (!picked && word.toLowerCase() !== c.typed.toLowerCase())
                     predictionEngine.logSlips(c.typed, word, "manual")   // what was meant
-                return
+                return false
             }
         }
         if (!picked)
             predictionEngine.logSlips(reopened.word, word, "manual")
+        return false
     }
 
     // Whether the sign is written after a space: ! ? : ; if the user wants

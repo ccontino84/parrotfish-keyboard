@@ -103,8 +103,8 @@ void PredictionEngine::setLanguages(const QString &languages)
     m_languages = languages;
     emit languagesChanged();
     loadLanguages();
-    // The undo memory stays: a word the user wants left alone doesn't
-    // depend on the languages (and it is loaded before them at start).
+    // The undo memory stays: it is kept per language, for when a language
+    // is used again (and it is loaded before them at start).
     setContext(m_context);
 }
 
@@ -288,24 +288,37 @@ QString PredictionEngine::resolveTap(const QString &preedit, const QString &lift
     return c == l[0] ? lifted : initial;
 }
 
+// The language `typed` was corrected in: the text's leading language then
+// (the corrected word has been counted since). A word picked from the bar
+// is still being typed: the leading language now, even if it was corrected
+// in another language before.
+QString PredictionEngine::fixLanguage(const QString &typed) const
+{
+    if (typed.compare(m_preedit, Qt::CaseInsensitive) == 0)
+        return leadingLanguage();
+    return m_fixLanguages.value(typed.toLower(), leadingLanguage());
+}
+
 void PredictionEngine::rejectCorrection(const QString &typed)
 {
+    const QString language = fixLanguage(typed), lower = typed.toLower();
     // A valid word fixed by Strong is left alone after one undo.
-    int &count = m_undos[typed.toLower()];
-    count = m_strongFixes.contains(typed.toLower()) ? UndosToStop : count + 1;
+    int &count = m_undos[qMakePair(language, lower)];
+    count = m_strongFixes.contains(lower) ? UndosToStop : count + 1;
     const int undos = count;
-    m_store->setUndos(typed.toLower(), undos);
+    m_store->setUndos(language, lower, undos);
     if (m_debug)
-        qInfo("parrotfish: autocorrection undone (%d of %d)", undos, UndosToStop);
+        qInfo("parrotfish: autocorrection undone (%d of %d) in %s", undos, UndosToStop, qPrintable(language));
 }
 
 void PredictionEngine::acceptCorrection(const QString &typed)
 {
-    if (!m_undos.remove(typed.toLower()))
+    const QString language = fixLanguage(typed), lower = typed.toLower();
+    if (!m_undos.remove(qMakePair(language, lower)))
         return;
-    m_store->setUndos(typed.toLower(), 0);
+    m_store->setUndos(language, lower, 0);
     if (m_debug)
-        qInfo("parrotfish: undos of an autocorrection forgotten");
+        qInfo("parrotfish: undos of an autocorrection forgotten in %s", qPrintable(language));
 }
 
 void PredictionEngine::logSlips(const QString &typed, const QString &meant, const QString &how)
@@ -331,7 +344,15 @@ void PredictionEngine::logSlips(const QString &typed, const QString &meant, cons
         return (j > 0 && w[j - 1] == w[j]) || (j + 1 < static_cast<int>(w.size()) && w[j + 1] == w[j]);
     };
     QStringList slips;
-    if (t.size() == m.size()) {
+    if (m.find(U' ') != std::u32string::npos && t.find(U' ') == std::u32string::npos) {
+        // Two words typed as one: the space left out, or typed as a key.
+        std::u32string joined = m;
+        joined.erase(std::remove(joined.begin(), joined.end(), U' '), joined.end());
+        const size_t at = m.find(U' ');
+        slips << (joined == t ? QStringLiteral("space missing")
+                  : t.size() == m.size() && at < t.size() ? QStringLiteral("space key %1").arg(letter(t[at]))
+                  : QStringLiteral("other"));
+    } else if (t.size() == m.size()) {
         std::vector<size_t> diff;
         for (size_t i = 0; i < t.size(); ++i)
             if (t[i] != m[i])
@@ -501,12 +522,16 @@ void PredictionEngine::update()
                 break;
             items.append(fromU32(s.word));
         }
-        if (r.autocorrect == 0 && m_undos.value(m_preedit.toLower()) < UndosToStop) {
+        const QString language = leadingLanguage(), lower = m_preedit.toLower();
+        if (r.autocorrect == 0 && m_undos.value(qMakePair(language, lower)) < UndosToStop) {
             autocorrection = items.value(0);
+            if (m_fixLanguages.size() > 64)
+                m_fixLanguages.clear();
+            m_fixLanguages.insert(lower, language);
             if (r.realWordFix) {
                 if (m_strongFixes.size() > 32)
                     m_strongFixes.clear();
-                m_strongFixes.insert(m_preedit.toLower(), qMakePair(autocorrection.toLower(), r.margin));
+                m_strongFixes.insert(lower, qMakePair(autocorrection.toLower(), r.margin));
             }
         }
         if (m_debug)

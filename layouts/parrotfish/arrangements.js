@@ -320,6 +320,52 @@ function punctuation(languages, localeName) {
     return {"comma": ":,;" + (dash ? "—" : ""), "period": es ? "¡!.?¿" : "!.?"}
 }
 
+// The accented letters of each typing language, which its long-press menus
+// show: those in about 0.05% of the words of everyday text or more, and
+// Spanish ü (pingüino). The other letters of a key are one step away,
+// behind `more` (AccentPanel.qml).
+var languageLetters = {
+    "da": "åæøé", "de": "äöüß", "en": "", "es": "áéíóúñü", "fi": "äö",
+    "fr": "éàèêçôîùâûœëï", "it": "àèéìòù", "nb": "åøæé", "nl": "éëï",
+    "pt_BR": "ãáéçóíêúõôàâ", "pt_PT": "ãáéçóíêúõôàâ", "ro": "ășîțâ", "sv": "äåöé"
+}
+var more = "\u22ef"   // ⋯
+
+// The letters of the typing languages `codes`.
+function letters(codes) {
+    var out = ""
+    for (var i = 0; i < codes.length; ++i) {
+        var l = languageLetters[codes[i]] || ""
+        for (var j = 0; j < l.length; ++j)
+            if (out.indexOf(l.charAt(j)) < 0)
+                out += l.charAt(j)
+    }
+    return out
+}
+
+// A key's long-press menus, unshifted and shifted (accents `a`, `A` of an
+// arrangement), for the typing languages' `letters`: {a, A, more,
+// moreShifted}. The menu keeps the plain letter, signs (€ on E) and the
+// typing languages' letters, then `more` if the key has other letters:
+// those go to more, moreShifted.
+function accentMenus(a, A, letters) {
+    var split = function(accents) {
+        var keep = "", rest = ""
+        for (var i = 0; i < accents.length; ++i) {
+            var c = accents.charAt(i), lower = c.toLowerCase()
+            if (lower === c.toUpperCase() || (lower >= "a" && lower <= "z") || letters.indexOf(lower) >= 0)
+                keep += c   // a sign, the plain letter or a typing language's letter
+            else
+                rest += c
+        }
+        return {"keep": keep, "rest": rest}
+    }
+    var s = split(a), S = split(A)
+    if (s.rest === "")
+        return {"a": a, "A": A, "more": "", "moreShifted": ""}
+    return {"a": s.keep + more, "A": S.keep + more, "more": s.rest, "moreShifted": S.rest}
+}
+
 // The typing languages: the codes in `value` (separated by spaces), or the
 // system language if none, else English. Same as selected() in
 // settings/languages.js, with its codes.

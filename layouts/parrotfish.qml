@@ -8,7 +8,10 @@
 // when it changes. The keys can have subtle backgrounds (parrotfish/, dconf
 // /apps/parrotfish-keyboard/key-fill, key-border). In portrait the rows can be
 // shorter (/apps/parrotfish-keyboard/key-height: 100, 90, 80 percent).
+// The letter keys' long-press menus show the typing languages' accented
+// letters, the others behind ⋯ (parrotfish/AccentPanel.qml).
 import QtQuick 2.6
+import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0
 import ".."
 import "parrotfish"
@@ -35,10 +38,21 @@ KeyboardLayout {
     property string keyFill: keyFillConfig.value
     property string keyBorder: keyBorderConfig.value
     property string keyTuning: keyTuningConfig.value
+    // The number row's own look (/apps/parrotfish-keyboard/number-row-fill:
+    // same, none, flat, shaded, band; number-row-border: same, none, line,
+    // raised; number-row-digits: normal, quiet). "same": the letters'.
+    property string numberFill: numberFillConfig.value
+    property string numberBorder: numberBorderConfig.value
+    property string numberDigits: numberDigitsConfig.value
     // The mark on keys with a long-press menu (parrotfish/LongPressHint.qml).
     property string longPressHint: longPressHintConfig.value
     // The comma's and the period's long-press menus, by typing language.
     readonly property var punctuation: Arrangements.punctuation(languagesConfig.value, Qt.locale().name)
+    // The accented letters the letter keys' menus show first (the others
+    // are behind ⋯): the typing languages'. The rows are rebuilt when they
+    // change.
+    readonly property string accentLetters: Arrangements.letters(
+        Arrangements.typingLanguages(languagesConfig.value, Qt.locale().name))
 
     // The sign of the sticky key: the one last picked from its long press.
     readonly property string stickySign: {
@@ -81,6 +95,7 @@ KeyboardLayout {
     splitSupported: true
 
     onArrangementChanged: _build()
+    onAccentLettersChanged: _build()
     Component.onCompleted: _build()
     // Jolla's updateSizes() sets keyHeight and then sizes the rows from it:
     // replacing the value here, as it is set, makes the rows use ours. Its
@@ -159,6 +174,24 @@ KeyboardLayout {
     }
 
     ConfigurationValue {
+        id: numberFillConfig
+        key: "/apps/parrotfish-keyboard/number-row-fill"   // same, none, flat, shaded, band
+        defaultValue: "same"
+    }
+
+    ConfigurationValue {
+        id: numberBorderConfig
+        key: "/apps/parrotfish-keyboard/number-row-border"   // same, none, line, raised
+        defaultValue: "same"
+    }
+
+    ConfigurationValue {
+        id: numberDigitsConfig
+        key: "/apps/parrotfish-keyboard/number-row-digits"   // normal, quiet
+        defaultValue: "normal"
+    }
+
+    ConfigurationValue {
         id: numberRowHeightConfig
         key: "/apps/parrotfish-keyboard/number-row-height"   // 100, 75 (any 40-100)
         defaultValue: "100"
@@ -173,6 +206,24 @@ KeyboardLayout {
         height: visible ? Math.round(parrotfishLayout.keyHeight * parrotfishLayout.numberRowPercent / 100) : 0
         onWidthChanged: parrotfishLayout._placeNumbers()
         onHeightChanged: parrotfishLayout._placeNumbers()
+
+        // numberFill "band": one band behind the digits (two when the rows
+        // are split), inset by the gap as the key backgrounds.
+        Repeater {
+            model: parrotfishLayout.numberFill === "band" ? (parrotfishLayout.avoidanceWidth > 0 ? 2 : 1) : 0
+            Rectangle {
+                readonly property real _half: (numberRow.width - parrotfishLayout.avoidanceWidth) / 2
+                x: (index === 0 ? 0 : _half + parrotfishLayout.avoidanceWidth) + parrotfishLayout.keyGap
+                y: parrotfishLayout.keyGap
+                width: (parrotfishLayout.avoidanceWidth > 0 ? _half : numberRow.width) - 2 * parrotfishLayout.keyGap
+                height: numberRow.height - 2 * parrotfishLayout.keyGap
+                z: -1
+                radius: geometry.keyRadius
+                color: Theme.rgba(parrotfishLayout._numberKeys.length > 0
+                                  ? parrotfishLayout._numberKeys[0].palette.primaryColor : "white",
+                                  parrotfishLayout._tuned("band", 0.06))
+            }
+        }
     }
 
     // The letter rows are filled by _build(), in order, so that the keys'
@@ -187,6 +238,11 @@ KeyboardLayout {
     }
 
     BottomRow {}
+
+    AccentPanel {
+        keyboardItem: typeof keyboard !== "undefined" ? keyboard : null
+        layout: parrotfishLayout
+    }
 
     StickyWatcher {
         keyboardItem: typeof keyboard !== "undefined" ? keyboard : null
@@ -203,7 +259,28 @@ KeyboardLayout {
         BackspaceKey {}
     }
 
+    // A build can be asked for while one is running (creating keys can
+    // change accentLetters while the layout loads): then it runs again
+    // when that one is done, so that no keys are left behind.
+    property bool _building: false
+    property bool _buildAgain: false
     function _build() {
+        if (_building) {
+            _buildAgain = true
+            return
+        }
+        _building = true
+        try {
+            do {
+                _buildAgain = false
+                _buildOnce()
+            } while (_buildAgain)
+        } finally {
+            _building = false
+        }
+    }
+
+    function _buildOnce() {
         var rows = [row1, row2, row3]
         var created = []
         for (var r = 0; r < rows.length; ++r) {
@@ -216,10 +293,12 @@ KeyboardLayout {
             var keys = []
             for (i = 0; i < spec.keys.length; ++i) {
                 var k = spec.keys[i]
+                var menus = Arrangements.accentMenus(k.a || "", k.A || "", accentLetters)
                 var key = letterKeyComponent.createObject(rows[r], {
                     "caption": k.c, "captionShifted": k.s,
                     "symView": k.y || "", "symView2": k.y2 || "",
-                    "accents": k.a || "", "accentsShifted": k.A || ""
+                    "accents": menus.a, "accentsShifted": menus.A,
+                    "moreAccents": menus.more, "moreAccentsShifted": menus.moreShifted
                 })
                 if (k.fit)
                     key.fontSizeMode = Text.HorizontalFit
@@ -252,7 +331,7 @@ KeyboardLayout {
         for (i = 0; i < digits.length; ++i) {
             numbers.push(letterKeyComponent.createObject(numberRow, {
                 "caption": digits[i].c, "captionShifted": digits[i].s,
-                "symView": digits[i].y, "symView2": digits[i].y2
+                "symView": digits[i].y, "symView2": digits[i].y2, "numberRow": true
             }))
         }
         _numberKeys = numbers

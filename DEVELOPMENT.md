@@ -202,10 +202,13 @@ timings (never the typed text) to the journal, and appends to
 `~/.local/share/parrotfish-keyboard/slips.log` the kind of slip behind every
 autocorrection kept or undone, every correction picked from the bar and
 every word changed by hand (Backspace back into a committed word):
-`kept key k l` (typed k, meant l), `undone key j h`, `undone late key g h`
+`kept key k l` (typed k, meant l), `kept space missing` and `kept space
+key n` (two words typed as one), `undone key j h`, `undone late key g h`
 (an autocorrection changed by hand after more typing; it also has a
-`kept` line), `manual key r e` (a word the engine left alone, fixed by
-hand; a quite different word is not logged), `picked swap`,
+`kept` line), `redone key j h` (an undo taken back: Backspace into the
+restored word, then Space, a pick or retyping the correction; it is
+neither picked, kept nor manual), `manual key r e` (a word the engine left
+alone, fixed by hand; a quite different word is not logged), `picked swap`,
 `strong kept key d s margin=9.0` (a valid word fixed by Strong, with its
 margin in nats; also `strong undone`), `missing`,
 `missing-double`, `extra`, `extra-double`, `accent`, `other`. Letter pairs
@@ -220,7 +223,8 @@ letter under that header (in batches of 50, and the rest when the settings
 change; up to 49 are lost at a restart), so slips can be compared per word.
 
 The undo memory (typed words whose autocorrection was undone; two undos
-stop it) is kept between sessions in
+stop it, in text of the language the text was in when it was corrected)
+is kept between sessions in
 `~/.local/share/parrotfish-keyboard/learning.db` (SQLite, the system's
 `sqlite-libs`), whether or not the debug file is there: words, so no
 debug data. Every table has a cap (undos: the 1,000 used last) and freed

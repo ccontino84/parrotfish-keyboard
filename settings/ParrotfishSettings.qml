@@ -29,6 +29,39 @@ Column {
         }
     }
 
+    // A ComboBox for one setting of a Repeater model (see below).
+    Component {
+        id: settingBox
+
+        ComboBox {
+            id: comboBox
+
+            readonly property var setting: modelData
+
+            width: parent.width
+            label: setting.label
+            description: setting.description
+            currentIndex: Math.max(0, setting.values.indexOf(config.value))
+
+            menu: ContextMenu {
+                Repeater {
+                    model: comboBox.setting.texts
+                    MenuItem {
+                        text: modelData
+                        onClicked: config.value = comboBox.setting.values[index]
+                    }
+                }
+            }
+
+            ConfigurationValue {
+                id: config
+                key: "/apps/parrotfish-keyboard/" + comboBox.setting.key
+                defaultValue: comboBox.setting["default"] !== undefined ? comboBox.setting["default"]
+                                                                        : comboBox.setting.values[0]
+            }
+        }
+    }
+
     Repeater {
         // key: under /apps/parrotfish-keyboard/; the default is "default", or
         // else the first value
@@ -70,33 +103,7 @@ Column {
               "texts": [qsTr("Dot"), qsTr("Line"), qsTr("Off")] }
         ]
 
-        ComboBox {
-            id: comboBox
-
-            readonly property var setting: modelData
-
-            width: parent.width
-            label: setting.label
-            description: setting.description
-            currentIndex: Math.max(0, setting.values.indexOf(config.value))
-
-            menu: ContextMenu {
-                Repeater {
-                    model: comboBox.setting.texts
-                    MenuItem {
-                        text: modelData
-                        onClicked: config.value = comboBox.setting.values[index]
-                    }
-                }
-            }
-
-            ConfigurationValue {
-                id: config
-                key: "/apps/parrotfish-keyboard/" + comboBox.setting.key
-                defaultValue: comboBox.setting["default"] !== undefined ? comboBox.setting["default"]
-                                                                        : comboBox.setting.values[0]
-            }
-        }
+        delegate: settingBox
     }
 
     TextSwitch {
@@ -123,6 +130,26 @@ Column {
             id: numberRowHeightConfig
             key: "/apps/parrotfish-keyboard/number-row-height"
             defaultValue: "100"
+        }
+    }
+
+    Column {
+        width: parent.width
+        visible: numberRowConfig.value === true || numberRowConfig.value === "true"
+
+        Repeater {
+            model: [
+                { "key": "number-row-fill", "label": qsTr("Number row fill"), "description": "",
+                  "values": ["same", "none", "flat", "shaded", "band"],
+                  "texts": [qsTr("As the keys"), qsTr("None"), qsTr("Flat"), qsTr("Shaded"), qsTr("One band")] },
+                { "key": "number-row-border", "label": qsTr("Number row border"), "description": "",
+                  "values": ["same", "none", "line", "raised"],
+                  "texts": [qsTr("As the keys"), qsTr("None"), qsTr("Line"), qsTr("Raised")] },
+                { "key": "number-row-digits", "label": qsTr("Number row digits"), "description": "",
+                  "values": ["normal", "quiet"],
+                  "texts": [qsTr("Normal"), qsTr("Smaller and fainter")] }
+            ]
+            delegate: settingBox
         }
     }
 

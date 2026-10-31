@@ -33,11 +33,15 @@ LearningStore::LearningStore(const QString &path)
     if (!exec("PRAGMA auto_vacuum = INCREMENTAL")
             || !exec("PRAGMA journal_mode = WAL")
             || !exec("PRAGMA synchronous = NORMAL")
+            // Version 1 kept undos without their language: they are dropped.
+            || (userVersion() < 2 && !exec("DROP TABLE IF EXISTS undos"))
             || !exec("CREATE TABLE IF NOT EXISTS undos ("
-                     " typed TEXT PRIMARY KEY,"
+                     " lang TEXT NOT NULL,"
+                     " typed TEXT NOT NULL,"
                      " count INTEGER NOT NULL,"
-                     " used INTEGER NOT NULL)")
-            || !exec("PRAGMA user_version = 1")) {
+                     " used INTEGER NOT NULL,"
+                     " PRIMARY KEY (lang, typed))")
+            || !exec("PRAGMA user_version = 2")) {
         sqlite3_close(m_db);
         m_db = nullptr;
         return;
@@ -61,34 +65,48 @@ bool LearningStore::exec(const char *sql)
     return false;
 }
 
-QHash<QString, int> LearningStore::undos() const
+int LearningStore::userVersion() const
 {
-    QHash<QString, int> out;
     sqlite3_stmt *st = nullptr;
-    if (!m_db || sqlite3_prepare_v2(m_db, "SELECT typed, count FROM undos", -1, &st, nullptr) != SQLITE_OK)
+    int version = 0;
+    if (sqlite3_prepare_v2(m_db, "PRAGMA user_version", -1, &st, nullptr) == SQLITE_OK
+            && sqlite3_step(st) == SQLITE_ROW)
+        version = sqlite3_column_int(st, 0);
+    sqlite3_finalize(st);
+    return version;
+}
+
+QHash<LearningStore::UndoKey, int> LearningStore::undos() const
+{
+    QHash<UndoKey, int> out;
+    sqlite3_stmt *st = nullptr;
+    if (!m_db || sqlite3_prepare_v2(m_db, "SELECT lang, typed, count FROM undos", -1, &st, nullptr) != SQLITE_OK)
         return out;
+    auto text = [st](int column) {
+        return QString::fromUtf8(reinterpret_cast<const char *>(sqlite3_column_text(st, column)));
+    };
     while (sqlite3_step(st) == SQLITE_ROW)
-        out.insert(QString::fromUtf8(reinterpret_cast<const char *>(sqlite3_column_text(st, 0))),
-                   sqlite3_column_int(st, 1));
+        out.insert(qMakePair(text(0), text(1)), sqlite3_column_int(st, 2));
     sqlite3_finalize(st);
     return out;
 }
 
-void LearningStore::setUndos(const QString &typed, int count)
+void LearningStore::setUndos(const QString &language, const QString &typed, int count)
 {
     if (!m_db)
         return;
     sqlite3_stmt *st = nullptr;
     const char *sql = count > 0
-            ? "INSERT OR REPLACE INTO undos (typed, count, used) VALUES (?1, ?2, ?3)"
-            : "DELETE FROM undos WHERE typed = ?1";
+            ? "INSERT OR REPLACE INTO undos (lang, typed, count, used) VALUES (?1, ?2, ?3, ?4)"
+            : "DELETE FROM undos WHERE lang = ?1 AND typed = ?2";
     if (sqlite3_prepare_v2(m_db, sql, -1, &st, nullptr) != SQLITE_OK)
         return;
-    const QByteArray t = typed.toUtf8();
-    sqlite3_bind_text(st, 1, t.constData(), t.size(), SQLITE_TRANSIENT);
+    const QByteArray l = language.toUtf8(), t = typed.toUtf8();
+    sqlite3_bind_text(st, 1, l.constData(), l.size(), SQLITE_TRANSIENT);
+    sqlite3_bind_text(st, 2, t.constData(), t.size(), SQLITE_TRANSIENT);
     if (count > 0) {
-        sqlite3_bind_int(st, 2, count);
-        sqlite3_bind_int64(st, 3, QDateTime::currentMSecsSinceEpoch() / 1000);
+        sqlite3_bind_int(st, 3, count);
+        sqlite3_bind_int64(st, 4, QDateTime::currentMSecsSinceEpoch() / 1000);
     }
     if (sqlite3_step(st) != SQLITE_DONE)
         qWarning("parrotfish: learning store: %s", sqlite3_errmsg(m_db));
@@ -102,8 +120,8 @@ void LearningStore::setUndos(const QString &typed, int count)
 void LearningStore::prune()
 {
     m_writes = 0;
-    const QByteArray sql = QByteArray("DELETE FROM undos WHERE typed NOT IN"
-                                      " (SELECT typed FROM undos ORDER BY used DESC, rowid DESC LIMIT ")
+    const QByteArray sql = QByteArray("DELETE FROM undos WHERE rowid NOT IN"
+                                      " (SELECT rowid FROM undos ORDER BY used DESC, rowid DESC LIMIT ")
             + QByteArray::number(MaxUndos) + ")";
     exec(sql.constData());
     exec("PRAGMA incremental_vacuum");

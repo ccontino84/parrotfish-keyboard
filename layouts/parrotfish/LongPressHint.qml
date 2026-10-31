@@ -8,7 +8,8 @@
 // its KeyBackground (frame): the mark sits in the background's rectangle,
 // also when the background isn't drawn, so it fits every key look. The
 // layout's keyTuning sets its size ("hintsize=3.5", times Theme.pixelRatio)
-// and alpha ("hint=0.4").
+// and alpha ("hint=0.4"). A menu with nothing for the typing languages (the
+// letter and ⋯ only: D's d ⋯ in English) gets a fainter mark ("faint=0.15").
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 
@@ -26,7 +27,9 @@ Item {
     readonly property string _accents: _attributes !== null && _attributes.isShifted
                                        ? key.accentsShifted : key.accents
     readonly property int _thickness: Math.max(2, Math.round(_tuned("hintsize", 3.5) * Theme.pixelRatio))
-    readonly property color _color: Theme.rgba(key.palette.primaryColor, _tuned("hint", 0.4))
+    readonly property bool _faint: typeof _accents === "string" && _accents.length === 2 && _accents.charAt(1) === "\u22ef"
+    readonly property color _color: Theme.rgba(key.palette.primaryColor,
+                                               _faint ? _tuned("faint", 0.15) : _tuned("hint", 0.4))
 
     function _tuned(name, fallback) {
         return layout && layout._tuned !== undefined ? layout._tuned(name, fallback) : fallback

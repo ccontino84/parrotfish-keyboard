@@ -15,6 +15,9 @@
 // /apps/parrotfish-keyboard/key-tuning) overrides the default strengths:
 // alphas of the ambience's primary colour (for "raised", of its white and
 // black edges).
+// numberRow: a key of the number row, with the row's own look when it is
+// set (the layout's numberFill and numberBorder; "same": the letters';
+// fill "band": none per key, the layout draws one band behind the row).
 // functionLook (the sticky key) sets a key apart from the letters, whatever
 // their look: flat and a little stronger, as Jolla's spacebar (0.07; ?123
 // and Enter are 0.17), no border.
@@ -27,8 +30,11 @@ Rectangle {
     readonly property Item key: parent
     readonly property Item layout: key && key.parent ? key.parent.parent : null
     property bool functionLook: false
-    readonly property string fillStyle: functionLook ? "flat" : _setting("keyFill", ["none", "flat", "shaded"], "none")
-    readonly property string borderStyle: functionLook ? "none" : _setting("keyBorder", ["none", "line", "raised"], "none")
+    property bool numberRow: false
+    readonly property string fillStyle: functionLook ? "flat"
+                                                     : _look("keyFill", "numberFill", ["none", "flat", "shaded"], "none")
+    readonly property string borderStyle: functionLook ? "none"
+                                                       : _look("keyBorder", "numberBorder", ["none", "line", "raised"], "none")
     readonly property bool styled: fillStyle !== "none" || borderStyle !== "none"
     readonly property bool raised: borderStyle === "raised"
     readonly property var strengths: _strengths(fillStyle, borderStyle,
@@ -47,6 +53,19 @@ Rectangle {
     function _setting(name, values, fallback) {
         var value = layout ? layout[name] : undefined
         return values.indexOf(value) >= 0 ? value : fallback
+    }
+
+    // The number row's value of `numberName` for its keys, if it is one of
+    // `values` ("band": no fill), else the letters' `name`.
+    function _look(name, numberName, values, fallback) {
+        if (numberRow && layout) {
+            var value = layout[numberName]
+            if (value === "band")
+                return "none"
+            if (values.indexOf(value) >= 0)
+                return value
+        }
+        return _setting(name, values, fallback)
     }
 
     function _strengths(fill, border, tuning) {

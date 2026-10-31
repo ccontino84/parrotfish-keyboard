@@ -128,6 +128,20 @@ Column {
 
     TextSwitch {
         automaticCheck: false
+        checked: spaceBeforeConfig.value === true || spaceBeforeConfig.value === "true"
+        text: qsTr("Space before ! ? : ;")
+        description: qsTr("Keeps the space after a picked suggestion, as in French")
+        onClicked: spaceBeforeConfig.value = !checked
+
+        ConfigurationValue {
+            id: spaceBeforeConfig
+            key: "/apps/parrotfish-keyboard/space-before-punctuation"
+            defaultValue: false
+        }
+    }
+
+    TextSwitch {
+        automaticCheck: false
         checked: dividersConfig.value !== false && dividersConfig.value !== "false"
         text: qsTr("Dividers between suggestions")
         onClicked: dividersConfig.value = !checked

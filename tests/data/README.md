@@ -40,3 +40,8 @@ tools/sample-sentences.py tests/data/tatoeba-es.txt ~/corpora/spa_sentences.tsv.
 Both sets are left out of every word count (`--exclude` in
 `tools/regenerate-lists.sh`), so the benchmarks don't test on data the
 dictionaries were built from.
+
+`alnum.txt`: tokens with one digit after a letter (mp3, ps4, h2o, win7),
+written for the project. With a number row they are typed as one word;
+`sentence-bench -N 75 -o tests/data/alnum.txt` checks that autocorrect
+leaves them alone.

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 
 Name:       parrotfish-keyboard
-Version:    0.1.0~alpha39
+Version:    0.1.0~alpha70
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LicenseRef-TBD AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
@@ -12,6 +12,7 @@ BuildRequires:  cmake
 BuildRequires:  python3-base
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(sqlite3)
 Requires:   jolla-keyboard
 Requires:   qt5-qtdeclarative
 
@@ -31,7 +32,8 @@ cmake -S . -B build-rpm \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_INSTALL_LIBDIR=%{_lib} \
     -DPARROTFISH_QML_DIR=%{_libdir}/qt5/qml \
-    -DPARROTFISH_DEVTOOLS=ON
+    -DPARROTFISH_DEVTOOLS=ON \
+    -DPARROTFISH_VERSION=%{version}
 cmake --build build-rpm -- %{?_smp_mflags}
 
 %install

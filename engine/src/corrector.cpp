@@ -99,8 +99,10 @@ struct Corrector::Search
                 if (ki < 0)
                     return Inf;
                 float prob = c.m_keys.probability(k, ki);
-                if (k0 >= 0)
-                    prob = p.liftWeight * prob + (1.0f - p.liftWeight) * c.m_keys.probability(k0, ki);
+                if (k0 >= 0) {
+                    const float w = t.chLifted ? p.liftWeight : 1.0f - p.liftWeight;
+                    prob = w * prob + (1.0f - w) * c.m_keys.probability(k0, ki);
+                }
                 return prob >= p.minTapProb ? -std::log(prob) : Inf;
             };
             for (uint32_t li = 0; li < a; ++li) {
@@ -135,6 +137,11 @@ struct Corrector::Search
         for (size_t i = 1; i < n; ++i)
             if (taps[i].ch == taps[i - 1].ch)
                 insertCost[i] = std::min(p.insertion, p.doubledInsertion);
+        // A digit in a word is a letter typed on the number row (h3llo), not
+        // an extra tap: tes5 is test, not yes.
+        for (size_t i = 0; i < n; ++i)
+            if (taps[i].ch >= U'0' && taps[i].ch <= U'9')
+                insertCost[i] = Inf;
         suffixMin.assign(n + 1, 0.0);
         for (size_t i = n; i-- > 0;) {
             float m = insertCost[i];

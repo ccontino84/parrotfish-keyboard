@@ -7,9 +7,11 @@
 #include "parrotfish/engine.h"
 #include "parrotfish/utf8.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <fstream>
+#include <limits>
 #include <functional>
 #include <sstream>
 #include <string>
@@ -261,8 +263,8 @@ void testContext()
 
 void testOtherLanguageWords()
 {
-    // English text, then the Italian "Mi": a word of a typing language is
-    // never replaced by a different word, not even in Normal mode.
+    // English text, then the Italian "Mi": a common word of a typing
+    // language stays, even in Normal mode (testOtherLanguageMargin).
     EngineParams p;
     p.strength = Strength::Normal;
     Engine e(p);
@@ -341,6 +343,78 @@ void testStrong()
     CHECK_EQ(space(Strength::Strong, "I think ", "p"), "p");
 }
 
+void testDigits()
+{
+    // A number row over the top letter row, as on the phone with it on.
+    std::vector<Key> keys = layout("en").keys();
+    float top = keys[0].y;
+    for (const Key &k : keys)
+        top = std::min(top, k.y);
+    std::vector<Key> row;
+    for (const Key &k : keys)
+        if (k.y == top)
+            row.push_back(k);
+    std::sort(row.begin(), row.end(), [](const Key &a, const Key &b) { return a.x < b.x; });
+    for (size_t i = 0; i < row.size() && i < 10; ++i)
+        keys.push_back({U"1234567890"[i], row[i].x, top - row[i].height, row[i].width, row[i].height});
+    EngineParams p;
+    p.strength = Strength::Normal;
+    p.corrector.completions = true;
+    Engine e(p);
+    e.addLanguage(dictDir + "/en.pfd");
+    e.setLayout(KeyModel(keys, layout("en").sigma()));
+    auto process = [&](const std::string &text, const std::string &typed) {
+        e.startText(u(text), {});
+        return e.process(tapsFor(u(typed)));
+    };
+    auto space = [&](const std::string &text, const std::string &typed) {
+        const Result r = process(text, typed);
+        return r.autocorrect >= 0 ? s8(r.suggestions[r.autocorrect].word) : typed;
+    };
+    // A slip onto the digit above a letter.
+    CHECK_EQ(space("This is an ", "exampl3"), "example");
+    CHECK_EQ(space("I don't know ", "ab9ut"), "about");
+    // The digit is a letter typed on the number row, not an extra tap: tes5
+    // is test (or rest), not yes.
+    const Result r = process("I think this is the ", "tes5");
+    CHECK(!r.suggestions.empty() && s8(r.suggestions[0].word) == "test");
+    CHECK(std::none_of(r.suggestions.begin(), r.suggestions.end(),
+                       [](const Suggestion &s) { return s8(s.word) == "yes"; }));
+    // Only a letter in the digit's place: names and codes stay, and a
+    // letter and a digit is always a code (a4 was at).
+    for (const char *w : {"ps4", "h2o", "win7", "b2b", "a4", "f1", "i5", "g7"})
+        CHECK_EQ(space("I bought a ", w), w);
+}
+
+void testOtherLanguageMargin()
+{
+    // English text with Italian and German loaded: a typo that happens to be
+    // a rare word of another language is fixed; a common word of another
+    // language, typed on purpose, stays.
+    auto space = [](const std::string &text, const std::string &typed, double margin = 12.0) {
+        EngineParams p;
+        p.strength = Strength::Normal;
+        p.corrector.completions = true;
+        p.otherLanguageMargin = margin;
+        Engine e(p);
+        for (const char *l : {"en", "it", "de"})
+            e.addLanguage(dictDir + "/" + l + ".pfd");
+        e.setLayout(layout("en"));
+        std::vector<double> prior(3, 1.0);
+        prior[e.languageIndex("en")] *= 3.0;
+        e.startText(u(text), prior);
+        const Result r = e.process(tapsFor(u(typed)));
+        return r.autocorrect >= 0 ? s8(r.suggestions[r.autocorrect].word) : typed;
+    };
+    const std::string text = "We went to the station and waited for the train. I think ";
+    CHECK_EQ(space(text, "thier"), "their");   // Thier: a German surname
+    CHECK_EQ(space(text, "tp"), "to");         // TP: an abbreviation
+    CHECK_EQ(space(text, "thier", std::numeric_limits<double>::infinity()), "thier");   // the old block
+    CHECK_EQ(space(text, "un"), "un");
+    CHECK_EQ(space(text, "ti"), "ti");
+    CHECK_EQ(space(text, "problema"), "problema");
+}
+
 void testUncertainTaps()
 {
     Setup s({"en"});
@@ -350,6 +424,21 @@ void testUncertainTaps()
     CHECK(s.engine.resolveTap(u("th"), U'e', U'r') == U'e');
     // No word starts either way: the lift key stays.
     CHECK(s.engine.resolveTap(u("xqz"), U'w', U'e') == U'w');
+    // Touched f, lifted on d after "le": "led..." fits better then, so the
+    // word shows "ledt"; with both keys kept, the whole word is "left".
+    CHECK(s.engine.resolveTap(u("le"), U'd', U'f') == U'd');
+    s.engine.startText(u("I think that "));
+    std::vector<Tap> taps = tapsFor(u("ledt"));
+    CHECK(s.engine.process(taps).autocorrect < 0 || s8(s.engine.process(taps).suggestions[0].word) != "left");
+    taps[2].initial = U'f';
+    const Result r = s.engine.process(taps);
+    CHECK(r.autocorrect >= 0 && s8(r.suggestions[r.autocorrect].word) == "left");
+    // The same tap, shown as the touch-down key (chLifted false): the lift
+    // key keeps its weight.
+    std::vector<Tap> shownTouched = tapsFor(u("left"));
+    shownTouched[2].initial = U'd';
+    shownTouched[2].chLifted = false;
+    CHECK(s.engine.process(shownTouched).autocorrect < 0);   // left is a word: stays
 }
 
 } // namespace
@@ -429,6 +518,8 @@ int main(int argc, char **argv)
     testOtherLanguageWords();
     testFirstWord();
     testStrong();
+    testDigits();
+    testOtherLanguageMargin();
     testMoreLanguages();
     if (failures)
         std::printf("%d check(s) failed\n", failures);

@@ -52,6 +52,9 @@ PredictionEngine::PredictionEngine(QObject *parent)
             : QStringLiteral(PARROTFISH_DATA_DIR);
     // Timing logs (never the typed text) while this file exists.
     m_debug = QFile::exists(QDir::homePath() + QStringLiteral("/.local/share/parrotfish-keyboard/debug"));
+    m_store.reset(new LearningStore(QDir::homePath()
+                                    + QStringLiteral("/.local/share/parrotfish-keyboard/learning.db")));
+    m_undos = m_store->undos();
 
     loadLanguages();
     loadFallbackLayout();
@@ -85,6 +88,14 @@ void PredictionEngine::setPreedit(const QString &preedit)
     update();
 }
 
+void PredictionEngine::setPreeditKeys(const QStringList &keys)
+{
+    if (keys == m_preeditKeys)
+        return;
+    m_preeditKeys = keys;   // used at the next update (the handler sets preedit next)
+    emit preeditKeysChanged();
+}
+
 void PredictionEngine::setLanguages(const QString &languages)
 {
     if (languages == m_languages)
@@ -92,7 +103,8 @@ void PredictionEngine::setLanguages(const QString &languages)
     m_languages = languages;
     emit languagesChanged();
     loadLanguages();
-    m_undos.clear();
+    // The undo memory stays: a word the user wants left alone doesn't
+    // depend on the languages (and it is loaded before them at start).
     setContext(m_context);
 }
 
@@ -282,13 +294,17 @@ void PredictionEngine::rejectCorrection(const QString &typed)
     int &count = m_undos[typed.toLower()];
     count = m_strongFixes.contains(typed.toLower()) ? UndosToStop : count + 1;
     const int undos = count;
+    m_store->setUndos(typed.toLower(), undos);
     if (m_debug)
         qInfo("parrotfish: autocorrection undone (%d of %d)", undos, UndosToStop);
 }
 
 void PredictionEngine::acceptCorrection(const QString &typed)
 {
-    if (m_undos.remove(typed.toLower()) && m_debug)
+    if (!m_undos.remove(typed.toLower()))
+        return;
+    m_store->setUndos(typed.toLower(), 0);
+    if (m_debug)
         qInfo("parrotfish: undos of an autocorrection forgotten");
 }
 
@@ -348,6 +364,12 @@ void PredictionEngine::logSlips(const QString &typed, const QString &meant, cons
         prefix = QStringLiteral("strong ") + how;
         suffix = QStringLiteral(" margin=") + QString::number(strong->second, 'f', 1);
     }
+    // A word changed by hand into a quite different one is a new word, not
+    // a slip.
+    if (how == QLatin1String("manual"))
+        slips.removeAll(QStringLiteral("other"));
+    if (slips.isEmpty())
+        return;
     for (QString &s : slips)
         s = prefix + QLatin1Char(' ') + s + suffix;
     appendSlips(slips);
@@ -371,6 +393,8 @@ QString PredictionEngine::slipsHeader() const
     // vertical neighbours are.
     std::vector<float> widths, ys;
     for (const parrotfish::Key &k : m_keys) {
+        if (k.ch >= U'0' && k.ch <= U'9')
+            continue;   // the letter rows only, with or without the number row
         widths.push_back(k.width);
         if (std::none_of(ys.begin(), ys.end(), [&](float y) { return std::abs(y - k.y) < k.height / 2; }))
             ys.push_back(k.y);
@@ -460,7 +484,18 @@ void PredictionEngine::update()
         QElapsedTimer timer;
         timer.start();
         const std::u32string typed = toU32(m_preedit);
-        const parrotfish::Result r = m_engine.process(parrotfish::tapsFor(typed));
+        std::vector<parrotfish::Tap> taps = parrotfish::tapsFor(typed);
+        if (static_cast<size_t>(m_preeditKeys.size()) == taps.size()) {
+            for (size_t i = 0; i < taps.size(); ++i) {
+                const QString &k = m_preeditKeys.at(static_cast<int>(i));
+                const std::u32string other = toU32(k.left(k.size() - 1).toLower());
+                if (k.size() >= 2 && other.size() == 1 && other[0] != taps[i].ch) {
+                    taps[i].initial = other[0];
+                    taps[i].chLifted = k.endsWith(QLatin1Char('1'));
+                }
+            }
+        }
+        const parrotfish::Result r = m_engine.process(taps);
         for (const parrotfish::Suggestion &s : r.suggestions) {
             if (items.size() >= MaxSuggestions)
                 break;

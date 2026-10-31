@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "learningstore.h"
 #include "parrotfish/engine.h"
 
 #include <QAbstractListModel>
@@ -12,6 +13,8 @@
 #include <QString>
 #include <QStringList>
 
+#include <memory>
+
 // The engine as Jolla's PreeditHandler expects it: a list model with a
 // `text` role and a predictionsChanged() signal. The handler sets `preedit`
 // (the word being typed) and calls setContext() with the text before the
@@ -20,6 +23,12 @@ class PredictionEngine : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QString preedit READ preedit WRITE setPreedit NOTIFY preeditChanged)
+    // Set before `preedit`: for each of its letters, "" or the tap's other
+    // key and whether the letter shown is where the finger lifted ("e1": the
+    // tap also touched e, and lifted on the letter shown; "e0": it lifted on
+    // e, and the letter shown is where it touched down). The search weighs
+    // both keys with the whole word. Ignored if its length differs.
+    Q_PROPERTY(QStringList preeditKeys READ preeditKeys WRITE setPreeditKeys NOTIFY preeditKeysChanged)
     // The typing languages: dictionary codes separated by spaces ("en it
     // pt_BR"); empty: the system language (English if there is no
     // dictionary for it). Codes without a dictionary are skipped.
@@ -56,6 +65,8 @@ public:
 
     QString preedit() const { return m_preedit; }
     void setPreedit(const QString &preedit);
+    QStringList preeditKeys() const { return m_preeditKeys; }
+    void setPreeditKeys(const QStringList &keys);
     QString languages() const { return m_languages; }
     void setLanguages(const QString &languages);
     QString language() const { return m_language; }
@@ -86,13 +97,16 @@ public:
                                    const QString &initial) const;
     // The user undid the autocorrection of `typed`. After the second undo
     // (the first for a Strong fix of a valid word) it isn't corrected again
-    // in this session.
+    // (kept between sessions in learning.db, up to LearningStore::MaxUndos
+    // words).
     Q_INVOKABLE void rejectCorrection(const QString &typed);
     // The user kept an autocorrection of `typed` or picked a correction of it
     // from the bar: its undos are forgotten.
     Q_INVOKABLE void acceptCorrection(const QString &typed);
     // With the debug file only: the user kept an autocorrection ("kept"),
-    // undid it ("undone") or picked a correction from the bar ("picked"); a
+    // undid it ("undone"; "undone late" when the corrected word was changed
+    // after more typing), picked a correction from the bar ("picked") or
+    // changed a word by hand ("manual": slips only, no "other"); a
     // Strong fix of a valid word is "strong kept" or "strong undone", with
     // " margin=5.3" (nats);
     // appends the kind of slip (a letter pair for a wrong key, never the
@@ -111,6 +125,7 @@ public:
 
 signals:
     void preeditChanged();
+    void preeditKeysChanged();
     void languagesChanged();
     void languageChanged();
     void leadingLanguageChanged();
@@ -131,6 +146,7 @@ private:
     parrotfish::Engine m_engine;
     QString m_dataDir;
     QString m_preedit;
+    QStringList m_preeditKeys;
     QString m_languages;
     QString m_language;
     QString m_context;
@@ -140,6 +156,7 @@ private:
     QString m_autocorrection;
     QString m_tuning;
     QHash<QString, int> m_undos;   // lowercase typed word → undos in a row
+    std::unique_ptr<LearningStore> m_store;   // keeps m_undos between sessions
     // Strong's autocorrections of valid words: lowercase typed word →
     // (lowercase correction, margin in nats), for slips.log and undo.
     QHash<QString, QPair<QString, double>> m_strongFixes;

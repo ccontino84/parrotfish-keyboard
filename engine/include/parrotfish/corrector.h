@@ -15,11 +15,15 @@ namespace parrotfish {
 
 // One tap: the key typed (where the finger lifted) and, if different, the
 // key first touched. `ch` is lowercase; characters typed from a popup or
-// the symbol view are taken as typed (`onLayout` false).
+// the symbol view are taken as typed (`onLayout` false). When the keyboard
+// typed the touch-down key instead (the word fitted it better), `ch` is that
+// key, `initial` the lift key and `chLifted` false: `ch` is always what the
+// word shows, and the lift key keeps its weight.
 struct Tap {
     char32_t ch = 0;
-    char32_t initial = 0;    // 0: same as ch
+    char32_t initial = 0;    // 0: same as ch; else the tap's other key
     bool upper = false;      // typed with Shift or Caps Lock
+    bool chLifted = true;    // ch is where the finger lifted (else touched down)
 };
 
 // All costs are negative natural logs of probabilities.

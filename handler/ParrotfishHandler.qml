@@ -12,10 +12,21 @@
 //   correction, shown first and highlighted in the bar (the typed word
 //   stays in the text field and is not repeated in the bar);
 // - Backspace straight after an autocorrection brings back what was typed;
+//   a word changed by hand later (Backspace into it) is logged as a manual
+//   correction, or as a late undo if it was an autocorrection;
 // - punctuation straight after a picked suggestion replaces its space with
-//   a Backspace key event (also in Android apps);
+//   a Backspace key event (also in Android apps); ! ? : ; keep it if the
+//   user wants a space before them (dconf
+//   /apps/parrotfish-keyboard/space-before-punctuation, as in French: mot ?);
+// - a letter typed right at the end of a word (no space: the keyboard was
+//   closed in the middle of it, or the cursor was put there) goes on with
+//   that word;
 // - a tap that starts on one letter key and lifts on another types the
-//   letter that makes the more likely word;
+//   letter that makes the more likely word so far, and the engine keeps
+//   both keys for that letter: the whole word decides (autocorrect);
+// - with the number row, one digit after letters stays in the word, so a
+//   slip onto the digit above a letter can be autocorrected (h3llo); a word
+//   right after a digit (2nd) is never autocorrected;
 // - the real key geometry and the text before the cursor go to the engine;
 // - the typing languages come from dconf /apps/parrotfish-keyboard/languages
 //   (settings/ParrotfishLanguages.qml);
@@ -71,6 +82,32 @@ InputHandler {
     // True while commit() runs: an emptied preedit is then a committed word,
     // not a word deleted with Backspace.
     property bool _committing: false
+    // Whether the layout has digit keys among the letters (the number row):
+    // they are in the engine's key map, and a digit can be part of a word.
+    property bool _digitKeys: false
+    // The word being typed comes right after a digit (2nd): typed as it is.
+    property bool _afterDigit: false
+    // The last text we committed ends with a digit (the app may not have
+    // reported it yet).
+    property bool _committedDigit: false
+    // The word Backspace went back into ({ word }), until the next word is
+    // committed: if that differs, the user corrected it by hand.
+    property var _reopened: null
+    // The text before a word taken back as the word being typed (Backspace
+    // into it, or typing on at its end), for the context: the app still
+    // reports the word itself before the cursor. null: the text before.
+    property var _contextBefore: null
+    // The word being typed when the keyboard last closed (committed as it
+    // was), to type on with when the cursor is back at its end.
+    property string _interrupted: ""
+    // For each letter of preedit: "" or the tap's other key and "1"/"0" (the
+    // letter shown is where the finger lifted / touched down), for the
+    // engine (predictionEngine.preeditKeys). Kept in step with preedit.
+    property var _tapKeys: []
+    property string _lastTapKey: ""   // the same for the last tap
+    // The last autocorrections ({ typed, corrected }, newest last), to tell
+    // a late undo from a manual correction.
+    property var _recentCorrections: []
     // The layout whose keys the engine has, and two of its keys (the first
     // and the last letter key: opposite corners) with their geometry when
     // read. If neither moved, the keys are taken as unchanged.
@@ -128,6 +165,12 @@ InputHandler {
     }
 
     ConfigurationValue {
+        id: spaceBeforeConfig
+        key: "/apps/parrotfish-keyboard/space-before-punctuation"   // false, true
+        defaultValue: false
+    }
+
+    ConfigurationValue {
         id: dividersConfig
         key: "/apps/parrotfish-keyboard/dividers"   // true, false
         defaultValue: true
@@ -166,9 +209,12 @@ InputHandler {
 
     onActiveChanged: {
         if (!active && preedit !== "") {
+            _interrupted = preedit
             commit(preedit)
         }
         _correction = null
+        _reopened = null
+        _recentCorrections = []
         _applySwipe()
         if (active) {
             _updateLayout()
@@ -180,7 +226,8 @@ InputHandler {
         if (preedit.length > 0 && _lastPreedit.length === 0) {
             // A new word: refresh the keys and the language context first.
             _updateLayout()
-            _setContext(_textBefore())
+            _setContext(_contextBefore !== null ? _contextBefore : _textBefore())
+            _contextBefore = null
         } else if (preedit.length === 0 && _lastPreedit.length > 0 && _committing) {
             // The word was committed. The app reports the new text a moment
             // later; until then, assume the word and a space.
@@ -193,6 +240,11 @@ InputHandler {
             _setContext(_textBefore())
         }
         _lastPreedit = preedit
+        var keys = _tapKeys.slice(0, preedit.length)
+        while (keys.length < preedit.length)
+            keys.push("")
+        _tapKeys = keys
+        predictionEngine.preeditKeys = keys
         predictionEngine.preedit = preedit
     }
 
@@ -228,6 +280,7 @@ InputHandler {
             predictionEngine.acceptCorrection(preedit)   // forgets earlier undos
             predictionEngine.logSlips(preedit, replacement, "picked")
         }
+        _checkManual(replacement, true)
         replacement = replacement + " "
         var before = _textBefore()
         commit(replacement)
@@ -264,6 +317,7 @@ InputHandler {
 
         } else if (pressedKey.key === Qt.Key_Return) {
             if (preedit !== "") {
+                _checkManual(preedit)
                 commit(preedit)
             }
             if (keyboard.shiftState !== ShiftState.LockedShift) {
@@ -300,14 +354,37 @@ InputHandler {
             handled = true
 
         } else if (pressedKey.text.length !== 0) {
-            if (isInputCharacter(pressedKey.text)) {
-                preedit += _tappedText()
+            if (isInputCharacter(pressedKey.text) || _digitInWord(pressedKey.text)) {
+                var resumed = 0
+                if (preedit === "") {
+                    var before = _wordAtCursor()
+                    resumed = before.length
+                    if (resumed > 0) {
+                        _interrupted = ""
+                        var text = MInputMethodQuick.surroundingText
+                        var start = MInputMethodQuick.cursorPosition - resumed
+                        _afterDigit = _isDigit(text.charAt(start - 1))
+                        _contextBefore = text.substring(Math.max(0, start - 1000), start)
+                        preedit = before
+                    } else {
+                        _afterDigit = _committedDigit || _isDigit(_textBefore().slice(-1))
+                    }
+                }
+                var tapped = _tappedText()
+                var keys = _tapKeys.slice(0, preedit.length).concat([_lastTapKey])
+                while (keys.length < preedit.length + tapped.length)
+                    keys.push("")
+                _tapKeys = keys
+                preedit += tapped
 
                 if (keyboard.shiftState !== ShiftState.LockedShift) {
                     keyboard.shiftState = ShiftState.NoShift
                 }
 
-                MInputMethodQuick.sendPreedit(preedit)
+                if (resumed > 0)
+                    MInputMethodQuick.sendPreedit(preedit, undefined, -resumed, resumed)
+                else
+                    MInputMethodQuick.sendPreedit(preedit)
                 handled = true
             } else {
                 // normal symbols etc.
@@ -315,6 +392,7 @@ InputHandler {
                     if (".,;:!?)\"".indexOf(pressedKey.text) >= 0) {
                         _commitWord(pressedKey.text)
                     } else {
+                        _checkManual(preedit)
                         commit(preedit + pressedKey.text)
                     }
                 } else {
@@ -322,8 +400,10 @@ InputHandler {
                             && (_endsTextBefore(autoSpaced) || _textBefore() === _autoSpacedBefore)) {
                         // Replace the space added by a picked suggestion: a
                         // Backspace key event, as for undo (Jolla's replacing
-                        // commit failed in Android apps).
-                        MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+                        // commit failed in Android apps). Kept before ! ? : ;
+                        // if the user wants it (mot ?).
+                        if (!_spaceBefore(pressedKey.text))
+                            MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
                         commit(pressedKey.text + " ")
                     } else {
                         commit(pressedKey.text)
@@ -345,6 +425,10 @@ InputHandler {
             pos++
 
             var word = MInputMethodQuick.surroundingText.substring(pos, pos + wordLength)
+            var deleted = MInputMethodQuick.surroundingText.charAt(MInputMethodQuick.cursorPosition - 1)
+            _reopened = { "word": word + (isInputCharacter(deleted) ? deleted : "") }
+            _afterDigit = _isDigit(MInputMethodQuick.surroundingText.charAt(pos - 1))
+            _contextBefore = MInputMethodQuick.surroundingText.substring(Math.max(0, pos - 1000), pos)
             MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
             MInputMethodQuick.sendPreedit(word, undefined, -wordLength, wordLength)
             preedit = word
@@ -354,18 +438,54 @@ InputHandler {
         return handled
     }
 
+    // The word the cursor is right at the end of (word characters before it,
+    // none after it, at least one letter), to type on with; "" if none. Inside
+    // a word, nothing: typing there inserts. Android apps report only the
+    // text before the cursor, so where the app reports nothing after it, the
+    // cursor may be inside a word: then only the word interrupted when the
+    // keyboard closed is taken back, if the text still ends with it.
+    function _wordAtCursor() {
+        if (!MInputMethodQuick.surroundingTextValid || MInputMethodQuick.hasSelection)
+            return ""
+        var text = MInputMethodQuick.surroundingText
+        var cursor = MInputMethodQuick.cursorPosition
+        if (cursor >= text.length) {
+            var interrupted = _interrupted
+            if (interrupted === "" || text.substr(cursor - interrupted.length, interrupted.length) !== interrupted
+                    || isInputCharacter(text.charAt(cursor - interrupted.length - 1)))
+                return ""
+        } else if (isInputCharacter(text.charAt(cursor))) {
+            return ""
+        }
+        var pos = cursor
+        while (pos > 0 && cursor - pos < 40 && isInputCharacter(text.charAt(pos - 1)))
+            --pos
+        if (pos > 0 && isInputCharacter(text.charAt(pos - 1)))
+            return ""   // too long to be a word
+        var word = text.substring(pos, cursor)
+        for (var i = 0; i < word.length; ++i)
+            if (predictionEngine.isLetter(word.charAt(i)))
+                return word
+        return ""
+    }
+
     function isInputCharacter(character) {
-        return predictionEngine.isLetter(character) ||"\'-".indexOf(character) >= 0
+        return character !== "" && (predictionEngine.isLetter(character) || "\'-".indexOf(character) >= 0)
     }
 
     function reset() {
         preedit = ""
         _correction = null
+        _reopened = null
+        _committedDigit = false
     }
 
     function commit(text) {
+        if (preedit === "")
+            _reopened = null   // the word went back into was deleted and not retyped
         _committing = true
         MInputMethodQuick.sendCommit(text)
+        _committedDigit = _isDigit(text.slice(-1))
         preedit = ""
         _committing = false
     }
@@ -373,11 +493,73 @@ InputHandler {
     // Commits the word being typed, or its autocorrection, then `suffix`.
     function _commitWord(suffix) {
         var typed = preedit
-        var word = predictionEngine.autocorrection !== "" ? predictionEngine.autocorrection : typed
+        var word = predictionEngine.autocorrection !== "" && !_afterDigit ? predictionEngine.autocorrection : typed
+        // Back in an autocorrected word, the user typed it as before: they
+        // meant it (a late undo), don't correct it again.
+        if (word !== typed && _reopened !== null && _recentCorrection(_reopened.word, typed))
+            word = typed
+        _checkManual(word)
         commit(word + suffix)
         if (word !== typed) {
             _correction = { "typed": typed, "corrected": word, "suffix": suffix }
+            _recentCorrections = _recentCorrections.slice(-4).concat([{ "typed": typed, "corrected": word }])
         }
+    }
+
+    // Whether `typed` was recently autocorrected into `corrected`.
+    function _recentCorrection(corrected, typed) {
+        for (var i = 0; i < _recentCorrections.length; ++i) {
+            var c = _recentCorrections[i]
+            if (c.corrected.toLowerCase() === corrected.toLowerCase()
+                    && c.typed.toLowerCase() === typed.toLowerCase())
+                return true
+        }
+        return false
+    }
+
+    // A word is committed: if Backspace went back into a word and this one
+    // differs, the user corrected that word by hand. An autocorrection
+    // changed that way was wrong: a late undo (twice stops it, as Backspace
+    // right after it). `picked`: the word came from the bar, already logged
+    // as picked.
+    function _checkManual(word, picked) {
+        var reopened = _reopened
+        _reopened = null
+        if (reopened === null || word.toLowerCase() === reopened.word.toLowerCase())
+            return
+        var corrections = _recentCorrections
+        for (var i = corrections.length - 1; i >= 0; --i) {
+            var c = corrections[i]
+            if (c.corrected.toLowerCase() === reopened.word.toLowerCase()) {
+                _recentCorrections = corrections.slice(0, i).concat(corrections.slice(i + 1))
+                predictionEngine.rejectCorrection(c.typed)
+                predictionEngine.logSlips(c.typed, c.corrected, "undone late")
+                if (!picked && word.toLowerCase() !== c.typed.toLowerCase())
+                    predictionEngine.logSlips(c.typed, word, "manual")   // what was meant
+                return
+            }
+        }
+        if (!picked)
+            predictionEngine.logSlips(reopened.word, word, "manual")
+    }
+
+    // Whether the sign is written after a space: ! ? : ; if the user wants
+    // it (French writes mot ?), whatever the language.
+    function _spaceBefore(sign) {
+        return "!?:;".indexOf(sign) >= 0
+                && (spaceBeforeConfig.value === true || spaceBeforeConfig.value === "true")
+    }
+
+    function _isDigit(character) {
+        return character.length === 1 && character >= "0" && character <= "9"
+    }
+
+    // With the number row, a digit typed after a letter stays in the word
+    // (only one: mp34 and h33llo are typed as they are). The engine fixes
+    // it only as a slip onto the digit (h3llo → hello, not ps4 → is).
+    function _digitInWord(character) {
+        return _digitKeys && _isDigit(character) && preedit !== ""
+                && predictionEngine.isLetter(preedit.slice(-1)) && !/[0-9]/.test(preedit)
     }
 
     // Only if the correction is right before the cursor (the cursor may have
@@ -401,6 +583,7 @@ InputHandler {
     function _tappedText() {
         var text = pressedKey.text
         var initial = keyboard.lastInitialKey
+        _lastTapKey = ""
         // lastInitialKey belongs to the latest touch. When a second finger lands
         // before the first lifts, Jolla's keyboard types the first finger's key
         // while lastInitialKey is already the second finger's: then
@@ -410,7 +593,9 @@ InputHandler {
                 && typeof initial.text === "string" && initial.text.length === 1
                 && text.length === 1 && isInputCharacter(initial.text)
                 && _adjacent(initial, pressedKey)) {
-            text = predictionEngine.resolveTap(preedit, text, initial.text)
+            var resolved = predictionEngine.resolveTap(preedit, text, initial.text)
+            _lastTapKey = resolved === text ? initial.text + "1" : text + "0"
+            text = resolved
         }
         return text
     }
@@ -448,11 +633,12 @@ InputHandler {
     // Letter keys and the apostrophe key: the keys words are typed with. The
     // sticky key (the layout's apostrophe key) counts as the apostrophe
     // whatever sign it types, so that the engine's key map stays the same.
+    // The number row's digits too: slips onto them are autocorrected.
     function _isLetterKey(item) {
         return item.keyType !== undefined && typeof item.caption === "string"
                 && item.caption.length === 1
                 && (item.caption.toLowerCase() !== item.caption.toUpperCase() || item.caption === "'"
-                    || item.sticky === true)
+                    || item.sticky === true || _isDigit(item.caption))
                 && item.visible && item.width > 0
     }
 
@@ -525,6 +711,10 @@ InputHandler {
         predictionEngine.log("layout " + layout.languageCode + ": " + keys.length
                              + " letter keys in " + (Date.now() - started) + " ms, spacebar "
                              + (_spacebar !== null) + ", spacebar label " + (_spacebarLabel !== null))
+        _digitKeys = false
+        for (var i = 0; i < keys.length; ++i)
+            if (_isDigit(keys[i].ch))
+                _digitKeys = true
         if (predictionEngine.setKeys(keys) > 0) {
             _probeLayout = layout
             _probeFirst = items[0]

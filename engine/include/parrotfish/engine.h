@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -36,6 +37,12 @@ struct EngineParams {
     // Share of the probability the best correction needs.
     double gentleConfidence = 0.5;
     double normalConfidence = 0.5;
+    // Normal and Strong ask more of shorter words, which have more
+    // neighbours and are more often names (sentence-bench -L sweep,
+    // 2026-10-31: at 0.5, 3-4 letters had 2.4-3.6 % wrong fixes and 12-13 %
+    // of names changed; at 0.8, 0.8-1.5 % and 4-9 %).
+    double normalTwoLetterConfidence = 0.7;   // 2 letters
+    double normalShortConfidence = 0.8;       // 3 and 4 letters
     // Normal (and Strong) leave shorter input alone: a single letter is not
     // replaced (t → it, p → to were; the benches don't type such words).
     size_t normalMinLength = 2;
@@ -55,6 +62,17 @@ struct EngineParams {
     // least strongMargin nats likelier, previous word and taps included
     // (5: about 150 times; sentence-bench -R, plan §6).
     double strongMargin = 5.0;
+    // A word of a typing language that seems unlikely in the text (weight
+    // below validThreshold: Italian "ti" in English text) is replaced only
+    // if the fix is this many nats likelier than the word read as a word of
+    // its language, with that language's weight (so it follows the text: an
+    // Italian word weighs more once Italian is being typed). Infinity: never
+    // replaced (the hard block up to alpha68). 12 (sentence-bench, en/it/de,
+    // 2026-10-31): 2-3 more typos fixed in 100 (thier is the German surname
+    // Thier, tp the abbreviation TP), and no word of another language changed in
+    // mixed texts (tools/mix-sentences.py; at 8: 0.4 % of single foreign
+    // words, un → in).
+    double otherLanguageMargin = 12.0;
     size_t strongMinLength = 2;
     // An uncertain tap takes the touch-down key only if that makes the word
     // this many nats more likely than the lift key.

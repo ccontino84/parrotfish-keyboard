@@ -6,7 +6,8 @@
 //   sentence-bench -l data/layouts/it.layout -t tests/data/tatoeba-it.txt
 //                  -d build/data/it.pfd [-d OTHER.pfd]... [-n 2000] [-r 0.3]
 //                  [-s SEED] [-m LANG] [-B] [-F] [-D] [-R] [-P name=value]... [-v]
-//                  [-S slips.log [-M] | -U] [-N PCT] [-X] [-o OOV.txt [-u RATE]]
+//                  [-S slips.log [-M] | -U] [-N PCT] [-X] [-o OOV.txt [-u RATE]] [-L]
+//                  [-T [-K]]
 //
 // Words of real sentences are typed one by one with the earlier words as
 // context, as on the phone (all dictionaries loaded, equal starting weights,
@@ -32,8 +33,17 @@
 // row: the space left out (thisis), the space typed as a key above the
 // spacebar (thisbis), and with -N a top-row letter typed as the digit above
 // it (h3llo). -o adds unknown words (names, rare words: one per line, those
-// no loaded dictionary knows), a share -u (0.1) of the sentences' words,
+// no loaded dictionary knows; with -N also with one digit after a letter, mp3), a share -u (0.1) of the sentences' words,
 // typed correctly: autocorrect must leave them alone.
+//
+// -T adds uncertain taps: a tap that touched one key and lifted on its
+// neighbour, one of them the meant letter (either way round). The word
+// shows the lift key, or the touch-down key if the word so far fits it
+// better (Engine::resolveTap, as the handler). -K also gives the engine the
+// tap's other key, from alpha70 on; without it only the letter shown.
+//
+// -L adds the results by typed length (2, 3-4, 5+ letters; typos of two
+// words left out), for thresholds by length.
 //
 // The last line sums up: typos fixed and fixed wrong, correct and unknown
 // words changed, and the word error rate before and after autocorrect
@@ -66,6 +76,14 @@ struct GroupStats {
     int clean = 0, cleanWrong = 0, fixable = 0, fixed = 0, wrong = 0;
 };
 
+// Words by typed length, for -L (thresholds by length).
+enum LengthGroup { Len2, Len34, Len5, LengthCount };
+const char *const lengthNames[] = {"2", "3-4", "5+"};
+
+struct LengthStats {
+    int clean = 0, cleanWrong = 0, unknown = 0, unknownWrong = 0, fixable = 0, fixed = 0, wrong = 0;
+};
+
 double pct(int a, int b)
 {
     return b ? 100.0 * a / b : 0.0;
@@ -80,9 +98,9 @@ int main(int argc, char **argv)
     int maxSentences = 2000;
     double rate = 0.3;
     unsigned seed = 1;
-    bool verbose = false, breakdown = false, firstOnly = false, doubles = false, realWords = false;
+    bool verbose = false, breakdown = false, byLength = false, firstOnly = false, doubles = false, realWords = false;
     std::string remembered, slipsPath, oovPath;
-    bool uniform = false, mirrored = false, extraKinds = false;
+    bool uniform = false, mirrored = false, extraKinds = false, uncertainTaps = false, keepBoth = false;
     int numberPct = 0;
     double unknownRate = 0.1;
     EngineParams params;
@@ -98,6 +116,7 @@ int main(int argc, char **argv)
         else if (a == "-s" && i + 1 < argc) seed = std::stoul(argv[++i]);
         else if (a == "-m" && i + 1 < argc) remembered = argv[++i];
         else if (a == "-B") breakdown = true;
+        else if (a == "-L") byLength = true;
         else if (a == "-F") firstOnly = breakdown = true;
         else if (a == "-D") doubles = true;
         else if (a == "-R") realWords = true;
@@ -107,6 +126,8 @@ int main(int argc, char **argv)
         else if (a == "-M") mirrored = true;
         else if (a == "-N" && i + 1 < argc) numberPct = std::stoi(argv[++i]);
         else if (a == "-X") extraKinds = true;
+        else if (a == "-T") uncertainTaps = true;
+        else if (a == "-K") keepBoth = true;
         else if (a == "-o" && i + 1 < argc) oovPath = argv[++i];
         else if (a == "-u" && i + 1 < argc) unknownRate = std::stod(argv[++i]);
         else if (a == "-P" && i + 1 < argc) {
@@ -170,13 +191,30 @@ int main(int argc, char **argv)
         std::fprintf(stderr, "-S %s: no wrong keys of this layout\n", slipsPath.c_str());
         return 2;
     }
-    // Unknown words: letters only, 3+ of them, in no loaded dictionary.
+    // What the handler types as one word: letters and apostrophes, and with
+    // a number row one digit after a letter (mp3, h3llo).
+    const bool digits = typos.hasDigits();
+    auto isPlain = [digits](const std::u32string &w) {
+        if (w.size() < 2)
+            return false;
+        int n = 0;
+        for (size_t i = 0; i < w.size(); ++i)
+            if (w[i] >= U'0' && w[i] <= U'9') {
+                if (!digits || i == 0 || ++n > 1)
+                    return false;
+            } else if (!isLetter(w[i]) && w[i] != U'\'') {
+                return false;
+            }
+        return true;
+    };
+    // Unknown words: 3+ characters typed as one word (no apostrophe), in no
+    // loaded dictionary.
     std::vector<std::u32string> unknown;
     if (!oovPath.empty()) {
         std::ifstream of(oovPath);
         for (std::string w; std::getline(of, w);) {
             const std::u32string u = utf8::decode(w);
-            if (u.size() < 3 || !std::all_of(u.begin(), u.end(), isLetter))
+            if (u.size() < 3 || !isPlain(u) || u.find(U'\'') != std::u32string::npos)
                 continue;
             bool known = false;
             for (size_t d = 0; d < engine.languageCount() && !known; ++d)
@@ -193,6 +231,8 @@ int main(int argc, char **argv)
     std::vector<Kind> kinds;
     for (int k = Neighbour; k <= (doubles ? DoubleExtra : Double); ++k)
         kinds.push_back(Kind(k));
+    if (uncertainTaps)
+        kinds.push_back(Uncertain);
     if (extraKinds) {
         kinds.push_back(Joined);
         kinds.push_back(SpaceLetter);
@@ -205,6 +245,7 @@ int main(int argc, char **argv)
 
     Stats stats[KindCount];
     GroupStats groups[GroupCount];
+    LengthStats lengths[LengthCount];
     double totalUs = 0, maxUs = 0;
     int searches = 0, sentences = 0, typedWords = 0, wrongBefore = 0, wrongAfter = 0;
     std::string line;
@@ -222,10 +263,6 @@ int main(int argc, char **argv)
                     ++i;
                 }
         }
-        auto isPlain = [](const std::u32string &w) {
-            return w.size() >= 2 && std::all_of(w.begin(), w.end(),
-                [](char32_t c) { return isLetter(c) || c == U'\''; });
-        };
         std::u32string context;
         for (size_t wi = 0; wi < ws.size(); ++wi) {
             std::u32string target = ws[wi];
@@ -234,6 +271,11 @@ int main(int argc, char **argv)
                 Kind kind = isUnknown[wi] ? Unknown : Clean;
                 std::u32string typed = target;
                 std::u32string next;   // the word typed with this one (Joined, SpaceLetter)
+                // Uncertain: the letter with two keys, the key not shown, and
+                // whether the shown one is where the finger lifted.
+                int uncertainAt = -1;
+                char32_t uncertainOther = 0;
+                bool shownLifted = true;
                 if (realWords && kind == Clean && coin(typos.rng()) < rate) {
                     const Dictionary &d = engine.dictionary(0);
                     std::vector<std::u32string> real;
@@ -267,6 +309,24 @@ int main(int argc, char **argv)
                         typed = typos.numberRowSlip(target);
                         if (typed.empty())
                             typed = typos.apply(target, kind = Neighbour);
+                    } else if (kind == Uncertain) {
+                        const size_t i = typos.pos(target.size());
+                        const char32_t meant = utf8::toLower(target[i]);
+                        const char32_t other = typos.wrongKey(meant);
+                        if (other == 0) {
+                            typed = typos.apply(target, kind = Neighbour);
+                        } else {
+                            const bool liftOnMeant = coin(typos.rng()) < 0.5;
+                            const char32_t lifted = liftOnMeant ? meant : other;
+                            const char32_t touched = liftOnMeant ? other : meant;
+                            engine.startText(context, prior);
+                            const char32_t shown = engine.resolveTap(lower(target.substr(0, i)), lifted, touched);
+                            typed = target;
+                            typed[i] = utf8::isUpper(target[i]) ? utf8::toUpper(shown) : shown;
+                            uncertainAt = static_cast<int>(i);
+                            shownLifted = shown == lifted;
+                            uncertainOther = shownLifted ? touched : lifted;
+                        }
                     } else {
                         typed = typos.apply(target, kind);
                     }
@@ -284,7 +344,12 @@ int main(int argc, char **argv)
                 }
                 engine.startText(context, prior);
                 const auto t0 = std::chrono::steady_clock::now();
-                const Result r = engine.process(tapsFor(typed));
+                std::vector<Tap> taps = tapsFor(typed);
+                if (keepBoth && uncertainAt >= 0 && uncertainAt < static_cast<int>(taps.size())) {
+                    taps[uncertainAt].initial = uncertainOther;
+                    taps[uncertainAt].chLifted = shownLifted;
+                }
+                const Result r = engine.process(taps);
                 const double us = std::chrono::duration<double, std::micro>(
                     std::chrono::steady_clock::now() - t0).count();
                 totalUs += us;
@@ -293,7 +358,9 @@ int main(int argc, char **argv)
 
                 Stats &s = stats[kind];
                 ++s.total;
-                const bool fired = r.autocorrect >= 0;
+                // A leading digit is typed as it is, and so are the letters
+                // after it (the handler: 2nd, 5om).
+                const bool fired = r.autocorrect >= 0 && !(typed[0] >= U'0' && typed[0] <= U'9');
                 const std::u32string got = fired ? r.suggestions[r.autocorrect].word : typed;
                 const int group = context.empty() ? First : typed.size() <= 2 ? Short : Rest;
                 GroupStats &g = groups[group];
@@ -303,6 +370,18 @@ int main(int argc, char **argv)
                 ++typedWords;
                 if (lower(typed) != lower(target)) ++wrongBefore;
                 if (lower(got) != lower(target)) ++wrongAfter;
+                LengthStats &ls = lengths[typed.size() <= 2 ? Len2 : typed.size() <= 4 ? Len34 : Len5];
+                if (kind == Clean) {
+                    ++ls.clean;
+                    if (lower(got) != lower(target)) ++ls.cleanWrong;
+                } else if (kind == Unknown) {
+                    ++ls.unknown;
+                    if (lower(got) != lower(target)) ++ls.unknownWrong;
+                } else if (!r.typedIsWord && target.find(U' ') == std::u32string::npos) {
+                    ++ls.fixable;
+                    if (fired && lower(got) == lower(target)) ++ls.fixed;
+                    if (fired && lower(got) != lower(target)) ++ls.wrong;
+                }
                 if (kind == Clean) {
                     ++g.clean;
                 } else if (kind != Unknown && !r.typedIsWord) {
@@ -382,6 +461,15 @@ int main(int argc, char **argv)
             std::printf("%-10s %6d %5d %5.2f%% %5d %5d %5.1f%% %5d %5.1f%%\n", groupNames[k], g.clean,
                         g.cleanWrong, pct(g.cleanWrong, g.clean), g.fixable, g.fixed,
                         pct(g.fixed, g.fixable), g.wrong, pct(g.wrong, g.fixable));
+        }
+    }
+    if (byLength) {
+        for (int k = 0; k < LengthCount; ++k) {
+            const LengthStats &l = lengths[k];
+            std::printf("length %-3s typos %5d fixed %5.1f%% wrong %4.1f%%, correct %6d changed %.2f%%,"
+                        " unknown %5d changed %.2f%%\n", lengthNames[k], l.fixable, pct(l.fixed, l.fixable),
+                        pct(l.wrong, l.fixable), l.clean, pct(l.cleanWrong, l.clean), l.unknown,
+                        pct(l.unknownWrong, l.unknown));
         }
     }
     std::printf("time per word: mean %.0f µs, max %.0f µs\n", totalUs / searches, maxUs);

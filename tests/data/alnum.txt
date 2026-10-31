@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Tokens with one digit after a letter, typed as one word with a number row
+# (sentence-bench -N PCT -o, which reads those of 3+ characters; the unit
+# test checks shorter ones): autocorrect must leave them alone.
+mp3
+mp4
+ps2
+ps3
+ps4
+ps5
+a3
+a4
+a5
+a6
+b2b
+b2c
+h2o
+co2
+g5
+g7
+g8
+f1
+k9
+s3
+m1
+m2
+i3
+i5
+i7
+i9
+x5
+z4
+t9
+win7
+win8
+w3c
+ipv4
+ipv6
+usb3
+c3po
+5g
+4k
+covid19
+pixel7

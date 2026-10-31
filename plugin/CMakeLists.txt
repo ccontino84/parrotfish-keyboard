@@ -4,13 +4,16 @@
 # QML module Parrotfish.Keyboard, loaded by the handler inside maliit-server.
 # Qt 5.6 on Sailfish OS: keep to its API.
 find_package(Qt5 REQUIRED COMPONENTS Core Qml)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SQLITE3 REQUIRED IMPORTED_TARGET sqlite3)
 set(CMAKE_AUTOMOC ON)
 
 add_library(parrotfishkeyboard MODULE
+    src/learningstore.cpp
     src/plugin.cpp
     src/predictionengine.cpp
 )
-target_link_libraries(parrotfishkeyboard PRIVATE parrotfish-engine Qt5::Core Qt5::Qml)
+target_link_libraries(parrotfishkeyboard PRIVATE parrotfish-engine Qt5::Core Qt5::Qml PkgConfig::SQLITE3)
 target_compile_definitions(parrotfishkeyboard PRIVATE
     PARROTFISH_DATA_DIR="${PARROTFISH_DATA_DIR}"
     PARROTFISH_VERSION="${PARROTFISH_VERSION}"

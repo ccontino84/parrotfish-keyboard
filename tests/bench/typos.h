@@ -20,7 +20,8 @@
 // Kinds after RealWord need two words or a number row (sentence-bench -X):
 // Joined, two words with the space left out (thisis); SpaceLetter, the space
 // typed as a letter key above the spacebar (thisbis); NumberRow, a letter of
-// the top row typed as the digit above it (h3llo). Unknown marks a word no
+// the top row typed as the digit above it (h3llo); Uncertain, a tap that
+// touched one key and lifted on its neighbour (sentence-bench -T). Unknown marks a word no
 // loaded dictionary knows (a name), typed correctly.
 
 #pragma once
@@ -44,12 +45,12 @@ namespace bench {
 // the benches' -D: the other kinds already include some of them.
 // RealWord (form for from) only with sentence-bench -R.
 enum Kind { Clean, Neighbour, Deletion, Insertion, Transposition, Accent, Double, DoubleMissed,
-            DoubleExtra, RealWord, Joined, SpaceLetter, NumberRow, Unknown, KindCount };
+            DoubleExtra, RealWord, Joined, SpaceLetter, NumberRow, Uncertain, Unknown, KindCount };
 inline const char *kindName(int k)
 {
     static const char *names[] = {"clean", "neighbour", "deletion", "insertion", "transposition",
                                   "accent-less", "two typos", "double missed", "tapped twice", "real word",
-                                  "no space", "space as key", "number row", "unknown word"};
+                                  "no space", "space as key", "number row", "uncertain tap", "unknown word"};
     return names[k];
 }
 

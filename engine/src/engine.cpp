@@ -287,12 +287,34 @@ Result Engine::process(const std::vector<Tap> &taps) const
         unknownProb = std::exp(-(tapCost + base + m_params.unknownPerLetter * taps.size()));
     }
 
+    // A digit in the word (typed on the number row: h3llo) can only be a
+    // slip onto the digit: the fix is the word as typed with a letter in the
+    // digit's place. Other words are only offered (any other fix turns names
+    // into words: ps4 → is, h2o → who). A letter and a digit is a code
+    // (A4, F1, i5): never fixed.
+    auto isDigit = [](char32_t c) { return c >= U'0' && c <= U'9'; };
+    const bool digits = std::any_of(r.typed.begin(), r.typed.end(), isDigit);
+    const std::u32string typedFolded = fold(r.typed);
+    auto canFix = [&](const Suggestion &s) {
+        if (s.completion)
+            return false;
+        if (!digits)
+            return true;
+        const std::u32string b = fold(s.word);
+        if (b.size() != typedFolded.size() || b.size() < 3)
+            return false;
+        for (size_t i = 0; i < b.size(); ++i)
+            if (b[i] != typedFolded[i] && !isDigit(typedFolded[i]))
+                return false;
+        return true;
+    };
+
     // Completions don't compete with corrections for confidence: they are
     // words the user may still be typing.
     double total = unknownProb;
     for (Merged &m : merged) {
         m.s.cost = -std::log(m.prob);
-        if (!m.s.completion)
+        if (canFix(m.s))
             total += m.prob;
     }
     std::sort(merged.begin(), merged.end(),
@@ -319,7 +341,7 @@ Result Engine::process(const std::vector<Tap> &taps) const
     // finished, so the candidate is the best suggestion of the typed length.
     int candidate = -1;
     for (size_t i = 0; i < r.suggestions.size(); ++i) {
-        if (!r.suggestions[i].completion) {
+        if (canFix(r.suggestions[i])) {
             candidate = static_cast<int>(i);
             break;
         }
@@ -362,17 +384,34 @@ Result Engine::process(const std::vector<Tap> &taps) const
     if (!languageOk || (best.attrs & format::AttrOffensive) || m_params.strength == Strength::Off)
         return r;
 
-    // A word of any typing language is never replaced by a different word,
-    // even when its language seems unlikely (the first words after a switch:
-    // Italian "Mi" after English text). Accents and apostrophes may still be
+    // A word of a typing language that seems unlikely in the text (the
+    // first words after a switch: Italian "Mi" after English text) is
+    // replaced by a different word only if the fix is otherLanguageMargin
+    // nats likelier than the word as typed, read as a word of its language
+    // with that language's weight. Accents and apostrophes may always be
     // fixed (fur → für in German text, English jai → j'ai in French text).
     auto letters = [this](const std::u32string &w) {
         std::u32string out = fold(w);
         out.erase(std::remove(out.begin(), out.end(), U'\''), out.end());
         return out;
     };
-    if (wordInSomeLanguage && !r.typedIsWord && letters(best.word) != letters(r.typed))
-        return r;
+    if (wordInSomeLanguage && !r.typedIsWord && letters(best.word) != letters(r.typed)) {
+        if (!std::isfinite(m_params.otherLanguageMargin))
+            return r;
+        double typedProb = 0;
+        for (size_t i = 0; i < m_dicts.size(); ++i) {
+            std::u32string stored;
+            const uint32_t node = m_dicts[i]->find(r.typed, &stored);
+            if (!node || (m_dicts[i]->attributes(node) & format::AttrMisspelling) || w[i] <= 0)
+                continue;
+            const double tapCost = m_correctors[i]->matchCost(taps, stored);
+            if (std::isfinite(tapCost))
+                typedProb += std::exp(-(tapCost + m_params.corrector.lmWeight * -m_dicts[i]->logProb(
+                                            m_dicts[i]->node(node).freq) - std::log(w[i])));
+        }
+        if (typedProb > 0 && std::log(bestProb / typedProb) < m_params.otherLanguageMargin)
+            return r;
+    }
 
     bool apply = false;
     if (r.typedIsWord) {
@@ -403,7 +442,13 @@ Result Engine::process(const std::vector<Tap> &taps) const
             apply = neighbourSwap(r.typed, best.word)
                     || (m_params.gentleTwoLetterAccents && fold(best.word) == fold(r.typed));
     } else {
-        apply = r.confidence >= m_params.normalConfidence && taps.size() >= m_params.normalMinLength;
+        // Shorter words need more, unless only accents or apostrophes are
+        // added (ca → ça, jai → j'ai).
+        const bool sameLetters = letters(best.word) == letters(r.typed);
+        const double threshold = sameLetters || taps.size() > 4 ? m_params.normalConfidence
+                                 : taps.size() <= 2 ? m_params.normalTwoLetterConfidence
+                                                    : m_params.normalShortConfidence;
+        apply = r.confidence >= threshold && taps.size() >= m_params.normalMinLength;
     }
     if (apply) {
         // What Space will type comes first in the bar.
@@ -581,8 +626,11 @@ bool setParam(EngineParams &p, const std::string &assignment)
     else if (name == "gentleTwoLetterAccents") p.gentleTwoLetterAccents = v != 0;
     else if (name == "gentleConfidence") p.gentleConfidence = v;
     else if (name == "normalConfidence") p.normalConfidence = v;
+    else if (name == "normalTwoLetterConfidence") p.normalTwoLetterConfidence = v;
+    else if (name == "normalShortConfidence") p.normalShortConfidence = v;
     else if (name == "normalMinLength") p.normalMinLength = static_cast<size_t>(v);
     else if (name == "strongMargin") p.strongMargin = v;
+    else if (name == "otherLanguageMargin") p.otherLanguageMargin = v;
     else if (name == "strongMinLength") p.strongMinLength = static_cast<size_t>(v);
 
     else if (name == "gentleMinLength") p.gentleMinLength = static_cast<size_t>(v);

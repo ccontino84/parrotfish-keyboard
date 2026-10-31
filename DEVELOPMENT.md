@@ -16,13 +16,17 @@ SPDX-License-Identifier: LicenseRef-TBD
 | `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press; QWERTY ÅÖÄ: Jolla's fi keys), picked by `/apps/parrotfish-keyboard/layout`; optional key backgrounds in `parrotfish/` |
 | `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`, list in `languages.js`) |
 | `rpm/` | RPM spec |
-| `tools/` | Python tools that build and maintain the dictionary data |
+| `tools/pf` | the developer front door (below): tests, lint, benchmark suite, comparisons, RPM |
+| `tools/data/` | Python tools that build and maintain the dictionary data |
+| `tools/eval/` | benchmark helpers: parameter sweeps, mixed-language texts |
+| `tools/qt56-scan.sh` | flags QML and JavaScript that the phone's Qt 5.6 rejects |
 | `data/aosp/` | AOSP wordlists (Apache-2.0), unchanged |
 | `data/rules/` | per-language rules and reviewed generated lists (below) |
 | `tests/data/` | held-out test sentences per language (`README.md` there) |
 | `data/layouts/` | approximate letter rows of Jolla's en/it/de layouts, for PC tests (square keys); `phone-*.layout`: keys as tall as on the phone (`pitch`; AZERTY and Nordic by the same geometry, not logged) |
 | `tests/unit/` | unit tests (ctest) |
-| `tests/bench/` | accuracy benchmarks: typos (`typo-bench`) and mixed languages (`lang-bench`) |
+| `tests/qml/` | the handler on the PC with the plugin, Sailfish OS's modules replaced by stand-ins (ctest `qml`, needs `qmltestrunner`) |
+| `tests/bench/` | accuracy benchmarks: typos and autocorrect in running text (`sentence-bench`), next words (`nextword-bench`), single words (`typo-bench`), mixed languages (`lang-bench`) |
 
 ## Build and test
 
@@ -31,6 +35,27 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 ninja -C build            # engine, dictionaries (build/data/*.pfd), tests
 (cd build && ctest --output-on-failure)
 ```
+
+The front door, `tools/pf` (Python, standard library only; `tools/pf -h`):
+
+```sh
+tools/pf lint                   # QML/JS that Qt 5.6 rejects
+tools/pf test                   # build, unit and QML tests
+tools/pf suite                  # the standard benchmark suite, stored with its commit
+tools/pf suite --label try --param otherLanguageMargin=8   # an experiment
+tools/pf compare alpha70 try    # two runs side by side, better/WORSE marked
+tools/pf check                  # before a release: lint, tests, suite, and
+                                # exit 1 if a number got worse than the last run
+tools/pf rpm --version 0.1.0~alpha71   # phone RPM (sfdk), copied if configured
+```
+
+The suite: typos in running text (en, it, de; fr, es) with the number row,
+uncertain taps and names mixed in; codes with a digit; words of another
+language in mixed texts; next words and keystrokes saved. Settings of one
+machine are in `~/.config/parrotfish-dev.ini` (`tools/pf config`): where
+results go (outside the repo), where `pf rpm` copies the RPM, the sfdk
+target, and more test texts of your own for the next-word cases (`[eval]`,
+`NAME = LANG:PATH`, one message per line).
 
 Try words: `build/engine/pf-query -l data/layouts/it.layout -d build/data/it.pfd perche citta\'`
 
@@ -63,7 +88,7 @@ keys go mostly sideways, 10% up or down):
 build/tests/sentence-bench -l data/layouts/phone-qwerty.layout -t tests/data/sentences-en.txt -m en \
     -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd \
     -X -N 75 -o build/data/oov-en.txt [-S slips.log [-M]]
-tools/bench-sweep.sh normalConfidence "0.3 0.5 0.7 0.85" ...same arguments...
+tools/eval/bench-sweep.sh normalConfidence "0.3 0.5 0.7 0.85" ...same arguments...
 ```
 
 `-X` adds a missing space (`thisis`), the space typed as a key above the
@@ -84,7 +109,7 @@ Next words and completions (the word-pair data):
 ```sh
 build/tests/nextword-bench -l data/layouts/phone-qwerty.layout -t tests/data/tatoeba-en.txt -m en \
     -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd [-v]
-BENCH=build/tests/nextword-bench tools/bench-sweep.sh pairWeight "0.3 0.5 0.7" ...same arguments...
+BENCH=build/tests/nextword-bench tools/eval/bench-sweep.sh pairWeight "0.3 0.5 0.7" ...same arguments...
 ```
 
 Before each word, with the line up to it as context, it counts the word
@@ -97,7 +122,7 @@ Tatoeba's example names (Tom, Mary; `data/rules/supplement.stop`) have no
 word pairs, so they and the words after them are mostly misses.
 
 Mixed-language texts, for rules that concern other languages' words:
-`tools/mix-sentences.py insert tests/data/tatoeba-en.txt
+`tools/eval/mix-sentences.py insert tests/data/tatoeba-en.txt
 tests/data/tatoeba-it.txt > mix.txt` puts one Italian word into each English
 sentence (`switch`: an English sentence, then an Italian one); run
 sentence-bench on it with `-m en -r 0 -v` and count the `changed` lines:
@@ -208,7 +233,7 @@ build`) and load it in `qmlscene-qt5` with `QML2_IMPORT_PATH` and
 
 ## Dictionary data
 
-`tools/build-dict.py` turns an AOSP wordlist into a memory-mapped `.pfd`
+`tools/data/build-dict.py` turns an AOSP wordlist into a memory-mapped `.pfd`
 file (format: `engine/include/parrotfish/dictformat.h`). It reads, from
 `data/rules/`:
 
@@ -216,21 +241,21 @@ file (format: `engine/include/parrotfish/dictformat.h`). It reads, from
 |---|---|---|
 | `<lang>.rules` | spelling rules (`ae ä`, `e' è final`, `ş ș`); settings for the generators: `paradigm`/`paradigm-plain` (real verb forms that are not accent misspellings), `only-marks`, `no-misspellings`, `capitalised-nouns`, `min-freq` (drop the padding of a list; ro), `one-source` (a supplement word needs only N sightings in both corpora together; fi); word forms the list lacks, for the engine (`Dictionary::isWordForm`; fi): `suffix ENDING... [after=LETTERS] [drop=LETTERS]` (endings on a word: kännykkä → kännykkänsä; `drop`: talon → taloni) and `compound MIN PARTS` (up to PARTS words of at least MIN letters, and hyphenated parts). Such forms stand when typed (never autocorrected, and count for their language) but are never suggested | hand |
 | `<lang>.keep` | plain spellings that are words of their own, never marked as misspellings (pt `forca`, ro `frumoasa`) | hand |
-| `<lang>.misspellings` | accent-less spellings that are not words (`perche` → `perché`) | `tools/find-accent-misspellings.py`, reviewed |
-| `<lang>.supplement` | common words missing from the AOSP list (`uomo`, `überhaupt`) | `tools/find-supplement.py`, reviewed |
-| `<lang>.boost` | raised frequencies of everyday words (`penso`, `voglio`) | `tools/find-boosts.py`, reviewed |
+| `<lang>.misspellings` | accent-less spellings that are not words (`perche` → `perché`) | `tools/data/find-accent-misspellings.py`, reviewed |
+| `<lang>.supplement` | common words missing from the AOSP list (`uomo`, `überhaupt`) | `tools/data/find-supplement.py`, reviewed |
+| `<lang>.boost` | raised frequencies of everyday words (`penso`, `voglio`) | `tools/data/find-boosts.py`, reviewed |
 | `<lang>.paradigms`, `<lang>.paradigm-skip` | regular verb endings, irregular verbs to leave alone | hand |
-| `<lang>.forms` | missing forms of regular verbs (`riuscivi`) | `tools/complete-paradigms.py`, review a sample |
+| `<lang>.forms` | missing forms of regular verbs (`riuscivi`) | `tools/data/complete-paradigms.py`, review a sample |
 | `supplement.stop` | Tatoeba example names and over-used words, kept out of all generated data | hand |
-| `../pairs/<lang>.tsv.gz` | starting next-word data (word pairs) | `tools/count-pairs.py` |
+| `../pairs/<lang>.tsv.gz` | starting next-word data (word pairs) | `tools/data/count-pairs.py` |
 
 The generated lists need the sentence corpora (Common Voice, CC0; Tatoeba,
 CC BY 2.0 FR; about 400 MB), which are not in the repo. To regenerate the
 lists and the test lists of unknown real words (`build/data/oov-*.txt`):
 
 ```sh
-tools/regenerate-lists.sh ~/corpora --fetch    # without --fetch: reuse ~/corpora
-tools/regenerate-lists.sh ~/corpora es fr      # only these languages
+tools/data/regenerate-lists.sh ~/corpora --fetch    # without --fetch: reuse ~/corpora
+tools/data/regenerate-lists.sh ~/corpora es fr      # only these languages
 git diff data/rules                            # review before committing
 ```
 
@@ -239,7 +264,7 @@ Languages: `en` (AOSP en_US), `it`, `de`, `es`, `fr`, `pt_BR`, `pt_PT`,
 `settings/languages.js`). Both Portuguese lists use the same corpora (`pt`).
 Adding one: its AOSP list in `data/aosp/`, a `.rules` file, the test
 sentences (`tests/data/README.md`), an entry in both places named
-above and in `ALL`, `cvdir` and `tatoeba` of `tools/regenerate-lists.sh`,
+above and in `ALL`, `cvdir` and `tatoeba` of `tools/data/regenerate-lists.sh`,
 then regenerate and review the lists. The lists of sv, da and nb come
 from little corpus text (Common Voice has 0.1–1 MB for them), so their
 next-word data is thin. Finnish has many forms per word, and the AOSP

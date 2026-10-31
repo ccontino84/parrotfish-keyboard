@@ -1,0 +1,3 @@
+module Nemo.Configuration
+singleton Dconf 1.0 Dconf.qml
+ConfigurationValue 1.0 ConfigurationValue.qml

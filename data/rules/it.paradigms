@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LicenseRef-TBD
 #
-# Regular Italian verb endings for tools/complete-paradigms.py.
+# Regular Italian verb endings for tools/data/complete-paradigms.py.
 #   class NAME INFINITIVE-ENDING GERUND-ENDING
 #   tense NAME: endings for io tu lui noi voi loro
 #   spell RULE: spelling adjustments (see the tool)

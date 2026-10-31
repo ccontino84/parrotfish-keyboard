@@ -18,6 +18,13 @@ target_link_libraries(engine-test PRIVATE parrotfish-engine)
 add_dependencies(engine-test dictionaries)
 add_test(NAME engine COMMAND engine-test ${PROJECT_BINARY_DIR}/data ${PROJECT_SOURCE_DIR}/data/layouts)
 
+# The QML tests (tests/qml): the handler with the plugin, on the PC.
+find_program(QMLTESTRUNNER NAMES qmltestrunner-qt5 qmltestrunner)
+if(PARROTFISH_PLUGIN AND QMLTESTRUNNER)
+    add_test(NAME qml COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/qml/run.sh ${PROJECT_BINARY_DIR})
+    set_tests_properties(qml PROPERTIES ENVIRONMENT "QMLTESTRUNNER=${QMLTESTRUNNER}")
+endif()
+
 if(PARROTFISH_DEVTOOLS)
     install(TARGETS typo-bench lang-bench sentence-bench nextword-bench DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/parrotfish-keyboard)
     install(FILES data/sentences-en.txt data/sentences-it.txt data/sentences-de.txt

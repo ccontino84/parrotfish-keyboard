@@ -17,7 +17,7 @@
 // adjacent key), so the test doesn't just measure the model against itself.
 //
 // -o FILE: real words missing from the dictionaries, one per line (see
-// tools/make-oov-list.py), typed correctly: autocorrect must leave them alone.
+// tools/data/make-oov-list.py), typed correctly: autocorrect must leave them alone.
 //
 // -D adds two kinds: one letter of a double missed (aparte), a letter tapped
 // twice (coomputer); the other kinds are unchanged.

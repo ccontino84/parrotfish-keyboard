@@ -1,0 +1,388 @@
+#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+"""pf: the developer front door of Parrotfish.
+
+  tools/pf lint                  QML/JS traps for the phone's Qt 5.6
+  tools/pf test                  build, then the unit and QML tests (ctest)
+  tools/pf bench NAME ARGS...    run build/tests/NAME-bench (sentence, nextword...)
+  tools/pf suite [--label L] [--param NAME=VALUE]...
+                                 the standard benchmark suite; results stored
+  tools/pf runs                  stored suite runs
+  tools/pf compare [A [B]]       two runs side by side (default: the last two)
+  tools/pf check                 lint, test, suite, compare with the last run
+                                 (without --param):
+                                 exit 1 if a number got worse beyond --tolerance
+  tools/pf rpm [--version V]     phone RPM with sfdk, copied where configured
+  tools/pf config                the settings in use
+
+Settings that belong to one machine live outside the repo, in
+~/.config/parrotfish-dev.ini (or $PF_CONFIG):
+
+  [paths]
+  results = ~/.local/share/parrotfish-dev/results
+  rpm_copy = ~/some/folder          ; where `pf rpm` copies the RPM (optional)
+  [sfdk]
+  target = SailfishOS-5.1.0.11-aarch64
+  [eval]
+  ; more next-word test texts, one message per line: NAME = LANG:PATH
+  ; mine-en = en:~/texts/messages-en.txt
+
+The suite's results stay in the results folder, never in the repo.
+"""
+import argparse
+import concurrent.futures
+import configparser
+import datetime
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PHONE_LAYOUT = "data/layouts/phone-qwerty.layout"
+
+# Metrics: True if higher is better, False if lower is better, None: neither.
+DIRECTION = {
+    "fixed": True, "wrong": False, "correct_changed": False, "unknown_changed": False,
+    "wer_after": False, "top1": True, "top3": True, "ksr": True, "unknown": None,
+}
+
+
+def config():
+    path = os.path.expanduser(os.environ.get("PF_CONFIG", "~/.config/parrotfish-dev.ini"))
+    cfg = configparser.ConfigParser()
+    cfg.read(path)
+    return path, cfg
+
+
+def setting(cfg, section, key, default=None):
+    value = cfg.get(section, key, fallback=default)
+    return os.path.expanduser(value) if value else value
+
+
+def run(cmd, **kw):
+    return subprocess.run(cmd, cwd=kw.pop("cwd", REPO), **kw)
+
+
+def build(build_dir):
+    if run(["cmake", "--build", build_dir]).returncode != 0:
+        sys.exit("pf: the build failed")
+
+
+def git(*args):
+    out = run(["git"] + list(args), capture_output=True, text=True)
+    return out.stdout.strip()
+
+
+def spec_version():
+    with open(os.path.join(REPO, "rpm/parrotfish-keyboard.spec")) as f:
+        m = re.search(r"^Version:\s*(\S+)", f.read(), re.M)
+    return m.group(1) if m else "unknown"
+
+
+# --- the suite -----------------------------------------------------------
+
+def parse_summary(text):
+    """The metrics of a bench's `summary:` line, in %."""
+    line = next((l for l in text.splitlines() if l.startswith("summary:")), "")
+    m = {}
+    if "typos fixed" in line:
+        pats = {"fixed": r"typos fixed ([\d.]+)%", "wrong": r"wrong ([\d.]+)%",
+                "correct_changed": r"correct changed ([\d.]+)%",
+                "unknown_changed": r"unknown changed ([\d.]+)%", "wer_after": r"-> ([\d.]+)%"}
+    else:
+        pats = {"top1": r"next word top1 ([\d.]+)%", "top3": r"next word top1 [\d.]+% top3 ([\d.]+)%",
+                "ksr": r"KSR ([\d.]+)%", "unknown": r"unknown ([\d.]+)%"}
+    for k, p in pats.items():
+        f = re.search(p, line)
+        if f:
+            m[k] = float(f.group(1))
+    return m
+
+
+def suite_cases(build_dir, cfg, tmp):
+    """(name, command, metrics to keep or None for all)."""
+    d = lambda langs: sum((["-d", f"{build_dir}/data/{l}.pfd"] for l in langs), [])
+    sentence = f"{build_dir}/tests/sentence-bench"
+    nextword = f"{build_dir}/tests/nextword-bench"
+    cases = []
+    # Typos in running text: wrong keys, missing and extra letters, missing
+    # spaces, the number row, uncertain taps, names mixed in.
+    for lang, langs in [("en", ["en", "it", "de"]), ("it", ["en", "it", "de"]), ("de", ["en", "it", "de"]),
+                        ("fr", ["fr", "es", "en"]), ("es", ["fr", "es", "en"])]:
+        args = [sentence, "-l", PHONE_LAYOUT, "-t", f"tests/data/tatoeba-{lang}.txt"] + d(langs) + \
+               ["-m", lang, "-X", "-N", "75", "-T", "-K"]
+        oov = f"{build_dir}/data/oov-{lang}.txt"
+        if os.path.exists(oov):
+            args += ["-o", oov]
+        cases.append((f"typos-{lang}", args, None))
+    # Codes with a digit (mp3, ps4): left alone.
+    cases.append(("codes-en", [sentence, "-l", PHONE_LAYOUT, "-t", "tests/data/tatoeba-en.txt"] +
+                  d(["en", "it", "de"]) + ["-m", "en", "-N", "75", "-o", "tests/data/alnum.txt", "-u", "0.1"],
+                  ["unknown_changed"]))
+    # Words of another language in the text: left alone.
+    for a, b in [("en", "it"), ("it", "en"), ("en", "de"), ("de", "en"), ("it", "de"), ("de", "it")]:
+        for kind in ["insert", "switch"]:
+            path = os.path.join(tmp, f"{kind}-{a}-{b}.txt")
+            with open(path, "w") as f:
+                run([sys.executable, "-I", "tools/eval/mix-sentences.py", kind, f"tests/data/tatoeba-{a}.txt",
+                     f"tests/data/tatoeba-{b}.txt", "-n", "300", "-s", "1"], stdout=f, check=True)
+            cases.append((f"mixed-{kind}-{a}-{b}", [sentence, "-l", PHONE_LAYOUT, "-t", path] +
+                          d(["en", "it", "de"]) + ["-m", a, "-r", "0"], ["correct_changed"]))
+    # Next words and keystrokes saved.
+    for lang in ["en", "it", "de"]:
+        for src in ["tatoeba", "sentences"]:
+            cases.append((f"nextword-{src}-{lang}", [nextword, "-l", PHONE_LAYOUT, "-t", f"tests/data/{src}-{lang}.txt"]
+                          + d(["en", "it", "de"]) + ["-m", lang], None))
+    # More test texts of this machine ([eval] in the settings).
+    if cfg.has_section("eval"):
+        for name, value in cfg.items("eval"):
+            lang, _, path = value.partition(":")
+            path = os.path.expanduser(path.strip())
+            langs = [lang] + [l for l in ["en", "it", "de"] if l != lang][:2]
+            if os.path.exists(path) and os.path.exists(f"{build_dir}/data/{lang}.pfd"):
+                cases.append((f"nextword-{name}", [nextword, "-l", PHONE_LAYOUT, "-t", path] + d(langs)
+                              + ["-m", lang], None))
+    return cases
+
+
+def run_case(case):
+    name, cmd, keep = case
+    out = run(cmd, capture_output=True, text=True)
+    if out.returncode != 0:
+        return name, {"error": out.stderr.strip()[-300:]}
+    m = parse_summary(out.stdout)
+    if keep:
+        m = {k: v for k, v in m.items() if k in keep}
+    return name, m
+
+
+def results_dir(cfg):
+    path = setting(cfg, "paths", "results", "~/.local/share/parrotfish-dev/results")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def run_suite(args, cfg):
+    build(args.build)
+    with tempfile.TemporaryDirectory() as tmp:
+        cases = suite_cases(args.build, cfg, tmp)
+        params = sum((["-P", p] for p in args.param or []), [])
+        cases = [(n, cmd + params, keep) for n, cmd, keep in cases]
+        if args.only:
+            cases = [c for c in cases if re.search(args.only, c[0])]
+        with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
+            metrics = dict(pool.map(run_case, cases))
+    dirty = bool(git("status", "--porcelain", "--untracked-files=no"))
+    label = args.label or spec_version() + ("+dirty" if dirty else "")
+    record = {"label": label, "commit": git("rev-parse", "--short", "HEAD"), "dirty": dirty,
+              "params": args.param or [],
+              "date": datetime.datetime.now().isoformat(timespec="seconds"), "cases": metrics}
+    name = f"{record['date'].replace(':', '')}-{re.sub(r'[^A-Za-z0-9.~+_-]', '_', label)}.json"
+    path = os.path.join(results_dir(cfg), name)
+    with open(path, "w") as f:
+        json.dump(record, f, indent=1, sort_keys=True)
+    errors = [n for n, m in metrics.items() if "error" in m]
+    for n in errors:
+        print(f"pf: {n} failed: {metrics[n]['error']}", file=sys.stderr)
+    print(f"stored {path} ({len(metrics)} cases)")
+    return path, record
+
+
+# --- comparing runs ----------------------------------------------------------
+
+def stored_runs(cfg):
+    folder = results_dir(cfg)
+    runs = []
+    for name in sorted(os.listdir(folder)):
+        if name.endswith(".json"):
+            with open(os.path.join(folder, name)) as f:
+                runs.append((name, json.load(f)))
+    return runs
+
+
+def find_run(runs, key):
+    """The newest run whose label or file name is `key`."""
+    for name, rec in reversed(runs):
+        if key in (rec["label"], name, name[:-5]):
+            return rec
+    sys.exit(f"pf: no stored run {key!r} (pf runs lists them)")
+
+
+def compare(a, b, tolerance):
+    """Prints the cases side by side; returns the regressions."""
+    worse = []
+    print(f"{'case':28} {'metric':16} {a['label'][:14]:>14} {b['label'][:14]:>14} {'change':>8}")
+    for case in sorted(set(a["cases"]) | set(b["cases"])):
+        ma, mb = a["cases"].get(case, {}), b["cases"].get(case, {})
+        for metric in sorted(set(ma) | set(mb)):
+            if metric == "error":
+                continue
+            va, vb = ma.get(metric), mb.get(metric)
+            if va is None or vb is None:
+                print(f"{case:28} {metric:16} {str(va):>14} {str(vb):>14}")
+                continue
+            delta = vb - va
+            better = DIRECTION.get(metric)
+            flag = ""
+            if better is not None and abs(delta) > 1e-9:
+                gained = delta > 0 if better else delta < 0
+                flag = "  better" if gained else "  WORSE"
+                if not gained and abs(delta) > tolerance:
+                    worse.append((case, metric, va, vb))
+            if abs(delta) > 1e-9 or not args_quiet:
+                print(f"{case:28} {metric:16} {va:14.2f} {vb:14.2f} {delta:+8.2f}{flag}")
+    return worse
+
+
+args_quiet = False
+
+
+# --- commands ----------------------------------------------------------------
+
+def cmd_lint(args, cfg):
+    return run(["tools/qt56-scan.sh", REPO]).returncode
+
+
+def cmd_test(args, cfg):
+    build(args.build)
+    return run(["ctest", "--output-on-failure"], cwd=os.path.join(REPO, args.build)).returncode
+
+
+def cmd_bench(args, cfg):
+    exe = os.path.join(REPO, args.build, "tests", f"{args.name}-bench")
+    if not os.path.exists(exe):
+        sys.exit(f"pf: no {exe} (pf test builds it)")
+    return run([exe] + args.args).returncode
+
+
+def cmd_suite(args, cfg):
+    path, record = run_suite(args, cfg)
+    for case, m in sorted(record["cases"].items()):
+        print(f"{case:28} " + "  ".join(f"{k} {v:.2f}" for k, v in sorted(m.items()) if k != "error"))
+    return 0
+
+
+def cmd_runs(args, cfg):
+    for name, rec in stored_runs(cfg):
+        print(f"{rec['label']:24} {rec['commit']:9} {'dirty' if rec['dirty'] else '':6} {rec['date']}  {name}")
+    return 0
+
+
+def cmd_compare(args, cfg):
+    global args_quiet
+    args_quiet = not args.all
+    runs = stored_runs(cfg)
+    if len(runs) < 2 and not (args.a and args.b):
+        sys.exit("pf: need two stored runs (pf suite)")
+    a = find_run(runs, args.a) if args.a else runs[-2][1]
+    b = find_run(runs, args.b) if args.b else runs[-1][1]
+    compare(a, b, args.tolerance)
+    return 0
+
+
+def cmd_check(args, cfg):
+    global args_quiet
+    args_quiet = True
+    if cmd_lint(args, cfg) != 0:
+        sys.exit("pf check: lint failed")
+    if cmd_test(args, cfg) != 0:
+        sys.exit("pf check: tests failed")
+    # The last run with the engine's own settings (not an experiment).
+    before = [r for r in stored_runs(cfg) if not r[1].get("params")]
+    args.only = None
+    args.param = None
+    _, record = run_suite(args, cfg)
+    if not before:
+        print("pf check: first stored run, nothing to compare with")
+        return 0
+    worse = compare(before[-1][1], record, args.tolerance)
+    if worse:
+        print(f"pf check: {len(worse)} number(s) worse by more than {args.tolerance} points", file=sys.stderr)
+        return 1
+    print("pf check: nothing worse")
+    return 0
+
+
+def cmd_rpm(args, cfg):
+    spec = os.path.join(REPO, "rpm/parrotfish-keyboard.spec")
+    if args.version:
+        with open(spec) as f:
+            text = f.read()
+        text = re.sub(r"^(Version:\s*)\S+", lambda m: m.group(1) + args.version, text, count=1, flags=re.M)
+        with open(spec, "w") as f:
+            f.write(text)
+    version = spec_version()
+    target = setting(cfg, "sfdk", "target", "SailfishOS-5.1.0.11-aarch64")
+    log = os.path.join(REPO, args.build, "sfdk-build.log")
+    os.makedirs(os.path.dirname(log), exist_ok=True)
+    # sfdk forgets the target between commands: set it in the same shell.
+    with open(log, "w") as f:
+        code = run(["sh", "-c", f"sfdk config target={target} && sfdk build"], stdout=f, stderr=subprocess.STDOUT).returncode
+    rpms = [n for n in os.listdir(os.path.join(REPO, "RPMS")) if f"-{version}-" in n and n.endswith(".rpm")] \
+        if os.path.isdir(os.path.join(REPO, "RPMS")) else []
+    if code != 0 or not rpms:
+        sys.exit(f"pf rpm: no RPM for {version} (log: {log})")
+    rpm = os.path.join(REPO, "RPMS", rpms[0])
+    print(rpm)
+    dest = setting(cfg, "paths", "rpm_copy")
+    if dest and not args.no_copy:
+        if not os.path.isdir(dest):
+            sys.exit(f"pf rpm: {dest} isn't there (not mounted?); the RPM stays in RPMS/")
+        shutil.copy(rpm, dest)
+        print(f"copied to {dest}")
+    return 0
+
+
+def cmd_config(args, cfg):
+    path, _ = config()
+    print(f"settings: {path}{'' if os.path.exists(path) else ' (none: defaults)'}")
+    print(f"results:  {setting(cfg, 'paths', 'results', '~/.local/share/parrotfish-dev/results')}")
+    print(f"rpm_copy: {setting(cfg, 'paths', 'rpm_copy') or '(none)'}")
+    print(f"target:   {setting(cfg, 'sfdk', 'target', 'SailfishOS-5.1.0.11-aarch64')}")
+    if cfg.has_section("eval"):
+        for name, value in cfg.items("eval"):
+            print(f"eval:     {name} = {value}")
+    return 0
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="pf", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--build", default="build", help="build folder (default: build)")
+    sub = ap.add_subparsers(dest="command", required=True)
+    sub.add_parser("lint")
+    sub.add_parser("test")
+    b = sub.add_parser("bench")
+    b.add_argument("name")
+    b.add_argument("args", nargs=argparse.REMAINDER)
+    for name in ["suite", "check"]:
+        s = sub.add_parser(name)
+        s.add_argument("--label", help="name of the run (default: the spec's version)")
+        s.add_argument("--jobs", type=int, default=os.cpu_count())
+        s.add_argument("--tolerance", type=float, default=0.2, help="points a number may get worse (check)")
+        s.add_argument("--param", action="append", help="engine parameter for every bench, NAME=VALUE")
+        if name == "suite":
+            s.add_argument("--only", help="only cases matching this regular expression")
+    sub.add_parser("runs")
+    c = sub.add_parser("compare")
+    c.add_argument("a", nargs="?")
+    c.add_argument("b", nargs="?")
+    c.add_argument("--all", action="store_true", help="also the numbers that didn't change")
+    c.add_argument("--tolerance", type=float, default=0.2)
+    r = sub.add_parser("rpm")
+    r.add_argument("--version", help="set the spec's Version first, e.g. 0.1.0~alpha71")
+    r.add_argument("--no-copy", action="store_true")
+    sub.add_parser("config")
+    args = ap.parse_args()
+    _, cfg = config()
+    commands = {"lint": cmd_lint, "test": cmd_test, "bench": cmd_bench, "suite": cmd_suite, "runs": cmd_runs,
+                "compare": cmd_compare, "check": cmd_check, "rpm": cmd_rpm, "config": cmd_config}
+    sys.exit(commands[args.command](args, cfg))
+
+
+if __name__ == "__main__":
+    main()

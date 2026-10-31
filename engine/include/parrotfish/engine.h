@@ -70,7 +70,7 @@ struct EngineParams {
     // replaced (the hard block up to alpha68). 12 (sentence-bench, en/it/de,
     // 2026-10-31): 2-3 more typos fixed in 100 (thier is the German surname
     // Thier, tp the abbreviation TP), and no word of another language changed in
-    // mixed texts (tools/mix-sentences.py; at 8: 0.4 % of single foreign
+    // mixed texts (tools/eval/mix-sentences.py; at 8: 0.4 % of single foreign
     // words, un → in).
     double otherLanguageMargin = 12.0;
     size_t strongMinLength = 2;

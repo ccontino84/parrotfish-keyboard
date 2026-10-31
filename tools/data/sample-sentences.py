@@ -12,7 +12,7 @@ markup are skipped, and so are sentences outside MIN..MAX words. OUT gets
 C sentences (--count), or fewer for a small corpus: at most --share of the
 sentences that qualify, so most of the corpus is left for the word counts.
 Sentences in OUT are left out of every count (`--exclude` in
-tools/regenerate-lists.sh), so the benchmarks never test on data the
+tools/data/regenerate-lists.sh), so the benchmarks never test on data the
 dictionaries were built from.
 """
 

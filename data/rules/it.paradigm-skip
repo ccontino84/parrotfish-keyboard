@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LicenseRef-TBD
-# Irregular verbs (and their compounds) that tools/complete-paradigms.py
+# Irregular verbs (and their compounds) that tools/data/complete-paradigms.py
 # must not complete, and single generated forms that are not words.
 # Infinitives:
 essere

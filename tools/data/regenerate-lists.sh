@@ -6,7 +6,7 @@
 # next-word data data/pairs/<lang>.tsv.gz and the test lists
 # build/data/oov-<lang>.txt from the sentence corpora.
 #
-#   tools/regenerate-lists.sh CORPUS_DIR [--fetch] [LANG...]
+#   tools/data/regenerate-lists.sh CORPUS_DIR [--fetch] [LANG...]
 #
 # --fetch downloads Common Voice (sparse clone) and the Tatoeba exports into
 # CORPUS_DIR first. Without LANG, all languages. Review the diff of
@@ -55,9 +55,9 @@ exclude() { echo "--exclude tests/data/sentences-$(src $1).txt --exclude tests/d
 
 for s in $(for l in $LANGS; do src $l; done | sort -u); do
     t="$C/$(tatoeba $s)_sentences.tsv.bz2"
-    python3 -I tools/count-words.py "$C/$s-cv.tsv" $(cvfiles $s) $(exclude $s) &
-    python3 -I tools/count-words.py "$C/$s-tatoeba.tsv" "$t" $(exclude $s) &
-    python3 -I tools/count-words.py "$C/$s-all.tsv" $(cvfiles $s) "$t" $(exclude $s) &
+    python3 -I tools/data/count-words.py "$C/$s-cv.tsv" $(cvfiles $s) $(exclude $s) &
+    python3 -I tools/data/count-words.py "$C/$s-tatoeba.tsv" "$t" $(exclude $s) &
+    python3 -I tools/data/count-words.py "$C/$s-all.tsv" $(cvfiles $s) "$t" $(exclude $s) &
 done
 wait
 
@@ -67,18 +67,18 @@ for l in $LANGS; do
     # other Portuguese list is the same language).
     others=""
     for m in $ALL; do [ $(src $m) = $s ] || others="$others --other $(aosp $m)"; done
-    python3 -I tools/find-accent-misspellings.py $l "$(aosp $l)" "$C/$s-all.tsv" data/rules data/rules/$l.misspellings
-    python3 -I tools/find-supplement.py $l "$(aosp $l)" "$C/$s-cv.tsv" "$C/$s-tatoeba.tsv" data/rules \
+    python3 -I tools/data/find-accent-misspellings.py $l "$(aosp $l)" "$C/$s-all.tsv" data/rules data/rules/$l.misspellings
+    python3 -I tools/data/find-supplement.py $l "$(aosp $l)" "$C/$s-cv.tsv" "$C/$s-tatoeba.tsv" data/rules \
         data/rules/$l.supplement $others
-    python3 -I tools/complete-paradigms.py $l "$(aosp $l)" data/rules/$l.supplement "$C/$s-all.tsv" data/rules \
+    python3 -I tools/data/complete-paradigms.py $l "$(aosp $l)" data/rules/$l.supplement "$C/$s-all.tsv" data/rules \
         data/rules/$l.forms
-    python3 -I tools/find-boosts.py $l "$(aosp $l)" data/rules/$l.supplement "$C/$s-tatoeba.tsv" data/rules \
+    python3 -I tools/data/find-boosts.py $l "$(aosp $l)" data/rules/$l.supplement "$C/$s-tatoeba.tsv" data/rules \
         data/rules/$l.boost
-    python3 -I tools/make-oov-list.py "$C/$s-cv.tsv" "$(aosp $l)" data/rules/$l.supplement build/data/oov-$l.txt
+    python3 -I tools/data/make-oov-list.py "$C/$s-cv.tsv" "$(aosp $l)" data/rules/$l.supplement build/data/oov-$l.txt
 done
 
 for l in $LANGS; do
-    python3 -I tools/count-pairs.py data/pairs/$l.tsv.gz "$(aosp $l)" data/rules/$l.supplement data/rules \
+    python3 -I tools/data/count-pairs.py data/pairs/$l.tsv.gz "$(aosp $l)" data/rules/$l.supplement data/rules \
         $(cvfiles $l) "$C/$(tatoeba $l)_sentences.tsv.bz2" $(exclude $l) &
 done
 wait

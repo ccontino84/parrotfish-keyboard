@@ -1,0 +1,8 @@
+module com.jolla.keyboard
+KeyType 1.0 KeyType.qml
+SeparatorState 1.0 SeparatorState.qml
+ShiftState 1.0 ShiftState.qml
+InputHandler 1.0 InputHandler.qml
+TopItem 1.0 TopItem.qml
+HorizontalPredictionListView 1.0 HorizontalPredictionListView.qml
+VerticalPredictionListView 1.0 VerticalPredictionListView.qml

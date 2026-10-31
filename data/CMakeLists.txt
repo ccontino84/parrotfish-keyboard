@@ -12,11 +12,11 @@ foreach(entry ${PARROTFISH_LANGUAGES})
     set(out ${CMAKE_CURRENT_BINARY_DIR}/${lang}.pfd)
     add_custom_command(
         OUTPUT ${out}
-        COMMAND ${Python3_EXECUTABLE} -I ${PROJECT_SOURCE_DIR}/tools/build-dict.py
+        COMMAND ${Python3_EXECUTABLE} -I ${PROJECT_SOURCE_DIR}/tools/data/build-dict.py
                 ${lang} ${CMAKE_CURRENT_SOURCE_DIR}/aosp/${src}_wordlist.combined.gz
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules ${out}
                 --pairs ${CMAKE_CURRENT_SOURCE_DIR}/pairs/${lang}.tsv.gz
-        DEPENDS ${PROJECT_SOURCE_DIR}/tools/build-dict.py
+        DEPENDS ${PROJECT_SOURCE_DIR}/tools/data/build-dict.py
                 ${CMAKE_CURRENT_SOURCE_DIR}/aosp/${src}_wordlist.combined.gz
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.rules
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.misspellings

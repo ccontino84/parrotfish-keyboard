@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LicenseRef-TBD
 #
-# Regular (weak) German verb endings for tools/complete-paradigms.py; see
+# Regular (weak) German verb endings for tools/data/complete-paradigms.py; see
 # it.paradigms. Strong verbs change their stem (fahren → fährst, ging):
 # their forms are left as the wordlist has them, and a generated form that
 # differs from an existing word only by an umlaut (fahrst/fährst) is skipped.

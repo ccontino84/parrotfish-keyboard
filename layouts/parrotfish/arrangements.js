@@ -308,7 +308,7 @@ function withNumberRow(a) {
 }
 
 // The long-press menus of the comma and the period: Jolla's (: , ; and
-// ! . ?) plus the signs of the typing languages (agreed 2026-10-31): ¡ ¿ with Spanish,
+// ! . ?) plus the signs of the typing languages: ¡ ¿ with Spanish,
 // the em dash — with English or Spanish. Kept short: the hyphen is on the
 // sticky key, an ellipsis is typed as three periods, quotes are on the
 // second symbol page. `languages` is the dconf value of

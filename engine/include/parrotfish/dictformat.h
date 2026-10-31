@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-TBD
 
 // On-disk layout of a Parrotfish dictionary (.pfd), written by
-// tools/build-dict.py. Little-endian; every section is 8-byte aligned.
+// tools/data/build-dict.py. Little-endian; every section is 8-byte aligned.
 // Keep FormatVersion in sync with FORMAT_VERSION in the builder.
 
 #pragma once

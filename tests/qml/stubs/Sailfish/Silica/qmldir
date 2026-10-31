@@ -1,0 +1,10 @@
+module Sailfish.Silica
+singleton Theme 1.0 Theme.qml
+singleton Screen 1.0 Screen.qml
+SilicaControl 1.0 SilicaControl.qml
+Icon 1.0 Icon.qml
+FadeAnimation 1.0 FadeAnimation.qml
+FadeAnimator 1.0 FadeAnimator.qml
+Label 1.0 Label.qml
+BackgroundItem 1.0 BackgroundItem.qml
+IconButton 1.0 IconButton.qml

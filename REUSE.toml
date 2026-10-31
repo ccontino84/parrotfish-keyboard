@@ -21,3 +21,8 @@ SPDX-License-Identifier = "CC0-1.0"
 path = "tests/data/tatoeba-*.txt"
 SPDX-FileCopyrightText = "Tatoeba contributors"
 SPDX-License-Identifier = "LicenseRef-CC-BY-2.0-FR"
+
+[[annotations]]
+path = "tests/qml/stubs/**"
+SPDX-FileCopyrightText = "2026 ccontino84"
+SPDX-License-Identifier = "LicenseRef-TBD"

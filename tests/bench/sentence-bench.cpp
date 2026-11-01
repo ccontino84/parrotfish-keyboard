@@ -7,7 +7,7 @@
 //                  -d build/data/it.pfd [-d OTHER.pfd]... [-n 2000] [-r 0.3]
 //                  [-s SEED] [-m LANG] [-B] [-F] [-D] [-R] [-P name=value]... [-v]
 //                  [-S slips.log [-M] | -U] [-N PCT] [-X] [-o OOV.txt [-u RATE]] [-L]
-//                  [-T [-K]]
+//                  [-T [-K]] [-W pairs.tsv [-w RATE] [-c N] [-A]]
 //
 // Words of real sentences are typed one by one with the earlier words as
 // context, as on the phone (all dictionaries loaded, equal starting weights,
@@ -42,8 +42,22 @@
 // better (Engine::resolveTap, as the handler). -K also gives the engine the
 // tap's other key, from alpha70 on; without it only the letter shown.
 //
+// -W adds real misspellings (recieve, propio, Vorraussetzung) from a list:
+// misspelling TAB correct [TAB source [TAB flags]] per line, # for comments.
+// A word of the sentences that has some (ignoring case; a correction of two
+// words matches two words of the sentence, alot for "a lot") is typed as
+// one of them, picked at random, with no other slip: a share -w (1) of such
+// words, at most -c (3) times each correct word, so that the few common
+// words (teh for the) don't make up the sample. Flag accents-only marks a
+// misspelling in accents only (citta, Strasse), counted apart. With -A the
+// sentences are only context: each pair of the list is typed once, after
+// the first three words of a sentence (in turn). The kinds "misspelling"
+// and "missp. accents" are not part of "all typos"; the summary adds them,
+// fixed (the correct word), wrong (changed to something else) and left.
+//
 // -L adds the results by typed length (2, 3-4, 5+ letters; typos of two
-// words left out), for thresholds by length.
+// words left out), for thresholds by length, and the same for the words
+// typed with a capital after a word ("capital": names, German nouns).
 //
 // The last line sums up: typos fixed and fixed wrong, correct and unknown
 // words changed, and the word error rate before and after autocorrect
@@ -57,6 +71,7 @@
 #include <chrono>
 #include <cstdio>
 #include <fstream>
+#include <map>
 #include <sstream>
 
 using namespace parrotfish;
@@ -89,6 +104,32 @@ double pct(int a, int b)
     return b ? 100.0 * a / b : 0.0;
 }
 
+bool isMisspelled(int kind)
+{
+    return kind == Misspelled || kind == MisspelledAccents;
+}
+
+// A real misspelling of a word (-W).
+struct Misspelling {
+    std::u32string typed;
+    bool accentsOnly = false;
+};
+
+// One line of the -W list: misspelling TAB correct [TAB source [TAB flags]].
+bool parsePair(const std::string &line, std::u32string *typed, std::u32string *correct, bool *accentsOnly)
+{
+    std::vector<std::string> f;
+    std::istringstream in(line);
+    for (std::string x; std::getline(in, x, '\t');)
+        f.push_back(x);
+    if (f.size() < 2 || f[0].empty() || f[1].empty())
+        return false;
+    *typed = utf8::decode(f[0]);
+    *correct = utf8::decode(f[1]);
+    *accentsOnly = f.size() > 3 && ("," + f[3] + ",").find(",accents-only,") != std::string::npos;
+    return true;
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -99,10 +140,12 @@ int main(int argc, char **argv)
     double rate = 0.3;
     unsigned seed = 1;
     bool verbose = false, breakdown = false, byLength = false, firstOnly = false, doubles = false, realWords = false;
-    std::string remembered, slipsPath, oovPath;
+    std::string remembered, slipsPath, oovPath, misspPath;
     bool uniform = false, mirrored = false, extraKinds = false, uncertainTaps = false, keepBoth = false;
     int numberPct = 0;
-    double unknownRate = 0.1;
+    double unknownRate = 0.1, misspRate = 1.0;
+    int misspCap = 3;
+    bool pairsAlone = false;
     EngineParams params;
     params.corrector.completions = true;   // as on the phone
     params.strength = Strength::Normal;    // the phone's default (the engine's is Gentle)
@@ -130,6 +173,10 @@ int main(int argc, char **argv)
         else if (a == "-K") keepBoth = true;
         else if (a == "-o" && i + 1 < argc) oovPath = argv[++i];
         else if (a == "-u" && i + 1 < argc) unknownRate = std::stod(argv[++i]);
+        else if (a == "-W" && i + 1 < argc) misspPath = argv[++i];
+        else if (a == "-w" && i + 1 < argc) misspRate = std::stod(argv[++i]);
+        else if (a == "-c" && i + 1 < argc) misspCap = std::stoi(argv[++i]);
+        else if (a == "-A") pairsAlone = true;
         else if (a == "-P" && i + 1 < argc) {
             if (!setParam(params, argv[++i])) {
                 std::fprintf(stderr, "unknown parameter %s\n", argv[i]);
@@ -168,9 +215,10 @@ int main(int argc, char **argv)
         }
     }
     std::ifstream tf(textPath);
-    if (keys.keys().empty() || engine.languageCount() == 0 || !tf) {
+    if (keys.keys().empty() || engine.languageCount() == 0 || !tf || (pairsAlone && misspPath.empty())) {
         std::fprintf(stderr, "usage: sentence-bench -l LAYOUT -t SENTENCES -d DICT [-d DICT]... [-n N] [-r RATE]"
-                             " [-s SEED] [-m LANG] [-B] [-F] [-D] [-R] [-P name=value]... [-v]\n");
+                             " [-s SEED] [-m LANG] [-B] [-F] [-D] [-R] [-P name=value]... [-v]"
+                             " [-W PAIRS [-w RATE] [-c N] [-A]]\n");
         return 2;
     }
     std::vector<double> prior;
@@ -227,6 +275,28 @@ int main(int argc, char **argv)
             return 2;
         }
     }
+    // Real misspellings by their correct word or words (lowercase); in the
+    // list's order, -A types them all.
+    std::map<std::u32string, std::vector<Misspelling>> misspellings;
+    std::vector<std::pair<std::u32string, Misspelling>> pairs;   // correct, misspelling
+    if (!misspPath.empty()) {
+        std::ifstream mf(misspPath);
+        for (std::string l; std::getline(mf, l);) {
+            std::u32string typed, correct;
+            Misspelling m;
+            if (l.empty() || l[0] == '#' || !parsePair(l, &typed, &correct, &m.accentsOnly) || !isPlain(typed))
+                continue;
+            m.typed = typed;
+            misspellings[lower(correct)].push_back(m);
+            pairs.emplace_back(correct, m);
+        }
+        if (pairs.empty()) {
+            std::fprintf(stderr, "-W %s: no misspellings\n", misspPath.c_str());
+            return 2;
+        }
+    }
+    std::map<std::u32string, int> misspUsed;   // times each correct word was misspelled (-c)
+
     // Typo kinds to pick from.
     std::vector<Kind> kinds;
     for (int k = Neighbour; k <= (doubles ? DoubleExtra : Double); ++k)
@@ -245,28 +315,74 @@ int main(int argc, char **argv)
 
     Stats stats[KindCount];
     GroupStats groups[GroupCount];
-    LengthStats lengths[LengthCount];
+    LengthStats lengths[LengthCount], capitals;
     double totalUs = 0, maxUs = 0;
     int searches = 0, sentences = 0, typedWords = 0, wrongBefore = 0, wrongAfter = 0;
-    std::string line;
-    while (std::getline(tf, line) && sentences < maxSentences) {
+    // The texts: the sentences, or with -A one for each pair: three words of
+    // a sentence, then the pair's correct word or words (one entry).
+    // ends[i]: word i ends a sentence (. ! ? … after it, before the next
+    // word): the context then has ". " after it, so that the next word is
+    // a sentence start for the engine, as on the phone.
+    std::vector<std::vector<std::u32string>> texts;
+    std::vector<std::vector<bool>> textEnds;
+    for (std::string line; static_cast<int>(texts.size()) < maxSentences && std::getline(tf, line);) {
         if (line.empty() || line[0] == '#')
             continue;
+        std::u32string text = utf8::decode(line);
+        for (char32_t &c : text)
+            if (c == 0x2019 || c == 0x02BC)
+                c = U'\'';   // as words() reads them
+        texts.push_back(words(text));
+        std::vector<bool> ends(texts.back().size(), false);
+        size_t pos = 0;
+        for (size_t i = 0; i < ends.size(); ++i) {
+            const size_t at = text.find(texts.back()[i], pos);
+            if (at == std::u32string::npos)
+                break;
+            pos = at + texts.back()[i].size();
+            const size_t next = i + 1 < ends.size() ? text.find(texts.back()[i + 1], pos) : std::u32string::npos;
+            const std::u32string gap = text.substr(pos, next == std::u32string::npos ? 0 : next - pos);
+            ends[i] = gap.find_first_of(U".!?\u2026") != std::u32string::npos;
+        }
+        textEnds.push_back(ends);
+    }
+    if (pairsAlone && !texts.empty()) {
+        std::vector<std::vector<std::u32string>> alone;
+        for (size_t p = 0; p < pairs.size(); ++p) {
+            const std::vector<std::u32string> &t = texts[p % texts.size()];
+            alone.emplace_back(t.begin(), t.begin() + std::min<size_t>(3, t.size()));
+            alone.back().push_back(pairs[p].first);
+        }
+        texts.swap(alone);
+        textEnds.assign(texts.size(), {});
+        for (size_t i = 0; i < texts.size(); ++i)
+            textEnds[i].assign(texts[i].size(), false);
+    }
+    for (size_t ti = 0; ti < texts.size(); ++ti) {
         ++sentences;
-        std::vector<std::u32string> ws = words(utf8::decode(line));
+        std::vector<std::u32string> ws = texts[ti];
+        std::vector<bool> ends = textEnds[ti];
         std::vector<bool> isUnknown(ws.size(), false);
-        if (!unknown.empty()) {
+        if (!unknown.empty() && !pairsAlone) {
             for (size_t i = 0; i <= ws.size(); ++i)
                 if (coin(typos.rng()) < unknownRate) {
                     ws.insert(ws.begin() + i, unknown[typos.pos(unknown.size())]);
                     isUnknown.insert(isUnknown.begin() + i, true);
+                    ends.insert(ends.begin() + i, false);
                     ++i;
                 }
         }
+        // What the context gets after word wi.
+        auto after = [&](size_t wi) { return std::u32string(ends[wi] ? U". " : U" "); };
         std::u32string context;
         for (size_t wi = 0; wi < ws.size(); ++wi) {
             std::u32string target = ws[wi];
-            const bool plain = isPlain(target);
+            const bool forcedHere = pairsAlone && wi + 1 == ws.size();
+            if (pairsAlone && !forcedHere) {   // context only
+                context += target + after(wi);
+                continue;
+            }
+            const bool plain = forcedHere || isPlain(target);
             if (plain) {
                 Kind kind = isUnknown[wi] ? Unknown : Clean;
                 std::u32string typed = target;
@@ -276,6 +392,33 @@ int main(int argc, char **argv)
                 int uncertainAt = -1;
                 char32_t uncertainOther = 0;
                 bool shownLifted = true;
+                // A real misspelling (-W): of this word, or of it and the next.
+                const Misspelling *missp = nullptr;
+                if (forcedHere) {
+                    missp = &pairs[ti].second;
+                } else if (!misspellings.empty() && kind == Clean) {
+                    auto it = misspellings.end();
+                    bool two = false;
+                    if (wi + 1 < ws.size() && isPlain(ws[wi + 1]) && !isUnknown[wi + 1]) {
+                        it = misspellings.find(lower(target + U" " + ws[wi + 1]));
+                        two = it != misspellings.end();
+                    }
+                    if (!two)
+                        it = misspellings.find(lower(target));
+                    if (it != misspellings.end() && misspUsed[it->first] < misspCap && coin(typos.rng()) < misspRate) {
+                        ++misspUsed[it->first];
+                        missp = &it->second[typos.pos(it->second.size())];
+                        if (two)
+                            target += U" " + ws[++wi];
+                    }
+                }
+                if (missp) {
+                    kind = missp->accentsOnly ? MisspelledAccents : Misspelled;
+                    typed = missp->typed;
+                    // The capital of a sentence start, typed with Shift.
+                    if (utf8::isUpper(target[0]))
+                        typed[0] = utf8::toUpper(typed[0]);
+                }
                 if (realWords && kind == Clean && coin(typos.rng()) < rate) {
                     const Dictionary &d = engine.dictionary(0);
                     std::vector<std::u32string> real;
@@ -339,7 +482,7 @@ int main(int argc, char **argv)
                     }
                 }
                 if (firstOnly && !context.empty()) {
-                    context += target + U" ";
+                    context += target + after(wi);
                     continue;   // the same typos as without -F
                 }
                 engine.startText(context, prior);
@@ -370,21 +513,28 @@ int main(int argc, char **argv)
                 ++typedWords;
                 if (lower(typed) != lower(target)) ++wrongBefore;
                 if (lower(got) != lower(target)) ++wrongAfter;
-                LengthStats &ls = lengths[typed.size() <= 2 ? Len2 : typed.size() <= 4 ? Len34 : Len5];
-                if (kind == Clean) {
-                    ++ls.clean;
-                    if (lower(got) != lower(target)) ++ls.cleanWrong;
-                } else if (kind == Unknown) {
-                    ++ls.unknown;
-                    if (lower(got) != lower(target)) ++ls.unknownWrong;
-                } else if (!r.typedIsWord && target.find(U' ') == std::u32string::npos) {
-                    ++ls.fixable;
-                    if (fired && lower(got) == lower(target)) ++ls.fixed;
-                    if (fired && lower(got) != lower(target)) ++ls.wrong;
+                // By length, and the words typed with a capital after a
+                // word (names, German nouns) once more.
+                for (LengthStats *lp : {&lengths[typed.size() <= 2 ? Len2 : typed.size() <= 4 ? Len34 : Len5],
+                                        !context.empty() && utf8::isUpper(typed[0]) ? &capitals : nullptr}) {
+                    if (!lp)
+                        continue;
+                    LengthStats &ls = *lp;
+                    if (kind == Clean) {
+                        ++ls.clean;
+                        if (lower(got) != lower(target)) ++ls.cleanWrong;
+                    } else if (kind == Unknown) {
+                        ++ls.unknown;
+                        if (lower(got) != lower(target)) ++ls.unknownWrong;
+                    } else if (!isMisspelled(kind) && !r.typedIsWord && target.find(U' ') == std::u32string::npos) {
+                        ++ls.fixable;
+                        if (fired && lower(got) == lower(target)) ++ls.fixed;
+                        if (fired && lower(got) != lower(target)) ++ls.wrong;
+                    }
                 }
                 if (kind == Clean) {
                     ++g.clean;
-                } else if (kind != Unknown && !r.typedIsWord) {
+                } else if (kind != Unknown && !isMisspelled(kind) && !r.typedIsWord) {
                     ++g.fixable;
                     if (fired && lower(got) == lower(target)) ++g.fixed;
                     if (fired && lower(got) != lower(target)) ++g.wrong;
@@ -424,7 +574,7 @@ int main(int argc, char **argv)
                                     rank, fired ? " (autocorrected)" : "", tag);
                 }
             }
-            context += target + U" ";
+            context += target + after(wi);
         }
     }
 
@@ -445,6 +595,8 @@ int main(int argc, char **argv)
         std::printf("%-14s %6d %7.1f%% %6.1f%% %6.1f%% %9.1f%% %9.1f%%\n", kindName(k), s.total,
                     pct(s.realWord, s.total), pct(s.top1, fixable), pct(s.top3, fixable),
                     pct(s.fixed, fixable), pct(s.wrong, fixable));
+        if (isMisspelled(k))
+            continue;   // apart from the slips
         all.total += s.total; all.realWord += s.realWord; all.top1 += s.top1; all.top3 += s.top3;
         all.fixed += s.fixed; all.wrong += s.wrong;
     }
@@ -452,6 +604,24 @@ int main(int argc, char **argv)
     std::printf("%-14s %6d %7.1f%% %6.1f%% %6.1f%% %9.1f%% %9.1f%%\n", "all typos", all.total,
                 pct(all.realWord, all.total), pct(all.top1, fixable), pct(all.top3, fixable),
                 pct(all.fixed, fixable), pct(all.wrong, fixable));
+    // Real misspellings: fixed, wrong, left (of those no loaded language
+    // takes as a word).
+    auto misspText = [&](int k) {
+        const Stats &s = stats[k];
+        const int n = s.total - s.realWord;
+        char buf[160];
+        std::snprintf(buf, sizeof buf, "fixed %.1f%% wrong %.1f%% left %.1f%%", pct(s.fixed, n), pct(s.wrong, n),
+                      pct(n - s.fixed - s.wrong, n));
+        return std::string(buf);
+    };
+    if (!misspPath.empty()) {
+        for (int k : {Misspelled, MisspelledAccents})
+            std::printf("%-14s %6d typed, %d words in some language, of the rest %s\n", kindName(k), stats[k].total,
+                        stats[k].realWord, misspText(k).c_str());
+        const long used = std::count_if(misspUsed.begin(), misspUsed.end(), [](const auto &u) { return u.second > 0; });
+        std::printf("misspelled words: %ld, of %zu in the list\n", pairsAlone ? long(misspellings.size()) : used,
+                    misspellings.size());
+    }
     if (breakdown) {
         std::printf("start lean: %s\n", remembered.empty() ? "none" : remembered.c_str());
         std::printf("%-10s %6s %12s %5s %12s %12s\n", "words", "clean", "changed", "typos",
@@ -464,18 +634,24 @@ int main(int argc, char **argv)
         }
     }
     if (byLength) {
-        for (int k = 0; k < LengthCount; ++k) {
-            const LengthStats &l = lengths[k];
-            std::printf("length %-3s typos %5d fixed %5.1f%% wrong %4.1f%%, correct %6d changed %.2f%%,"
-                        " unknown %5d changed %.2f%%\n", lengthNames[k], l.fixable, pct(l.fixed, l.fixable),
+        for (int k = 0; k <= LengthCount; ++k) {
+            const LengthStats &l = k < LengthCount ? lengths[k] : capitals;
+            std::printf("%-10s typos %5d fixed %5.1f%% wrong %4.1f%%, correct %6d changed %.2f%%,"
+                        " unknown %5d changed %.2f%%\n",
+                        k < LengthCount ? (std::string("length ") + lengthNames[k]).c_str() : "capital",
+                        l.fixable, pct(l.fixed, l.fixable),
                         pct(l.wrong, l.fixable), l.clean, pct(l.cleanWrong, l.clean), l.unknown,
                         pct(l.unknownWrong, l.unknown));
         }
     }
     std::printf("time per word: mean %.0f µs, max %.0f µs\n", totalUs / searches, maxUs);
     std::printf("summary: typos fixed %.1f%% wrong %.1f%%, correct changed %.2f%%, unknown changed %.2f%%,"
-                " WER %.2f%% -> %.2f%%\n", pct(all.fixed, fixable), pct(all.wrong, fixable),
+                " WER %.2f%% -> %.2f%%", pct(all.fixed, fixable), pct(all.wrong, fixable),
                 pct(stats[Clean].wrong, stats[Clean].total), pct(stats[Unknown].wrong, stats[Unknown].total),
                 pct(wrongBefore, typedWords), pct(wrongAfter, typedWords));
+    if (!misspPath.empty())
+        std::printf(", misspellings %s, accents only %s", misspText(Misspelled).c_str(),
+                    misspText(MisspelledAccents).c_str());
+    std::printf("\n");
     return 0;
 }

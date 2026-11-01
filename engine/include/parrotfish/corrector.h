@@ -45,6 +45,16 @@ struct CorrectorParams {
     float ruleCost = 0.4f;         // a spelling rule (ae → ä, e' → è)
     int maxEdits = 2;              // insertions + deletions + transpositions
     float lmWeight = 0.6f;         // scale of word frequency against tap evidence
+    // Typed letters that are exactly a listed misspelling (im, perche,
+    // fur) are that word written that way, not a slip onto it: its target
+    // costs this many nats less. Without it, im became in (the word
+    // frequencies come from written text, where I'm is rare).
+    // sentence-bench (2026-11-01), 0 -> 2.5: German accent misspellings
+    // fixed 64.6 -> 70.8 %, French misspellings +0.6 points, nothing fixed
+    // wrong more; 3: more fixed wrong. Next-word keystrokes saved -0.1 to
+    // -0.2 points (a prefix that is a misspelling, fur..., ranks für).
+    // Not after a word with a capital (Mr Cant: Engine::process).
+    float exactMisspellingBonus = 2.5f;
     size_t maxResults = 12;
     bool completions = false;      // also return longer words (prefix match)
     float completionCost = 0.3f;   // per letter added beyond the taps

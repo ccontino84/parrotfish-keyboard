@@ -224,7 +224,7 @@ struct Corrector::Search
             cand.word = target;
             cand.viaTarget = true;
             cand.wordCost = wc;
-            cand.cost = cost + wc;
+            cand.cost = cost + wc - (changes == 0 ? p.exactMisspellingBonus : 0.0f);
             add(std::move(cand));
             return;
         }

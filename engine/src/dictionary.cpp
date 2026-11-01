@@ -5,6 +5,7 @@
 #include "parrotfish/utf8.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstring>
 #include <sstream>
 #include <fcntl.h>
@@ -41,9 +42,17 @@ Dictionary &Dictionary::operator=(Dictionary &&other) noexcept
         m_suffixes = std::move(other.m_suffixes);
         m_compoundMin = other.m_compoundMin;
         m_compoundParts = other.m_compoundParts;
+        m_letters = other.m_letters;
+        m_letterKeys = other.m_letterKeys;
+        m_letterCosts = other.m_letterCosts;
+        m_letterSymbols = std::move(other.m_letterSymbols);
         other.m_data = nullptr;
         other.m_size = 0;
         other.m_suffixes.clear();
+        other.m_letters = nullptr;
+        other.m_letterKeys = nullptr;
+        other.m_letterCosts = nullptr;
+        other.m_letterSymbols.clear();
         other.m_compoundMin = other.m_compoundParts = 0;
     }
     return *this;
@@ -57,6 +66,10 @@ void Dictionary::close()
     m_size = 0;
     m_suffixes.clear();
     m_compoundMin = m_compoundParts = 0;
+    m_letters = nullptr;
+    m_letterKeys = nullptr;
+    m_letterCosts = nullptr;
+    m_letterSymbols.clear();
 }
 
 static bool fail(std::string *error, const std::string &message)
@@ -98,7 +111,8 @@ bool Dictionary::open(const std::string &path, std::string *error)
             || !inRange(h.ruleOffset, h.ruleCount, sizeof(format::Rule))
             || !inRange(h.stringsOffset, h.stringsSize, 1)
             || !inRange(h.pairRowOffset, h.pairRowCount, sizeof(format::PairRow))
-            || !inRange(h.pairEntryOffset, h.pairEntryCount, sizeof(format::PairEntry))) {
+            || !inRange(h.pairEntryOffset, h.pairEntryCount, sizeof(format::PairEntry))
+            || !inRange(h.sectionOffset, h.sectionCount, sizeof(format::Section))) {
         close();
         return fail(error, path + ": not a Parrotfish dictionary of version "
                     + std::to_string(format::FormatVersion));
@@ -119,7 +133,109 @@ bool Dictionary::open(const std::string &path, std::string *error)
         close();
         return fail(error, path + ": damaged word-part rules");
     }
+    return openSections(error, path);
+}
+
+bool Dictionary::openSections(std::string *error, const std::string &path)
+{
+    const auto *sections = reinterpret_cast<const format::Section *>(m_data + m_header->sectionOffset);
+    for (uint32_t i = 0; i < m_header->sectionCount; ++i) {
+        const format::Section &s = sections[i];
+        if (std::memcmp(s.tag, format::LettersTag, 4) != 0 || s.version != format::LettersVersion)
+            continue;   // a section of a later version: not used
+        const uint64_t end = uint64_t(s.offset) + s.size;
+        bool ok = s.offset % 8 == 0 && end <= m_size && s.size >= sizeof(format::LetterModel);
+        const auto *m = reinterpret_cast<const format::LetterModel *>(m_data + s.offset);
+        ok = ok && m->order >= 1 && m->order <= 5 && m->symbolCount >= 2
+             && m->symbolCount <= (1u << format::LetterBits) && m->step > 0
+             && m->symbolsOffset % 4 == 0 && m->keysOffset % 4 == 0
+             && m->symbolsOffset + uint64_t(m->symbolCount - 2) * 4 <= s.size
+             && m->keysOffset + uint64_t(m->keyCount) * 4 <= s.size
+             && m->costsOffset + uint64_t(m->keyCount) * 2 <= s.size;
+        if (!ok) {
+            close();
+            return fail(error, path + ": damaged letter model");
+        }
+        const uint8_t *base = m_data + s.offset;
+        const auto *symbols = reinterpret_cast<const uint32_t *>(base + m->symbolsOffset);
+        m_letterSymbols.clear();
+        for (uint32_t k = 2; k < m->symbolCount; ++k)
+            m_letterSymbols.emplace_back(symbols[k - 2], static_cast<uint8_t>(k));
+        std::sort(m_letterSymbols.begin(), m_letterSymbols.end());
+        m_letters = m;
+        m_letterKeys = reinterpret_cast<const uint32_t *>(base + m->keysOffset);
+        m_letterCosts = base + m->costsOffset;
+    }
     return true;
+}
+
+const uint8_t *Dictionary::letterEntry(uint32_t key) const
+{
+    const uint32_t *end = m_letterKeys + m_letters->keyCount;
+    const uint32_t *k = std::lower_bound(m_letterKeys, end, key);
+    return k != end && *k == key ? m_letterCosts + 2 * (k - m_letterKeys) : nullptr;
+}
+
+double Dictionary::letterCost(const std::u32string &folded) const
+{
+    if (!m_letters)
+        return -1.0;
+    const format::LetterModel &m = *m_letters;
+    const double step = m.step;
+    // Below the single letters: every symbol but "none" equally likely.
+    const double unseen = std::log(static_cast<double>(m.symbolCount - 1));
+    // The last order - 1 symbols, oldest first; the word starts after a boundary.
+    uint32_t history[4];
+    size_t length = 0;
+    const size_t context = m.order - 1;
+    auto pack = [&](size_t from, uint32_t last) {
+        uint32_t key = 0;
+        for (size_t i = from; i < length; ++i)
+            key = key << format::LetterBits | history[i];
+        return last ? key << format::LetterBits | last : key;
+    };
+    if (context > 0)
+        history[length++] = 1;
+    double total = 0;
+    for (size_t i = 0; i <= folded.size(); ++i) {
+        uint32_t symbol = 1;   // the end of the word
+        if (i < folded.size()) {
+            auto it = std::lower_bound(m_letterSymbols.begin(), m_letterSymbols.end(),
+                                       std::make_pair(folded[i], uint8_t(0)));
+            symbol = it != m_letterSymbols.end() && it->first == folded[i] ? it->second : 0;
+        }
+        // The longest stored context, backing off through shorter ones.
+        double backoff = 0;
+        double cost = -1;
+        for (size_t from = 0; from <= length && symbol; ++from) {
+            const uint8_t *e = letterEntry(pack(from, symbol));
+            if (e && e[0] != format::LetterNone) {
+                cost = backoff + e[0] * step;
+                break;
+            }
+            if (from < length)
+                if (const uint8_t *c = letterEntry(pack(from, 0)))
+                    backoff += c[1] * step;
+        }
+        if (cost < 0) {
+            // An unknown letter: every context backs off, then the unseen cost.
+            for (size_t from = 0; from < length && !symbol; ++from)
+                if (const uint8_t *c = letterEntry(pack(from, 0)))
+                    backoff += c[1] * step;
+            cost = backoff + unseen;
+        }
+        total += cost;
+        if (!symbol) {
+            length = 0;   // no context spans an unknown letter
+        } else if (context > 0) {
+            if (length == context) {
+                std::memmove(history, history + 1, (length - 1) * sizeof(uint32_t));
+                --length;
+            }
+            history[length++] = symbol;
+        }
+    }
+    return total;
 }
 
 bool Dictionary::parseWordParts(const std::string &text)

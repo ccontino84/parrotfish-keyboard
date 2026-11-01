@@ -450,14 +450,16 @@ void testUncertainTaps()
     // No word starts either way: the lift key stays.
     CHECK(s.engine.resolveTap(u("xqz"), U'w', U'e') == U'w');
     // Touched f, lifted on d after "le": "led..." fits better then, so the
-    // word shows "ledt"; with both keys kept, the whole word is "left".
+    // word shows "ledt"; with both keys kept, the whole word is "left",
+    // surer than from the letters shown alone.
     CHECK(s.engine.resolveTap(u("le"), U'd', U'f') == U'd');
     s.engine.startText(u("I think that "));
     std::vector<Tap> taps = tapsFor(u("ledt"));
-    CHECK(s.engine.process(taps).autocorrect < 0 || s8(s.engine.process(taps).suggestions[0].word) != "left");
+    const Result shown = s.engine.process(taps);
     taps[2].initial = U'f';
     const Result r = s.engine.process(taps);
     CHECK(r.autocorrect >= 0 && s8(r.suggestions[r.autocorrect].word) == "left");
+    CHECK(r.confidence > shown.confidence + 0.05);
     // The same tap, shown as the touch-down key (chLifted false): the lift
     // key keeps its weight.
     std::vector<Tap> shownTouched = tapsFor(u("left"));
@@ -541,6 +543,176 @@ void testSingleLetterCase()
     s.engine.setStrength(Strength::Normal);
 }
 
+void testContractions()
+{
+    Setup s({"en"});
+    for (Strength st : {Strength::Normal, Strength::Strong}) {
+        s.engine.setStrength(st);
+        for (const auto &c : std::vector<std::pair<const char *, const char *>>{
+                 {"cant", "can't"}, {"wont", "won't"}, {"whats", "what's"}}) {
+            s.engine.startText(u("Yesterday after work "));
+            Result r = s.engine.process(tapsFor(u(c.first)));
+            CHECK(r.autocorrect == 0 && r.suggestions[0].word == u(c.second));
+        }
+        // Words in their own right stay (their contraction is a suggestion).
+        for (const char *w : {"id", "ill", "lets"}) {
+            s.engine.startText(u("Yesterday after work "));
+            CHECK(s.engine.process(tapsFor(u(w))).autocorrect < 0);
+        }
+        // A listed misspelling typed as it is: its word, not a slip onto a
+        // more frequent one (im: in).
+        s.engine.startText(u("Yesterday after work "));
+        Result r = s.engine.process(tapsFor(u("im")));
+        CHECK(r.autocorrect == 0 && r.suggestions[0].word == u("I'm"));
+    }
+    s.engine.setStrength(Strength::Normal);
+
+    // German text: im is a word.
+    Setup de({"de", "en"});
+    de.engine.setStrength(Strength::Normal);
+    de.engine.startText(u("Wir waren gestern "));
+    CHECK(de.engine.process(tapsFor(u("im"))).autocorrect < 0);
+
+    // Letters that are a word only with a capital (the name Jaime, the
+    // acronym MN) are not capitalised when another reading is likelier:
+    // j'aime; m'n is offered, mn stays. A word stored with its capital is
+    // still capitalised (haus: Haus).
+    Setup fr({"fr", "en"});
+    fr.engine.setStrength(Strength::Normal);
+    fr.engine.startText(u("Je pense que "));
+    CHECK_EQ(fr.space("jaime"), "j'aime");
+    Setup nl({"nl", "en"}, "en");
+    nl.engine.setStrength(Strength::Normal);
+    nl.engine.startText(u("Ik ga met "));
+    const Result mn = nl.engine.process(tapsFor(u("mn")));
+    CHECK(mn.autocorrect < 0);
+    CHECK(std::any_of(mn.suggestions.begin(), mn.suggestions.end(),
+                      [](const Suggestion &x) { return x.word == u("m'n"); }));
+    Setup de2({"de", "en"});
+    de2.engine.setStrength(Strength::Normal);
+    de2.engine.startText(u("Ich gehe ins "));
+    CHECK_EQ(de2.space("haus"), "Haus");
+}
+
+void testUnknownWords()
+{
+    // The letter model: a string shaped like the language's words scores
+    // better than one with unlikely letters.
+    Dictionary en, it;
+    CHECK(en.open(dictDir + "/en.pfd") && en.hasLetterModel());
+    CHECK(it.open(dictDir + "/it.pfd") && it.hasLetterModel());
+    CHECK(en.letterCost(u("norn")) + 3 < en.letterCost(u("bprn")));
+    CHECK(en.letterCost(u("kowalsky")) + 10 < en.letterCost(u("xqztkwvb")));
+    CHECK(it.letterCost(u("ugo")) + 2 < en.letterCost(u("ugo")));   // an Italian name
+    CHECK(en.letterCost(u("nörn")) > en.letterCost(u("norn")));     // a letter it doesn't know
+    CHECK(en.letterMeanCost() > 1.0 && en.letterMeanCost() < 3.0);
+
+    // Words missing from the dictionaries: a name stays as typed, the same
+    // slip in unlikely letters is still fixed, and so are typos. Long
+    // letters one change from a word are that word misspelled (recieve);
+    // a long name further from one stays (Wiggin), and so does one that is
+    // two words joined (Welland). The letter model alone: without the cost
+    // of a capital on words stored in lower case (testCapitalNames).
+    EngineParams p;
+    p.strength = Strength::Normal;
+    p.capitalLowerCost = p.capitalLowerCostNouns = 0;
+    Engine e(p);
+    for (const char *l : {"en", "it", "de"})
+        e.addLanguage(dictDir + "/" + l + ".pfd");
+    e.setLayout(layout("en"));
+    std::vector<double> prior(3, 1.0);
+    prior[e.languageIndex("en")] *= 3.0;
+    auto space = [&](const std::string &typed) {
+        e.startText(u("Yesterday I went to see "), prior);
+        const Result r = e.process(tapsFor(u(typed)));
+        return r.autocorrect >= 0 ? s8(r.suggestions[r.autocorrect].word) : typed;
+    };
+    CHECK_EQ(space("Norn"), "Norn");       // Born with a fixed cost per letter
+    CHECK_EQ(space("Farrer"), "Farrer");   // Career
+    CHECK_EQ(space("Wiggin"), "Wiggin");   // Within
+    CHECK_EQ(space("Welland"), "Welland"); // Well and
+    CHECK_EQ(space("Bprn"), "Born");
+    CHECK_EQ(space("Bqttle"), "Battle");
+    CHECK_EQ(space("hpuse"), "house");
+    CHECK_EQ(space("becuase"), "because");
+    CHECK_EQ(space("recieve"), "receive");
+    CHECK_EQ(space("goverment"), "government");
+    CHECK_EQ(space("occured"), "occurred");
+
+    // Long letters two changes from a word (two slips): that word, even
+    // when they look like the language's (conoleanno in Italian).
+    std::vector<double> itPrior(3, 1.0);
+    itPrior[e.languageIndex("it")] *= 3.0;
+    e.setLayout(layout("it"));
+    e.startText(u("Domani è il mio "), itPrior);
+    const Result r = e.process(tapsFor(u("conoleanno")));
+    CHECK(r.autocorrect >= 0 && r.suggestions[r.autocorrect].word == u("compleanno"));
+}
+
+void testCapitalNames()
+{
+    // A capital after a word: a name, left alone (cant, wont and whats are
+    // stored as misspellings of can't, won't, what's); at a sentence start
+    // it is only the sentence's capital. Slips in unlikely letters are still
+    // fixed, and so are German nouns.
+    EngineParams p;
+    p.strength = Strength::Normal;
+    Engine e(p);
+    for (const char *l : {"en", "it", "de"})
+        e.addLanguage(dictDir + "/" + l + ".pfd");
+    e.setLayout(layout("en"));
+    std::vector<double> prior(3, 1.0);
+    prior[e.languageIndex("en")] *= 3.0;
+    auto space = [&](const std::string &before, const std::string &typed) {
+        e.startText(u(before), prior);
+        const Result r = e.process(tapsFor(u(typed)));
+        return r.autocorrect >= 0 ? s8(r.suggestions[r.autocorrect].word) : typed;
+    };
+    CHECK_EQ(space("Yesterday I met Mr ", "Cant"), "Cant");
+    CHECK_EQ(space("Yesterday I met Mr ", "Wont"), "Wont");
+    CHECK_EQ(space("Yesterday I met Mr ", "Whats"), "Whats");
+    CHECK_EQ(space("", "Cant"), "Can't");
+    CHECK_EQ(space("It was late. ", "Cant"), "Can't");
+    CHECK_EQ(space("I really ", "cant"), "can't");
+    for (const char *name : {"Bartle", "Vincenzi", "Norn"})
+        CHECK_EQ(space("Yesterday I went to see ", name), name);
+    // A slip in a word stored with its capital is fixed (Oreland: Ireland,
+    // a name too).
+    CHECK_EQ(space("Yesterday I went to see ", "Lomdon"), "London");
+    CHECK_EQ(space("Yesterday I went to see ", "Bqttle"), "Battle");
+    CHECK_EQ(space("Yesterday I went to see ", "Hpuse"), "House");
+    // All capitals: not a name's capital.
+    CHECK_EQ(space("Yesterday I really ", "CANT"), "CAN'T");
+
+    // German text: a capital is every noun's. A slip in one is fixed; a
+    // word stored in lower case is less likely (Hinger: Hunger more than
+    // hinter).
+    std::vector<double> de(3, 1.0);
+    de[e.languageIndex("de")] *= 3.0;
+    e.setLayout(layout("de"));
+    e.startText(u("Gestern war ich mit meinem "), de);
+    Result r = e.process(tapsFor(u("Freumd")));
+    CHECK(r.autocorrect >= 0 && r.suggestions[r.autocorrect].word == u("Freund"));
+    e.startText(u("Ich habe "), de);
+    r = e.process(tapsFor(u("Hinger")));
+    CHECK(r.autocorrect < 0 && !r.suggestions.empty() && r.suggestions[0].word == u("Hunger"));
+}
+
+void testStrengths()
+{
+    // The strengths share one model; Gentle asks a larger share of the
+    // probability (freind: friend at about 0.7).
+    Setup s({"en"});
+    s.engine.setStrength(Strength::Normal);
+    s.engine.startText(u("Yesterday after work I "));
+    CHECK_EQ(s.space("freind"), "friend");
+    s.engine.setStrength(Strength::Gentle);
+    s.engine.startText(u("Yesterday after work I "));
+    CHECK_EQ(s.space("freind"), "freind");
+    CHECK_EQ(s.space("becuase"), "because");
+    s.engine.setStrength(Strength::Normal);
+}
+
 int main(int argc, char **argv)
 {
     if (argc < 3) {
@@ -565,7 +737,11 @@ int main(int argc, char **argv)
     testDigits();
     testOtherLanguageMargin();
     testSingleLetterCase();
+    testContractions();
     testSplits();
+    testUnknownWords();
+    testCapitalNames();
+    testStrengths();
     testMoreLanguages();
     if (failures)
         std::printf("%d check(s) failed\n", failures);

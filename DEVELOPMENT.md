@@ -51,11 +51,13 @@ tools/pf rpm --version 0.1.0~alpha71   # phone RPM (sfdk), copied if configured
 
 The suite: typos in running text (en, it, de; fr, es) with the number row,
 uncertain taps and names mixed in; codes with a digit; words of another
-language in mixed texts; next words and keystrokes saved. Settings of one
-machine are in `~/.config/parrotfish-dev.ini` (`tools/pf config`): where
-results go (outside the repo), where `pf rpm` copies the RPM, the sfdk
-target, and more test texts of your own for the next-word cases (`[eval]`,
-`NAME = LANG:PATH`, one message per line).
+language in mixed texts; next words and keystrokes saved; real misspellings
+from your own lists. Settings of one machine are in
+`~/.config/parrotfish-dev.ini` (`tools/pf config`): where results go
+(outside the repo), where `pf rpm` copies the RPM, the sfdk target, more
+test texts of your own for the next-word cases (`[eval]`,
+`NAME = LANG:PATH`, one message per line), and lists of real misspellings
+for the `missp-NAME` cases (`[misspellings]`, `NAME = LANG:PATH`, below).
 
 Try words: `build/engine/pf-query -l data/layouts/it.layout -d build/data/it.pfd perche citta\'`
 
@@ -103,6 +105,24 @@ as the handler would; `-K` also gives the engine the other key, as the
 phone does since alpha70). `-L` adds the results by typed length (2, 3–4, 5+
 letters), as used for the thresholds by length. The last line sums up, with the word error rate before and
 after autocorrect; `bench-sweep.sh` prints it for each value of a parameter.
+
+Real misspellings, as people spell (recieve, propio, Vorraussetzung), not
+slips of the finger:
+
+```sh
+build/tests/sentence-bench -l data/layouts/phone-qwerty.layout -t tests/data/sentences-en.txt -m en \
+    -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd -N 75 -r 0 -W en-misspellings.tsv [-A]
+```
+
+`-W` reads a list (`misspelling<TAB>correct[<TAB>source<TAB>flags]`, `#`
+comments; flag `accents-only` for citta, Strasse) and types the words of the
+sentences that have one as one of them, as is: a share `-w` (1) of them, at
+most `-c` (3) times each word. A two-word correction (alot for "a lot")
+matches two words. `-A` types each pair once instead, after three words of
+a sentence. The rows "misspelling" and "missp. accents" and the summary say
+how many were fixed, changed to another word (wrong) or left. The lists
+are not in the repo (licences); `tools/pf suite` runs the ones named in
+`[misspellings]` as `missp-NAME`.
 
 Next words and completions (the word-pair data):
 
@@ -238,7 +258,14 @@ build`) and load it in `qmlscene-qt5` with `QML2_IMPORT_PATH` and
 ## Dictionary data
 
 `tools/data/build-dict.py` turns an AOSP wordlist into a memory-mapped `.pfd`
-file (format: `engine/include/parrotfish/dictformat.h`). It reads, from
+file (format: `engine/include/parrotfish/dictformat.h`). Besides the words,
+each file holds the language's letter model (section `LTRS`, 0.2–0.4 MB): a
+character 4-gram of the list's words without accents, so that a word missing
+from the list that looks like the language (a name) is left alone more often
+than random letters (`EngineParams::unknownLetterWeight`). Long letters one
+change from a word get less of that benefit, the longer the less
+(`unknownLongLetterCost`): those are mostly the word misspelled (recieve,
+goverment), not a new word. It reads, from
 `data/rules/`:
 
 | File | Content | Made by |

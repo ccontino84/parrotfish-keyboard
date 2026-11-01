@@ -34,8 +34,16 @@ struct EngineParams {
     // the probability (the lower of the two) is at least firstWordShare.
     double firstWordConfidence = 0.5;
     double firstWordShare = 0.7;
-    // Share of the probability the best correction needs.
-    double gentleConfidence = 0.5;
+    // Share of the probability the best correction needs. The strengths
+    // share one model and differ only here: Gentle asks more. Up to
+    // alpha85 Gentle had its own unknownBase (6, against 8) and 0.5;
+    // with one base, 0.875 (sentence-bench, Gentle, 5 languages x 2
+    // seeds, 2026-11-01): typos fixed 32.5 -> 32.3 %, fixed wrong 0.41 ->
+    // 0.26, unknown words changed 0.13 -> 0.16; real misspellings fixed
+    // the same or more (accents it +8.7, fr +3.6 points), fixed wrong
+    // lower (it 2.6 -> 0, de 0.9 -> 0.3). 0.85: more fixed, more names
+    // changed (0.19); 0.9: names as before, 2.4 points fewer fixed.
+    double gentleConfidence = 0.875;
     double normalConfidence = 0.5;
     // Normal and Strong ask more of shorter words, which have more
     // neighbours and are more often names (sentence-bench -L sweep,
@@ -91,11 +99,70 @@ struct EngineParams {
     // from the starting word-pair data (interpolated word-pair model).
     double pairWeight = 0.5;
     // Cost of "the typed letters are an intended word missing from the
-    // dictionaries": unknownBase + unknownPerLetter × letters, plus the taps.
-    double unknownBase = 6.0;
+    // dictionaries": unknownBase plus the taps, plus unknownLetterWeight ×
+    // (-log P(letters) − unknownLetterRef) by the language's letter model
+    // (Dictionary::letterCost; 16 nats: a word of the list of seven or eight
+    // letters), mixed over the languages by their weights. Letters that look
+    // like a word of the text's languages (a name: Kaito, Müller) make it
+    // likelier than unlikely ones (xqzt), so fewer names are changed.
+    // Without a letter model, with unknownLetterWeight 0, for a word's
+    // letters typed without its accents, or for a word of another language:
+    // unknownPerLetter × letters.
+    // Letters that look like a word and are one change from one (the
+    // likeliest fix) are mostly that word misspelled when they are long
+    // (recieve, goverment, propio), often a name when short (Ugo, Norn): what
+    // the letter model takes off unknownPerLetter × letters then shrinks by
+    // unknownLongLetterCost for each letter past unknownShortLength.
+    // sentence-bench -L, en/it/de/fr/es, 12 runs each, Normal (2026-11-01),
+    // per letter only -> letter model -> with the shrink: 44.4 -> 47.5 ->
+    // 51.9 % of typos fixed, 1.12 -> 0.98 -> 1.07 % fixed wrong, 1.23 ->
+    // 0.67 -> 0.91 % of unknown words changed (most of the rest are words
+    // without their accents); 3-4 letters: 47.2 -> 45.5 -> 45.5 % fixed,
+    // 3.8 -> 1.8 -> 1.8 % changed. Gentle 29.8 -> 34.1 -> 36.4, 0.63 ->
+    // 0.48 -> 0.51, 0.40 -> 0.23 -> 0.25. Real misspellings (-W, lists of
+    // common misspellings), fixed: en 41 -> 23 -> 40 %, it 57 -> 32 -> 55,
+    // de 51 -> 30 -> 51, fr 57 -> 25 -> 56, es 39 -> 23 -> 37; fixed wrong
+    // lower than per letter only. The gain is in typos with unlikely letters
+    // (h3llo, thisbis) and long typos; short typos that look like words are
+    // fixed less (they look like short names). Weights 0.35-0.45 do as
+    // well, 0.2 worse; set the level with unknownLetterRef:
+    // unknownBase also moves the accent fixes (perche). The shrink
+    // from 3 letters on (1 nat) fixes short typos as per letter only, at
+    // 1.95 % of 3-4-letter names changed; a cap on what the letter model
+    // takes off, at any length, does worse.
+    double unknownBase = 8.0;
     double unknownPerLetter = 0.5;
-    // Normal: an unknown word is less likely, so fixes apply more often.
-    double normalUnknownBase = 8.0;
+    double unknownLetterWeight = 0.4;
+    double unknownLetterRef = 16.0;
+    size_t unknownShortLength = 4;
+    double unknownLongLetterCost = 1.5;
+    // ... and when it is two changes away, from unknownTwoChangeLength
+    // letters (conoleanno: compleanno, letters that look Italian).
+    // sentence-bench (2026-11-01), off -> 9: real misspellings fixed +0.2
+    // to +0.6 points (en, fr, de, es), fixed wrong and unknown words
+    // changed the same; 8 and less: more fixed wrong (de 1.4 -> 1.6 %).
+    size_t unknownTwoChangeLength = 9;
+    // A word typed with a capital first letter (not all capitals) after a
+    // word, not at a sentence start, is rarely a word the dictionaries store
+    // in lower case (cant: can't) and often a name (I met Mr Cant), or a
+    // word they store with its capital (London, German nouns): the words
+    // stored in lower case cost capitalLowerCost nats more; in the
+    // languages that capitalise their nouns (German), where nouns made of
+    // verbs and adjectives (beim Essen, das Gute) and the polite Sie are
+    // capitalised too, capitalLowerCostNouns. Words stored only in lower
+    // case are typed with a capital after a word in 0.3-0.8 % of Tatoeba's
+    // (5-6 nats), 3-6 % of news and informal text (3 nats: titles, brands,
+    // missed sentence starts), German 4-5 %. sentence-bench -L, Normal
+    // (2026-11-01), 0 -> 4 (German 2): unknown words changed en 0.47 ->
+    // 0.18 %, it 1.37 -> 0.62, fr 1.38 -> 1.02, es 0.83 -> 0.53, de 0.70 ->
+    // 0.52; typos fixed 0 to -0.3 points, fixed wrong 0 to -0.2; next-word
+    // keystrokes saved +0.1 to +1.2 (a capital favours names and nouns).
+    // Real misspellings (-W, in news text) fixed -0.5 to -2.4 points, all
+    // of them capitalised words in titles (Cheif Editior). Costs 3 to 5 do
+    // about as well; 4 keeps Mr Cant (2 does not). German at 4: typos fixed
+    // -0.7 points.
+    double capitalLowerCost = 4.0;
+    double capitalLowerCostNouns = 2.0;
     // Tap distances up and down: 0 = in key widths, 1 = in key heights
     // (KeyModel heightShare). Also sets which keys are neighbours.
     double keyHeightShare = 0.0;

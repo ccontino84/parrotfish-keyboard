@@ -72,12 +72,25 @@ public:
     // first, with P(next | prev) on the 0..255 scale. Empty if none.
     std::vector<std::pair<std::u32string, uint8_t>> nextWords(uint32_t prev) const;
 
+    // The letter-pattern model (format::LetterModel): -log P(word) of a
+    // string as a word of this language, its end included; `folded` is
+    // lowercase without accents (Engine::fold). A letter the model doesn't
+    // know costs as much as an unseen one can. Negative if the file has no
+    // model.
+    double letterCost(const std::u32string &folded) const;
+    bool hasLetterModel() const { return m_letters != nullptr; }
+    // Mean letterCost per letter of the list's words.
+    double letterMeanCost() const { return m_letters ? m_letters->meanCost : 0.0; }
+
     // Calls f(node, word) for every terminal node (tests and tools).
     template<typename F> void forEachWord(F f) const;
 
 private:
     void close();
     bool parseWordParts(const std::string &text);
+    bool openSections(std::string *error, const std::string &path);
+    // The costs of the n-gram or context `key`, or null if not stored.
+    const uint8_t *letterEntry(uint32_t key) const;
     bool isPlainWord(const std::u32string &word) const;
     bool wordForm(const std::u32string &word, int suffixes, size_t parts) const;
 
@@ -104,6 +117,11 @@ private:
     const char *m_strings = nullptr;
     const format::PairRow *m_pairRows = nullptr;
     const format::PairEntry *m_pairEntries = nullptr;
+    const format::LetterModel *m_letters = nullptr;
+    const uint32_t *m_letterKeys = nullptr;
+    const uint8_t *m_letterCosts = nullptr;
+    // Letter → symbol, sorted by letter.
+    std::vector<std::pair<char32_t, uint8_t>> m_letterSymbols;
 };
 
 template<typename F>

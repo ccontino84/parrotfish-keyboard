@@ -10,6 +10,11 @@ foreach(entry ${PARROTFISH_LANGUAGES})
     list(GET parts 0 lang)
     list(GET parts 1 src)
     set(out ${CMAKE_CURRENT_BINARY_DIR}/${lang}.pfd)
+    # Optional, hand-written (not every language has one).
+    set(manual)
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.manual-misspellings)
+        set(manual ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.manual-misspellings)
+    endif()
     add_custom_command(
         OUTPUT ${out}
         COMMAND ${Python3_EXECUTABLE} -I ${PROJECT_SOURCE_DIR}/tools/data/build-dict.py
@@ -20,6 +25,7 @@ foreach(entry ${PARROTFISH_LANGUAGES})
                 ${CMAKE_CURRENT_SOURCE_DIR}/aosp/${src}_wordlist.combined.gz
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.rules
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.misspellings
+                ${manual}
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.supplement
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.boost
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.forms

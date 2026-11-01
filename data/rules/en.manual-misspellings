@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+# Hand-written: words of the wordlist that are almost always a misspelling
+# of `target` (here contractions typed without the apostrophe), corrected
+# like the ones in LANG.misspellings. Not for words that are common in
+# their own right (ill, id, lets, well, were: they keep the contraction as
+# a suggestion only).
+# plain	target
+cant	can't
+wont	won't
+whats	what's

@@ -4,6 +4,7 @@
 """Build a Parrotfish dictionary (.pfd) from an AOSP LatinIME wordlist.
 
 Usage: build-dict.py LANG WORDLIST.combined.gz RULES_DIR OUT.pfd [--pairs PAIRS.tsv.gz]
+                     [--letter-order N] [--letter-min-count N]
 
 The output is a little-endian binary file that the engine memory-maps.
 The layout is documented in engine/include/parrotfish/dictformat.h; keep
@@ -18,7 +19,7 @@ import struct
 import sys
 import unicodedata
 
-FORMAT_VERSION = 3
+FORMAT_VERSION = 4
 MAGIC = b"PFDICT\0\0"
 
 # Attribute flags (dictformat.h: AttrFlag)
@@ -41,6 +42,16 @@ RULE_FINAL = 1 << 0          # only at the end of the word
 # AOSP frequencies: f=255 is probability 1, each step divides it by 1.15
 # (dictionaries/sample.combined).
 STEP = math.log(1.15)
+
+# Optional sections after the fixed ones (dictformat.h: Section): tag, version.
+SECTION_LETTERS = (b"LTRS", 1)
+# The letter model (dictformat.h: LetterModel): symbols of 6 bits (0 none,
+# 1 the word boundary), costs in steps of 1/16 nat, 255 for none.
+LETTER_SYMBOLS = 64
+LETTER_STEP = 1.0 / 16
+LETTER_NONE = 255
+LETTER_ORDER = 4        # 3 letters of context (5: no better, three times the size)
+LETTER_MIN_COUNT = 2
 
 
 def fold(word):
@@ -133,7 +144,8 @@ def apply_boosts(words, path):
 
 
 def mark_misspellings(words, path):
-    """Apply RULES_DIR/LANG.misspellings (from find-accent-misspellings.py)."""
+    """Apply RULES_DIR/LANG.misspellings (from find-accent-misspellings.py)
+    or LANG.manual-misspellings (hand-written)."""
     marked = 0
     for line in read_list(path):
         plain, target = line.split("\t")[:2]
@@ -224,6 +236,128 @@ def read_pairs(path, words, order):
     return rows
 
 
+def letter_model(words, order, min_count):
+    """The letter-pattern model of the language (dictformat.h: LetterModel).
+
+    A character n-gram over the word list's distinct words, lowercase and
+    without accents (as the engine folds typed letters), each word once: an
+    unknown word is a rare one, so the shape of the list's words matters,
+    not how often they are used. Interpolated Witten-Bell estimates, stored
+    in back-off form (ARPA): for a kept n-gram -log P(c | h), for a context
+    -log of its back-off weight. N-grams of the full order seen fewer than
+    `min_count` times are dropped and their mass moved to the back-off (a
+    quarter smaller; dropping shorter ones too changes more names).
+
+    Returns (section bytes, number of n-grams, mean cost per letter).
+    """
+    train = set()
+    for w, e in words.items():
+        if e["attrs"] & ATTR_MISSPELLING or not all(c.isalpha() or c in "'-" for c in w):
+            continue
+        train.add("".join(base_char(c) for c in w.lower()))
+    train = sorted(train)   # the same file from the same list
+    freq = collections.Counter(c for w in train for c in w)
+    if len(freq) > LETTER_SYMBOLS - 2:
+        sys.exit("too many letters for the letter model")
+    # Symbol 0: none (key padding), 1: the word boundary, then by frequency.
+    symbols = [c for c, _ in freq.most_common()]
+    sym = {c: i + 2 for i, c in enumerate(symbols)}
+
+    # counts[k][(h, c)]: c after the k-1 symbols h (tuples of symbol ids).
+    counts = [None] + [collections.Counter() for _ in range(order)]
+    for w in train:
+        s = (1,) + tuple(sym[c] for c in w) + (1,)
+        for i in range(1, len(s)):
+            for k in range(1, min(order, i + 1) + 1):
+                counts[k][(s[i - k + 1:i], s[i])] += 1
+    # Per context: total count and number of distinct followers.
+    totals = [None] + [collections.defaultdict(lambda: [0, 0]) for _ in range(order)]
+    for k in range(1, order + 1):
+        for (h, c), n in counts[k].items():
+            t = totals[k][h]
+            t[0] += n
+            t[1] += 1
+
+    # Interpolated Witten-Bell: P(c | h) = (n(h c) + T(h) P(c | h')) / (C(h) + T(h)),
+    # h' = h without its first symbol; below the unigram, uniform.
+    uniform = 1.0 / (len(symbols) + 1)
+    prob = [None] + [{} for _ in range(order)]
+    for k in range(1, order + 1):
+        for (h, c), n in counts[k].items():
+            if k == order and n < min_count:
+                continue
+            lower = prob[k - 1][(h[1:], c)] if k > 1 else uniform
+            total, types = totals[k][h]
+            prob[k][(h, c)] = (n + types * lower) / (total + types)
+
+    def backed_off(h, c):
+        """P(c | h) of the stored model."""
+        weight = 1.0
+        while True:
+            p = prob[len(h) + 1].get((h, c))
+            if p is not None:
+                return weight * p
+            if not h:
+                return weight * uniform
+            weight *= bow.get(h, 1.0)
+            h = h[1:]
+
+    # Back-off weights, shorter contexts first: the mass the kept n-grams
+    # leave, spread like the shorter context's estimates.
+    bow = {}
+    for k in range(2, order + 1):
+        kept = collections.defaultdict(lambda: [0.0, 0.0])
+        for (h, c), p in prob[k].items():
+            kept[h][0] += p
+            kept[h][1] += backed_off(h[1:], c)
+        for h, (p, lower) in kept.items():
+            bow[h] = max(1e-9, 1.0 - p) / max(1e-9, 1.0 - lower)
+
+    def quant(cost):
+        return max(0, min(254, round(cost / LETTER_STEP)))
+
+    # One sorted key per n-gram or context: symbol ids, 6 bits each, the
+    # predicted symbol lowest.
+    def key(seq):
+        k = 0
+        for s in seq:
+            k = k << 6 | s
+        return k
+    entries = {}
+    for k in range(1, order + 1):
+        for (h, c), p in prob[k].items():
+            entries[key(h + (c,))] = [quant(-math.log(p)), 0]
+    for h, b in bow.items():
+        e = entries.setdefault(key(h), [LETTER_NONE, 0])   # a context that is no kept n-gram
+        e[1] = quant(-math.log(b))
+    keys = sorted(entries)
+
+    # Mean cost per letter of the list's words (end of word included).
+    letters = cost = 0
+    for w in train:
+        s = (1,) + tuple(sym[c] for c in w) + (1,)
+        for i in range(1, len(s)):
+            cost -= math.log(backed_off(s[max(0, i - order + 1):i], s[i]))
+        letters += len(w)
+    mean = cost / letters
+
+    head_fmt = "<IIIIIIff"
+    off = struct.calcsize(head_fmt)
+    sym_off = off
+    off += 4 * len(symbols)
+    off = (off + 7) & ~7
+    keys_off = off
+    off += 4 * len(keys)
+    values_off = off
+    body = struct.pack(head_fmt, order, len(symbols) + 2, sym_off, len(keys), keys_off, values_off,
+                       LETTER_STEP, mean)
+    body += b"".join(struct.pack("<I", ord(c)) for c in symbols)
+    body += b"\0" * (keys_off - len(body))
+    body += b"".join(struct.pack("<I", k) for k in keys)
+    body += b"".join(struct.pack("<BB", *entries[k]) for k in keys)
+    return bytes(body), len(keys), mean
+
+
 class Node:
     __slots__ = ("children", "freq", "terminal", "best", "height", "index", "word")
 
@@ -284,7 +418,11 @@ def main():
     ap.add_argument("rules_dir")
     ap.add_argument("out")
     ap.add_argument("--pairs")
+    ap.add_argument("--letter-order", type=int, default=LETTER_ORDER)
+    ap.add_argument("--letter-min-count", type=int, default=LETTER_MIN_COUNT)
     args = ap.parse_args()
+    if not 1 <= args.letter_order <= 5:
+        sys.exit("--letter-order: 1 to 5")
 
     words = parse_aosp(args.wordlist)
     # `min-freq N` in LANG.rules drops the rare entries of a list padded
@@ -298,6 +436,7 @@ def main():
     supplemented = add_supplement(words, f"{args.rules_dir}/{args.lang}.supplement")
     forms = add_supplement(words, f"{args.rules_dir}/{args.lang}.forms")
     marked = mark_misspellings(words, f"{args.rules_dir}/{args.lang}.misspellings")
+    marked += mark_misspellings(words, f"{args.rules_dir}/{args.lang}.manual-misspellings")
     boosted = apply_boosts(words, f"{args.rules_dir}/{args.lang}.boost")
     rules = read_rules(f"{args.rules_dir}/{args.lang}.rules")
 
@@ -379,16 +518,25 @@ def main():
             entry_bytes += struct.pack("<IB3x", word_string(order[node].word), f)
             entries += 1
 
+    letters, letter_ngrams, letter_mean = letter_model(words, args.letter_order, args.letter_min_count)
+    optional = [(SECTION_LETTERS, letters)]
+
     lang = args.lang.encode()[:7].ljust(8, b"\0")
-    header_fmt = "<8sII8sIfIIIIIIIIIIIIIIII"
+    header_fmt = "<8sII8sIfIIIIIIIIIIIIIIIIII"
     header_size = struct.calcsize(header_fmt)
     off = header_size
     sections = []
-    blobs = (nodes, alpha, attr_bytes, rule_bytes, strings, row_bytes, entry_bytes)
+    blobs = [nodes, alpha, attr_bytes, rule_bytes, strings, row_bytes, entry_bytes] + [b for _, b in optional]
     for blob in blobs:
         off = (off + 7) & ~7
         sections.append(off)
         off += len(blob)
+    # The table of optional sections, last.
+    table_off = (off + 7) & ~7
+    table = b"".join(struct.pack("<4sIII", tag, version, start, len(blob))
+                     for ((tag, version), blob), start in zip(optional, sections[7:]))
+    blobs.append(table)
+    sections.append(table_off)
 
     header = struct.pack(header_fmt, MAGIC, FORMAT_VERSION, header_size, lang,
                          sum(1 for e in words.values() if not e["attrs"] & ATTR_MISSPELLING),
@@ -400,7 +548,7 @@ def main():
                          len(strings), sections[4],
                          len(pair_rows), sections[5],
                          entries, sections[6],
-                         parts_ref, 0)
+                         parts_ref, len(optional), table_off, 0)
     out = bytearray(header)
     for blob, start in zip(blobs, sections):
         out += b"\0" * (start - len(out))
@@ -413,6 +561,7 @@ def main():
           f"{len(order)} nodes, "
           f"{len(alphabet)} chars, {len(attrs)} attrs ({marked} accent misspellings), "
           f"{len(rules)} rules, {len(pair_rows)} pair rows ({entries} next words), "
+          f"letter model {letter_ngrams} n-grams ({len(letters) / 1e6:.2f} MB, {letter_mean:.2f} nats a letter), "
           f"{len(out) / 1e6:.1f} MB")
 
 

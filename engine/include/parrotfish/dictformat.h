@@ -13,7 +13,7 @@ namespace parrotfish {
 namespace format {
 
 constexpr char Magic[8] = {'P', 'F', 'D', 'I', 'C', 'T', 0, 0};
-constexpr uint32_t FormatVersion = 3;
+constexpr uint32_t FormatVersion = 4;
 
 struct Header {
     char magic[8];
@@ -33,7 +33,17 @@ struct Header {
     // line (Dictionary::isWordForm): 1 + their offset in the strings
     // section, or 0 for none (files made before them).
     uint32_t wordParts;
+    // Optional sections (Section), each with its own version: a reader
+    // skips the tags it doesn't know and the versions it can't read.
+    uint32_t sectionCount, sectionOffset;
     uint32_t reserved;
+};
+
+struct Section {
+    char tag[4];
+    uint32_t version;
+    uint32_t offset;        // from the start of the file, 8-byte aligned
+    uint32_t size;          // bytes
 };
 
 // Trie node. Children of a node are contiguous, sorted by `best`
@@ -99,6 +109,29 @@ struct PairEntry {
     uint32_t word;          // offset of the next word in the strings section
     uint8_t freq;           // P(next | prev) on the 0..255 scale
     uint8_t reserved[3];
+};
+
+// The letter-pattern model (section `LTRS`, version 1): a character n-gram
+// of the list's words, lowercase without accents (AlphabetEntry::base),
+// for words missing from the list (names). Back-off form: a kept n-gram
+// has -log P(c | h); a context has -log of its back-off weight. Symbols:
+// 0 none, 1 the word boundary, 2.. the letters (`symbols`). An n-gram's key
+// is its symbols, 6 bits each, the last (predicted) one lowest; the keys
+// are sorted, the costs in the same order.
+constexpr char LettersTag[4] = {'L', 'T', 'R', 'S'};
+constexpr uint32_t LettersVersion = 1;
+constexpr uint32_t LetterBits = 6;
+constexpr uint8_t LetterNone = 255;   // no cost stored (a context only)
+
+struct LetterModel {
+    uint32_t order;         // symbols per n-gram, at most 5
+    uint32_t symbolCount;   // including 0 and 1
+    uint32_t symbolsOffset; // from the section's start: uint32_t code points of symbols 2..
+    uint32_t keyCount;
+    uint32_t keysOffset;    // uint32_t keys
+    uint32_t costsOffset;   // per key: uint8_t cost, uint8_t back-off cost
+    float step;             // nats per cost unit
+    float meanCost;         // mean -log P per letter of the list's words (ends included)
 };
 
 // AOSP frequencies: 255 is probability 1, each step down divides by 1.15.

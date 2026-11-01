@@ -153,6 +153,8 @@ Result Engine::process(const std::vector<Tap> &taps) const
     const std::u32string typedLower = lower(r.typed);
     std::u32string caseFix;   // the stored capitalisation, if it differs (haus → Haus)
     bool wordInSomeLanguage = false;
+    bool typedHasShortcut = false;   // id: also I'd (Strong leaves it alone)
+    bool validAsTyped = false;       // not only in another case (jaime: Jaime only)
     for (size_t i = 0; i < m_dicts.size(); ++i) {
         std::u32string stored;
         const uint32_t node = m_dicts[i]->find(r.typed, &stored);
@@ -163,10 +165,25 @@ Result Engine::process(const std::vector<Tap> &taps) const
         if (w[i] < m_params.validThreshold)
             continue;
         r.typedIsWord = true;
-        if (stored != r.typed && lower(stored) == typedLower && caseFix.empty()
-                && applyCase(stored, taps) != r.typed)
+        if (node && (m_dicts[i]->attributes(node) & format::AttrShortcut))
+            typedHasShortcut = true;
+        const bool otherCase = node && stored != r.typed && lower(stored) == typedLower
+                               && applyCase(stored, taps) != r.typed;
+        if (!otherCase)
+            validAsTyped = true;
+        else if (caseFix.empty())
             caseFix = applyCase(stored, taps);
     }
+
+    // A capital after a word (not all capitals): a name, or a word stored
+    // with its capital, rarely a word stored in lower case.
+    const bool capital = !m_context.sentenceStart && !m_context.prev.empty() && taps[0].upper
+                         && !std::all_of(taps.begin(), taps.end(), [](const Tap &t) { return t.upper; });
+    auto capitalCost = [&](size_t dict, const std::u32string &stored) {
+        if (!capital || stored.empty() || utf8::isUpper(stored[0]))
+            return 0.0;
+        return m_dicts[dict]->language() == "de" ? m_params.capitalLowerCostNouns : m_params.capitalLowerCost;
+    };
 
     // Search every language, weighted by its probability, and merge.
     // Spellings that differ only in case (zweiten, Zweiten) are one
@@ -251,7 +268,14 @@ Result Engine::process(const std::vector<Tap> &taps) const
             }
         }
 
-        for (const Candidate &c : cands) {
+        for (Candidate &c : cands) {
+            // A listed misspelling typed with a capital after a word is not
+            // the habit (cant for can't) but likely a name (Mr Cant): no
+            // bonus for its target.
+            const double capitalExtra = capitalCost(i, c.word);
+            c.cost += capitalExtra;
+            if (capitalExtra > 0 && c.viaTarget && c.changes == 0 && (c.attrs & format::AttrMisspelling))
+                c.cost += m_params.corrector.exactMisspellingBonus;
             bestCost = std::min(bestCost, c.cost);
             const std::u32string key = lower(c.word);
             auto it = std::find_if(merged.begin(), merged.end(),
@@ -319,7 +343,7 @@ Result Engine::process(const std::vector<Tap> &taps) const
                 if (!std::isfinite(tapCost))
                     continue;
                 const uint32_t prev = m_context.prev.empty() || m_context.sentenceStart ? 0 : d.find(m_context.prev);
-                const double cost = tapCost + extra - std::log(w[i])
+                const double cost = tapCost + extra - std::log(w[i]) + capitalCost(i, ls)
                         - m_params.corrector.lmWeight * (logProb(d, ln, ls, prev) + logProb(d, rn, rs, ln));
                 const std::u32string word = ls + U' ' + rs;
                 const std::u32string key = lower(word);
@@ -350,19 +374,6 @@ Result Engine::process(const std::vector<Tap> &taps) const
         }
     }
 
-    // The "intended word missing from the dictionaries" hypothesis.
-    double unknownProb = 0;
-    if (!r.typedIsWord) {
-        double tapCost = 0;
-        for (const Tap &t : taps) {
-            const int k = m_keys.indexOf(t.ch);
-            tapCost += k >= 0 ? -std::log(m_keys.probability(k, k)) : 0.0;
-        }
-        const double base = m_params.strength >= Strength::Normal ? m_params.normalUnknownBase
-                                                                  : m_params.unknownBase;
-        unknownProb = std::exp(-(tapCost + base + m_params.unknownPerLetter * taps.size()));
-    }
-
     // A digit in the word (typed on the number row: h3llo) can only be a
     // slip onto the digit: the fix is the word as typed with a letter in the
     // digit's place. Other words are only offered (any other fix turns names
@@ -384,6 +395,75 @@ Result Engine::process(const std::vector<Tap> &taps) const
                 return false;
         return true;
     };
+
+    // Letters that are a word only in another case (jaime: the name Jaime,
+    // mn: MN) are the user's word with a capital only if that is the
+    // likeliest reading; else (j'aime, m'n) the candidates compete as for
+    // any other letters.
+    if (r.typedIsWord && !validAsTyped) {
+        const Merged *likeliest = nullptr;
+        for (const Merged &m : merged)
+            if (canFix(m.s) && (!likeliest || m.prob > likeliest->prob))
+                likeliest = &m;
+        if (likeliest && likeliest->key != typedLower) {
+            r.typedIsWord = false;
+            caseFix.clear();
+        }
+    }
+
+    // The "intended word missing from the dictionaries" hypothesis: its
+    // letters cost by how much they look like a word of the likely
+    // languages (Kaito less than xqzt), mixed by the languages' weights as
+    // the words are. Not when they are a word's but for accents,
+    // apostrophes or spelling rules (garcon, perche, strasse): the letter
+    // model knows those letters from that word; nor when they are a word of
+    // a less likely language (thier, a German surname, in English text): not
+    // a missing word, otherLanguageMargin decides. probEqual: all languages
+    // equally likely (the first word).
+    double unknownProb = 0, unknownProbEqual = 0;
+    if (!r.typedIsWord) {
+        double tapCost = 0;
+        for (const Tap &t : taps) {
+            const int k = m_keys.indexOf(t.ch);
+            tapCost += k >= 0 ? -std::log(m_keys.probability(k, k)) : 0.0;
+        }
+        const double base = m_params.unknownBase;
+        const bool spelling = std::any_of(merged.begin(), merged.end(), [&](const Merged &m) {
+            return canFix(m.s) && m.s.changes == 0;
+        });
+        const bool useLetters = m_params.unknownLetterWeight > 0 && !spelling && !wordInSomeLanguage;
+        // Long letters one change from a word are mostly that word
+        // misspelled (recieve, goverment), short ones are often new words
+        // (Ugo, Norn): when the likeliest fix is one word one change away,
+        // what the letter model takes off the cost per letter shrinks with
+        // each letter past unknownShortLength.
+        const Merged *likeliest = nullptr;
+        for (const Merged &m : merged)
+            if (canFix(m.s) && (!likeliest || m.prob > likeliest->prob))
+                likeliest = &m;
+        const bool nearWord = likeliest && (likeliest->s.changes <= 1
+                                            || (likeliest->s.changes == 2 && taps.size() >= m_params.unknownTwoChangeLength))
+                              && likeliest->key.find(U' ') == std::u32string::npos;
+        const double flat = m_params.unknownPerLetter * taps.size();
+        const double longer = nearWord && taps.size() > m_params.unknownShortLength
+                              ? m_params.unknownLongLetterCost * (taps.size() - m_params.unknownShortLength)
+                              : 0.0;
+        double mixed = 0, equal = 0;
+        for (size_t i = 0; i < m_dicts.size(); ++i) {
+            const double letters = useLetters ? m_dicts[i]->letterCost(typedFolded) : -1.0;
+            double cost = flat;
+            if (letters >= 0) {
+                cost = m_params.unknownLetterWeight * (letters - m_params.unknownLetterRef);
+                if (cost < flat)
+                    cost = std::min(flat, cost + longer);
+            }
+            const double p = std::exp(-cost);
+            mixed += w[i] * p;
+            equal += p / m_dicts.size();
+        }
+        unknownProb = std::exp(-(tapCost + base)) * mixed;
+        unknownProbEqual = std::exp(-(tapCost + base)) * equal;
+    }
 
     // Completions don't compete with corrections for confidence: they are
     // words the user may still be typing.
@@ -444,7 +524,7 @@ Result Engine::process(const std::vector<Tap> &taps) const
     if (!languageOk && m_textWords == 0 && bestWeight >= m_params.firstWordConfidence) {
         // The first word: the same correction whichever language the text
         // is in, and sure enough with the lean and without it.
-        double totalEqual = unknownProb, bestEqual = 0, topEqual = 0;
+        double totalEqual = unknownProbEqual, bestEqual = 0, topEqual = 0;
         for (const Merged &m : merged) {
             if (m.s.completion)
                 continue;
@@ -496,9 +576,10 @@ Result Engine::process(const std::vector<Tap> &taps) const
     bool apply = false;
     if (r.typedIsWord) {
         // Only a capitalisation fix (haus → Haus) replaces a valid word, and
-        // with Strong a much likelier word one slip away (after a word).
+        // with Strong a much likelier word one slip away (after a word), but
+        // not a word that also stands for another (id: I'd, ill: I'll).
         apply = !caseFix.empty() && best.word == caseFix;
-        if (!apply && m_params.strength == Strength::Strong && !m_context.prev.empty()
+        if (!apply && m_params.strength == Strength::Strong && !typedHasShortcut && !m_context.prev.empty()
                 && !m_context.sentenceStart
                 && taps.size() >= m_params.strongMinLength
                 && letters(best.word) != letters(r.typed)
@@ -721,9 +802,16 @@ bool setParam(EngineParams &p, const std::string &assignment)
     else if (name == "pairWeight") p.pairWeight = v;
     else if (name == "gentleShortLength") p.gentleShortLength = static_cast<size_t>(v);
     else if (name == "completions") p.corrector.completions = v != 0;
+    else if (name == "exactMisspellingBonus") p.corrector.exactMisspellingBonus = static_cast<float>(v);
     else if (name == "unknownBase") p.unknownBase = v;
     else if (name == "unknownPerLetter") p.unknownPerLetter = v;
-    else if (name == "normalUnknownBase") p.normalUnknownBase = v;
+    else if (name == "unknownLetterWeight") p.unknownLetterWeight = v;
+    else if (name == "unknownLetterRef") p.unknownLetterRef = v;
+    else if (name == "unknownShortLength") p.unknownShortLength = static_cast<size_t>(v);
+    else if (name == "unknownTwoChangeLength") p.unknownTwoChangeLength = static_cast<size_t>(v);
+    else if (name == "unknownLongLetterCost") p.unknownLongLetterCost = v;
+    else if (name == "capitalLowerCost") p.capitalLowerCost = v;
+    else if (name == "capitalLowerCostNouns") p.capitalLowerCostNouns = v;
     else if (name == "keyHeightShare") p.keyHeightShare = v;
     else if (name == "searchMargin") p.searchMargin = v;
     else if (name == "searchMinWeight") p.searchMinWeight = v;

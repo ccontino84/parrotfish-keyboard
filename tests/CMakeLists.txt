@@ -17,6 +17,13 @@ add_executable(engine-test unit/engine-test.cpp)
 target_link_libraries(engine-test PRIVATE parrotfish-engine)
 add_dependencies(engine-test dictionaries)
 add_test(NAME engine COMMAND engine-test ${PROJECT_BINARY_DIR}/data ${PROJECT_SOURCE_DIR}/data/layouts)
+# sentence-bench -W: real misspellings typed after a few words of context.
+add_test(NAME sentence-bench-misspellings
+         COMMAND sentence-bench -l ${PROJECT_SOURCE_DIR}/data/layouts/phone-qwerty.layout
+                 -t ${CMAKE_CURRENT_SOURCE_DIR}/data/tatoeba-en.txt -d ${PROJECT_BINARY_DIR}/data/en.pfd
+                 -n 20 -r 0 -W ${CMAKE_CURRENT_SOURCE_DIR}/data/misspellings-smoke.tsv -A)
+set_tests_properties(sentence-bench-misspellings PROPERTIES
+                     PASS_REGULAR_EXPRESSION "misspelling +4 typed, 0 words in some language, of the rest fixed")
 
 # The QML tests (tests/qml): the handler with the plugin, on the PC.
 find_program(QMLTESTRUNNER NAMES qmltestrunner-qt5 qmltestrunner)

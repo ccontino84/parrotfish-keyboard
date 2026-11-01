@@ -27,6 +27,10 @@ Settings that belong to one machine live outside the repo, in
   [eval]
   ; more next-word test texts, one message per line: NAME = LANG:PATH
   ; mine-en = en:~/texts/messages-en.txt
+  [misspellings]
+  ; lists of real misspellings (misspelling TAB correct per line) for the
+  ; suite's missp-NAME cases: NAME = LANG:PATH
+  ; en = en:~/lists/en.dev.tsv
 
 The suite's results stay in the results folder, never in the repo.
 """
@@ -48,7 +52,8 @@ PHONE_LAYOUT = "data/layouts/phone-qwerty.layout"
 # Metrics: True if higher is better, False if lower is better, None: neither.
 DIRECTION = {
     "fixed": True, "wrong": False, "correct_changed": False, "unknown_changed": False,
-    "wer_after": False, "top1": True, "top3": True, "ksr": True, "unknown": None,
+    "wer_after": False, "missp_fixed": True, "missp_wrong": False, "missp_left": None,
+    "missp_acc_fixed": True, "missp_acc_wrong": False, "missp_acc_left": None, "top1": True, "top3": True, "ksr": True, "unknown": None,
 }
 
 
@@ -97,6 +102,12 @@ def parse_summary(text):
     else:
         pats = {"top1": r"next word top1 ([\d.]+)%", "top3": r"next word top1 [\d.]+% top3 ([\d.]+)%",
                 "ksr": r"KSR ([\d.]+)%", "unknown": r"unknown ([\d.]+)%"}
+    if "misspellings fixed" in line:
+        pats.update({"missp_fixed": r"misspellings fixed ([\d.]+)%", "missp_wrong": r"misspellings fixed [\d.]+% wrong ([\d.]+)%",
+                     "missp_left": r"misspellings fixed [\d.]+% wrong [\d.]+% left ([\d.]+)%",
+                     "missp_acc_fixed": r"accents only fixed ([\d.]+)%",
+                     "missp_acc_wrong": r"accents only fixed [\d.]+% wrong ([\d.]+)%",
+                     "missp_acc_left": r"accents only fixed [\d.]+% wrong [\d.]+% left ([\d.]+)%"})
     for k, p in pats.items():
         f = re.search(p, line)
         if f:
@@ -133,6 +144,22 @@ def suite_cases(build_dir, cfg, tmp):
                      f"tests/data/tatoeba-{b}.txt", "-n", "300", "-s", "1"], stdout=f, check=True)
             cases.append((f"mixed-{kind}-{a}-{b}", [sentence, "-l", PHONE_LAYOUT, "-t", path] +
                           d(["en", "it", "de"]) + ["-m", a, "-r", "0"], ["correct_changed"]))
+    # Real misspellings (recieve, propio) from lists of this machine
+    # ([misspellings] in the settings), in running text: no other typos.
+    if cfg.has_section("misspellings"):
+        for name, value in cfg.items("misspellings"):
+            lang, _, path = value.partition(":")
+            lang, path = lang.strip(), os.path.expanduser(path.strip())
+            langs = [lang] + ([l for l in ["en", "it", "de"] if l != lang][:2] if lang in ("en", "it", "de")
+                              else [l for l in ["fr", "es", "en"] if l != lang][:2] if lang in ("fr", "es")
+                              else ["en"])
+            text = f"tests/data/sentences-{lang.split('_')[0]}.txt"
+            if os.path.exists(path) and os.path.exists(os.path.join(REPO, text)) \
+                    and all(os.path.exists(f"{build_dir}/data/{l}.pfd") for l in langs):
+                cases.append((f"missp-{name}", [sentence, "-l", PHONE_LAYOUT, "-t", text] + d(langs) +
+                              ["-m", lang, "-N", "75", "-r", "0", "-W", path],
+                              ["missp_fixed", "missp_wrong", "missp_left", "missp_acc_fixed", "missp_acc_wrong",
+                               "missp_acc_left", "correct_changed"]))
     # Next words and keystrokes saved.
     for lang in ["en", "it", "de"]:
         for src in ["tatoeba", "sentences"]:
@@ -344,9 +371,10 @@ def cmd_config(args, cfg):
     print(f"results:  {setting(cfg, 'paths', 'results', '~/.local/share/parrotfish-dev/results')}")
     print(f"rpm_copy: {setting(cfg, 'paths', 'rpm_copy') or '(none)'}")
     print(f"target:   {setting(cfg, 'sfdk', 'target', 'SailfishOS-5.1.0.11-aarch64')}")
-    if cfg.has_section("eval"):
-        for name, value in cfg.items("eval"):
-            print(f"eval:     {name} = {value}")
+    for section in ["eval", "misspellings"]:
+        if cfg.has_section(section):
+            for name, value in cfg.items(section):
+                print(f"{section + ':':9} {name} = {value}")
     return 0
 
 

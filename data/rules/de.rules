@@ -19,3 +19,10 @@ capitalised-nouns
 # wusste). Such a word is an old spelling when the list has the ss form
 # and the corpus prefers it (Fuß, Spaß, groß stay: ß after a long vowel).
 respell ß(?![aeiouäöüy]) ss
+
+# Compounds (plan 6g): closed compounds of dictionary words are likely words
+# (tweedehandsauto, kaputtgemacht) rather than two words with a space missing,
+# unless the two words are likelier (heefteen: heeft een): `unknown` makes them
+# a missing word made of known parts (compoundBonus), not words by themselves.
+# Parts of 4+ letters, up to three, joined directly or by a linking letter.
+compound 4 3 link=s,es,n,en,er,e unknown

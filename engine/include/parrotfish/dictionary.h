@@ -65,6 +65,10 @@ public:
     // (parkki + paikkaa), or parts joined by hyphens (juna-asemalta). It
     // only lets typed text stand; such forms are never suggested.
     bool isWordForm(const std::u32string &word) const;
+    // Letters that are a compound of dictionary words where the rules say
+    // compounds are not words by themselves (`compound ... unknown`): a
+    // word missing from the dictionary, made of known parts (plan 6g).
+    bool isCompound(const std::u32string &word) const;
     bool hasWordForms() const { return !m_suffixes.empty() || m_compoundMin > 0; }
 
     // Starting next-word data: the words that most often follow `prev` (a
@@ -92,7 +96,7 @@ private:
     // The costs of the n-gram or context `key`, or null if not stored.
     const uint8_t *letterEntry(uint32_t key) const;
     bool isPlainWord(const std::u32string &word) const;
-    bool wordForm(const std::u32string &word, int suffixes, size_t parts) const;
+    bool wordForm(const std::u32string &word, int suffixes, size_t parts, bool compounds) const;
 
     // `suffix ENDING... [after=LETTERS] [drop=LETTERS]`: the endings attach
     // to a word, after one of LETTERS only, and may replace a final letter
@@ -106,6 +110,10 @@ private:
     // `compound MIN PARTS`: up to PARTS words of at least MIN letters.
     size_t m_compoundMin = 0;
     size_t m_compoundParts = 0;
+    // Letters that may join two parts of a compound (German, Dutch,
+    // Scandinavian -s-: Arbeitsplatz, samenwerkingsovereenkomst).
+    std::vector<std::u32string> m_compoundLinks;
+    bool m_compoundsUnknown = false;
 
     const uint8_t *m_data = nullptr;
     size_t m_size = 0;

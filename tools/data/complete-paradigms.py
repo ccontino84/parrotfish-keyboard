@@ -16,8 +16,9 @@ class and tense. A verb qualifies when:
 2. it is not in RULES_DIR/LANG.paradigm-skip (irregular verbs).
 
 In each tense with at least two attested forms, the missing forms are added,
-unless they differ from an existing word only by accents (de: fahrst next to
-fährst) or are listed in the skip file. When two classes share an
+unless they differ only by accents from an existing word that is not a form
+of the same verb (de: fahrst next to fährst; it: parlo stays next to parlò)
+or are listed in the skip file. When two classes share an
 infinitive ending (it: dormire, finire), each tense takes the class with
 more attested forms of its own.
 
@@ -79,6 +80,8 @@ def join(stem, ending, cls, spell):
         return stem + ending[1:] if len(ending) > 1 else stem
     if "drop-i-after-cg-before-e" in spell and stem[-2:] in ("ci", "gi") and e0 in "eèé":
         return stem[:-1] + ending
+    if "qu-gu-c-before-e" in spell and stem[-1:] in ("c", "g", "ç") and e0 in "eéê":
+        return stem[:-1] + {"c": "qu", "g": "gu", "ç": "c"}[stem[-1]] + ending
     if "e-after-dt-before-st-t" in spell and stem[-1:] in ("d", "t") and ending[:2] in ("st", "t", "te"):
         return stem + "e" + ending
     if "drop-s-after-sz-before-st" in spell and stem[-1:] in ("s", "ß", "z", "x") and ending == "st":
@@ -152,6 +155,9 @@ def main():
             if not group:
                 continue
             verbs += 1
+            # Every form of this verb: an accent variant that is one of them
+            # (it: parlò, past, next to parlo, present) blocks nothing.
+            paradigm = {join(stem, e, c, spell) for c in group for t in c["tenses"].values() for e in t}
             tense_names = {t for c in group for t in c["tenses"]}
             for tense in tense_names:
                 options = []
@@ -173,8 +179,8 @@ def main():
                 for f in forms:
                     if f in known or f in skip or f in generated:
                         continue
-                    if fold(f) in folded:
-                        continue   # an accent variant of an existing word
+                    if folded.get(fold(f), set()) - paradigm:
+                        continue   # an accent variant of another existing word
                     seen = counts.get(f, 0)
                     freq = max(1, min(150, round(a + b * math.log(seen / total * 1e6)))) if seen else 1
                     generated[f] = (freq, f"{w} {tense} ({c['name']}), corpus {seen}")

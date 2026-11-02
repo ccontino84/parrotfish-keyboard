@@ -13,3 +13,10 @@ no-misspellings
 # find-respellings.py: aa for å before the 1917 reform (paa: på), in older
 # texts. Only lowercase words: names keep their aa (Aasen).
 respell aa å lower
+
+# Compounds (plan 6g): closed compounds of dictionary words are likely words
+# (tweedehandsauto, kaputtgemacht) rather than two words with a space missing,
+# unless the two words are likelier (heefteen: heeft een): `unknown` makes them
+# a missing word made of known parts (compoundBonus), not words by themselves.
+# Parts of 4+ letters, up to three, joined directly or by a linking letter.
+compound 4 3 link=s,e unknown

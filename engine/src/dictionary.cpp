@@ -42,6 +42,8 @@ Dictionary &Dictionary::operator=(Dictionary &&other) noexcept
         m_suffixes = std::move(other.m_suffixes);
         m_compoundMin = other.m_compoundMin;
         m_compoundParts = other.m_compoundParts;
+        m_compoundLinks = std::move(other.m_compoundLinks);
+        m_compoundsUnknown = other.m_compoundsUnknown;
         m_letters = other.m_letters;
         m_letterKeys = other.m_letterKeys;
         m_letterCosts = other.m_letterCosts;
@@ -54,6 +56,7 @@ Dictionary &Dictionary::operator=(Dictionary &&other) noexcept
         other.m_letterCosts = nullptr;
         other.m_letterSymbols.clear();
         other.m_compoundMin = other.m_compoundParts = 0;
+        other.m_compoundLinks.clear();
     }
     return *this;
 }
@@ -66,6 +69,8 @@ void Dictionary::close()
     m_size = 0;
     m_suffixes.clear();
     m_compoundMin = m_compoundParts = 0;
+    m_compoundLinks.clear();
+    m_compoundsUnknown = false;
     m_letters = nullptr;
     m_letterKeys = nullptr;
     m_letterCosts = nullptr;
@@ -249,6 +254,21 @@ bool Dictionary::parseWordParts(const std::string &text)
         if (kind == "compound") {
             if (!(in >> m_compoundMin >> m_compoundParts) || m_compoundMin == 0)
                 return false;
+            while (in >> item) {
+                if (item == "unknown") {
+                    m_compoundsUnknown = true;
+                    continue;
+                }
+                if (item.compare(0, 5, "link=") != 0)
+                    return false;
+                std::string links = item.substr(5);
+                for (size_t a = 0; a <= links.size();) {
+                    const size_t b = std::min(links.find(',', a), links.size());
+                    if (b > a)
+                        m_compoundLinks.push_back(utf8::decode(links.substr(a, b - a)));
+                    a = b + 1;
+                }
+            }
             continue;
         }
         if (kind != "suffix")
@@ -284,7 +304,17 @@ bool Dictionary::isWordForm(const std::u32string &word) const
     std::u32string lower = word;
     for (char32_t &c : lower)
         c = utf8::toLower(c);
-    return wordForm(lower, 0, 1);
+    return wordForm(lower, 0, 1, !m_compoundsUnknown);
+}
+
+bool Dictionary::isCompound(const std::u32string &word) const
+{
+    if (!m_compoundsUnknown || m_compoundMin == 0 || isPlainWord(word))
+        return false;
+    std::u32string lower = word;
+    for (char32_t &c : lower)
+        c = utf8::toLower(c);
+    return !wordForm(lower, 0, 1, false) && wordForm(lower, 0, 1, true);
 }
 
 bool Dictionary::isPlainWord(const std::u32string &word) const
@@ -293,15 +323,15 @@ bool Dictionary::isPlainWord(const std::u32string &word) const
     return node && !(attributes(node) & format::AttrMisspelling);
 }
 
-bool Dictionary::wordForm(const std::u32string &w, int suffixes, size_t parts) const
+bool Dictionary::wordForm(const std::u32string &w, int suffixes, size_t parts, bool compounds) const
 {
     if (isPlainWord(w))
         return true;
-    if (m_compoundMin > 0) {
+    if (m_compoundMin > 0 && compounds) {
         const size_t hyphen = w.find(U'-');
         if (hyphen != std::u32string::npos)
-            return hyphen > 0 && wordForm(w.substr(0, hyphen), suffixes, parts)
-                   && wordForm(w.substr(hyphen + 1), suffixes, parts);
+            return hyphen > 0 && wordForm(w.substr(0, hyphen), suffixes, parts, compounds)
+                   && wordForm(w.substr(hyphen + 1), suffixes, parts, compounds);
     }
     if (suffixes < MaxSuffixes) {
         for (const SuffixRule &r : m_suffixes) {
@@ -311,20 +341,26 @@ bool Dictionary::wordForm(const std::u32string &w, int suffixes, size_t parts) c
             std::u32string stem = w.substr(0, w.size() - n);
             if (!r.after.empty() && r.after.find(stem.back()) == std::u32string::npos)
                 continue;
-            if (wordForm(stem, suffixes + 1, parts))
+            if (wordForm(stem, suffixes + 1, parts, compounds))
                 return true;
             for (char32_t d : r.drop)
-                if (wordForm(stem + d, suffixes + 1, parts))
+                if (wordForm(stem + d, suffixes + 1, parts, compounds))
                     return true;
         }
     }
-    if (m_compoundMin > 0 && parts < m_compoundParts) {
+    if (m_compoundMin > 0 && compounds && parts < m_compoundParts) {
         for (size_t i = m_compoundMin; i + m_compoundMin <= w.size(); ++i) {
             const std::u32string first = w.substr(0, i);
             if (prefixBest(first) < 0)
                 break;   // no longer word starts with these letters
-            if (isPlainWord(first) && wordForm(w.substr(i), suffixes, parts + 1))
+            if (!isPlainWord(first))
+                continue;
+            if (wordForm(w.substr(i), suffixes, parts + 1, compounds))
                 return true;
+            for (const std::u32string &link : m_compoundLinks)
+                if (w.size() >= i + link.size() + m_compoundMin && w.compare(i, link.size(), link) == 0
+                        && wordForm(w.substr(i + link.size()), suffixes, parts + 1, compounds))
+                    return true;
         }
     }
     return false;

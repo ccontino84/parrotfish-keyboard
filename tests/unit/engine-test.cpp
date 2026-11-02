@@ -173,6 +173,14 @@ void testCorrections()
     CHECK_EQ(it.space("citta'"), "città");
     CHECK_EQ(it.space("e"), "e");           // e and è are both words
     CHECK_EQ(it.space("collaboro"), "collaboro");
+    // An infinitive with clitics (it.rules) stands, even at Normal.
+    it.engine.setStrength(Strength::Normal);
+    CHECK_EQ(it.space("fidarvi"), "fidarvi");
+    CHECK_EQ(it.space("impressionarle"), "impressionarle");
+    CHECK(it.engine.dictionary(0).isWordForm(u("ricordarmelo")));
+    CHECK(!it.engine.dictionary(0).isWordForm(u("fralo")));   // fra is no infinitive
+    CHECK_EQ(it.space("sottolineo"), "sottolineo");   // present, next to sottolineò (it.forms)
+    it.engine.setStrength(Strength::Gentle);
 
     Setup de({"de"});
     CHECK_EQ(de.space("fuer"), "für");
@@ -219,8 +227,10 @@ void testLanguages()
     CHECK_EQ(s.engine.language(s.engine.tracker().leading()), "en");
 
     // `fur` is English, so in uncertain text it is left alone; in clearly
-    // German text it becomes `für`.
+    // German text it becomes `für` (Normal, the keyboard's default: Gentle
+    // leaves it at confidence 0.89, which the benches say it should).
     Setup mix({"de", "en"});
+    mix.engine.setStrength(Strength::Normal);
     mix.engine.startText(u("Ich habe heute keine Zeit, aber morgen komme ich gerne vorbei"));
     CHECK_EQ(mix.space("fur"), "für");
     mix.engine.startText(u("The cat has soft fur and the dog has long"));
@@ -485,6 +495,9 @@ void testOldSpellings()
     CHECK_EQ(br.space("vôo"), "voo");
     CHECK_EQ(br.space("heróico"), "heroico");
     CHECK_EQ(br.space("papéis"), "papéis");     // oxytone: keeps its accent
+    // The past of -ar verbs (pt_BR.paradigms), with c/g/ç spelt before e.
+    for (const char *w : {"telefonei", "instalei", "fiquei", "paguei", "comecei"})
+        CHECK_EQ(br.space(w), w);
     // European Portuguese: both spellings of silent consonants in use.
     Setup pt({"pt_PT", "en"}, "en");
     pt.engine.startText(u("Eu tenho a "), {1.0, 0.01});

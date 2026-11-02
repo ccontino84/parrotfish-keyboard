@@ -39,7 +39,7 @@ std::vector<double> LanguageTracker::logLikelihoods(const std::u32string &word) 
         // node carries the frequency of the word it stands for.
         // A form made by the language's rules (kännykkänsä) is a rare word.
         const int freq = node ? std::max<int>(d.node(node).freq, m_params.unknownFreq)
-                              : d.isWordForm(word) ? m_params.formFreq : m_params.unknownFreq;
+                              : d.isWordForm(word) || d.isCompound(word) ? m_params.formFreq : m_params.unknownFreq;
         ll[i] = d.logProb(static_cast<uint8_t>(freq));
     }
     return ll;

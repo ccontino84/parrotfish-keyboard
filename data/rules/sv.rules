@@ -5,3 +5,10 @@
 # find-accent-misspellings.py: å, ä, ö, æ, ø are letters of their own, so
 # a plain spelling is often another word (har/här, made/måde).
 no-misspellings
+
+# Compounds (plan 6g): closed compounds of dictionary words are likely words
+# (tweedehandsauto, kaputtgemacht) rather than two words with a space missing,
+# unless the two words are likelier (heefteen: heeft een): `unknown` makes them
+# a missing word made of known parts (compoundBonus), not words by themselves.
+# Parts of 4+ letters, up to three, joined directly or by a linking letter.
+compound 4 3 link=s unknown

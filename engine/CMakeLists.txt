@@ -6,6 +6,9 @@ add_library(parrotfish-engine STATIC
     src/corrector.cpp
     src/dictionary.cpp
     src/engine.cpp
+    src/search.cpp
+    src/decide.cpp
+    src/params.cpp
     src/languagetracker.cpp
     src/keymodel.cpp
     src/utf8.cpp

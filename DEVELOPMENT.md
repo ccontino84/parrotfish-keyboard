@@ -45,7 +45,7 @@ tools/pf suite                  # the standard benchmark suite, stored with its 
 tools/pf suite --label try --param otherLanguageMargin=8   # an experiment
 tools/pf compare alpha70 try    # two runs side by side, better/WORSE marked
 tools/pf diff alpha70 try       # the words whose outcome changed
-tools/pf sweep normalConfidence "0.4 0.5 0.6"   # a parameter's values, ranked
+tools/pf sweep changeCost "6 7 8"   # a parameter's values, ranked
 tools/pf failures               # typos left or fixed wrong, sorted by cause
 tools/pf check                  # before a release: lint, tests, suite, and
                                 # exit 1 if a number got worse than the last run
@@ -81,10 +81,10 @@ Faster runs and sweeps:
   texts across the cores (`-k`, `-Z`, joined by the bench's `-J`: the same
   numbers); `--no-shard` doesn't.
 - Decision settings (the parameters only `Engine::decide` reads:
-  `isDecisionParam` in `engine.cpp`: confidence thresholds, margins,
+  `isDecisionParam` in `engine/src/params.cpp`: the decision costs and thresholds, margins,
   `unknown*`, strength other than Strong) are replayed on the same searches:
-  `pf suite --label L --replay normalConfidence=0.6 --replay
-  unknownBase=7,normalShortConfidence=0.7` stores `L` and `L[SETTINGS]`
+  `pf suite --label L --replay changeCost=8 --replay
+  unknownBase=11,changeCostShort=15` stores `L` and `L[SETTINGS]`
   for each, the same numbers as runs with `--param`, for about the time of
   one run.
 - `pf sweep NAME "V1 V2 ..."`: replayed in one run if NAME is a decision
@@ -151,7 +151,7 @@ keys go mostly sideways, 10% up or down):
 build/tests/sentence-bench -l data/layouts/phone-qwerty.layout -t tests/data/sentences-en.txt -m en \
     -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd \
     -X -N 75 -o tests/data/unknown-en.txt [-S slips.log [-M]]
-tools/eval/bench-sweep.sh normalConfidence "0.3 0.5 0.7 0.85" ...same arguments...
+tools/eval/bench-sweep.sh changeCost "5 7 9" ...same arguments...
 ```
 
 `-X` adds a missing space (`thisis`), the space typed as a key above the

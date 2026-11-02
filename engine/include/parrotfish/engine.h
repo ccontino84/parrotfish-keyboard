@@ -18,6 +18,7 @@ namespace parrotfish {
 // (plan §6; until that exists, the same as Normal).
 enum class Strength { Off, Gentle, Normal, Strong };
 
+// The measurements behind the values: engine/TUNING.md.
 struct EngineParams {
     CorrectorParams corrector;
     LanguageParams language;
@@ -34,23 +35,32 @@ struct EngineParams {
     // the probability (the lower of the two) is at least firstWordShare.
     double firstWordConfidence = 0.5;
     double firstWordShare = 0.7;
-    // Share of the probability the best correction needs. The strengths
-    // share one model and differ only here: Gentle asks more. Up to
-    // alpha85 Gentle had its own unknownBase (6, against 8) and 0.5;
-    // with one base, 0.875 (sentence-bench, Gentle, 5 languages x 2
-    // seeds, 2026-11-01): typos fixed 32.5 -> 32.3 %, fixed wrong 0.41 ->
-    // 0.26, unknown words changed 0.13 -> 0.16; real misspellings fixed
-    // the same or more (accents it +8.7, fr +3.6 points), fixed wrong
-    // lower (it 2.6 -> 0, de 0.9 -> 0.3). 0.85: more fixed, more names
-    // changed (0.19); 0.9: names as before, 2.4 points fewer fixed.
-    double gentleConfidence = 0.875;
-    double normalConfidence = 0.5;
-    // Normal and Strong ask more of shorter words, which have more
-    // neighbours and are more often names (sentence-bench -L sweep,
-    // 2026-10-31: at 0.5, 3-4 letters had 2.4-3.6 % wrong fixes and 12-13 %
-    // of names changed; at 0.8, 0.8-1.5 % and 4-9 %).
-    double normalTwoLetterConfidence = 0.7;   // 2 letters
-    double normalShortConfidence = 0.8;       // 3 and 4 letters
+    // Gentle: the share of the probability the best correction needs, and
+    // its limits below (one edit, few letters: only obvious slips).
+    double gentleConfidence = 0.95;
+    // Normal and Strong, for letters that are not a word: fix when
+    //   P(fix meant) > P(typed meant) * changeCost + P(another word) * (wrongCost - 1),
+    // the losses of changing a correct word and of typing a wrong word
+    // instead of the slip, against 1 for a slip left as typed, with the
+    // probabilities of the calibrated model (unknownBase, unknownLetterWeight,
+    // unknownOddsScale).
+    double changeCost = 7.0, wrongCost = 5.0;
+    // changeCost for 2 and for 3-4 letters (0: changeCost). Short words
+    // have more neighbours and are more often names; the typos benches
+    // have no unknown words of 2 letters to calibrate them on. A fix that
+    // only adds accents or apostrophes uses changeCost at any length.
+    double changeCostTwo = 6.0, changeCostShort = 20.0;
+    // wrongCost for another word that is the fix but for its ending
+    // (received for receive): nearer the meant word than the slip.
+    double nearWrongCost = 1.5;
+    // The log-odds of "a word missing from the dictionaries" against the
+    // words, scaled (they swing too far: fit on the typos benches).
+    double unknownOddsScale = 0.6;
+    // Letters that are a compound of dictionary words (Dictionary::
+    // isCompound: tweedehandsauto, kaputtgemacht) are a missing word this
+    // much likelier (nats), against two words typed without the space
+    // (heefteen: heeft een), which the word pairs make likely.
+    double compoundBonus = 8.0;
     // Normal (and Strong) leave shorter input alone: a single letter is not
     // replaced (t → it, p → to were; the benches don't type such words).
     size_t normalMinLength = 2;
@@ -67,19 +77,14 @@ struct EngineParams {
     // Strong: after a previous word (not at a sentence start), a valid word
     // of at least strongMinLength letters becomes another valid word one slip
     // away (a neighbouring key or two letters swapped) if that word is at
-    // least strongMargin nats likelier, previous word and taps included
-    // (5: about 150 times; sentence-bench -R, plan §6).
+    // least strongMargin nats likelier, previous word and taps included.
     double strongMargin = 5.0;
     // A word of a typing language that seems unlikely in the text (weight
     // below validThreshold: Italian "ti" in English text) is replaced only
     // if the fix is this many nats likelier than the word read as a word of
     // its language, with that language's weight (so it follows the text: an
     // Italian word weighs more once Italian is being typed). Infinity: never
-    // replaced (the hard block up to alpha68). 12 (sentence-bench, en/it/de,
-    // 2026-10-31): 2-3 more typos fixed in 100 (thier is the German surname
-    // Thier, tp the abbreviation TP), and no word of another language changed in
-    // mixed texts (tools/eval/mix-sentences.py; at 8: 0.4 % of single foreign
-    // words, un → in).
+    // replaced.
     double otherLanguageMargin = 12.0;
     // Two words typed as one (plan §6 fix 6): a string that is no word of a
     // typing language may be two words of one language, each typed as it
@@ -113,34 +118,14 @@ struct EngineParams {
     // (recieve, goverment, propio), often a name when short (Ugo, Norn): what
     // the letter model takes off unknownPerLetter × letters then shrinks by
     // unknownLongLetterCost for each letter past unknownShortLength.
-    // sentence-bench -L, en/it/de/fr/es, 12 runs each, Normal (2026-11-01),
-    // per letter only -> letter model -> with the shrink: 44.4 -> 47.5 ->
-    // 51.9 % of typos fixed, 1.12 -> 0.98 -> 1.07 % fixed wrong, 1.23 ->
-    // 0.67 -> 0.91 % of unknown words changed (most of the rest are words
-    // without their accents); 3-4 letters: 47.2 -> 45.5 -> 45.5 % fixed,
-    // 3.8 -> 1.8 -> 1.8 % changed. Gentle 29.8 -> 34.1 -> 36.4, 0.63 ->
-    // 0.48 -> 0.51, 0.40 -> 0.23 -> 0.25. Real misspellings (-W, lists of
-    // common misspellings), fixed: en 41 -> 23 -> 40 %, it 57 -> 32 -> 55,
-    // de 51 -> 30 -> 51, fr 57 -> 25 -> 56, es 39 -> 23 -> 37; fixed wrong
-    // lower than per letter only. The gain is in typos with unlikely letters
-    // (h3llo, thisbis) and long typos; short typos that look like words are
-    // fixed less (they look like short names). Weights 0.35-0.45 do as
-    // well, 0.2 worse; set the level with unknownLetterRef:
-    // unknownBase also moves the accent fixes (perche). The shrink
-    // from 3 letters on (1 nat) fixes short typos as per letter only, at
-    // 1.95 % of 3-4-letter names changed; a cap on what the letter model
-    // takes off, at any length, does worse.
-    double unknownBase = 8.0;
+    double unknownBase = 11.5;
     double unknownPerLetter = 0.5;
-    double unknownLetterWeight = 0.4;
+    double unknownLetterWeight = 0.5;
     double unknownLetterRef = 16.0;
     size_t unknownShortLength = 4;
     double unknownLongLetterCost = 1.5;
     // ... and when it is two changes away, from unknownTwoChangeLength
     // letters (conoleanno: compleanno, letters that look Italian).
-    // sentence-bench (2026-11-01), off -> 9: real misspellings fixed +0.2
-    // to +0.6 points (en, fr, de, es), fixed wrong and unknown words
-    // changed the same; 8 and less: more fixed wrong (de 1.4 -> 1.6 %).
     size_t unknownTwoChangeLength = 9;
     // A word typed with a capital first letter (not all capitals) after a
     // word, not at a sentence start, is rarely a word the dictionaries store
@@ -149,21 +134,7 @@ struct EngineParams {
     // stored in lower case cost capitalLowerCost nats more; in the
     // languages that capitalise their nouns (German), where nouns made of
     // verbs and adjectives (beim Essen, das Gute) and the polite Sie are
-    // capitalised too, capitalLowerCostNouns. Words stored only in lower
-    // case are typed with a capital after a word in 0.3-0.8 % of Tatoeba's
-    // (5-6 nats), 3-6 % of news and informal text (3 nats: titles, brands,
-    // missed sentence starts), German 4-5 %. sentence-bench -L, Normal
-    // (2026-11-01), 0 -> 4 (German 2): unknown words changed en 0.47 ->
-    // 0.18 %, it 1.37 -> 0.62, fr 1.38 -> 1.02, es 0.83 -> 0.53, de 0.70 ->
-    // 0.52; typos fixed 0 to -0.3 points, fixed wrong 0 to -0.2; next-word
-    // keystrokes saved +0.1 to +1.2 (a capital favours names and nouns).
-    // Real misspellings (-W, in news text) fixed -0.5 to -2.4 points, all
-    // of them capitalised words in titles (Cheif Editior). Costs 3 to 5 do
-    // about as well; 4 keeps Mr Cant (2 does not). German at 4: typos fixed
-    // -0.7 points. alpha88: 5, with the everyday frequencies (can't 160 ->
-    // 166 made Mr Cant can't again at 4; 4.5 is the least that keeps it):
-    // against 4, real misspellings fixed -0.1 to -0.3 points (capitalised
-    // title words), names changed es 0.71 -> 0.65 %, slips the same.
+    // capitalised too, capitalLowerCostNouns.
     double capitalLowerCost = 5.0;
     double capitalLowerCostNouns = 2.0;
     // Tap distances up and down: 0 = in key widths, 1 = in key heights
@@ -210,9 +181,7 @@ enum class Reason : uint8_t {
     TypedIsWord,       // a valid word, not a case fix, Strong's real-word fix not tried
     StrongMargin,      // Strong: the fix is less than strongMargin likelier than the valid word
     SlipShortcut,      // Strong: a slip word (foe) whose fix the previous word doesn't support
-    BelowNormal,       // Normal/Strong: confidence below normalConfidence (5+ letters or same letters)
-    BelowTwoLetter,    // ... below normalTwoLetterConfidence (2 letters)
-    BelowShort,        // ... below normalShortConfidence (3-4 letters)
+    BelowNormal,       // Normal/Strong: the fix's expected loss above leaving the letters
     TooShort,          // fewer letters than normalMinLength / gentleMinLength
     BelowGentle,       // Gentle: confidence below gentleConfidence
     GentleChanges,     // Gentle: more edits or changes than it makes
@@ -245,6 +214,7 @@ struct Searched {
     bool typedIsWord = false;        // valid in a likely language
     bool wordInSomeLanguage = false; // valid in some typing language
     bool validAsTyped = false;       // not only in another case (jaime: Jaime only)
+    bool compound = false;           // a compound of a likely language's words (Dictionary::isCompound)
     bool typedHasShortcut = false, typedHasSlipShortcut = false;
     std::u32string caseFix;          // the stored capitalisation, if it differs (haus → Haus)
     std::vector<double> weights;     // the languages' weights
@@ -321,6 +291,26 @@ public:
 
 private:
     void rebuild();
+    // search() in steps (search.cpp).
+    void typedWordStatus(Searched &out) const;
+    void searchLanguages(Searched &out, bool capital) const;
+    void addContext(size_t dict, const Searched &out, std::vector<Candidate> &cands) const;
+    void searchSplits(Searched &out, bool capital) const;
+    // Extra cost of a word stored in lower case typed with a capital after
+    // a word (capitalLowerCost).
+    double capitalCost(size_t dict, const std::u32string &stored, bool capital) const;
+    // decide() in steps (decide.cpp), on one decision's state.
+    struct Decision;
+    void unknownReading(Decision &d) const;
+    void shares(Decision &d) const;
+    bool bar(Decision &d) const;
+    bool languageSure(Decision &d) const;
+    bool otherLanguageAllows(Decision &d) const;
+    bool fixValidWord(Decision &d) const;
+    bool fixGentle(Decision &d) const;
+    bool fixExpectedCost(Decision &d) const;
+    // Folded, without apostrophes: the same letters (piu, più; jai, j'ai).
+    std::u32string letters(const std::u32string &word) const;
     // `word` is `typed` with one letter changed to a neighbouring key.
     bool neighbourSwap(const std::u32string &typed, const std::u32string &word) const;
     // Two neighbouring letters swapped (from → form), accents aside.

@@ -1,3 +1,10 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LicenseRef-TBD
 # No spelling rules for this language yet.
+
+# Compounds (plan 6g): closed compounds of dictionary words are likely words
+# (tweedehandsauto, kaputtgemacht) rather than two words with a space missing,
+# unless the two words are likelier (heefteen: heeft een): `unknown` makes them
+# a missing word made of known parts (compoundBonus), not words by themselves.
+# Parts of 4+ letters, up to three, joined directly or by a linking letter.
+compound 4 3 link=s,en,e unknown

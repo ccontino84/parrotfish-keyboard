@@ -20,3 +20,10 @@ paradigm ò are ere ire
 paradigm à are
 paradigm ì ire ere are
 paradigm é ere
+
+# Word forms the list lacks (dictionary.h: isWordForm): typed, they stand;
+# they are never suggested. An infinitive drops its final e before one or
+# two clitic pronouns (fidarvi, impressionarle, farmelo, darglielo).
+suffix mi ti si ci vi lo la li le ne gli after=r drop=e
+suffix melo mela meli mele mene telo tela teli tele tene selo sela seli sele sene after=r drop=e
+suffix celo cela celi cele cene velo vela veli vele vene glielo gliela glieli gliele gliene after=r drop=e

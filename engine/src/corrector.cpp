@@ -221,10 +221,24 @@ struct Corrector::Search
         if (attrs & format::AttrMisspelling) {
             if (target.empty())
                 return;
+            // A completion through a misspelling (da: daß, dass) only where
+            // the letters typed so far are not the start of the word itself
+            // (recie: recieve, receive): else the word's own path completes
+            // it, and the misspelling's would make it cheaper than it is.
+            if (extra > 0) {
+                const size_t typedPart = path.size() - static_cast<size_t>(extra);
+                bool shared = target.size() >= typedPart;
+                for (size_t k = 0; k < typedPart && shared; ++k)
+                    shared = utf8::toLower(target[k]) == utf8::toLower(path[k]);
+                if (shared)
+                    return;
+            }
             cand.word = target;
             cand.viaTarget = true;
             cand.wordCost = wc;
-            cand.cost = cost + wc - (changes == 0 ? p.exactMisspellingBonus : 0.0f);
+            // The bonus is for the misspelling typed in full, not for a
+            // completion of it.
+            cand.cost = cost + wc - (changes == 0 && extra == 0 ? p.exactMisspellingBonus : 0.0f);
             add(std::move(cand));
             return;
         }

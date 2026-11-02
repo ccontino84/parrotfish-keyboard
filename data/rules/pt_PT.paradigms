@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+#
+# Regular Portuguese verb endings for tools/data/complete-paradigms.py; see
+# it.paradigms. Only the past of -ar verbs, where the lists lack most
+# first-person forms (telefonei, instalei); other tenses have stem changes
+# (passear → passeio) that the endings cannot follow.
+
+spell qu-gu-c-before-e              # ficar → fiquei, pagar → paguei, começar → comecei
+
+class ar ar ando
+tense past: ei aste ou amos astes aram

@@ -8,7 +8,7 @@ abbandonai	61	abbandonare past (are), corpus 2
 abbandonammo	61	abbandonare past (are), corpus 2
 abbandonassi	54	abbandonare subjunctive-past (are), corpus 1
 abbandonassimo	1	abbandonare subjunctive-past (are), corpus 0
-abbandonaste	1	abbandonare past (are), corpus 0
+abbandonaste	1	abbandonare subjunctive-past (are), corpus 0
 abbandonasti	1	abbandonare past (are), corpus 0
 abbandonavamo	68	abbandonare imperfect (are), corpus 4
 abbandonavate	65	abbandonare imperfect (are), corpus 3
@@ -109,7 +109,7 @@ abitai	1	abitare past (are), corpus 0
 abitammo	1	abitare past (are), corpus 0
 abitassi	65	abitare subjunctive-past (are), corpus 3
 abitassimo	1	abitare subjunctive-past (are), corpus 0
-abitaste	61	abitare past (are), corpus 2
+abitaste	61	abitare subjunctive-past (are), corpus 2
 abitasti	1	abitare past (are), corpus 0
 abitavamo	80	abitare imperfect (are), corpus 13
 abitavate	68	abitare imperfect (are), corpus 4
@@ -285,7 +285,7 @@ accertiate	1	accertare subjunctive (are), corpus 0
 accettammo	68	accettare past (are), corpus 4
 accettassi	1	accettare subjunctive-past (are), corpus 0
 accettassimo	1	accettare subjunctive-past (are), corpus 0
-accettaste	61	accettare past (are), corpus 2
+accettaste	61	accettare subjunctive-past (are), corpus 2
 accettasti	1	accettare past (are), corpus 0
 accettavamo	61	accettare imperfect (are), corpus 2
 accettavate	61	accettare imperfect (are), corpus 2
@@ -331,7 +331,7 @@ accompagnai	70	accompagnare past (are), corpus 5
 accompagnammo	68	accompagnare past (are), corpus 4
 accompagnassi	76	accompagnare subjunctive-past (are), corpus 9
 accompagnassimo	1	accompagnare subjunctive-past (are), corpus 0
-accompagnaste	77	accompagnare past (are), corpus 10
+accompagnaste	77	accompagnare subjunctive-past (are), corpus 10
 accompagnasti	68	accompagnare past (are), corpus 4
 accompagnavamo	61	accompagnare imperfect (are), corpus 2
 accompagnavate	61	accompagnare imperfect (are), corpus 2
@@ -364,7 +364,7 @@ accontentai	1	accontentare past (are), corpus 0
 accontentammo	1	accontentare past (are), corpus 0
 accontentassi	1	accontentare subjunctive-past (are), corpus 0
 accontentassimo	1	accontentare subjunctive-past (are), corpus 0
-accontentaste	1	accontentare past (are), corpus 0
+accontentaste	1	accontentare subjunctive-past (are), corpus 0
 accontentasti	1	accontentare past (are), corpus 0
 accontentavamo	1	accontentare imperfect (are), corpus 0
 accontentavate	1	accontentare imperfect (are), corpus 0
@@ -377,7 +377,7 @@ accoppiammo	1	accoppiare past (are), corpus 0
 accoppiamo	1	accoppiare subjunctive (are), corpus 0
 accoppiassi	1	accoppiare subjunctive-past (are), corpus 0
 accoppiassimo	1	accoppiare subjunctive-past (are), corpus 0
-accoppiaste	1	accoppiare past (are), corpus 0
+accoppiaste	1	accoppiare subjunctive-past (are), corpus 0
 accoppiasti	1	accoppiare past (are), corpus 0
 accoppiavamo	1	accoppiare imperfect (are), corpus 0
 accoppiavate	1	accoppiare imperfect (are), corpus 0
@@ -397,7 +397,7 @@ accordai	65	accordare past (are), corpus 3
 accordammo	65	accordare past (are), corpus 3
 accordassi	1	accordare subjunctive-past (are), corpus 0
 accordassimo	1	accordare subjunctive-past (are), corpus 0
-accordaste	61	accordare past (are), corpus 2
+accordaste	61	accordare subjunctive-past (are), corpus 2
 accordasti	61	accordare past (are), corpus 2
 accordavamo	1	accordare imperfect (are), corpus 0
 accordavate	1	accordare imperfect (are), corpus 0
@@ -486,7 +486,7 @@ accusai	54	accusare past (are), corpus 1
 accusammo	1	accusare past (are), corpus 0
 accusassi	1	accusare subjunctive-past (are), corpus 0
 accusassimo	1	accusare subjunctive-past (are), corpus 0
-accusaste	1	accusare past (are), corpus 0
+accusaste	1	accusare subjunctive-past (are), corpus 0
 accusasti	1	accusare past (are), corpus 0
 accusavamo	61	accusare imperfect (are), corpus 2
 accusavate	61	accusare imperfect (are), corpus 2
@@ -514,7 +514,7 @@ acquisisci	54	acquisire present (ire-isc), corpus 1
 acquisisco	1	acquisire present (ire-isc), corpus 0
 acquisissi	1	acquisire subjunctive-past (ire), corpus 0
 acquisissimo	1	acquisire subjunctive-past (ire), corpus 0
-acquisiste	1	acquisire past (ire), corpus 0
+acquisiste	1	acquisire subjunctive-past (ire), corpus 0
 acquisisti	1	acquisire past (ire), corpus 0
 acquisivamo	1	acquisire imperfect (ire), corpus 0
 acquisivate	1	acquisire imperfect (ire), corpus 0
@@ -524,7 +524,7 @@ acquistai	61	acquistare past (are), corpus 2
 acquistammo	61	acquistare past (are), corpus 2
 acquistassi	1	acquistare subjunctive-past (are), corpus 0
 acquistassimo	1	acquistare subjunctive-past (are), corpus 0
-acquistaste	1	acquistare past (are), corpus 0
+acquistaste	1	acquistare subjunctive-past (are), corpus 0
 acquistasti	1	acquistare past (are), corpus 0
 acquistavamo	1	acquistare imperfect (are), corpus 0
 acquistavate	1	acquistare imperfect (are), corpus 0
@@ -551,7 +551,7 @@ adattai	54	adattare past (are), corpus 1
 adattammo	1	adattare past (are), corpus 0
 adattassi	1	adattare subjunctive-past (are), corpus 0
 adattassimo	1	adattare subjunctive-past (are), corpus 0
-adattaste	1	adattare past (are), corpus 0
+adattaste	1	adattare subjunctive-past (are), corpus 0
 adattasti	1	adattare past (are), corpus 0
 adattavamo	1	adattare imperfect (are), corpus 0
 adattavate	1	adattare imperfect (are), corpus 0
@@ -636,7 +636,7 @@ aderisci	1	aderire present (ire-isc), corpus 0
 aderisco	61	aderire present (ire-isc), corpus 2
 aderissi	1	aderire subjunctive-past (ire), corpus 0
 aderissimo	1	aderire subjunctive-past (ire), corpus 0
-aderiste	1	aderire past (ire), corpus 0
+aderiste	1	aderire subjunctive-past (ire), corpus 0
 aderisti	1	aderire past (ire), corpus 0
 aderite	1	aderire present (ire-isc), corpus 0
 aderivamo	1	aderire imperfect (ire), corpus 0
@@ -661,7 +661,7 @@ adoperai	1	adoperare past (are), corpus 0
 adoperammo	1	adoperare past (are), corpus 0
 adoperassi	1	adoperare subjunctive-past (are), corpus 0
 adoperassimo	1	adoperare subjunctive-past (are), corpus 0
-adoperaste	1	adoperare past (are), corpus 0
+adoperaste	1	adoperare subjunctive-past (are), corpus 0
 adoperasti	1	adoperare past (are), corpus 0
 adoperavamo	1	adoperare imperfect (are), corpus 0
 adoperavate	1	adoperare imperfect (are), corpus 0
@@ -672,7 +672,7 @@ adorai	1	adorare past (are), corpus 0
 adorammo	1	adorare past (are), corpus 0
 adorassi	1	adorare subjunctive-past (are), corpus 0
 adorassimo	1	adorare subjunctive-past (are), corpus 0
-adoraste	1	adorare past (are), corpus 0
+adoraste	1	adorare subjunctive-past (are), corpus 0
 adorasti	1	adorare past (are), corpus 0
 adoravamo	72	adorare imperfect (are), corpus 6
 adoravate	72	adorare imperfect (are), corpus 6
@@ -691,7 +691,7 @@ adottai	61	adottare past (are), corpus 2
 adottammo	75	adottare past (are), corpus 8
 adottassi	1	adottare subjunctive-past (are), corpus 0
 adottassimo	1	adottare subjunctive-past (are), corpus 0
-adottaste	1	adottare past (are), corpus 0
+adottaste	1	adottare subjunctive-past (are), corpus 0
 adottasti	1	adottare past (are), corpus 0
 adottavamo	1	adottare imperfect (are), corpus 0
 adottavate	1	adottare imperfect (are), corpus 0
@@ -707,7 +707,7 @@ affacciammo	1	affacciare past (are), corpus 0
 affacciamo	1	affacciare subjunctive (are), corpus 0
 affacciassi	1	affacciare subjunctive-past (are), corpus 0
 affacciassimo	1	affacciare subjunctive-past (are), corpus 0
-affacciaste	1	affacciare past (are), corpus 0
+affacciaste	1	affacciare subjunctive-past (are), corpus 0
 affacciasti	1	affacciare past (are), corpus 0
 affacciavamo	1	affacciare imperfect (are), corpus 0
 affacciavate	1	affacciare imperfect (are), corpus 0
@@ -727,7 +727,7 @@ affermai	68	affermare past (are), corpus 4
 affermammo	1	affermare past (are), corpus 0
 affermassi	1	affermare subjunctive-past (are), corpus 0
 affermassimo	1	affermare subjunctive-past (are), corpus 0
-affermaste	1	affermare past (are), corpus 0
+affermaste	1	affermare subjunctive-past (are), corpus 0
 affermasti	1	affermare past (are), corpus 0
 affermavamo	1	affermare imperfect (are), corpus 0
 affermavate	1	affermare imperfect (are), corpus 0
@@ -754,7 +754,7 @@ affiancai	1	affiancare past (are), corpus 0
 affiancammo	1	affiancare past (are), corpus 0
 affiancassi	1	affiancare subjunctive-past (are), corpus 0
 affiancassimo	1	affiancare subjunctive-past (are), corpus 0
-affiancaste	1	affiancare past (are), corpus 0
+affiancaste	1	affiancare subjunctive-past (are), corpus 0
 affiancasti	1	affiancare past (are), corpus 0
 affiancavamo	1	affiancare imperfect (are), corpus 0
 affiancavate	1	affiancare imperfect (are), corpus 0
@@ -863,7 +863,7 @@ affondai	1	affondare past (are), corpus 0
 affondammo	1	affondare past (are), corpus 0
 affondassi	1	affondare subjunctive-past (are), corpus 0
 affondassimo	1	affondare subjunctive-past (are), corpus 0
-affondaste	1	affondare past (are), corpus 0
+affondaste	1	affondare subjunctive-past (are), corpus 0
 affondasti	1	affondare past (are), corpus 0
 affondavamo	61	affondare imperfect (are), corpus 2
 affondavate	1	affondare imperfect (are), corpus 0
@@ -894,7 +894,7 @@ affrettai	65	affrettare past (are), corpus 3
 affrettammo	1	affrettare past (are), corpus 0
 affrettassi	1	affrettare subjunctive-past (are), corpus 0
 affrettassimo	1	affrettare subjunctive-past (are), corpus 0
-affrettaste	1	affrettare past (are), corpus 0
+affrettaste	1	affrettare subjunctive-past (are), corpus 0
 affrettasti	1	affrettare past (are), corpus 0
 affrettavamo	1	affrettare imperfect (are), corpus 0
 affrettavate	1	affrettare imperfect (are), corpus 0
@@ -905,7 +905,7 @@ affrontai	72	affrontare past (are), corpus 6
 affrontammo	54	affrontare past (are), corpus 1
 affrontassi	54	affrontare subjunctive-past (are), corpus 1
 affrontassimo	1	affrontare subjunctive-past (are), corpus 0
-affrontaste	54	affrontare past (are), corpus 1
+affrontaste	54	affrontare subjunctive-past (are), corpus 1
 affrontasti	1	affrontare past (are), corpus 0
 affrontavamo	61	affrontare imperfect (are), corpus 2
 affrontavate	61	affrontare imperfect (are), corpus 2
@@ -918,7 +918,7 @@ agevolai	1	agevolare past (are), corpus 0
 agevolammo	1	agevolare past (are), corpus 0
 agevolassi	1	agevolare subjunctive-past (are), corpus 0
 agevolassimo	1	agevolare subjunctive-past (are), corpus 0
-agevolaste	1	agevolare past (are), corpus 0
+agevolaste	1	agevolare subjunctive-past (are), corpus 0
 agevolasti	1	agevolare past (are), corpus 0
 agevolavamo	1	agevolare imperfect (are), corpus 0
 agevolavate	1	agevolare imperfect (are), corpus 0
@@ -949,7 +949,7 @@ aggirai	1	aggirare past (are), corpus 0
 aggirammo	1	aggirare past (are), corpus 0
 aggirassi	1	aggirare subjunctive-past (are), corpus 0
 aggirassimo	1	aggirare subjunctive-past (are), corpus 0
-aggiraste	1	aggirare past (are), corpus 0
+aggiraste	1	aggirare subjunctive-past (are), corpus 0
 aggirasti	1	aggirare past (are), corpus 0
 aggiravamo	1	aggirare imperfect (are), corpus 0
 aggiravate	1	aggirare imperfect (are), corpus 0
@@ -1044,7 +1044,7 @@ aiutai	97	aiutare past (are), corpus 70
 aiutammo	80	aiutare past (are), corpus 13
 aiutassi	92	aiutare subjunctive-past (are), corpus 43
 aiutassimo	54	aiutare subjunctive-past (are), corpus 1
-aiutaste	70	aiutare past (are), corpus 5
+aiutaste	70	aiutare subjunctive-past (are), corpus 5
 aiutasti	1	aiutare past (are), corpus 0
 aiutavamo	72	aiutare imperfect (are), corpus 6
 aiutavate	72	aiutare imperfect (are), corpus 6
@@ -1075,7 +1075,7 @@ alimentai	1	alimentare past (are), corpus 0
 alimentammo	1	alimentare past (are), corpus 0
 alimentassi	1	alimentare subjunctive-past (are), corpus 0
 alimentassimo	1	alimentare subjunctive-past (are), corpus 0
-alimentaste	1	alimentare past (are), corpus 0
+alimentaste	1	alimentare subjunctive-past (are), corpus 0
 alimentasti	1	alimentare past (are), corpus 0
 alimentavamo	1	alimentare imperfect (are), corpus 0
 alimentavate	1	alimentare imperfect (are), corpus 0
@@ -1145,7 +1145,7 @@ allenasti	1	allenare past (are), corpus 0
 allenavamo	1	allenare imperfect (are), corpus 0
 allenavate	1	allenare imperfect (are), corpus 0
 allenavi	1	allenare imperfect (are), corpus 0
-allenavo	1	allenare imperfect (are), corpus 0
+allenavo	61	allenare imperfect (are), corpus 2
 allenerai	54	allenare future (are), corpus 1
 alleneremo	1	allenare future (are), corpus 0
 allenerete	1	allenare future (are), corpus 0
@@ -1226,7 +1226,7 @@ allontanai	54	allontanare past (are), corpus 1
 allontanammo	1	allontanare past (are), corpus 0
 allontanassi	1	allontanare subjunctive-past (are), corpus 0
 allontanassimo	1	allontanare subjunctive-past (are), corpus 0
-allontanaste	1	allontanare past (are), corpus 0
+allontanaste	1	allontanare subjunctive-past (are), corpus 0
 allontanasti	1	allontanare past (are), corpus 0
 allontanavamo	54	allontanare imperfect (are), corpus 1
 allontanavate	1	allontanare imperfect (are), corpus 0
@@ -1266,7 +1266,7 @@ alterai	1	alterare past (are), corpus 0
 alterammo	1	alterare past (are), corpus 0
 alterassi	1	alterare subjunctive-past (are), corpus 0
 alterassimo	1	alterare subjunctive-past (are), corpus 0
-alteraste	1	alterare past (are), corpus 0
+alteraste	1	alterare subjunctive-past (are), corpus 0
 alterasti	1	alterare past (are), corpus 0
 alteravamo	1	alterare imperfect (are), corpus 0
 alteravate	1	alterare imperfect (are), corpus 0
@@ -1324,7 +1324,7 @@ ammalai	61	ammalare past (are), corpus 2
 ammalammo	1	ammalare past (are), corpus 0
 ammalassi	1	ammalare subjunctive-past (are), corpus 0
 ammalassimo	1	ammalare subjunctive-past (are), corpus 0
-ammalaste	1	ammalare past (are), corpus 0
+ammalaste	1	ammalare subjunctive-past (are), corpus 0
 ammalasti	1	ammalare past (are), corpus 0
 ammalavamo	1	ammalare imperfect (are), corpus 0
 ammalavate	1	ammalare imperfect (are), corpus 0
@@ -1404,7 +1404,7 @@ ammontai	1	ammontare past (are), corpus 0
 ammontammo	1	ammontare past (are), corpus 0
 ammontassi	1	ammontare subjunctive-past (are), corpus 0
 ammontassimo	1	ammontare subjunctive-past (are), corpus 0
-ammontaste	1	ammontare past (are), corpus 0
+ammontaste	1	ammontare subjunctive-past (are), corpus 0
 ammontasti	1	ammontare past (are), corpus 0
 ammontavamo	1	ammontare imperfect (are), corpus 0
 ammontavate	1	ammontare imperfect (are), corpus 0
@@ -1559,7 +1559,7 @@ annunciai	1	annunciare past (are), corpus 0
 annunciammo	1	annunciare past (are), corpus 0
 annunciassi	1	annunciare subjunctive-past (are), corpus 0
 annunciassimo	1	annunciare subjunctive-past (are), corpus 0
-annunciaste	1	annunciare past (are), corpus 0
+annunciaste	1	annunciare subjunctive-past (are), corpus 0
 annunciasti	1	annunciare past (are), corpus 0
 annunciavamo	1	annunciare imperfect (are), corpus 0
 annunciavate	1	annunciare imperfect (are), corpus 0
@@ -1658,7 +1658,7 @@ applicai	1	applicare past (are), corpus 0
 applicammo	1	applicare past (are), corpus 0
 applicassi	1	applicare subjunctive-past (are), corpus 0
 applicassimo	1	applicare subjunctive-past (are), corpus 0
-applicaste	1	applicare past (are), corpus 0
+applicaste	1	applicare subjunctive-past (are), corpus 0
 applicasti	1	applicare past (are), corpus 0
 applicavamo	1	applicare imperfect (are), corpus 0
 applicavate	1	applicare imperfect (are), corpus 0
@@ -1677,7 +1677,7 @@ appoggiai	70	appoggiare past (are), corpus 5
 appoggiammo	1	appoggiare past (are), corpus 0
 appoggiassi	1	appoggiare subjunctive-past (are), corpus 0
 appoggiassimo	1	appoggiare subjunctive-past (are), corpus 0
-appoggiaste	1	appoggiare past (are), corpus 0
+appoggiaste	1	appoggiare subjunctive-past (are), corpus 0
 appoggiasti	1	appoggiare past (are), corpus 0
 appoggiavamo	61	appoggiare imperfect (are), corpus 2
 appoggiavate	1	appoggiare imperfect (are), corpus 0
@@ -1687,7 +1687,7 @@ apportai	1	apportare past (are), corpus 0
 apportammo	1	apportare past (are), corpus 0
 apportassi	1	apportare subjunctive-past (are), corpus 0
 apportassimo	1	apportare subjunctive-past (are), corpus 0
-apportaste	1	apportare past (are), corpus 0
+apportaste	1	apportare subjunctive-past (are), corpus 0
 apportasti	1	apportare past (are), corpus 0
 apportavamo	1	apportare imperfect (are), corpus 0
 apportavate	1	apportare imperfect (are), corpus 0
@@ -1728,7 +1728,7 @@ apprezzai	70	apprezzare past (are), corpus 5
 apprezzammo	1	apprezzare past (are), corpus 0
 apprezzassi	54	apprezzare subjunctive-past (are), corpus 1
 apprezzassimo	1	apprezzare subjunctive-past (are), corpus 0
-apprezzaste	1	apprezzare past (are), corpus 0
+apprezzaste	1	apprezzare subjunctive-past (are), corpus 0
 apprezzasti	1	apprezzare past (are), corpus 0
 apprezzavamo	1	apprezzare imperfect (are), corpus 0
 apprezzavate	1	apprezzare imperfect (are), corpus 0
@@ -1759,7 +1759,7 @@ approfittai	1	approfittare past (are), corpus 0
 approfittammo	1	approfittare past (are), corpus 0
 approfittassi	1	approfittare subjunctive-past (are), corpus 0
 approfittassimo	1	approfittare subjunctive-past (are), corpus 0
-approfittaste	1	approfittare past (are), corpus 0
+approfittaste	1	approfittare subjunctive-past (are), corpus 0
 approfittasti	1	approfittare past (are), corpus 0
 approfittate	65	approfittare present (are), corpus 3
 approfittavamo	1	approfittare imperfect (are), corpus 0
@@ -1804,7 +1804,7 @@ approvai	1	approvare past (are), corpus 0
 approvammo	1	approvare past (are), corpus 0
 approvassi	1	approvare subjunctive-past (are), corpus 0
 approvassimo	1	approvare subjunctive-past (are), corpus 0
-approvaste	1	approvare past (are), corpus 0
+approvaste	1	approvare subjunctive-past (are), corpus 0
 approvasti	1	approvare past (are), corpus 0
 approvavamo	1	approvare imperfect (are), corpus 0
 approvavate	1	approvare imperfect (are), corpus 0
@@ -1839,7 +1839,7 @@ aprirete	72	aprire future (ire), corpus 6
 aprirò	84	aprire future (ire), corpus 19
 aprissi	1	aprire subjunctive-past (ire), corpus 0
 aprissimo	1	aprire subjunctive-past (ire), corpus 0
-apriste	1	aprire past (ire), corpus 0
+apriste	1	aprire subjunctive-past (ire), corpus 0
 apristi	1	aprire past (ire), corpus 0
 aprivamo	70	aprire imperfect (ire), corpus 5
 aprivate	1	aprire imperfect (ire), corpus 0
@@ -1910,7 +1910,7 @@ arrecai	1	arrecare past (are), corpus 0
 arrecammo	1	arrecare past (are), corpus 0
 arrecassi	1	arrecare subjunctive-past (are), corpus 0
 arrecassimo	1	arrecare subjunctive-past (are), corpus 0
-arrecaste	1	arrecare past (are), corpus 0
+arrecaste	1	arrecare subjunctive-past (are), corpus 0
 arrecasti	1	arrecare past (are), corpus 0
 arrecavamo	1	arrecare imperfect (are), corpus 0
 arrecavate	1	arrecare imperfect (are), corpus 0
@@ -1974,11 +1974,11 @@ arricchivo	1	arricchire imperfect (ire), corpus 0
 arrivammo	87	arrivare past (are), corpus 27
 arrivassi	76	arrivare subjunctive-past (are), corpus 9
 arrivassimo	61	arrivare subjunctive-past (are), corpus 2
-arrivaste	1	arrivare past (are), corpus 0
+arrivaste	1	arrivare subjunctive-past (are), corpus 0
 arrivasti	1	arrivare past (are), corpus 0
 arrivavamo	54	arrivare imperfect (are), corpus 1
 arrivavate	1	arrivare imperfect (are), corpus 0
-arrivavi	1	arrivare imperfect (are), corpus 0
+arrivavi	54	arrivare imperfect (are), corpus 1
 arrivavo	1	arrivare imperfect (are), corpus 0
 arriverai	85	arrivare future (are), corpus 22
 arriverei	70	arrivare conditional (are), corpus 5
@@ -2045,7 +2045,7 @@ asciughiamo	1	asciugare subjunctive (are), corpus 0
 asciughiate	1	asciugare subjunctive (are), corpus 0
 ascoltammo	72	ascoltare past (are), corpus 6
 ascoltassi	65	ascoltare subjunctive-past (are), corpus 3
-ascoltaste	70	ascoltare past (are), corpus 5
+ascoltaste	70	ascoltare subjunctive-past (are), corpus 5
 ascoltasti	1	ascoltare past (are), corpus 0
 ascoltavamo	54	ascoltare imperfect (are), corpus 1
 ascoltavate	54	ascoltare imperfect (are), corpus 1
@@ -2063,7 +2063,7 @@ aspettai	92	aspettare past (are), corpus 42
 aspettammo	83	aspettare past (are), corpus 18
 aspettassi	93	aspettare subjunctive-past (are), corpus 47
 aspettassimo	72	aspettare subjunctive-past (are), corpus 6
-aspettaste	65	aspettare past (are), corpus 3
+aspettaste	65	aspettare subjunctive-past (are), corpus 3
 aspettasti	1	aspettare past (are), corpus 0
 aspettavi	87	aspettare imperfect (are), corpus 26
 aspetterai	82	aspettare future (are), corpus 15
@@ -2187,7 +2187,7 @@ assicurai	54	assicurare past (are), corpus 1
 assicurammo	61	assicurare past (are), corpus 2
 assicurassi	1	assicurare subjunctive-past (are), corpus 0
 assicurassimo	1	assicurare subjunctive-past (are), corpus 0
-assicuraste	1	assicurare past (are), corpus 0
+assicuraste	1	assicurare subjunctive-past (are), corpus 0
 assicurasti	1	assicurare past (are), corpus 0
 assicuravamo	1	assicurare imperfect (are), corpus 0
 assicuravate	1	assicurare imperfect (are), corpus 0
@@ -2227,7 +2227,7 @@ associai	1	associare past (are), corpus 0
 associammo	1	associare past (are), corpus 0
 associassi	1	associare subjunctive-past (are), corpus 0
 associassimo	1	associare subjunctive-past (are), corpus 0
-associaste	1	associare past (are), corpus 0
+associaste	1	associare subjunctive-past (are), corpus 0
 associasti	1	associare past (are), corpus 0
 associavamo	1	associare imperfect (are), corpus 0
 associavate	1	associare imperfect (are), corpus 0
@@ -2321,7 +2321,7 @@ attaccai	70	attaccare past (are), corpus 5
 attaccammo	1	attaccare past (are), corpus 0
 attaccassi	1	attaccare subjunctive-past (are), corpus 0
 attaccassimo	61	attaccare subjunctive-past (are), corpus 2
-attaccaste	1	attaccare past (are), corpus 0
+attaccaste	1	attaccare subjunctive-past (are), corpus 0
 attaccasti	1	attaccare past (are), corpus 0
 attaccavamo	1	attaccare imperfect (are), corpus 0
 attaccavate	1	attaccare imperfect (are), corpus 0
@@ -2372,7 +2372,7 @@ attestai	1	attestare past (are), corpus 0
 attestammo	1	attestare past (are), corpus 0
 attestassi	1	attestare subjunctive-past (are), corpus 0
 attestassimo	1	attestare subjunctive-past (are), corpus 0
-attestaste	1	attestare past (are), corpus 0
+attestaste	1	attestare subjunctive-past (are), corpus 0
 attestasti	1	attestare past (are), corpus 0
 attestavamo	1	attestare imperfect (are), corpus 0
 attestavate	1	attestare imperfect (are), corpus 0
@@ -2407,7 +2407,7 @@ attirai	1	attirare past (are), corpus 0
 attirammo	1	attirare past (are), corpus 0
 attirassi	1	attirare subjunctive-past (are), corpus 0
 attirassimo	1	attirare subjunctive-past (are), corpus 0
-attiraste	1	attirare past (are), corpus 0
+attiraste	1	attirare subjunctive-past (are), corpus 0
 attirasti	1	attirare past (are), corpus 0
 attiravamo	61	attirare imperfect (are), corpus 2
 attiravate	61	attirare imperfect (are), corpus 2
@@ -2422,7 +2422,7 @@ attivai	1	attivare past (are), corpus 0
 attivammo	1	attivare past (are), corpus 0
 attivassi	1	attivare subjunctive-past (are), corpus 0
 attivassimo	1	attivare subjunctive-past (are), corpus 0
-attivaste	1	attivare past (are), corpus 0
+attivaste	1	attivare subjunctive-past (are), corpus 0
 attivasti	1	attivare past (are), corpus 0
 attivavamo	1	attivare imperfect (are), corpus 0
 attivavate	1	attivare imperfect (are), corpus 0
@@ -2448,7 +2448,7 @@ attraversai	74	attraversare past (are), corpus 7
 attraversammo	75	attraversare past (are), corpus 8
 attraversassi	1	attraversare subjunctive-past (are), corpus 0
 attraversassimo	1	attraversare subjunctive-past (are), corpus 0
-attraversaste	1	attraversare past (are), corpus 0
+attraversaste	1	attraversare subjunctive-past (are), corpus 0
 attraversasti	1	attraversare past (are), corpus 0
 attraversavamo	61	attraversare imperfect (are), corpus 2
 attraversavate	1	attraversare imperfect (are), corpus 0
@@ -2478,7 +2478,7 @@ attribuirò	1	attribuire future (ire), corpus 0
 attribuisci	54	attribuire present (ire-isc), corpus 1
 attribuissi	1	attribuire subjunctive-past (ire), corpus 0
 attribuissimo	1	attribuire subjunctive-past (ire), corpus 0
-attribuiste	1	attribuire past (ire), corpus 0
+attribuiste	1	attribuire subjunctive-past (ire), corpus 0
 attribuisti	1	attribuire past (ire), corpus 0
 attribuivamo	61	attribuire imperfect (ire), corpus 2
 attribuivate	61	attribuire imperfect (ire), corpus 2
@@ -2492,7 +2492,7 @@ attualizzo	1	attualizzare present (are), corpus 0
 attuammo	1	attuare past (are), corpus 0
 attuassi	1	attuare subjunctive-past (are), corpus 0
 attuassimo	1	attuare subjunctive-past (are), corpus 0
-attuaste	1	attuare past (are), corpus 0
+attuaste	1	attuare subjunctive-past (are), corpus 0
 attuasti	1	attuare past (are), corpus 0
 attuavamo	1	attuare imperfect (are), corpus 0
 attuavate	1	attuare imperfect (are), corpus 0
@@ -2518,7 +2518,7 @@ aumentai	1	aumentare past (are), corpus 0
 aumentammo	1	aumentare past (are), corpus 0
 aumentassi	1	aumentare subjunctive-past (are), corpus 0
 aumentassimo	1	aumentare subjunctive-past (are), corpus 0
-aumentaste	1	aumentare past (are), corpus 0
+aumentaste	1	aumentare subjunctive-past (are), corpus 0
 aumentasti	1	aumentare past (are), corpus 0
 aumentavamo	1	aumentare imperfect (are), corpus 0
 aumentavate	1	aumentare imperfect (are), corpus 0
@@ -2552,7 +2552,7 @@ autorizzai	1	autorizzare past (are), corpus 0
 autorizzammo	1	autorizzare past (are), corpus 0
 autorizzassi	1	autorizzare subjunctive-past (are), corpus 0
 autorizzassimo	1	autorizzare subjunctive-past (are), corpus 0
-autorizzaste	1	autorizzare past (are), corpus 0
+autorizzaste	1	autorizzare subjunctive-past (are), corpus 0
 autorizzasti	1	autorizzare past (are), corpus 0
 autorizzavamo	1	autorizzare imperfect (are), corpus 0
 autorizzavate	1	autorizzare imperfect (are), corpus 0
@@ -2568,7 +2568,7 @@ avanzai	1	avanzare past (are), corpus 0
 avanzammo	54	avanzare past (are), corpus 1
 avanzassi	1	avanzare subjunctive-past (are), corpus 0
 avanzassimo	1	avanzare subjunctive-past (are), corpus 0
-avanzaste	1	avanzare past (are), corpus 0
+avanzaste	1	avanzare subjunctive-past (are), corpus 0
 avanzasti	1	avanzare past (are), corpus 0
 avanzavamo	61	avanzare imperfect (are), corpus 2
 avanzavate	61	avanzare imperfect (are), corpus 2
@@ -2647,7 +2647,7 @@ avviammo	1	avviare past (are), corpus 0
 avviamo	54	avviare present (are), corpus 1
 avviassi	1	avviare subjunctive-past (are), corpus 0
 avviassimo	1	avviare subjunctive-past (are), corpus 0
-avviaste	1	avviare past (are), corpus 0
+avviaste	1	avviare subjunctive-past (are), corpus 0
 avviasti	1	avviare past (are), corpus 0
 avviavamo	1	avviare imperfect (are), corpus 0
 avviavate	1	avviare imperfect (are), corpus 0
@@ -2663,7 +2663,7 @@ avvicinai	65	avvicinare past (are), corpus 3
 avvicinammo	54	avvicinare past (are), corpus 1
 avvicinassi	54	avvicinare subjunctive-past (are), corpus 1
 avvicinassimo	1	avvicinare subjunctive-past (are), corpus 0
-avvicinaste	1	avvicinare past (are), corpus 0
+avvicinaste	1	avvicinare subjunctive-past (are), corpus 0
 avvicinasti	1	avvicinare past (are), corpus 0
 avvicinavamo	61	avvicinare imperfect (are), corpus 2
 avvicinavate	61	avvicinare imperfect (are), corpus 2
@@ -2799,7 +2799,7 @@ basai	1	basare past (are), corpus 0
 basammo	1	basare past (are), corpus 0
 basassi	1	basare subjunctive-past (are), corpus 0
 basassimo	1	basare subjunctive-past (are), corpus 0
-basaste	1	basare past (are), corpus 0
+basaste	1	basare subjunctive-past (are), corpus 0
 basasti	1	basare past (are), corpus 0
 basavamo	1	basare imperfect (are), corpus 0
 basavate	1	basare imperfect (are), corpus 0
@@ -2818,7 +2818,7 @@ bastai	1	bastare past (are), corpus 0
 bastammo	1	bastare past (are), corpus 0
 bastassi	1	bastare subjunctive-past (are), corpus 0
 bastassimo	1	bastare subjunctive-past (are), corpus 0
-bastaste	1	bastare past (are), corpus 0
+bastaste	1	bastare subjunctive-past (are), corpus 0
 bastasti	1	bastare past (are), corpus 0
 bastavamo	1	bastare imperfect (are), corpus 0
 bastavate	1	bastare imperfect (are), corpus 0
@@ -2866,7 +2866,7 @@ beneficiammo	1	beneficiare past (are), corpus 0
 beneficiamo	1	beneficiare subjunctive (are), corpus 0
 beneficiassi	1	beneficiare subjunctive-past (are), corpus 0
 beneficiassimo	1	beneficiare subjunctive-past (are), corpus 0
-beneficiaste	1	beneficiare past (are), corpus 0
+beneficiaste	1	beneficiare subjunctive-past (are), corpus 0
 beneficiasti	1	beneficiare past (are), corpus 0
 beneficiavamo	1	beneficiare imperfect (are), corpus 0
 beneficiavate	1	beneficiare imperfect (are), corpus 0
@@ -2910,7 +2910,7 @@ bloccai	61	bloccare past (are), corpus 2
 bloccammo	1	bloccare past (are), corpus 0
 bloccassi	1	bloccare subjunctive-past (are), corpus 0
 bloccassimo	1	bloccare subjunctive-past (are), corpus 0
-bloccaste	1	bloccare past (are), corpus 0
+bloccaste	1	bloccare subjunctive-past (are), corpus 0
 bloccasti	1	bloccare past (are), corpus 0
 bloccavamo	1	bloccare imperfect (are), corpus 0
 bloccavate	1	bloccare imperfect (are), corpus 0
@@ -3004,7 +3004,7 @@ bruciai	82	bruciare past (are), corpus 15
 bruciamo	54	bruciare subjunctive (are), corpus 1
 bruciassi	1	bruciare subjunctive-past (are), corpus 0
 bruciassimo	1	bruciare subjunctive-past (are), corpus 0
-bruciaste	1	bruciare past (are), corpus 0
+bruciaste	1	bruciare subjunctive-past (are), corpus 0
 bruciasti	1	bruciare past (are), corpus 0
 bruciavamo	1	bruciare imperfect (are), corpus 0
 bruciavate	1	bruciare imperfect (are), corpus 0
@@ -3046,7 +3046,7 @@ cacciammo	1	cacciare past (are), corpus 0
 cacciamo	54	cacciare subjunctive (are), corpus 1
 cacciassi	1	cacciare subjunctive-past (are), corpus 0
 cacciassimo	1	cacciare subjunctive-past (are), corpus 0
-cacciaste	1	cacciare past (are), corpus 0
+cacciaste	1	cacciare subjunctive-past (are), corpus 0
 cacciasti	1	cacciare past (are), corpus 0
 cacciavamo	1	cacciare imperfect (are), corpus 0
 cacciavate	1	cacciare imperfect (are), corpus 0
@@ -3130,7 +3130,7 @@ cambiai	81	cambiare past (are), corpus 14
 cambiammo	61	cambiare past (are), corpus 2
 cambiassi	61	cambiare subjunctive-past (are), corpus 2
 cambiassimo	1	cambiare subjunctive-past (are), corpus 0
-cambiaste	1	cambiare past (are), corpus 0
+cambiaste	1	cambiare subjunctive-past (are), corpus 0
 cambiasti	1	cambiare past (are), corpus 0
 cambiavamo	61	cambiare imperfect (are), corpus 2
 cambiavate	61	cambiare imperfect (are), corpus 2
@@ -3165,7 +3165,7 @@ cancellai	78	cancellare past (are), corpus 11
 cancellammo	1	cancellare past (are), corpus 0
 cancellassi	1	cancellare subjunctive-past (are), corpus 0
 cancellassimo	61	cancellare subjunctive-past (are), corpus 2
-cancellaste	1	cancellare past (are), corpus 0
+cancellaste	1	cancellare subjunctive-past (are), corpus 0
 cancellasti	1	cancellare past (are), corpus 0
 cancellavamo	1	cancellare imperfect (are), corpus 0
 cancellavate	1	cancellare imperfect (are), corpus 0
@@ -3188,7 +3188,7 @@ cannoneggiaste	1	cannoneggiare past (are), corpus 0
 cannoneggiasti	1	cannoneggiare past (are), corpus 0
 cantammo	83	cantare past (are), corpus 17
 cantassimo	1	cantare subjunctive-past (are), corpus 0
-cantaste	68	cantare past (are), corpus 4
+cantaste	68	cantare subjunctive-past (are), corpus 4
 cantasti	1	cantare past (are), corpus 0
 cantavamo	68	cantare imperfect (are), corpus 4
 cantavate	70	cantare imperfect (are), corpus 5
@@ -3215,7 +3215,7 @@ capirete	85	capire future (ire), corpus 21
 capirò	88	capire future (ire), corpus 28
 capissi	65	capire subjunctive-past (ire), corpus 3
 capissimo	1	capire subjunctive-past (ire), corpus 0
-capiste	65	capire past (ire), corpus 3
+capiste	65	capire subjunctive-past (ire), corpus 3
 capisti	54	capire past (ire), corpus 1
 capitai	1	capitare past (are), corpus 0
 capitalizzi	1	capitalizzare present (are), corpus 0
@@ -3260,7 +3260,7 @@ caratterizzai	1	caratterizzare past (are), corpus 0
 caratterizzammo	1	caratterizzare past (are), corpus 0
 caratterizzassi	1	caratterizzare subjunctive-past (are), corpus 0
 caratterizzassimo	1	caratterizzare subjunctive-past (are), corpus 0
-caratterizzaste	1	caratterizzare past (are), corpus 0
+caratterizzaste	1	caratterizzare subjunctive-past (are), corpus 0
 caratterizzasti	1	caratterizzare past (are), corpus 0
 caratterizzavamo	1	caratterizzare imperfect (are), corpus 0
 caratterizzavate	1	caratterizzare imperfect (are), corpus 0
@@ -3314,7 +3314,7 @@ catturai	80	catturare past (are), corpus 13
 catturammo	78	catturare past (are), corpus 11
 catturassi	54	catturare subjunctive-past (are), corpus 1
 catturassimo	1	catturare subjunctive-past (are), corpus 0
-catturaste	1	catturare past (are), corpus 0
+catturaste	1	catturare subjunctive-past (are), corpus 0
 catturasti	1	catturare past (are), corpus 0
 catturavamo	1	catturare imperfect (are), corpus 0
 catturavate	1	catturare imperfect (are), corpus 0
@@ -3330,7 +3330,7 @@ causai	72	causare past (are), corpus 6
 causammo	1	causare past (are), corpus 0
 causassi	1	causare subjunctive-past (are), corpus 0
 causassimo	1	causare subjunctive-past (are), corpus 0
-causaste	1	causare past (are), corpus 0
+causaste	1	causare subjunctive-past (are), corpus 0
 causasti	1	causare past (are), corpus 0
 causavamo	1	causare imperfect (are), corpus 0
 causavate	1	causare imperfect (are), corpus 0
@@ -3378,7 +3378,7 @@ celai	1	celare past (are), corpus 0
 celammo	1	celare past (are), corpus 0
 celassi	1	celare subjunctive-past (are), corpus 0
 celassimo	1	celare subjunctive-past (are), corpus 0
-celaste	1	celare past (are), corpus 0
+celaste	1	celare subjunctive-past (are), corpus 0
 celasti	1	celare past (are), corpus 0
 celavamo	1	celare imperfect (are), corpus 0
 celavate	1	celare imperfect (are), corpus 0
@@ -3388,7 +3388,7 @@ celebrai	1	celebrare past (are), corpus 0
 celebrammo	1	celebrare past (are), corpus 0
 celebrassi	1	celebrare subjunctive-past (are), corpus 0
 celebrassimo	1	celebrare subjunctive-past (are), corpus 0
-celebraste	1	celebrare past (are), corpus 0
+celebraste	1	celebrare subjunctive-past (are), corpus 0
 celebrasti	1	celebrare past (are), corpus 0
 celebravamo	1	celebrare imperfect (are), corpus 0
 celebravate	1	celebrare imperfect (are), corpus 0
@@ -3436,7 +3436,7 @@ centriate	1	centrare subjunctive (are), corpus 0
 cercammo	78	cercare past (are), corpus 11
 cercassi	1	cercare subjunctive-past (are), corpus 0
 cercassimo	1	cercare subjunctive-past (are), corpus 0
-cercaste	1	cercare past (are), corpus 0
+cercaste	1	cercare subjunctive-past (are), corpus 0
 cercasti	1	cercare past (are), corpus 0
 cercavate	61	cercare imperfect (are), corpus 2
 cercavi	74	cercare imperfect (are), corpus 7
@@ -3454,7 +3454,7 @@ cessai	1	cessare past (are), corpus 0
 cessammo	1	cessare past (are), corpus 0
 cessassi	1	cessare subjunctive-past (are), corpus 0
 cessassimo	1	cessare subjunctive-past (are), corpus 0
-cessaste	1	cessare past (are), corpus 0
+cessaste	1	cessare subjunctive-past (are), corpus 0
 cessasti	1	cessare past (are), corpus 0
 cessavamo	1	cessare imperfect (are), corpus 0
 cessavate	1	cessare imperfect (are), corpus 0
@@ -3478,7 +3478,7 @@ chiacchieriamo	68	chiacchierare present (are), corpus 4
 chiamammo	79	chiamare past (are), corpus 12
 chiamassi	68	chiamare subjunctive-past (are), corpus 4
 chiamassimo	54	chiamare subjunctive-past (are), corpus 1
-chiamaste	61	chiamare past (are), corpus 2
+chiamaste	61	chiamare subjunctive-past (are), corpus 2
 chiamasti	54	chiamare past (are), corpus 1
 chiamavate	61	chiamare imperfect (are), corpus 2
 chiamavi	74	chiamare imperfect (are), corpus 7
@@ -3495,7 +3495,7 @@ chiarirete	1	chiarire future (ire), corpus 0
 chiarirò	54	chiarire future (ire), corpus 1
 chiarissero	1	chiarire subjunctive-past (ire), corpus 0
 chiarissi	1	chiarire subjunctive-past (ire), corpus 0
-chiariste	1	chiarire past (ire), corpus 0
+chiariste	1	chiarire subjunctive-past (ire), corpus 0
 chiarono	1	chiarire present (ire), corpus 0
 chiederai	81	chiedere future (ere), corpus 14
 chiederemo	80	chiedere future (ere), corpus 13
@@ -3525,7 +3525,7 @@ cibai	1	cibare past (are), corpus 0
 cibammo	1	cibare past (are), corpus 0
 cibassi	1	cibare subjunctive-past (are), corpus 0
 cibassimo	1	cibare subjunctive-past (are), corpus 0
-cibaste	1	cibare past (are), corpus 0
+cibaste	1	cibare subjunctive-past (are), corpus 0
 cibasti	1	cibare past (are), corpus 0
 cibate	1	cibare present (are), corpus 0
 cibavamo	1	cibare imperfect (are), corpus 0
@@ -3562,7 +3562,7 @@ circolai	1	circolare past (are), corpus 0
 circolammo	1	circolare past (are), corpus 0
 circolassi	1	circolare subjunctive-past (are), corpus 0
 circolassimo	1	circolare subjunctive-past (are), corpus 0
-circolaste	1	circolare past (are), corpus 0
+circolaste	1	circolare subjunctive-past (are), corpus 0
 circolasti	1	circolare past (are), corpus 0
 circolavamo	1	circolare imperfect (are), corpus 0
 circolavate	1	circolare imperfect (are), corpus 0
@@ -3578,7 +3578,7 @@ circondai	1	circondare past (are), corpus 0
 circondammo	70	circondare past (are), corpus 5
 circondassi	1	circondare subjunctive-past (are), corpus 0
 circondassimo	1	circondare subjunctive-past (are), corpus 0
-circondaste	1	circondare past (are), corpus 0
+circondaste	1	circondare subjunctive-past (are), corpus 0
 circondasti	1	circondare past (are), corpus 0
 circondavamo	1	circondare imperfect (are), corpus 0
 circondavate	1	circondare imperfect (are), corpus 0
@@ -3724,7 +3724,7 @@ collaborai	1	collaborare past (are), corpus 0
 collaborammo	1	collaborare past (are), corpus 0
 collaborassi	1	collaborare subjunctive-past (are), corpus 0
 collaborassimo	1	collaborare subjunctive-past (are), corpus 0
-collaboraste	1	collaborare past (are), corpus 0
+collaboraste	1	collaborare subjunctive-past (are), corpus 0
 collaborasti	1	collaborare past (are), corpus 0
 collaborate	61	collaborare present (are), corpus 2
 collaboravamo	1	collaborare imperfect (are), corpus 0
@@ -3756,7 +3756,7 @@ collegai	54	collegare past (are), corpus 1
 collegammo	1	collegare past (are), corpus 0
 collegassi	1	collegare subjunctive-past (are), corpus 0
 collegassimo	1	collegare subjunctive-past (are), corpus 0
-collegaste	1	collegare past (are), corpus 0
+collegaste	1	collegare subjunctive-past (are), corpus 0
 collegasti	1	collegare past (are), corpus 0
 collegavamo	1	collegare imperfect (are), corpus 0
 collegavate	1	collegare imperfect (are), corpus 0
@@ -3836,7 +3836,7 @@ colpirete	1	colpire future (ire), corpus 0
 colpirò	65	colpire future (ire), corpus 3
 colpissi	1	colpire subjunctive-past (ire), corpus 0
 colpissimo	1	colpire subjunctive-past (ire), corpus 0
-colpiste	1	colpire past (ire), corpus 0
+colpiste	1	colpire subjunctive-past (ire), corpus 0
 colpisti	1	colpire past (ire), corpus 0
 colpivamo	1	colpire imperfect (ire), corpus 0
 colpivate	1	colpire imperfect (ire), corpus 0
@@ -3847,7 +3847,7 @@ coltivai	1	coltivare past (are), corpus 0
 coltivammo	1	coltivare past (are), corpus 0
 coltivassi	1	coltivare subjunctive-past (are), corpus 0
 coltivassimo	1	coltivare subjunctive-past (are), corpus 0
-coltivaste	1	coltivare past (are), corpus 0
+coltivaste	1	coltivare subjunctive-past (are), corpus 0
 coltivasti	1	coltivare past (are), corpus 0
 coltivavamo	1	coltivare imperfect (are), corpus 0
 coltivavate	1	coltivare imperfect (are), corpus 0
@@ -3888,7 +3888,7 @@ combinai	1	combinare past (are), corpus 0
 combinammo	1	combinare past (are), corpus 0
 combinassi	1	combinare subjunctive-past (are), corpus 0
 combinassimo	1	combinare subjunctive-past (are), corpus 0
-combinaste	1	combinare past (are), corpus 0
+combinaste	1	combinare subjunctive-past (are), corpus 0
 combinasti	1	combinare past (are), corpus 0
 combinavamo	1	combinare imperfect (are), corpus 0
 combinavate	1	combinare imperfect (are), corpus 0
@@ -3906,7 +3906,7 @@ comincerete	54	cominciare future (are), corpus 1
 comincerò	87	cominciare future (are), corpus 26
 cominciassi	1	cominciare subjunctive-past (are), corpus 0
 cominciassimo	65	cominciare subjunctive-past (are), corpus 3
-cominciaste	54	cominciare past (are), corpus 1
+cominciaste	54	cominciare subjunctive-past (are), corpus 1
 cominciasti	1	cominciare past (are), corpus 0
 cominciavamo	61	cominciare imperfect (are), corpus 2
 cominciavate	1	cominciare imperfect (are), corpus 0
@@ -3998,7 +3998,7 @@ comparirete	1	comparire future (ire), corpus 0
 comparirò	1	comparire future (ire), corpus 0
 comparissi	1	comparire subjunctive-past (ire), corpus 0
 comparissimo	1	comparire subjunctive-past (ire), corpus 0
-compariste	1	comparire past (ire), corpus 0
+compariste	1	comparire subjunctive-past (ire), corpus 0
 comparisti	1	comparire past (ire), corpus 0
 comparite	1	comparire present (ire), corpus 0
 comparivamo	1	comparire imperfect (ire), corpus 0
@@ -4059,7 +4059,7 @@ completai	1	completare past (are), corpus 0
 completammo	1	completare past (are), corpus 0
 completassi	1	completare subjunctive-past (are), corpus 0
 completassimo	1	completare subjunctive-past (are), corpus 0
-completaste	1	completare past (are), corpus 0
+completaste	1	completare subjunctive-past (are), corpus 0
 completasti	1	completare past (are), corpus 0
 completavamo	1	completare imperfect (are), corpus 0
 completavate	1	completare imperfect (are), corpus 0
@@ -4095,7 +4095,7 @@ comportai	1	comportare past (are), corpus 0
 comportammo	1	comportare past (are), corpus 0
 comportassi	1	comportare subjunctive-past (are), corpus 0
 comportassimo	1	comportare subjunctive-past (are), corpus 0
-comportaste	1	comportare past (are), corpus 0
+comportaste	1	comportare subjunctive-past (are), corpus 0
 comportasti	1	comportare past (are), corpus 0
 comportavamo	1	comportare imperfect (are), corpus 0
 comportavate	54	comportare imperfect (are), corpus 1
@@ -4133,7 +4133,7 @@ comprendevate	1	comprendere imperfect (ere), corpus 0
 comprendevi	1	comprendere imperfect (ere), corpus 0
 comprendevo	61	comprendere imperfect (ere), corpus 2
 comprendiate	65	comprendere subjunctive (ere), corpus 3
-comprerai	88	comprare future (are), corpus 28
+comprerai	88	comprare future (are), corpus 29
 compreremo	83	comprare future (are), corpus 18
 comprerete	85	comprare future (are), corpus 22
 comprerò	110	comprare future (are), corpus 242
@@ -4168,7 +4168,7 @@ comunicai	1	comunicare past (are), corpus 0
 comunicammo	1	comunicare past (are), corpus 0
 comunicassi	1	comunicare subjunctive-past (are), corpus 0
 comunicassimo	1	comunicare subjunctive-past (are), corpus 0
-comunicaste	1	comunicare past (are), corpus 0
+comunicaste	1	comunicare subjunctive-past (are), corpus 0
 comunicasti	1	comunicare past (are), corpus 0
 comunicavamo	61	comunicare imperfect (are), corpus 2
 comunicavate	1	comunicare imperfect (are), corpus 0
@@ -4199,7 +4199,7 @@ concentrai	54	concentrare past (are), corpus 1
 concentrammo	61	concentrare past (are), corpus 2
 concentrassi	54	concentrare subjunctive-past (are), corpus 1
 concentrassimo	1	concentrare subjunctive-past (are), corpus 0
-concentraste	61	concentrare past (are), corpus 2
+concentraste	61	concentrare subjunctive-past (are), corpus 2
 concentrasti	1	concentrare past (are), corpus 0
 concentravamo	1	concentrare imperfect (are), corpus 0
 concentravate	1	concentrare imperfect (are), corpus 0
@@ -4252,7 +4252,7 @@ concordai	1	concordare past (are), corpus 0
 concordammo	54	concordare past (are), corpus 1
 concordassi	1	concordare subjunctive-past (are), corpus 0
 concordassimo	1	concordare subjunctive-past (are), corpus 0
-concordaste	1	concordare past (are), corpus 0
+concordaste	1	concordare subjunctive-past (are), corpus 0
 concordasti	1	concordare past (are), corpus 0
 concordavamo	1	concordare imperfect (are), corpus 0
 concordavate	1	concordare imperfect (are), corpus 0
@@ -4289,7 +4289,7 @@ condannai	1	condannare past (are), corpus 0
 condannammo	1	condannare past (are), corpus 0
 condannassi	1	condannare subjunctive-past (are), corpus 0
 condannassimo	1	condannare subjunctive-past (are), corpus 0
-condannaste	1	condannare past (are), corpus 0
+condannaste	1	condannare subjunctive-past (are), corpus 0
 condannasti	1	condannare past (are), corpus 0
 condannavamo	1	condannare imperfect (are), corpus 0
 condannavate	1	condannare imperfect (are), corpus 0
@@ -4346,7 +4346,7 @@ conferisci	1	conferire present (ire-isc), corpus 0
 conferisco	1	conferire present (ire-isc), corpus 0
 conferissi	1	conferire subjunctive-past (ire), corpus 0
 conferissimo	1	conferire subjunctive-past (ire), corpus 0
-conferiste	1	conferire past (ire), corpus 0
+conferiste	1	conferire subjunctive-past (ire), corpus 0
 conferisti	1	conferire past (ire), corpus 0
 conferivamo	1	conferire imperfect (ire), corpus 0
 conferivate	1	conferire imperfect (ire), corpus 0
@@ -4356,7 +4356,7 @@ confermai	1	confermare past (are), corpus 0
 confermammo	54	confermare past (are), corpus 1
 confermassi	1	confermare subjunctive-past (are), corpus 0
 confermassimo	1	confermare subjunctive-past (are), corpus 0
-confermaste	1	confermare past (are), corpus 0
+confermaste	1	confermare subjunctive-past (are), corpus 0
 confermasti	1	confermare past (are), corpus 0
 confermavamo	1	confermare imperfect (are), corpus 0
 confermavate	1	confermare imperfect (are), corpus 0
@@ -4447,7 +4447,7 @@ confluisci	1	confluire present (ire-isc), corpus 0
 confluisco	1	confluire present (ire-isc), corpus 0
 confluissi	1	confluire subjunctive-past (ire), corpus 0
 confluissimo	1	confluire subjunctive-past (ire), corpus 0
-confluiste	1	confluire past (ire), corpus 0
+confluiste	1	confluire subjunctive-past (ire), corpus 0
 confluisti	1	confluire past (ire), corpus 0
 confluivamo	1	confluire imperfect (ire), corpus 0
 confluivate	1	confluire imperfect (ire), corpus 0
@@ -4461,7 +4461,7 @@ confondevamo	1	confondere imperfect (ere), corpus 0
 confondevate	1	confondere imperfect (ere), corpus 0
 confondevi	1	confondere imperfect (ere), corpus 0
 confondevo	1	confondere imperfect (ere), corpus 0
-confondi	1	confondere present (ere), corpus 0
+confondi	54	confondere present (ere), corpus 1
 confondiamo	65	confondere subjunctive (ere), corpus 3
 confondiate	1	confondere subjunctive (ere), corpus 0
 conformai	1	conformare past (are), corpus 0
@@ -4560,7 +4560,7 @@ conquistai	1	conquistare past (are), corpus 0
 conquistammo	1	conquistare past (are), corpus 0
 conquistassi	1	conquistare subjunctive-past (are), corpus 0
 conquistassimo	1	conquistare subjunctive-past (are), corpus 0
-conquistaste	1	conquistare past (are), corpus 0
+conquistaste	1	conquistare subjunctive-past (are), corpus 0
 conquistasti	1	conquistare past (are), corpus 0
 conquistavamo	1	conquistare imperfect (are), corpus 0
 conquistavate	1	conquistare imperfect (are), corpus 0
@@ -4587,7 +4587,7 @@ consacriamo	1	consacrare present (are), corpus 0
 consegnammo	1	consegnare past (are), corpus 0
 consegnassi	1	consegnare subjunctive-past (are), corpus 0
 consegnassimo	1	consegnare subjunctive-past (are), corpus 0
-consegnaste	1	consegnare past (are), corpus 0
+consegnaste	1	consegnare subjunctive-past (are), corpus 0
 consegnasti	1	consegnare past (are), corpus 0
 consegnavamo	1	consegnare imperfect (are), corpus 0
 consegnavate	1	consegnare imperfect (are), corpus 0
@@ -4628,7 +4628,7 @@ consentirete	1	consentire future (ire), corpus 0
 consentirò	1	consentire future (ire), corpus 0
 consentissi	1	consentire subjunctive-past (ire), corpus 0
 consentissimo	1	consentire subjunctive-past (ire), corpus 0
-consentiste	1	consentire past (ire), corpus 0
+consentiste	1	consentire subjunctive-past (ire), corpus 0
 consentisti	1	consentire past (ire), corpus 0
 consentivamo	1	consentire imperfect (ire), corpus 0
 consentivate	1	consentire imperfect (ire), corpus 0
@@ -4638,7 +4638,7 @@ conservai	54	conservare past (are), corpus 1
 conservammo	1	conservare past (are), corpus 0
 conservassi	1	conservare subjunctive-past (are), corpus 0
 conservassimo	1	conservare subjunctive-past (are), corpus 0
-conservaste	1	conservare past (are), corpus 0
+conservaste	1	conservare subjunctive-past (are), corpus 0
 conservasti	1	conservare past (are), corpus 0
 conservavamo	1	conservare imperfect (are), corpus 0
 conservavate	1	conservare imperfect (are), corpus 0
@@ -4652,9 +4652,9 @@ conserviate	1	conservare subjunctive (are), corpus 0
 considerai	68	considerare past (are), corpus 4
 considerammo	61	considerare past (are), corpus 2
 considerassi	54	considerare subjunctive-past (are), corpus 1
-consideraste	1	considerare past (are), corpus 0
+consideraste	1	considerare subjunctive-past (are), corpus 0
 considerasti	1	considerare past (are), corpus 0
-consideravamo	68	considerare imperfect (are), corpus 4
+consideravamo	70	considerare imperfect (are), corpus 5
 consideravate	1	considerare imperfect (are), corpus 0
 consideravi	1	considerare imperfect (are), corpus 0
 considererai	54	considerare future (are), corpus 1
@@ -4668,7 +4668,7 @@ consigliai	82	consigliare past (are), corpus 15
 consigliammo	1	consigliare past (are), corpus 0
 consigliassi	1	consigliare subjunctive-past (are), corpus 0
 consigliassimo	1	consigliare subjunctive-past (are), corpus 0
-consigliaste	1	consigliare past (are), corpus 0
+consigliaste	1	consigliare subjunctive-past (are), corpus 0
 consigliasti	1	consigliare past (are), corpus 0
 consigliavamo	1	consigliare imperfect (are), corpus 0
 consigliavate	1	consigliare imperfect (are), corpus 0
@@ -4737,7 +4737,7 @@ consumai	1	consumare past (are), corpus 0
 consumammo	1	consumare past (are), corpus 0
 consumassi	1	consumare subjunctive-past (are), corpus 0
 consumassimo	1	consumare subjunctive-past (are), corpus 0
-consumaste	1	consumare past (are), corpus 0
+consumaste	1	consumare subjunctive-past (are), corpus 0
 consumasti	1	consumare past (are), corpus 0
 consumavamo	1	consumare imperfect (are), corpus 0
 consumavate	1	consumare imperfect (are), corpus 0
@@ -4768,7 +4768,7 @@ contaminiamo	1	contaminare present (are), corpus 0
 contammo	54	contare past (are), corpus 1
 contassi	1	contare subjunctive-past (are), corpus 0
 contassimo	1	contare subjunctive-past (are), corpus 0
-contaste	1	contare past (are), corpus 0
+contaste	1	contare subjunctive-past (are), corpus 0
 contasti	1	contare past (are), corpus 0
 contattai	79	contattare past (are), corpus 12
 contattammo	54	contattare past (are), corpus 1
@@ -4789,7 +4789,7 @@ contemplai	1	contemplare past (are), corpus 0
 contemplammo	1	contemplare past (are), corpus 0
 contemplassi	1	contemplare subjunctive-past (are), corpus 0
 contemplassimo	1	contemplare subjunctive-past (are), corpus 0
-contemplaste	1	contemplare past (are), corpus 0
+contemplaste	1	contemplare subjunctive-past (are), corpus 0
 contemplasti	1	contemplare past (are), corpus 0
 contemplavamo	1	contemplare imperfect (are), corpus 0
 contemplavate	1	contemplare imperfect (are), corpus 0
@@ -4840,7 +4840,7 @@ contiate	1	contare subjunctive (are), corpus 0
 continuammo	76	continuare past (are), corpus 9
 continuassi	1	continuare subjunctive-past (are), corpus 0
 continuassimo	1	continuare subjunctive-past (are), corpus 0
-continuaste	1	continuare past (are), corpus 0
+continuaste	1	continuare subjunctive-past (are), corpus 0
 continuasti	1	continuare past (are), corpus 0
 continuavamo	1	continuare imperfect (are), corpus 0
 continuavate	1	continuare imperfect (are), corpus 0
@@ -4876,7 +4876,7 @@ contrastai	1	contrastare past (are), corpus 0
 contrastammo	1	contrastare past (are), corpus 0
 contrastassi	1	contrastare subjunctive-past (are), corpus 0
 contrastassimo	1	contrastare subjunctive-past (are), corpus 0
-contrastaste	1	contrastare past (are), corpus 0
+contrastaste	1	contrastare subjunctive-past (are), corpus 0
 contrastasti	1	contrastare past (are), corpus 0
 contrastavamo	1	contrastare imperfect (are), corpus 0
 contrastavate	1	contrastare imperfect (are), corpus 0
@@ -4909,7 +4909,7 @@ contribuisci	74	contribuire present (ire-isc), corpus 7
 contribuisco	74	contribuire present (ire-isc), corpus 7
 contribuissi	1	contribuire subjunctive-past (ire), corpus 0
 contribuissimo	1	contribuire subjunctive-past (ire), corpus 0
-contribuiste	1	contribuire past (ire), corpus 0
+contribuiste	1	contribuire subjunctive-past (ire), corpus 0
 contribuisti	1	contribuire past (ire), corpus 0
 contribuite	65	contribuire present (ire-isc), corpus 3
 contribuivamo	1	contribuire imperfect (ire), corpus 0
@@ -4923,7 +4923,7 @@ controllai	84	controllare past (are), corpus 19
 controllammo	61	controllare past (are), corpus 2
 controllassi	72	controllare subjunctive-past (are), corpus 6
 controllassimo	1	controllare subjunctive-past (are), corpus 0
-controllaste	1	controllare past (are), corpus 0
+controllaste	1	controllare subjunctive-past (are), corpus 0
 controllasti	1	controllare past (are), corpus 0
 controllavamo	1	controllare imperfect (are), corpus 0
 controllavate	1	controllare imperfect (are), corpus 0
@@ -4966,7 +4966,7 @@ convertirete	1	convertire future (ire), corpus 0
 convertirò	1	convertire future (ire), corpus 0
 convertissi	1	convertire subjunctive-past (ire), corpus 0
 convertissimo	1	convertire subjunctive-past (ire), corpus 0
-convertiste	1	convertire past (ire), corpus 0
+convertiste	1	convertire subjunctive-past (ire), corpus 0
 convertisti	1	convertire past (ire), corpus 0
 convertivamo	1	convertire imperfect (ire), corpus 0
 convertivate	1	convertire imperfect (ire), corpus 0
@@ -5078,7 +5078,7 @@ coprirete	1	coprire future (ire), corpus 0
 coprirò	1	coprire future (ire), corpus 0
 coprissi	1	coprire subjunctive-past (ire), corpus 0
 coprissimo	1	coprire subjunctive-past (ire), corpus 0
-copriste	1	coprire past (ire), corpus 0
+copriste	1	coprire subjunctive-past (ire), corpus 0
 copristi	1	coprire past (ire), corpus 0
 coprivamo	1	coprire imperfect (ire), corpus 0
 coprivate	1	coprire imperfect (ire), corpus 0
@@ -5175,7 +5175,7 @@ costai	1	costare past (are), corpus 0
 costammo	1	costare past (are), corpus 0
 costassi	1	costare subjunctive-past (are), corpus 0
 costassimo	1	costare subjunctive-past (are), corpus 0
-costaste	1	costare past (are), corpus 0
+costaste	1	costare subjunctive-past (are), corpus 0
 costasti	1	costare past (are), corpus 0
 costatano	1	costatare present (are), corpus 0
 costatate	1	costatare present (are), corpus 0
@@ -5215,7 +5215,7 @@ costituirò	1	costituire future (ire), corpus 0
 costituisci	1	costituire present (ire-isc), corpus 0
 costituissi	1	costituire subjunctive-past (ire), corpus 0
 costituissimo	1	costituire subjunctive-past (ire), corpus 0
-costituiste	1	costituire past (ire), corpus 0
+costituiste	1	costituire subjunctive-past (ire), corpus 0
 costituisti	1	costituire past (ire), corpus 0
 costituivamo	1	costituire imperfect (ire), corpus 0
 costituivate	1	costituire imperfect (ire), corpus 0
@@ -5248,7 +5248,7 @@ costruirete	1	costruire future (ire), corpus 0
 costruirò	61	costruire future (ire), corpus 2
 costruissi	1	costruire subjunctive-past (ire), corpus 0
 costruissimo	1	costruire subjunctive-past (ire), corpus 0
-costruiste	1	costruire past (ire), corpus 0
+costruiste	1	costruire subjunctive-past (ire), corpus 0
 costruisti	1	costruire past (ire), corpus 0
 costruivamo	61	costruire imperfect (ire), corpus 2
 costruivate	61	costruire imperfect (ire), corpus 2
@@ -5273,7 +5273,7 @@ creai	61	creare past (are), corpus 2
 creammo	61	creare past (are), corpus 2
 creassi	1	creare subjunctive-past (are), corpus 0
 creassimo	1	creare subjunctive-past (are), corpus 0
-creaste	1	creare past (are), corpus 0
+creaste	1	creare subjunctive-past (are), corpus 0
 creasti	1	creare past (are), corpus 0
 creavamo	1	creare imperfect (are), corpus 0
 creavate	1	creare imperfect (are), corpus 0
@@ -5324,7 +5324,7 @@ criticai	54	criticare past (are), corpus 1
 criticammo	54	criticare past (are), corpus 1
 criticassi	1	criticare subjunctive-past (are), corpus 0
 criticassimo	1	criticare subjunctive-past (are), corpus 0
-criticaste	1	criticare past (are), corpus 0
+criticaste	1	criticare subjunctive-past (are), corpus 0
 criticasti	1	criticare past (are), corpus 0
 criticavamo	1	criticare imperfect (are), corpus 0
 criticavate	1	criticare imperfect (are), corpus 0
@@ -5341,7 +5341,7 @@ crollai	54	crollare past (are), corpus 1
 crollammo	1	crollare past (are), corpus 0
 crollassi	1	crollare subjunctive-past (are), corpus 0
 crollassimo	1	crollare subjunctive-past (are), corpus 0
-crollaste	1	crollare past (are), corpus 0
+crollaste	1	crollare subjunctive-past (are), corpus 0
 crollasti	1	crollare past (are), corpus 0
 crollavamo	1	crollare imperfect (are), corpus 0
 crollavate	1	crollare imperfect (are), corpus 0
@@ -5395,7 +5395,7 @@ curai	1	curare past (are), corpus 0
 curammo	1	curare past (are), corpus 0
 curassi	1	curare subjunctive-past (are), corpus 0
 curassimo	1	curare subjunctive-past (are), corpus 0
-curaste	1	curare past (are), corpus 0
+curaste	1	curare subjunctive-past (are), corpus 0
 curasti	1	curare past (are), corpus 0
 curavamo	1	curare imperfect (are), corpus 0
 curavate	1	curare imperfect (are), corpus 0
@@ -5421,7 +5421,7 @@ custodii	1	custodire past (ire), corpus 0
 custodimmo	1	custodire past (ire), corpus 0
 custodissi	1	custodire subjunctive-past (ire), corpus 0
 custodissimo	1	custodire subjunctive-past (ire), corpus 0
-custodiste	1	custodire past (ire), corpus 0
+custodiste	1	custodire subjunctive-past (ire), corpus 0
 custodisti	1	custodire past (ire), corpus 0
 custodivamo	1	custodire imperfect (ire), corpus 0
 custodivate	1	custodire imperfect (ire), corpus 0
@@ -5438,7 +5438,7 @@ danneggiammo	1	danneggiare past (are), corpus 0
 danneggiamo	1	danneggiare subjunctive (are), corpus 0
 danneggiassi	1	danneggiare subjunctive-past (are), corpus 0
 danneggiassimo	1	danneggiare subjunctive-past (are), corpus 0
-danneggiaste	1	danneggiare past (are), corpus 0
+danneggiaste	1	danneggiare subjunctive-past (are), corpus 0
 danneggiasti	1	danneggiare past (are), corpus 0
 danneggiavamo	1	danneggiare imperfect (are), corpus 0
 danneggiavate	1	danneggiare imperfect (are), corpus 0
@@ -5573,7 +5573,7 @@ decorai	68	decorare past (are), corpus 4
 decorammo	72	decorare past (are), corpus 6
 decorassi	1	decorare subjunctive-past (are), corpus 0
 decorassimo	1	decorare subjunctive-past (are), corpus 0
-decoraste	1	decorare past (are), corpus 0
+decoraste	1	decorare subjunctive-past (are), corpus 0
 decorasti	1	decorare past (are), corpus 0
 decoravamo	54	decorare imperfect (are), corpus 1
 decoravate	1	decorare imperfect (are), corpus 0
@@ -5604,7 +5604,7 @@ decretino	1	decretare subjunctive (are), corpus 0
 dedicammo	1	dedicare past (are), corpus 0
 dedicassi	1	dedicare subjunctive-past (are), corpus 0
 dedicassimo	1	dedicare subjunctive-past (are), corpus 0
-dedicaste	1	dedicare past (are), corpus 0
+dedicaste	1	dedicare subjunctive-past (are), corpus 0
 dedicasti	1	dedicare past (are), corpus 0
 dedicavamo	1	dedicare imperfect (are), corpus 0
 dedicavate	1	dedicare imperfect (are), corpus 0
@@ -5626,7 +5626,7 @@ definirò	61	definire future (ire), corpus 2
 definisci	75	definire present (ire-isc), corpus 8
 definissi	1	definire subjunctive-past (ire), corpus 0
 definissimo	1	definire subjunctive-past (ire), corpus 0
-definiste	1	definire past (ire), corpus 0
+definiste	1	definire subjunctive-past (ire), corpus 0
 definisti	1	definire past (ire), corpus 0
 definivamo	1	definire imperfect (ire), corpus 0
 definivate	1	definire imperfect (ire), corpus 0
@@ -5764,7 +5764,7 @@ denunciammo	1	denunciare past (are), corpus 0
 denunciamo	61	denunciare subjunctive (are), corpus 2
 denunciassi	54	denunciare subjunctive-past (are), corpus 1
 denunciassimo	1	denunciare subjunctive-past (are), corpus 0
-denunciaste	1	denunciare past (are), corpus 0
+denunciaste	1	denunciare subjunctive-past (are), corpus 0
 denunciasti	1	denunciare past (are), corpus 0
 denunciavamo	54	denunciare imperfect (are), corpus 1
 denunciavate	1	denunciare imperfect (are), corpus 0
@@ -5832,7 +5832,7 @@ derivai	1	derivare past (are), corpus 0
 derivammo	1	derivare past (are), corpus 0
 derivassi	1	derivare subjunctive-past (are), corpus 0
 derivassimo	1	derivare subjunctive-past (are), corpus 0
-derivaste	1	derivare past (are), corpus 0
+derivaste	1	derivare subjunctive-past (are), corpus 0
 derivasti	1	derivare past (are), corpus 0
 derivavamo	1	derivare imperfect (are), corpus 0
 derivavate	1	derivare imperfect (are), corpus 0
@@ -5877,7 +5877,7 @@ desiderai	1	desiderare past (are), corpus 0
 desiderammo	1	desiderare past (are), corpus 0
 desiderassi	54	desiderare subjunctive-past (are), corpus 1
 desiderassimo	1	desiderare subjunctive-past (are), corpus 0
-desideraste	54	desiderare past (are), corpus 1
+desideraste	54	desiderare subjunctive-past (are), corpus 1
 desiderasti	1	desiderare past (are), corpus 0
 desideravamo	65	desiderare imperfect (are), corpus 3
 desideravate	65	desiderare imperfect (are), corpus 3
@@ -5891,7 +5891,7 @@ designai	1	designare past (are), corpus 0
 designammo	1	designare past (are), corpus 0
 designassi	1	designare subjunctive-past (are), corpus 0
 designassimo	1	designare subjunctive-past (are), corpus 0
-designaste	1	designare past (are), corpus 0
+designaste	1	designare subjunctive-past (are), corpus 0
 designasti	1	designare past (are), corpus 0
 designavamo	1	designare imperfect (are), corpus 0
 designavate	1	designare imperfect (are), corpus 0
@@ -5956,7 +5956,7 @@ determinai	1	determinare past (are), corpus 0
 determinammo	1	determinare past (are), corpus 0
 determinassi	1	determinare subjunctive-past (are), corpus 0
 determinassimo	1	determinare subjunctive-past (are), corpus 0
-determinaste	1	determinare past (are), corpus 0
+determinaste	1	determinare subjunctive-past (are), corpus 0
 determinasti	1	determinare past (are), corpus 0
 determinavamo	1	determinare imperfect (are), corpus 0
 determinavate	1	determinare imperfect (are), corpus 0
@@ -6010,7 +6010,7 @@ deviammo	1	deviare past (are), corpus 0
 deviamo	1	deviare subjunctive (are), corpus 0
 deviassi	1	deviare subjunctive-past (are), corpus 0
 deviassimo	1	deviare subjunctive-past (are), corpus 0
-deviaste	1	deviare past (are), corpus 0
+deviaste	1	deviare subjunctive-past (are), corpus 0
 deviasti	1	deviare past (are), corpus 0
 deviavamo	1	deviare imperfect (are), corpus 0
 deviavate	1	deviare imperfect (are), corpus 0
@@ -6043,7 +6043,7 @@ dichiarai	1	dichiarare past (are), corpus 0
 dichiarammo	54	dichiarare past (are), corpus 1
 dichiarassi	1	dichiarare subjunctive-past (are), corpus 0
 dichiarassimo	1	dichiarare subjunctive-past (are), corpus 0
-dichiaraste	1	dichiarare past (are), corpus 0
+dichiaraste	1	dichiarare subjunctive-past (are), corpus 0
 dichiarasti	1	dichiarare past (are), corpus 0
 dichiaravamo	1	dichiarare imperfect (are), corpus 0
 dichiaravate	1	dichiarare imperfect (are), corpus 0
@@ -6206,7 +6206,7 @@ diminuisci	1	diminuire present (ire-isc), corpus 0
 diminuisco	1	diminuire present (ire-isc), corpus 0
 diminuissi	1	diminuire subjunctive-past (ire), corpus 0
 diminuissimo	1	diminuire subjunctive-past (ire), corpus 0
-diminuiste	1	diminuire past (ire), corpus 0
+diminuiste	1	diminuire subjunctive-past (ire), corpus 0
 diminuisti	1	diminuire past (ire), corpus 0
 diminuivamo	1	diminuire imperfect (ire), corpus 0
 diminuivate	1	diminuire imperfect (ire), corpus 0
@@ -6216,7 +6216,7 @@ dimorai	1	dimorare past (are), corpus 0
 dimorammo	1	dimorare past (are), corpus 0
 dimorassi	1	dimorare subjunctive-past (are), corpus 0
 dimorassimo	1	dimorare subjunctive-past (are), corpus 0
-dimoraste	1	dimorare past (are), corpus 0
+dimoraste	1	dimorare subjunctive-past (are), corpus 0
 dimorasti	1	dimorare past (are), corpus 0
 dimorate	1	dimorare present (are), corpus 0
 dimoravamo	1	dimorare imperfect (are), corpus 0
@@ -6229,7 +6229,7 @@ dimostrai	1	dimostrare past (are), corpus 0
 dimostrammo	1	dimostrare past (are), corpus 0
 dimostrassi	1	dimostrare subjunctive-past (are), corpus 0
 dimostrassimo	1	dimostrare subjunctive-past (are), corpus 0
-dimostraste	1	dimostrare past (are), corpus 0
+dimostraste	1	dimostrare subjunctive-past (are), corpus 0
 dimostrasti	1	dimostrare past (are), corpus 0
 dimostravamo	1	dimostrare imperfect (are), corpus 0
 dimostravate	1	dimostrare imperfect (are), corpus 0
@@ -6404,7 +6404,7 @@ disegnai	74	disegnare past (are), corpus 7
 disegnammo	1	disegnare past (are), corpus 0
 disegnassi	1	disegnare subjunctive-past (are), corpus 0
 disegnassimo	1	disegnare subjunctive-past (are), corpus 0
-disegnaste	1	disegnare past (are), corpus 0
+disegnaste	1	disegnare subjunctive-past (are), corpus 0
 disegnasti	1	disegnare past (are), corpus 0
 disegnavamo	1	disegnare imperfect (are), corpus 0
 disegnavate	1	disegnare imperfect (are), corpus 0
@@ -6518,7 +6518,7 @@ disputai	1	disputare past (are), corpus 0
 disputammo	1	disputare past (are), corpus 0
 disputassi	1	disputare subjunctive-past (are), corpus 0
 disputassimo	1	disputare subjunctive-past (are), corpus 0
-disputaste	1	disputare past (are), corpus 0
+disputaste	1	disputare subjunctive-past (are), corpus 0
 disputasti	1	disputare past (are), corpus 0
 disputavamo	1	disputare imperfect (are), corpus 0
 disputavate	1	disputare imperfect (are), corpus 0
@@ -6649,7 +6649,7 @@ distribuisci	65	distribuire present (ire-isc), corpus 3
 distribuisco	1	distribuire present (ire-isc), corpus 0
 distribuissi	1	distribuire subjunctive-past (ire), corpus 0
 distribuissimo	1	distribuire subjunctive-past (ire), corpus 0
-distribuiste	1	distribuire past (ire), corpus 0
+distribuiste	1	distribuire subjunctive-past (ire), corpus 0
 distribuisti	1	distribuire past (ire), corpus 0
 distribuivamo	1	distribuire imperfect (ire), corpus 0
 distribuivate	1	distribuire imperfect (ire), corpus 0
@@ -6694,7 +6694,7 @@ diventai	85	diventare past (are), corpus 22
 diventammo	75	diventare past (are), corpus 8
 diventassi	65	diventare subjunctive-past (are), corpus 3
 diventassimo	1	diventare subjunctive-past (are), corpus 0
-diventaste	1	diventare past (are), corpus 0
+diventaste	1	diventare subjunctive-past (are), corpus 0
 diventasti	1	diventare past (are), corpus 0
 diventavamo	1	diventare imperfect (are), corpus 0
 diventavate	1	diventare imperfect (are), corpus 0
@@ -6780,7 +6780,7 @@ documentai	1	documentare past (are), corpus 0
 documentammo	1	documentare past (are), corpus 0
 documentassi	1	documentare subjunctive-past (are), corpus 0
 documentassimo	1	documentare subjunctive-past (are), corpus 0
-documentaste	1	documentare past (are), corpus 0
+documentaste	1	documentare subjunctive-past (are), corpus 0
 documentasti	1	documentare past (are), corpus 0
 documentavamo	1	documentare imperfect (are), corpus 0
 documentavate	1	documentare imperfect (are), corpus 0
@@ -6807,7 +6807,7 @@ dominai	1	dominare past (are), corpus 0
 dominammo	1	dominare past (are), corpus 0
 dominassi	1	dominare subjunctive-past (are), corpus 0
 dominassimo	1	dominare subjunctive-past (are), corpus 0
-dominaste	1	dominare past (are), corpus 0
+dominaste	1	dominare subjunctive-past (are), corpus 0
 dominasti	1	dominare past (are), corpus 0
 dominavamo	1	dominare imperfect (are), corpus 0
 dominavate	1	dominare imperfect (are), corpus 0
@@ -6912,7 +6912,7 @@ duplichiamo	1	duplicare present (are), corpus 0
 durammo	1	durare past (are), corpus 0
 durassi	1	durare subjunctive-past (are), corpus 0
 durassimo	1	durare subjunctive-past (are), corpus 0
-duraste	1	durare past (are), corpus 0
+duraste	1	durare subjunctive-past (are), corpus 0
 durasti	1	durare past (are), corpus 0
 duravamo	1	durare imperfect (are), corpus 0
 duravate	1	durare imperfect (are), corpus 0
@@ -6958,7 +6958,7 @@ edificai	1	edificare past (are), corpus 0
 edificammo	1	edificare past (are), corpus 0
 edificassi	1	edificare subjunctive-past (are), corpus 0
 edificassimo	1	edificare subjunctive-past (are), corpus 0
-edificaste	1	edificare past (are), corpus 0
+edificaste	1	edificare subjunctive-past (are), corpus 0
 edificasti	1	edificare past (are), corpus 0
 edificavamo	1	edificare imperfect (are), corpus 0
 edificavate	1	edificare imperfect (are), corpus 0
@@ -6980,7 +6980,7 @@ effettuai	61	effettuare past (are), corpus 2
 effettuammo	1	effettuare past (are), corpus 0
 effettuassi	1	effettuare subjunctive-past (are), corpus 0
 effettuassimo	1	effettuare subjunctive-past (are), corpus 0
-effettuaste	1	effettuare past (are), corpus 0
+effettuaste	1	effettuare subjunctive-past (are), corpus 0
 effettuasti	1	effettuare past (are), corpus 0
 effettuavamo	1	effettuare imperfect (are), corpus 0
 effettuavate	1	effettuare imperfect (are), corpus 0
@@ -7100,7 +7100,7 @@ emanai	1	emanare past (are), corpus 0
 emanammo	1	emanare past (are), corpus 0
 emanassi	1	emanare subjunctive-past (are), corpus 0
 emanassimo	1	emanare subjunctive-past (are), corpus 0
-emanaste	1	emanare past (are), corpus 0
+emanaste	1	emanare subjunctive-past (are), corpus 0
 emanasti	1	emanare past (are), corpus 0
 emanavamo	1	emanare imperfect (are), corpus 0
 emanavate	1	emanare imperfect (are), corpus 0
@@ -7185,7 +7185,7 @@ enfatizziamo	1	enfatizzare present (are), corpus 0
 entrammo	80	entrare past (are), corpus 13
 entrassi	1	entrare subjunctive-past (are), corpus 0
 entrassimo	54	entrare subjunctive-past (are), corpus 1
-entraste	1	entrare past (are), corpus 0
+entraste	1	entrare subjunctive-past (are), corpus 0
 entrasti	1	entrare past (are), corpus 0
 entravamo	54	entrare imperfect (are), corpus 1
 entravate	1	entrare imperfect (are), corpus 0
@@ -7249,7 +7249,7 @@ ereditai	54	ereditare past (are), corpus 1
 ereditammo	1	ereditare past (are), corpus 0
 ereditassi	1	ereditare subjunctive-past (are), corpus 0
 ereditassimo	1	ereditare subjunctive-past (are), corpus 0
-ereditaste	1	ereditare past (are), corpus 0
+ereditaste	1	ereditare subjunctive-past (are), corpus 0
 ereditasti	1	ereditare past (are), corpus 0
 ereditavamo	1	ereditare imperfect (are), corpus 0
 ereditavate	1	ereditare imperfect (are), corpus 0
@@ -7307,7 +7307,7 @@ esaltai	1	esaltare past (are), corpus 0
 esaltammo	1	esaltare past (are), corpus 0
 esaltassi	1	esaltare subjunctive-past (are), corpus 0
 esaltassimo	1	esaltare subjunctive-past (are), corpus 0
-esaltaste	1	esaltare past (are), corpus 0
+esaltaste	1	esaltare subjunctive-past (are), corpus 0
 esaltasti	1	esaltare past (are), corpus 0
 esaltavamo	1	esaltare imperfect (are), corpus 0
 esaltavate	1	esaltare imperfect (are), corpus 0
@@ -7394,7 +7394,7 @@ eseguirete	1	eseguire future (ire), corpus 0
 eseguirò	1	eseguire future (ire), corpus 0
 eseguissi	1	eseguire subjunctive-past (ire), corpus 0
 eseguissimo	1	eseguire subjunctive-past (ire), corpus 0
-eseguiste	1	eseguire past (ire), corpus 0
+eseguiste	1	eseguire subjunctive-past (ire), corpus 0
 eseguisti	1	eseguire past (ire), corpus 0
 eseguivamo	1	eseguire imperfect (ire), corpus 0
 eseguivate	1	eseguire imperfect (ire), corpus 0
@@ -7408,7 +7408,7 @@ esercitai	1	esercitare past (are), corpus 0
 esercitammo	1	esercitare past (are), corpus 0
 esercitassi	1	esercitare subjunctive-past (are), corpus 0
 esercitassimo	1	esercitare subjunctive-past (are), corpus 0
-esercitaste	1	esercitare past (are), corpus 0
+esercitaste	1	esercitare subjunctive-past (are), corpus 0
 esercitasti	1	esercitare past (are), corpus 0
 esercitavamo	1	esercitare imperfect (are), corpus 0
 esercitavate	1	esercitare imperfect (are), corpus 0
@@ -7424,7 +7424,7 @@ eserciterete	1	esercitare future (are), corpus 0
 eserciterò	1	esercitare future (are), corpus 0
 esercitiamo	65	esercitare subjunctive (are), corpus 3
 esercitiate	1	esercitare subjunctive (are), corpus 0
-esibiamo	1	esibire subjunctive (ire-isc), corpus 0
+esibiamo	61	esibire subjunctive (ire-isc), corpus 2
 esibiate	1	esibire subjunctive (ire-isc), corpus 0
 esibii	1	esibire past (ire), corpus 0
 esibimmo	1	esibire past (ire), corpus 0
@@ -7436,7 +7436,7 @@ esibisci	1	esibire present (ire-isc), corpus 0
 esibisco	1	esibire present (ire-isc), corpus 0
 esibissi	1	esibire subjunctive-past (ire), corpus 0
 esibissimo	1	esibire subjunctive-past (ire), corpus 0
-esibiste	1	esibire past (ire), corpus 0
+esibiste	1	esibire subjunctive-past (ire), corpus 0
 esibisti	1	esibire past (ire), corpus 0
 esibivamo	1	esibire imperfect (ire), corpus 0
 esibivate	1	esibire imperfect (ire), corpus 0
@@ -7732,7 +7732,7 @@ evidenziai	1	evidenziare past (are), corpus 0
 evidenziammo	1	evidenziare past (are), corpus 0
 evidenziassi	1	evidenziare subjunctive-past (are), corpus 0
 evidenziassimo	1	evidenziare subjunctive-past (are), corpus 0
-evidenziaste	1	evidenziare past (are), corpus 0
+evidenziaste	1	evidenziare subjunctive-past (are), corpus 0
 evidenziasti	1	evidenziare past (are), corpus 0
 evidenziavamo	1	evidenziare imperfect (are), corpus 0
 evidenziavate	1	evidenziare imperfect (are), corpus 0
@@ -7746,7 +7746,7 @@ evitai	54	evitare past (are), corpus 1
 evitammo	1	evitare past (are), corpus 0
 evitassi	1	evitare subjunctive-past (are), corpus 0
 evitassimo	1	evitare subjunctive-past (are), corpus 0
-evitaste	1	evitare past (are), corpus 0
+evitaste	1	evitare subjunctive-past (are), corpus 0
 evitasti	1	evitare past (are), corpus 0
 evitavamo	61	evitare imperfect (are), corpus 2
 evitavate	65	evitare imperfect (are), corpus 3
@@ -7799,7 +7799,7 @@ facilitai	1	facilitare past (are), corpus 0
 facilitammo	1	facilitare past (are), corpus 0
 facilitassi	1	facilitare subjunctive-past (are), corpus 0
 facilitassimo	1	facilitare subjunctive-past (are), corpus 0
-facilitaste	1	facilitare past (are), corpus 0
+facilitaste	1	facilitare subjunctive-past (are), corpus 0
 facilitasti	1	facilitare past (are), corpus 0
 facilitavamo	1	facilitare imperfect (are), corpus 0
 facilitavate	1	facilitare imperfect (are), corpus 0
@@ -7826,7 +7826,7 @@ fallirete	1	fallire future (ire), corpus 0
 fallirò	65	fallire future (ire), corpus 3
 fallissi	65	fallire subjunctive-past (ire), corpus 3
 fallissimo	1	fallire subjunctive-past (ire), corpus 0
-falliste	1	fallire past (ire), corpus 0
+falliste	1	fallire subjunctive-past (ire), corpus 0
 fallisti	1	fallire past (ire), corpus 0
 fallivamo	61	fallire imperfect (ire), corpus 2
 fallivate	1	fallire imperfect (ire), corpus 0
@@ -7874,7 +7874,7 @@ favorirete	1	favorire future (ire), corpus 0
 favorirò	1	favorire future (ire), corpus 0
 favorissi	1	favorire subjunctive-past (ire), corpus 0
 favorissimo	1	favorire subjunctive-past (ire), corpus 0
-favoriste	1	favorire past (ire), corpus 0
+favoriste	1	favorire subjunctive-past (ire), corpus 0
 favoristi	1	favorire past (ire), corpus 0
 favorivamo	1	favorire imperfect (ire), corpus 0
 favorivate	1	favorire imperfect (ire), corpus 0
@@ -7906,7 +7906,7 @@ fermai	76	fermare past (are), corpus 9
 fermammo	75	fermare past (are), corpus 8
 fermassi	70	fermare subjunctive-past (are), corpus 5
 fermassimo	1	fermare subjunctive-past (are), corpus 0
-fermaste	70	fermare past (are), corpus 5
+fermaste	70	fermare subjunctive-past (are), corpus 5
 fermasti	1	fermare past (are), corpus 0
 fermavamo	61	fermare imperfect (are), corpus 2
 fermavate	61	fermare imperfect (are), corpus 2
@@ -7961,7 +7961,7 @@ figurai	1	figurare past (are), corpus 0
 figurammo	1	figurare past (are), corpus 0
 figurassi	1	figurare subjunctive-past (are), corpus 0
 figurassimo	1	figurare subjunctive-past (are), corpus 0
-figuraste	1	figurare past (are), corpus 0
+figuraste	1	figurare subjunctive-past (are), corpus 0
 figurasti	1	figurare past (are), corpus 0
 figuravamo	1	figurare imperfect (are), corpus 0
 figuravate	1	figurare imperfect (are), corpus 0
@@ -8009,7 +8009,7 @@ finanziammo	1	finanziare past (are), corpus 0
 finanziamo	54	finanziare subjunctive (are), corpus 1
 finanziassi	1	finanziare subjunctive-past (are), corpus 0
 finanziassimo	1	finanziare subjunctive-past (are), corpus 0
-finanziaste	1	finanziare past (are), corpus 0
+finanziaste	1	finanziare subjunctive-past (are), corpus 0
 finanziasti	1	finanziare past (are), corpus 0
 finanziavamo	1	finanziare imperfect (are), corpus 0
 finanziavate	1	finanziare imperfect (are), corpus 0
@@ -8041,7 +8041,7 @@ finireste	1	finire conditional (ire), corpus 0
 finiresti	54	finire conditional (ire), corpus 1
 finirete	75	finire future (ire), corpus 8
 finissi	70	finire subjunctive-past (ire), corpus 5
-finiste	1	finire past (ire), corpus 0
+finiste	1	finire subjunctive-past (ire), corpus 0
 finisti	1	finire past (ire), corpus 0
 finivamo	1	finire imperfect (ire), corpus 0
 finivate	1	finire imperfect (ire), corpus 0
@@ -8065,7 +8065,7 @@ firmai	79	firmare past (are), corpus 12
 firmammo	1	firmare past (are), corpus 0
 firmassi	1	firmare subjunctive-past (are), corpus 0
 firmassimo	1	firmare subjunctive-past (are), corpus 0
-firmaste	1	firmare past (are), corpus 0
+firmaste	1	firmare subjunctive-past (are), corpus 0
 firmasti	1	firmare past (are), corpus 0
 firmavamo	1	firmare imperfect (are), corpus 0
 firmavate	1	firmare imperfect (are), corpus 0
@@ -8158,7 +8158,7 @@ fondai	1	fondare past (are), corpus 0
 fondammo	1	fondare past (are), corpus 0
 fondassi	1	fondare subjunctive-past (are), corpus 0
 fondassimo	1	fondare subjunctive-past (are), corpus 0
-fondaste	1	fondare past (are), corpus 0
+fondaste	1	fondare subjunctive-past (are), corpus 0
 fondasti	1	fondare past (are), corpus 0
 fondavamo	1	fondare imperfect (are), corpus 0
 fondavate	1	fondare imperfect (are), corpus 0
@@ -8205,7 +8205,7 @@ formalizziamo	1	formalizzare present (are), corpus 0
 formammo	1	formare past (are), corpus 0
 formassi	1	formare subjunctive-past (are), corpus 0
 formassimo	1	formare subjunctive-past (are), corpus 0
-formaste	1	formare past (are), corpus 0
+formaste	1	formare subjunctive-past (are), corpus 0
 formasti	1	formare past (are), corpus 0
 formavamo	1	formare imperfect (are), corpus 0
 formavate	1	formare imperfect (are), corpus 0
@@ -8243,7 +8243,7 @@ fornirò	1	fornire future (ire), corpus 0
 fornisci	72	fornire present (ire-isc), corpus 6
 fornissi	1	fornire subjunctive-past (ire), corpus 0
 fornissimo	1	fornire subjunctive-past (ire), corpus 0
-forniste	1	fornire past (ire), corpus 0
+forniste	1	fornire subjunctive-past (ire), corpus 0
 fornisti	1	fornire past (ire), corpus 0
 fornivamo	61	fornire imperfect (ire), corpus 2
 fornivate	1	fornire imperfect (ire), corpus 0
@@ -8324,7 +8324,7 @@ frequentai	54	frequentare past (are), corpus 1
 frequentammo	61	frequentare past (are), corpus 2
 frequentassi	54	frequentare subjunctive-past (are), corpus 1
 frequentassimo	1	frequentare subjunctive-past (are), corpus 0
-frequentaste	1	frequentare past (are), corpus 0
+frequentaste	1	frequentare subjunctive-past (are), corpus 0
 frequentasti	1	frequentare past (are), corpus 0
 frequentavamo	54	frequentare imperfect (are), corpus 1
 frequentavate	1	frequentare imperfect (are), corpus 0
@@ -8405,7 +8405,7 @@ fuggirete	1	fuggire future (ire), corpus 0
 fuggirò	1	fuggire future (ire), corpus 0
 fuggissi	1	fuggire subjunctive-past (ire), corpus 0
 fuggissimo	1	fuggire subjunctive-past (ire), corpus 0
-fuggiste	61	fuggire past (ire), corpus 2
+fuggiste	61	fuggire subjunctive-past (ire), corpus 2
 fuggisti	1	fuggire past (ire), corpus 0
 fuggivamo	1	fuggire imperfect (ire), corpus 0
 fuggivate	1	fuggire imperfect (ire), corpus 0
@@ -8440,7 +8440,7 @@ funzionai	1	funzionare past (are), corpus 0
 funzionammo	1	funzionare past (are), corpus 0
 funzionassi	1	funzionare subjunctive-past (are), corpus 0
 funzionassimo	1	funzionare subjunctive-past (are), corpus 0
-funzionaste	1	funzionare past (are), corpus 0
+funzionaste	1	funzionare subjunctive-past (are), corpus 0
 funzionasti	1	funzionare past (are), corpus 0
 funzionavamo	1	funzionare imperfect (are), corpus 0
 funzionavate	1	funzionare imperfect (are), corpus 0
@@ -8518,7 +8518,7 @@ generalizziamo	54	generalizzare present (are), corpus 1
 generammo	1	generare past (are), corpus 0
 generassi	1	generare subjunctive-past (are), corpus 0
 generassimo	1	generare subjunctive-past (are), corpus 0
-generaste	1	generare past (are), corpus 0
+generaste	1	generare subjunctive-past (are), corpus 0
 generasti	1	generare past (are), corpus 0
 generavamo	1	generare imperfect (are), corpus 0
 generavate	1	generare imperfect (are), corpus 0
@@ -8553,7 +8553,7 @@ gestirete	1	gestire future (ire), corpus 0
 gestirò	65	gestire future (ire), corpus 3
 gestissi	1	gestire subjunctive-past (ire), corpus 0
 gestissimo	1	gestire subjunctive-past (ire), corpus 0
-gestiste	1	gestire past (ire), corpus 0
+gestiste	1	gestire subjunctive-past (ire), corpus 0
 gestisti	1	gestire past (ire), corpus 0
 gestivamo	1	gestire imperfect (ire), corpus 0
 gestivate	1	gestire imperfect (ire), corpus 0
@@ -8564,7 +8564,7 @@ gettai	74	gettare past (are), corpus 7
 gettammo	61	gettare past (are), corpus 2
 gettassi	1	gettare subjunctive-past (are), corpus 0
 gettassimo	1	gettare subjunctive-past (are), corpus 0
-gettaste	68	gettare past (are), corpus 4
+gettaste	68	gettare subjunctive-past (are), corpus 4
 gettasti	68	gettare past (are), corpus 4
 gettavamo	1	gettare imperfect (are), corpus 0
 gettavate	1	gettare imperfect (are), corpus 0
@@ -8590,18 +8590,18 @@ giacono	1	giacere present (ere), corpus 0
 giocammo	84	giocare past (are), corpus 19
 giocassi	1	giocare subjunctive-past (are), corpus 0
 giocassimo	54	giocare subjunctive-past (are), corpus 1
-giocaste	1	giocare past (are), corpus 0
+giocaste	1	giocare subjunctive-past (are), corpus 0
 giocasti	1	giocare past (are), corpus 0
-giocavamo	89	giocare imperfect (are), corpus 32
+giocavamo	90	giocare imperfect (are), corpus 33
 giocavate	72	giocare imperfect (are), corpus 6
 giocavi	74	giocare imperfect (are), corpus 7
-giocherai	77	giocare future (are), corpus 10
+giocherai	79	giocare future (are), corpus 12
 giocherei	1	giocare conditional (are), corpus 0
 giocheremmo	1	giocare conditional (are), corpus 0
 giocheremo	87	giocare future (are), corpus 25
 giochereste	54	giocare conditional (are), corpus 1
 giocheresti	54	giocare conditional (are), corpus 1
-giocherete	76	giocare future (are), corpus 9
+giocherete	78	giocare future (are), corpus 11
 giocherò	87	giocare future (are), corpus 27
 giochiate	61	giocare subjunctive (are), corpus 2
 giovai	1	giovare past (are), corpus 0
@@ -8618,7 +8618,7 @@ gioviate	1	giovare subjunctive (are), corpus 0
 girammo	54	girare past (are), corpus 1
 girassi	1	girare subjunctive-past (are), corpus 0
 girassimo	1	girare subjunctive-past (are), corpus 0
-giraste	1	girare past (are), corpus 0
+giraste	1	girare subjunctive-past (are), corpus 0
 girasti	1	girare past (are), corpus 0
 giravamo	1	girare imperfect (are), corpus 0
 giravate	1	girare imperfect (are), corpus 0
@@ -8676,7 +8676,7 @@ giurai	65	giurare past (are), corpus 3
 giurammo	1	giurare past (are), corpus 0
 giurassi	1	giurare subjunctive-past (are), corpus 0
 giurassimo	1	giurare subjunctive-past (are), corpus 0
-giuraste	1	giurare past (are), corpus 0
+giuraste	1	giurare subjunctive-past (are), corpus 0
 giurasti	1	giurare past (are), corpus 0
 giuravamo	1	giurare imperfect (are), corpus 0
 giuravate	1	giurare imperfect (are), corpus 0
@@ -8688,7 +8688,7 @@ giustificai	1	giustificare past (are), corpus 0
 giustificammo	1	giustificare past (are), corpus 0
 giustificassi	1	giustificare subjunctive-past (are), corpus 0
 giustificassimo	1	giustificare subjunctive-past (are), corpus 0
-giustificaste	1	giustificare past (are), corpus 0
+giustificaste	1	giustificare subjunctive-past (are), corpus 0
 giustificasti	1	giustificare past (are), corpus 0
 giustificavamo	1	giustificare imperfect (are), corpus 0
 giustificavate	1	giustificare imperfect (are), corpus 0
@@ -8744,7 +8744,7 @@ governai	1	governare past (are), corpus 0
 governammo	1	governare past (are), corpus 0
 governassi	1	governare subjunctive-past (are), corpus 0
 governassimo	1	governare subjunctive-past (are), corpus 0
-governaste	1	governare past (are), corpus 0
+governaste	1	governare subjunctive-past (are), corpus 0
 governasti	1	governare past (are), corpus 0
 governavamo	1	governare imperfect (are), corpus 0
 governavate	1	governare imperfect (are), corpus 0
@@ -8806,7 +8806,7 @@ guadagnai	1	guadagnare past (are), corpus 0
 guadagnammo	1	guadagnare past (are), corpus 0
 guadagnassi	1	guadagnare subjunctive-past (are), corpus 0
 guadagnassimo	1	guadagnare subjunctive-past (are), corpus 0
-guadagnaste	1	guadagnare past (are), corpus 0
+guadagnaste	1	guadagnare subjunctive-past (are), corpus 0
 guadagnasti	1	guadagnare past (are), corpus 0
 guadagnavamo	1	guadagnare imperfect (are), corpus 0
 guadagnavate	61	guadagnare imperfect (are), corpus 2
@@ -8829,10 +8829,10 @@ guadasti	1	guadare past (are), corpus 0
 guadate	1	guadare present (are), corpus 0
 guadiamo	1	guadare subjunctive (are), corpus 0
 guadiate	1	guadare subjunctive (are), corpus 0
-guardammo	83	guardare past (are), corpus 18
+guardammo	84	guardare past (are), corpus 19
 guardassi	54	guardare subjunctive-past (are), corpus 1
 guardassimo	1	guardare subjunctive-past (are), corpus 0
-guardaste	1	guardare past (are), corpus 0
+guardaste	1	guardare subjunctive-past (are), corpus 0
 guardasti	1	guardare past (are), corpus 0
 guardavate	1	guardare imperfect (are), corpus 0
 guardavi	68	guardare imperfect (are), corpus 4
@@ -8862,7 +8862,7 @@ guidai	83	guidare past (are), corpus 17
 guidammo	61	guidare past (are), corpus 2
 guidassi	1	guidare subjunctive-past (are), corpus 0
 guidassimo	1	guidare subjunctive-past (are), corpus 0
-guidaste	1	guidare past (are), corpus 0
+guidaste	1	guidare subjunctive-past (are), corpus 0
 guidasti	1	guidare past (are), corpus 0
 guidavamo	68	guidare imperfect (are), corpus 4
 guidavate	68	guidare imperfect (are), corpus 4
@@ -8894,7 +8894,7 @@ identificai	68	identificare past (are), corpus 4
 identificammo	1	identificare past (are), corpus 0
 identificassi	1	identificare subjunctive-past (are), corpus 0
 identificassimo	1	identificare subjunctive-past (are), corpus 0
-identificaste	1	identificare past (are), corpus 0
+identificaste	1	identificare subjunctive-past (are), corpus 0
 identificasti	1	identificare past (are), corpus 0
 identificavamo	1	identificare imperfect (are), corpus 0
 identificavate	1	identificare imperfect (are), corpus 0
@@ -8919,7 +8919,7 @@ ignorai	77	ignorare past (are), corpus 10
 ignorammo	76	ignorare past (are), corpus 9
 ignorassi	1	ignorare subjunctive-past (are), corpus 0
 ignorassimo	54	ignorare subjunctive-past (are), corpus 1
-ignoraste	1	ignorare past (are), corpus 0
+ignoraste	1	ignorare subjunctive-past (are), corpus 0
 ignorasti	1	ignorare past (are), corpus 0
 ignoravamo	1	ignorare imperfect (are), corpus 0
 ignoravate	1	ignorare imperfect (are), corpus 0
@@ -8947,7 +8947,7 @@ illustrai	1	illustrare past (are), corpus 0
 illustrammo	1	illustrare past (are), corpus 0
 illustrassi	1	illustrare subjunctive-past (are), corpus 0
 illustrassimo	1	illustrare subjunctive-past (are), corpus 0
-illustraste	1	illustrare past (are), corpus 0
+illustraste	1	illustrare subjunctive-past (are), corpus 0
 illustrasti	1	illustrare past (are), corpus 0
 illustravamo	1	illustrare imperfect (are), corpus 0
 illustravate	1	illustrare imperfect (are), corpus 0
@@ -9000,7 +9000,7 @@ imitai	1	imitare past (are), corpus 0
 imitammo	1	imitare past (are), corpus 0
 imitassi	1	imitare subjunctive-past (are), corpus 0
 imitassimo	1	imitare subjunctive-past (are), corpus 0
-imitaste	1	imitare past (are), corpus 0
+imitaste	1	imitare subjunctive-past (are), corpus 0
 imitasti	1	imitare past (are), corpus 0
 imitavamo	1	imitare imperfect (are), corpus 0
 imitavate	1	imitare imperfect (are), corpus 0
@@ -9017,7 +9017,7 @@ immaginai	61	immaginare past (are), corpus 2
 immaginammo	1	immaginare past (are), corpus 0
 immaginassi	74	immaginare subjunctive-past (are), corpus 7
 immaginassimo	1	immaginare subjunctive-past (are), corpus 0
-immaginaste	54	immaginare past (are), corpus 1
+immaginaste	54	immaginare subjunctive-past (are), corpus 1
 immaginasti	1	immaginare past (are), corpus 0
 immaginavamo	54	immaginare imperfect (are), corpus 1
 immaginavate	1	immaginare imperfect (are), corpus 0
@@ -9070,12 +9070,12 @@ impadronisci	1	impadronire present (ire-isc), corpus 0
 impadronisco	1	impadronire present (ire-isc), corpus 0
 impadronissi	1	impadronire subjunctive-past (ire), corpus 0
 impadronissimo	1	impadronire subjunctive-past (ire), corpus 0
-impadroniste	1	impadronire past (ire), corpus 0
+impadroniste	1	impadronire subjunctive-past (ire), corpus 0
 impadronisti	1	impadronire past (ire), corpus 0
 imparammo	82	imparare past (are), corpus 15
 imparassi	61	imparare subjunctive-past (are), corpus 2
 imparassimo	1	imparare subjunctive-past (are), corpus 0
-imparaste	1	imparare past (are), corpus 0
+imparaste	1	imparare subjunctive-past (are), corpus 0
 imparasti	1	imparare past (are), corpus 0
 imparavamo	68	imparare imperfect (are), corpus 4
 imparavate	68	imparare imperfect (are), corpus 4
@@ -9127,10 +9127,10 @@ impedireste	1	impedire conditional (ire), corpus 0
 impediresti	1	impedire conditional (ire), corpus 0
 impedirete	1	impedire future (ire), corpus 0
 impedirò	54	impedire future (ire), corpus 1
-impedisco	61	impedire present (ire-isc), corpus 2
+impedisco	68	impedire present (ire-isc), corpus 4
 impedissi	1	impedire subjunctive-past (ire), corpus 0
 impedissimo	1	impedire subjunctive-past (ire), corpus 0
-impediste	1	impedire past (ire), corpus 0
+impediste	1	impedire subjunctive-past (ire), corpus 0
 impedisti	1	impedire past (ire), corpus 0
 impedivamo	1	impedire imperfect (ire), corpus 0
 impedivate	1	impedire imperfect (ire), corpus 0
@@ -9140,7 +9140,7 @@ impegnai	1	impegnare past (are), corpus 0
 impegnammo	1	impegnare past (are), corpus 0
 impegnassi	54	impegnare subjunctive-past (are), corpus 1
 impegnassimo	1	impegnare subjunctive-past (are), corpus 0
-impegnaste	1	impegnare past (are), corpus 0
+impegnaste	1	impegnare subjunctive-past (are), corpus 0
 impegnasti	1	impegnare past (are), corpus 0
 impegnavamo	1	impegnare imperfect (are), corpus 0
 impegnavate	1	impegnare imperfect (are), corpus 0
@@ -9189,7 +9189,7 @@ impiegai	1	impiegare past (are), corpus 0
 impiegammo	1	impiegare past (are), corpus 0
 impiegassi	1	impiegare subjunctive-past (are), corpus 0
 impiegassimo	1	impiegare subjunctive-past (are), corpus 0
-impiegaste	1	impiegare past (are), corpus 0
+impiegaste	1	impiegare subjunctive-past (are), corpus 0
 impiegasti	1	impiegare past (are), corpus 0
 impiegavamo	1	impiegare imperfect (are), corpus 0
 impiegavate	1	impiegare imperfect (are), corpus 0
@@ -9221,7 +9221,7 @@ implicai	1	implicare past (are), corpus 0
 implicammo	1	implicare past (are), corpus 0
 implicassi	1	implicare subjunctive-past (are), corpus 0
 implicassimo	1	implicare subjunctive-past (are), corpus 0
-implicaste	1	implicare past (are), corpus 0
+implicaste	1	implicare subjunctive-past (are), corpus 0
 implicasti	1	implicare past (are), corpus 0
 implicavamo	1	implicare imperfect (are), corpus 0
 implicavate	1	implicare imperfect (are), corpus 0
@@ -9237,7 +9237,7 @@ implorai	1	implorare past (are), corpus 0
 implorammo	1	implorare past (are), corpus 0
 imploraste	1	implorare past (are), corpus 0
 implorasti	1	implorare past (are), corpus 0
-implorate	54	implorare present (are), corpus 1
+implorate	61	implorare present (are), corpus 2
 imploravamo	1	implorare imperfect (are), corpus 0
 imploravate	1	implorare imperfect (are), corpus 0
 imploravi	1	implorare imperfect (are), corpus 0
@@ -9248,7 +9248,7 @@ importai	1	importare past (are), corpus 0
 importammo	1	importare past (are), corpus 0
 importassi	1	importare subjunctive-past (are), corpus 0
 importassimo	1	importare subjunctive-past (are), corpus 0
-importaste	1	importare past (are), corpus 0
+importaste	1	importare subjunctive-past (are), corpus 0
 importasti	1	importare past (are), corpus 0
 importavamo	54	importare imperfect (are), corpus 1
 importavate	1	importare imperfect (are), corpus 0
@@ -9519,7 +9519,7 @@ incitai	1	incitare past (are), corpus 0
 incitammo	1	incitare past (are), corpus 0
 incitassi	1	incitare subjunctive-past (are), corpus 0
 incitassimo	1	incitare subjunctive-past (are), corpus 0
-incitaste	1	incitare past (are), corpus 0
+incitaste	1	incitare subjunctive-past (are), corpus 0
 incitasti	1	incitare past (are), corpus 0
 incitavamo	1	incitare imperfect (are), corpus 0
 incitavate	1	incitare imperfect (are), corpus 0
@@ -9573,7 +9573,7 @@ incominciammo	1	incominciare past (are), corpus 0
 incominciamo	75	incominciare subjunctive (are), corpus 8
 incominciassi	1	incominciare subjunctive-past (are), corpus 0
 incominciassimo	1	incominciare subjunctive-past (are), corpus 0
-incominciaste	1	incominciare past (are), corpus 0
+incominciaste	1	incominciare subjunctive-past (are), corpus 0
 incominciasti	1	incominciare past (are), corpus 0
 incominciavamo	1	incominciare imperfect (are), corpus 0
 incominciavate	1	incominciare imperfect (are), corpus 0
@@ -9582,7 +9582,7 @@ incominciavo	1	incominciare imperfect (are), corpus 0
 incomincino	1	incominciare subjunctive (are), corpus 0
 incontrassi	75	incontrare subjunctive-past (are), corpus 8
 incontrassimo	54	incontrare subjunctive-past (are), corpus 1
-incontraste	61	incontrare past (are), corpus 2
+incontraste	61	incontrare subjunctive-past (are), corpus 2
 incontrasti	1	incontrare past (are), corpus 0
 incontravamo	65	incontrare imperfect (are), corpus 3
 incontravate	1	incontrare imperfect (are), corpus 0
@@ -9599,7 +9599,7 @@ incoraggiammo	1	incoraggiare past (are), corpus 0
 incoraggiamo	61	incoraggiare subjunctive (are), corpus 2
 incoraggiassi	1	incoraggiare subjunctive-past (are), corpus 0
 incoraggiassimo	1	incoraggiare subjunctive-past (are), corpus 0
-incoraggiaste	1	incoraggiare past (are), corpus 0
+incoraggiaste	1	incoraggiare subjunctive-past (are), corpus 0
 incoraggiasti	1	incoraggiare past (are), corpus 0
 incoraggiavamo	1	incoraggiare imperfect (are), corpus 0
 incoraggiavate	1	incoraggiare imperfect (are), corpus 0
@@ -9714,7 +9714,7 @@ indicai	1	indicare past (are), corpus 0
 indicammo	1	indicare past (are), corpus 0
 indicassi	1	indicare subjunctive-past (are), corpus 0
 indicassimo	1	indicare subjunctive-past (are), corpus 0
-indicaste	1	indicare past (are), corpus 0
+indicaste	1	indicare subjunctive-past (are), corpus 0
 indicasti	1	indicare past (are), corpus 0
 indicavamo	1	indicare imperfect (are), corpus 0
 indicavate	1	indicare imperfect (are), corpus 0
@@ -9748,7 +9748,7 @@ individuai	1	individuare past (are), corpus 0
 individuammo	1	individuare past (are), corpus 0
 individuassi	1	individuare subjunctive-past (are), corpus 0
 individuassimo	1	individuare subjunctive-past (are), corpus 0
-individuaste	1	individuare past (are), corpus 0
+individuaste	1	individuare subjunctive-past (are), corpus 0
 individuasti	1	individuare past (are), corpus 0
 individuavamo	1	individuare imperfect (are), corpus 0
 individuavate	1	individuare imperfect (are), corpus 0
@@ -9763,7 +9763,7 @@ indossai	65	indossare past (are), corpus 3
 indossammo	1	indossare past (are), corpus 0
 indossassi	54	indossare subjunctive-past (are), corpus 1
 indossassimo	1	indossare subjunctive-past (are), corpus 0
-indossaste	1	indossare past (are), corpus 0
+indossaste	1	indossare subjunctive-past (are), corpus 0
 indossasti	1	indossare past (are), corpus 0
 indossavamo	61	indossare imperfect (are), corpus 2
 indossavate	61	indossare imperfect (are), corpus 2
@@ -9888,7 +9888,7 @@ influenzai	1	influenzare past (are), corpus 0
 influenzammo	1	influenzare past (are), corpus 0
 influenzassi	1	influenzare subjunctive-past (are), corpus 0
 influenzassimo	1	influenzare subjunctive-past (are), corpus 0
-influenzaste	1	influenzare past (are), corpus 0
+influenzaste	1	influenzare subjunctive-past (are), corpus 0
 influenzasti	1	influenzare past (are), corpus 0
 influenzavamo	1	influenzare imperfect (are), corpus 0
 influenzavate	1	influenzare imperfect (are), corpus 0
@@ -9916,7 +9916,7 @@ influisci	1	influire present (ire-isc), corpus 0
 influisco	1	influire present (ire-isc), corpus 0
 influissi	1	influire subjunctive-past (ire), corpus 0
 influissimo	1	influire subjunctive-past (ire), corpus 0
-influiste	1	influire past (ire), corpus 0
+influiste	1	influire subjunctive-past (ire), corpus 0
 influisti	1	influire past (ire), corpus 0
 influite	1	influire present (ire-isc), corpus 0
 influivamo	1	influire imperfect (ire), corpus 0
@@ -9974,7 +9974,7 @@ ingaggiammo	1	ingaggiare past (are), corpus 0
 ingaggiamo	1	ingaggiare subjunctive (are), corpus 0
 ingaggiassi	1	ingaggiare subjunctive-past (are), corpus 0
 ingaggiassimo	1	ingaggiare subjunctive-past (are), corpus 0
-ingaggiaste	1	ingaggiare past (are), corpus 0
+ingaggiaste	1	ingaggiare subjunctive-past (are), corpus 0
 ingaggiasti	1	ingaggiare past (are), corpus 0
 ingaggiavamo	1	ingaggiare imperfect (are), corpus 0
 ingaggiavate	1	ingaggiare imperfect (are), corpus 0
@@ -10053,7 +10053,7 @@ inietti	1	iniettare present (are), corpus 0
 iniettiamo	1	iniettare present (are), corpus 0
 iniziassi	54	iniziare subjunctive-past (are), corpus 1
 iniziassimo	54	iniziare subjunctive-past (are), corpus 1
-iniziaste	1	iniziare past (are), corpus 0
+iniziaste	1	iniziare subjunctive-past (are), corpus 0
 iniziasti	1	iniziare past (are), corpus 0
 iniziavamo	65	iniziare imperfect (are), corpus 3
 iniziavate	54	iniziare imperfect (are), corpus 1
@@ -10079,7 +10079,7 @@ innamorai	72	innamorare past (are), corpus 6
 innamorammo	65	innamorare past (are), corpus 3
 innamorassi	1	innamorare subjunctive-past (are), corpus 0
 innamorassimo	1	innamorare subjunctive-past (are), corpus 0
-innamoraste	1	innamorare past (are), corpus 0
+innamoraste	1	innamorare subjunctive-past (are), corpus 0
 innamorasti	1	innamorare past (are), corpus 0
 innamorerai	61	innamorare future (are), corpus 2
 innamoreremo	1	innamorare future (are), corpus 0
@@ -10193,7 +10193,7 @@ insediammo	1	insediare past (are), corpus 0
 insediamo	1	insediare present (are), corpus 0
 insediassi	1	insediare subjunctive-past (are), corpus 0
 insediassimo	1	insediare subjunctive-past (are), corpus 0
-insediaste	1	insediare past (are), corpus 0
+insediaste	1	insediare subjunctive-past (are), corpus 0
 insediasti	1	insediare past (are), corpus 0
 insediavamo	1	insediare imperfect (are), corpus 0
 insediavate	1	insediare imperfect (are), corpus 0
@@ -10207,7 +10207,7 @@ insegnai	74	insegnare past (are), corpus 7
 insegnammo	54	insegnare past (are), corpus 1
 insegnassi	65	insegnare subjunctive-past (are), corpus 3
 insegnassimo	1	insegnare subjunctive-past (are), corpus 0
-insegnaste	1	insegnare past (are), corpus 0
+insegnaste	1	insegnare subjunctive-past (are), corpus 0
 insegnasti	1	insegnare past (are), corpus 0
 insegnavamo	61	insegnare imperfect (are), corpus 2
 insegnavate	65	insegnare imperfect (are), corpus 3
@@ -10216,7 +10216,7 @@ insegnavo	78	insegnare imperfect (are), corpus 11
 insegnerai	76	insegnare future (are), corpus 9
 insegneremo	1	insegnare future (are), corpus 0
 insegnerete	74	insegnare future (are), corpus 7
-insegnerò	95	insegnare future (are), corpus 57
+insegnerò	95	insegnare future (are), corpus 58
 insegniamo	68	insegnare subjunctive (are), corpus 4
 insegniate	70	insegnare subjunctive (are), corpus 5
 inseguiamo	54	inseguire present (ire), corpus 1
@@ -10308,7 +10308,7 @@ instaurai	1	instaurare past (are), corpus 0
 instaurammo	1	instaurare past (are), corpus 0
 instaurassi	1	instaurare subjunctive-past (are), corpus 0
 instaurassimo	1	instaurare subjunctive-past (are), corpus 0
-instauraste	1	instaurare past (are), corpus 0
+instauraste	1	instaurare subjunctive-past (are), corpus 0
 instaurasti	1	instaurare past (are), corpus 0
 instauravamo	1	instaurare imperfect (are), corpus 0
 instauravate	1	instaurare imperfect (are), corpus 0
@@ -10370,7 +10370,7 @@ integrai	1	integrare past (are), corpus 0
 integrammo	1	integrare past (are), corpus 0
 integrassi	1	integrare subjunctive-past (are), corpus 0
 integrassimo	1	integrare subjunctive-past (are), corpus 0
-integraste	1	integrare past (are), corpus 0
+integraste	1	integrare subjunctive-past (are), corpus 0
 integrasti	1	integrare past (are), corpus 0
 integravamo	1	integrare imperfect (are), corpus 0
 integravate	1	integrare imperfect (are), corpus 0
@@ -10446,7 +10446,7 @@ interessai	54	interessare past (are), corpus 1
 interessammo	1	interessare past (are), corpus 0
 interessassi	1	interessare subjunctive-past (are), corpus 0
 interessassimo	1	interessare subjunctive-past (are), corpus 0
-interessaste	1	interessare past (are), corpus 0
+interessaste	1	interessare subjunctive-past (are), corpus 0
 interessasti	1	interessare past (are), corpus 0
 interessavamo	1	interessare imperfect (are), corpus 0
 interessavate	1	interessare imperfect (are), corpus 0
@@ -10473,7 +10473,7 @@ interferisci	1	interferire present (ire-isc), corpus 0
 interferisco	61	interferire present (ire-isc), corpus 2
 interferissi	1	interferire subjunctive-past (ire), corpus 0
 interferissimo	1	interferire subjunctive-past (ire), corpus 0
-interferiste	1	interferire past (ire), corpus 0
+interferiste	1	interferire subjunctive-past (ire), corpus 0
 interferisti	1	interferire past (ire), corpus 0
 interferite	80	interferire present (ire-isc), corpus 13
 interferivamo	1	interferire imperfect (ire), corpus 0
@@ -10498,7 +10498,7 @@ interpretai	54	interpretare past (are), corpus 1
 interpretammo	1	interpretare past (are), corpus 0
 interpretassi	1	interpretare subjunctive-past (are), corpus 0
 interpretassimo	1	interpretare subjunctive-past (are), corpus 0
-interpretaste	1	interpretare past (are), corpus 0
+interpretaste	1	interpretare subjunctive-past (are), corpus 0
 interpretasti	1	interpretare past (are), corpus 0
 interpretavamo	1	interpretare imperfect (are), corpus 0
 interpretavate	1	interpretare imperfect (are), corpus 0
@@ -10761,7 +10761,7 @@ investirete	1	investire future (ire), corpus 0
 investirò	1	investire future (ire), corpus 0
 investissi	1	investire subjunctive-past (ire), corpus 0
 investissimo	1	investire subjunctive-past (ire), corpus 0
-investiste	1	investire past (ire), corpus 0
+investiste	1	investire subjunctive-past (ire), corpus 0
 investisti	1	investire past (ire), corpus 0
 investivamo	1	investire imperfect (ire), corpus 0
 investivate	1	investire imperfect (ire), corpus 0
@@ -10773,7 +10773,7 @@ inviammo	1	inviare past (are), corpus 0
 inviamo	61	inviare present (are), corpus 2
 inviassi	1	inviare subjunctive-past (are), corpus 0
 inviassimo	1	inviare subjunctive-past (are), corpus 0
-inviaste	1	inviare past (are), corpus 0
+inviaste	1	inviare subjunctive-past (are), corpus 0
 inviasti	1	inviare past (are), corpus 0
 inviavamo	1	inviare imperfect (are), corpus 0
 inviavate	1	inviare imperfect (are), corpus 0
@@ -10920,7 +10920,7 @@ ispirai	1	ispirare past (are), corpus 0
 ispirammo	1	ispirare past (are), corpus 0
 ispirassi	1	ispirare subjunctive-past (are), corpus 0
 ispirassimo	1	ispirare subjunctive-past (are), corpus 0
-ispiraste	1	ispirare past (are), corpus 0
+ispiraste	1	ispirare subjunctive-past (are), corpus 0
 ispirasti	1	ispirare past (are), corpus 0
 ispiravamo	1	ispirare imperfect (are), corpus 0
 ispiravate	1	ispirare imperfect (are), corpus 0
@@ -10957,7 +10957,7 @@ istituisci	54	istituire present (ire-isc), corpus 1
 istituisco	1	istituire present (ire-isc), corpus 0
 istituissi	1	istituire subjunctive-past (ire), corpus 0
 istituissimo	1	istituire subjunctive-past (ire), corpus 0
-istituiste	1	istituire past (ire), corpus 0
+istituiste	1	istituire subjunctive-past (ire), corpus 0
 istituisti	1	istituire past (ire), corpus 0
 istituivamo	1	istituire imperfect (ire), corpus 0
 istituivate	1	istituire imperfect (ire), corpus 0
@@ -11009,7 +11009,7 @@ lamentavamo	1	lamentare imperfect (are), corpus 0
 lamentavate	1	lamentare imperfect (are), corpus 0
 lamentavi	54	lamentare imperfect (are), corpus 1
 lamentavo	65	lamentare imperfect (are), corpus 3
-lamentiamo	81	lamentare present (are), corpus 14
+lamentiamo	82	lamentare present (are), corpus 15
 lancerai	1	lanciare future (are), corpus 0
 lanceremo	61	lanciare future (are), corpus 2
 lancerete	1	lanciare future (are), corpus 0
@@ -11019,7 +11019,7 @@ lanciammo	61	lanciare past (are), corpus 2
 lanciamo	68	lanciare subjunctive (are), corpus 4
 lanciassi	1	lanciare subjunctive-past (are), corpus 0
 lanciassimo	1	lanciare subjunctive-past (are), corpus 0
-lanciaste	1	lanciare past (are), corpus 0
+lanciaste	1	lanciare subjunctive-past (are), corpus 0
 lanciasti	1	lanciare past (are), corpus 0
 lanciavamo	1	lanciare imperfect (are), corpus 0
 lanciavate	1	lanciare imperfect (are), corpus 0
@@ -11031,11 +11031,11 @@ lasceresti	74	lasciare conditional (are), corpus 7
 lascerete	83	lasciare future (are), corpus 17
 lasciassi	65	lasciare subjunctive-past (are), corpus 3
 lasciassimo	1	lasciare subjunctive-past (are), corpus 0
-lasciaste	61	lasciare past (are), corpus 2
+lasciaste	61	lasciare subjunctive-past (are), corpus 2
 lasciasti	1	lasciare past (are), corpus 0
 lasciavate	1	lasciare imperfect (are), corpus 0
 lasciavi	54	lasciare imperfect (are), corpus 1
-lasciavo	1	lasciare imperfect (are), corpus 0
+lasciavo	54	lasciare imperfect (are), corpus 1
 laureai	1	laureare past (are), corpus 0
 laureammo	1	laureare past (are), corpus 0
 laureaste	1	laureare past (are), corpus 0
@@ -11055,7 +11055,7 @@ lavorai	88	lavorare past (are), corpus 29
 lavorammo	65	lavorare past (are), corpus 3
 lavorassi	76	lavorare subjunctive-past (are), corpus 9
 lavorassimo	1	lavorare subjunctive-past (are), corpus 0
-lavoraste	61	lavorare past (are), corpus 2
+lavoraste	61	lavorare subjunctive-past (are), corpus 2
 lavorasti	1	lavorare past (are), corpus 0
 lavoravate	76	lavorare imperfect (are), corpus 9
 lavoravi	76	lavorare imperfect (are), corpus 9
@@ -11088,7 +11088,7 @@ legalizziamo	1	legalizzare present (are), corpus 0
 legammo	61	legare past (are), corpus 2
 legassi	1	legare subjunctive-past (are), corpus 0
 legassimo	1	legare subjunctive-past (are), corpus 0
-legaste	1	legare past (are), corpus 0
+legaste	1	legare subjunctive-past (are), corpus 0
 legasti	1	legare past (are), corpus 0
 legavamo	1	legare imperfect (are), corpus 0
 legavate	1	legare imperfect (are), corpus 0
@@ -11132,7 +11132,7 @@ levai	1	levare past (are), corpus 0
 levammo	1	levare past (are), corpus 0
 levassi	1	levare subjunctive-past (are), corpus 0
 levassimo	1	levare subjunctive-past (are), corpus 0
-levaste	1	levare past (are), corpus 0
+levaste	1	levare subjunctive-past (are), corpus 0
 levavamo	1	levare imperfect (are), corpus 0
 levavate	1	levare imperfect (are), corpus 0
 levavi	1	levare imperfect (are), corpus 0
@@ -11152,7 +11152,7 @@ liberalizziamo	1	liberalizzare present (are), corpus 0
 liberammo	1	liberare past (are), corpus 0
 liberassi	1	liberare subjunctive-past (are), corpus 0
 liberassimo	1	liberare subjunctive-past (are), corpus 0
-liberaste	1	liberare past (are), corpus 0
+liberaste	1	liberare subjunctive-past (are), corpus 0
 liberasti	1	liberare past (are), corpus 0
 liberavamo	1	liberare imperfect (are), corpus 0
 liberavate	1	liberare imperfect (are), corpus 0
@@ -11181,7 +11181,7 @@ limitai	1	limitare past (are), corpus 0
 limitammo	1	limitare past (are), corpus 0
 limitassi	1	limitare subjunctive-past (are), corpus 0
 limitassimo	1	limitare subjunctive-past (are), corpus 0
-limitaste	1	limitare past (are), corpus 0
+limitaste	1	limitare subjunctive-past (are), corpus 0
 limitasti	1	limitare past (are), corpus 0
 limitavamo	1	limitare imperfect (are), corpus 0
 limitavate	1	limitare imperfect (are), corpus 0
@@ -11305,7 +11305,7 @@ mancai	72	mancare past (are), corpus 6
 mancammo	65	mancare past (are), corpus 3
 mancassi	54	mancare subjunctive-past (are), corpus 1
 mancassimo	1	mancare subjunctive-past (are), corpus 0
-mancaste	1	mancare past (are), corpus 0
+mancaste	1	mancare subjunctive-past (are), corpus 0
 mancasti	1	mancare past (are), corpus 0
 mancavamo	1	mancare imperfect (are), corpus 0
 mancavate	54	mancare imperfect (are), corpus 1
@@ -11321,9 +11321,9 @@ mancherò	85	mancare future (are), corpus 22
 manchiamo	70	mancare subjunctive (are), corpus 5
 manchiate	65	mancare subjunctive (are), corpus 3
 mandammo	1	mandare past (are), corpus 0
-mandassi	1	mandare subjunctive-past (are), corpus 0
+mandassi	54	mandare subjunctive-past (are), corpus 1
 mandassimo	1	mandare subjunctive-past (are), corpus 0
-mandaste	1	mandare past (are), corpus 0
+mandaste	1	mandare subjunctive-past (are), corpus 0
 mandasti	1	mandare past (are), corpus 0
 mandavamo	1	mandare imperfect (are), corpus 0
 mandavate	1	mandare imperfect (are), corpus 0
@@ -11344,7 +11344,7 @@ mangerò	101	mangiare future (are), corpus 104
 mangiammo	94	mangiare past (are), corpus 53
 mangiassi	1	mangiare subjunctive-past (are), corpus 0
 mangiassimo	1	mangiare subjunctive-past (are), corpus 0
-mangiaste	1	mangiare past (are), corpus 0
+mangiaste	1	mangiare subjunctive-past (are), corpus 0
 mangiasti	1	mangiare past (are), corpus 0
 mangiavamo	78	mangiare imperfect (are), corpus 11
 mangiavate	72	mangiare imperfect (are), corpus 6
@@ -11353,7 +11353,7 @@ manifestai	1	manifestare past (are), corpus 0
 manifestammo	1	manifestare past (are), corpus 0
 manifestassi	1	manifestare subjunctive-past (are), corpus 0
 manifestassimo	1	manifestare subjunctive-past (are), corpus 0
-manifestaste	1	manifestare past (are), corpus 0
+manifestaste	1	manifestare subjunctive-past (are), corpus 0
 manifestasti	1	manifestare past (are), corpus 0
 manifestavamo	1	manifestare imperfect (are), corpus 0
 manifestavate	1	manifestare imperfect (are), corpus 0
@@ -11423,7 +11423,7 @@ marciammo	1	marciare past (are), corpus 0
 marciamo	1	marciare present (are), corpus 0
 marciassi	1	marciare subjunctive-past (are), corpus 0
 marciassimo	1	marciare subjunctive-past (are), corpus 0
-marciaste	1	marciare past (are), corpus 0
+marciaste	1	marciare subjunctive-past (are), corpus 0
 marciasti	1	marciare past (are), corpus 0
 marciate	1	marciare present (are), corpus 0
 marciavamo	1	marciare imperfect (are), corpus 0
@@ -11541,11 +11541,11 @@ meritai	1	meritare past (are), corpus 0
 meritammo	1	meritare past (are), corpus 0
 meritassi	1	meritare subjunctive-past (are), corpus 0
 meritassimo	1	meritare subjunctive-past (are), corpus 0
-meritaste	1	meritare past (are), corpus 0
+meritaste	1	meritare subjunctive-past (are), corpus 0
 meritasti	1	meritare past (are), corpus 0
 meritavamo	61	meritare imperfect (are), corpus 2
 meritavate	1	meritare imperfect (are), corpus 0
-meritavi	76	meritare imperfect (are), corpus 9
+meritavi	77	meritare imperfect (are), corpus 10
 meritavo	78	meritare imperfect (are), corpus 11
 meriterei	1	meritare conditional (are), corpus 0
 meriteremmo	1	meritare conditional (are), corpus 0
@@ -11589,7 +11589,7 @@ migliorai	1	migliorare past (are), corpus 0
 migliorammo	1	migliorare past (are), corpus 0
 migliorassi	1	migliorare subjunctive-past (are), corpus 0
 migliorassimo	1	migliorare subjunctive-past (are), corpus 0
-miglioraste	1	migliorare past (are), corpus 0
+miglioraste	1	migliorare subjunctive-past (are), corpus 0
 migliorasti	1	migliorare past (are), corpus 0
 miglioravamo	61	migliorare imperfect (are), corpus 2
 miglioravate	61	migliorare imperfect (are), corpus 2
@@ -11619,7 +11619,7 @@ militai	1	militare past (are), corpus 0
 militammo	1	militare past (are), corpus 0
 militassi	1	militare subjunctive-past (are), corpus 0
 militassimo	1	militare subjunctive-past (are), corpus 0
-militaste	1	militare past (are), corpus 0
+militaste	1	militare subjunctive-past (are), corpus 0
 militasti	1	militare past (are), corpus 0
 militate	1	militare present (are), corpus 0
 militavamo	1	militare imperfect (are), corpus 0
@@ -11642,7 +11642,7 @@ minacciammo	1	minacciare past (are), corpus 0
 minacciamo	1	minacciare subjunctive (are), corpus 0
 minacciassi	1	minacciare subjunctive-past (are), corpus 0
 minacciassimo	1	minacciare subjunctive-past (are), corpus 0
-minacciaste	1	minacciare past (are), corpus 0
+minacciaste	1	minacciare subjunctive-past (are), corpus 0
 minacciasti	1	minacciare past (are), corpus 0
 minacciavamo	1	minacciare imperfect (are), corpus 0
 minacciavate	1	minacciare imperfect (are), corpus 0
@@ -11692,7 +11692,7 @@ misurai	68	misurare past (are), corpus 4
 misurammo	1	misurare past (are), corpus 0
 misurassi	1	misurare subjunctive-past (are), corpus 0
 misurassimo	1	misurare subjunctive-past (are), corpus 0
-misuraste	1	misurare past (are), corpus 0
+misuraste	1	misurare subjunctive-past (are), corpus 0
 misurasti	1	misurare past (are), corpus 0
 misuravamo	1	misurare imperfect (are), corpus 0
 misuravate	1	misurare imperfect (are), corpus 0
@@ -11749,7 +11749,7 @@ modificai	61	modificare past (are), corpus 2
 modificammo	1	modificare past (are), corpus 0
 modificassi	1	modificare subjunctive-past (are), corpus 0
 modificassimo	1	modificare subjunctive-past (are), corpus 0
-modificaste	1	modificare past (are), corpus 0
+modificaste	1	modificare subjunctive-past (are), corpus 0
 modificasti	1	modificare past (are), corpus 0
 modificavamo	1	modificare imperfect (are), corpus 0
 modificavate	1	modificare imperfect (are), corpus 0
@@ -11799,7 +11799,7 @@ montai	61	montare past (are), corpus 2
 montammo	1	montare past (are), corpus 0
 montassi	1	montare subjunctive-past (are), corpus 0
 montassimo	1	montare subjunctive-past (are), corpus 0
-montaste	1	montare past (are), corpus 0
+montaste	1	montare subjunctive-past (are), corpus 0
 montasti	1	montare past (are), corpus 0
 montavamo	1	montare imperfect (are), corpus 0
 montavate	1	montare imperfect (are), corpus 0
@@ -11828,7 +11828,7 @@ mostrai	76	mostrare past (are), corpus 9
 mostrammo	65	mostrare past (are), corpus 3
 mostrassi	54	mostrare subjunctive-past (are), corpus 1
 mostrassimo	1	mostrare subjunctive-past (are), corpus 0
-mostraste	1	mostrare past (are), corpus 0
+mostraste	1	mostrare subjunctive-past (are), corpus 0
 mostrasti	1	mostrare past (are), corpus 0
 mostravamo	1	mostrare imperfect (are), corpus 0
 mostravate	1	mostrare imperfect (are), corpus 0
@@ -11894,7 +11894,7 @@ mutai	1	mutare past (are), corpus 0
 mutammo	1	mutare past (are), corpus 0
 mutassi	1	mutare subjunctive-past (are), corpus 0
 mutassimo	1	mutare subjunctive-past (are), corpus 0
-mutaste	1	mutare past (are), corpus 0
+mutaste	1	mutare subjunctive-past (are), corpus 0
 mutasti	1	mutare past (are), corpus 0
 mutavamo	1	mutare imperfect (are), corpus 0
 mutavate	1	mutare imperfect (are), corpus 0
@@ -11975,7 +11975,7 @@ necessitai	1	necessitare past (are), corpus 0
 necessitammo	1	necessitare past (are), corpus 0
 necessitassi	1	necessitare subjunctive-past (are), corpus 0
 necessitassimo	1	necessitare subjunctive-past (are), corpus 0
-necessitaste	1	necessitare past (are), corpus 0
+necessitaste	1	necessitare subjunctive-past (are), corpus 0
 necessitasti	1	necessitare past (are), corpus 0
 necessitavamo	1	necessitare imperfect (are), corpus 0
 necessitavate	1	necessitare imperfect (are), corpus 0
@@ -11989,7 +11989,7 @@ necessitiate	1	necessitare subjunctive (are), corpus 0
 negammo	54	negare past (are), corpus 1
 negassi	61	negare subjunctive-past (are), corpus 2
 negassimo	1	negare subjunctive-past (are), corpus 0
-negaste	1	negare past (are), corpus 0
+negaste	1	negare subjunctive-past (are), corpus 0
 negasti	1	negare past (are), corpus 0
 negavamo	1	negare imperfect (are), corpus 0
 negavate	1	negare imperfect (are), corpus 0
@@ -12041,7 +12041,7 @@ nominai	61	nominare past (are), corpus 2
 nominammo	1	nominare past (are), corpus 0
 nominassi	1	nominare subjunctive-past (are), corpus 0
 nominassimo	1	nominare subjunctive-past (are), corpus 0
-nominaste	1	nominare past (are), corpus 0
+nominaste	1	nominare subjunctive-past (are), corpus 0
 nominasti	1	nominare past (are), corpus 0
 nominavamo	1	nominare imperfect (are), corpus 0
 nominavate	1	nominare imperfect (are), corpus 0
@@ -12062,7 +12062,7 @@ normalizziamo	1	normalizzare present (are), corpus 0
 notammo	1	notare past (are), corpus 0
 notassi	54	notare subjunctive-past (are), corpus 1
 notassimo	1	notare subjunctive-past (are), corpus 0
-notaste	1	notare past (are), corpus 0
+notaste	1	notare subjunctive-past (are), corpus 0
 notasti	1	notare past (are), corpus 0
 notavamo	1	notare imperfect (are), corpus 0
 notavate	1	notare imperfect (are), corpus 0
@@ -12103,7 +12103,7 @@ nutrirete	1	nutrire future (ire), corpus 0
 nutrirò	54	nutrire future (ire), corpus 1
 nutrissi	1	nutrire subjunctive-past (ire), corpus 0
 nutrissimo	1	nutrire subjunctive-past (ire), corpus 0
-nutriste	1	nutrire past (ire), corpus 0
+nutriste	1	nutrire subjunctive-past (ire), corpus 0
 nutristi	1	nutrire past (ire), corpus 0
 nutrivamo	1	nutrire imperfect (ire), corpus 0
 nutrivate	1	nutrire imperfect (ire), corpus 0
@@ -12120,7 +12120,7 @@ obbedirò	65	obbedire future (ire), corpus 3
 obbedisci	82	obbedire present (ire-isc), corpus 15
 obbedissi	1	obbedire subjunctive-past (ire), corpus 0
 obbedissimo	1	obbedire subjunctive-past (ire), corpus 0
-obbediste	1	obbedire past (ire), corpus 0
+obbediste	1	obbedire subjunctive-past (ire), corpus 0
 obbedisti	1	obbedire past (ire), corpus 0
 obbedite	74	obbedire present (ire-isc), corpus 7
 obbedivamo	1	obbedire imperfect (ire), corpus 0
@@ -12184,7 +12184,7 @@ occupai	1	occupare past (are), corpus 0
 occupammo	1	occupare past (are), corpus 0
 occupassi	1	occupare subjunctive-past (are), corpus 0
 occupassimo	54	occupare subjunctive-past (are), corpus 1
-occupaste	1	occupare past (are), corpus 0
+occupaste	1	occupare subjunctive-past (are), corpus 0
 occupasti	1	occupare past (are), corpus 0
 occupavamo	1	occupare imperfect (are), corpus 0
 occupavate	1	occupare imperfect (are), corpus 0
@@ -12202,7 +12202,7 @@ odiai	70	odiare past (are), corpus 5
 odiammo	54	odiare past (are), corpus 1
 odiassi	86	odiare subjunctive-past (are), corpus 23
 odiassimo	1	odiare subjunctive-past (are), corpus 0
-odiaste	84	odiare past (are), corpus 19
+odiaste	84	odiare subjunctive-past (are), corpus 19
 odiasti	1	odiare past (are), corpus 0
 odiavamo	82	odiare imperfect (are), corpus 15
 odiavate	80	odiare imperfect (are), corpus 13
@@ -12241,7 +12241,7 @@ offrirete	1	offrire future (ire), corpus 0
 offrirò	70	offrire future (ire), corpus 5
 offrissi	1	offrire subjunctive-past (ire), corpus 0
 offrissimo	1	offrire subjunctive-past (ire), corpus 0
-offriste	1	offrire past (ire), corpus 0
+offriste	1	offrire subjunctive-past (ire), corpus 0
 offristi	1	offrire past (ire), corpus 0
 offrite	72	offrire present (ire), corpus 6
 offrivamo	1	offrire imperfect (ire), corpus 0
@@ -12295,7 +12295,7 @@ onorino	1	onorare subjunctive (are), corpus 0
 operammo	1	operare past (are), corpus 0
 operassi	1	operare subjunctive-past (are), corpus 0
 operassimo	1	operare subjunctive-past (are), corpus 0
-operaste	1	operare past (are), corpus 0
+operaste	1	operare subjunctive-past (are), corpus 0
 operasti	1	operare past (are), corpus 0
 operavamo	1	operare imperfect (are), corpus 0
 operavate	1	operare imperfect (are), corpus 0
@@ -12348,7 +12348,7 @@ ordimmo	1	ordire past (ire), corpus 0
 ordinammo	74	ordinare past (are), corpus 7
 ordinassi	1	ordinare subjunctive-past (are), corpus 0
 ordinassimo	65	ordinare subjunctive-past (are), corpus 3
-ordinaste	1	ordinare past (are), corpus 0
+ordinaste	1	ordinare subjunctive-past (are), corpus 0
 ordinasti	1	ordinare past (are), corpus 0
 ordinavamo	1	ordinare imperfect (are), corpus 0
 ordinavate	1	ordinare imperfect (are), corpus 0
@@ -12364,7 +12364,7 @@ organizzai	54	organizzare past (are), corpus 1
 organizzammo	68	organizzare past (are), corpus 4
 organizzassi	1	organizzare subjunctive-past (are), corpus 0
 organizzassimo	54	organizzare subjunctive-past (are), corpus 1
-organizzaste	1	organizzare past (are), corpus 0
+organizzaste	1	organizzare subjunctive-past (are), corpus 0
 organizzasti	1	organizzare past (are), corpus 0
 organizzavamo	1	organizzare imperfect (are), corpus 0
 organizzavate	1	organizzare imperfect (are), corpus 0
@@ -12393,7 +12393,7 @@ originai	1	originare past (are), corpus 0
 originammo	1	originare past (are), corpus 0
 originassi	1	originare subjunctive-past (are), corpus 0
 originassimo	1	originare subjunctive-past (are), corpus 0
-originaste	1	originare past (are), corpus 0
+originaste	1	originare subjunctive-past (are), corpus 0
 originasti	1	originare past (are), corpus 0
 originavamo	1	originare imperfect (are), corpus 0
 originavate	1	originare imperfect (are), corpus 0
@@ -12452,7 +12452,7 @@ ospitai	1	ospitare past (are), corpus 0
 ospitammo	1	ospitare past (are), corpus 0
 ospitassi	1	ospitare subjunctive-past (are), corpus 0
 ospitassimo	1	ospitare subjunctive-past (are), corpus 0
-ospitaste	1	ospitare past (are), corpus 0
+ospitaste	1	ospitare subjunctive-past (are), corpus 0
 ospitasti	1	ospitare past (are), corpus 0
 ospitavamo	1	ospitare imperfect (are), corpus 0
 ospitavate	1	ospitare imperfect (are), corpus 0
@@ -12480,7 +12480,7 @@ ostacolai	1	ostacolare past (are), corpus 0
 ostacolammo	1	ostacolare past (are), corpus 0
 ostacolassi	1	ostacolare subjunctive-past (are), corpus 0
 ostacolassimo	1	ostacolare subjunctive-past (are), corpus 0
-ostacolaste	1	ostacolare past (are), corpus 0
+ostacolaste	1	ostacolare subjunctive-past (are), corpus 0
 ostacolasti	1	ostacolare past (are), corpus 0
 ostacolavamo	1	ostacolare imperfect (are), corpus 0
 ostacolavate	1	ostacolare imperfect (are), corpus 0
@@ -12559,7 +12559,7 @@ padroneggiavo	54	padroneggiare imperfect (are), corpus 1
 pagammo	76	pagare past (are), corpus 9
 pagassi	68	pagare subjunctive-past (are), corpus 4
 pagassimo	1	pagare subjunctive-past (are), corpus 0
-pagaste	1	pagare past (are), corpus 0
+pagaste	1	pagare subjunctive-past (are), corpus 0
 pagasti	1	pagare past (are), corpus 0
 pagavamo	54	pagare imperfect (are), corpus 1
 pagavate	1	pagare imperfect (are), corpus 0
@@ -12635,15 +12635,15 @@ parifichi	1	parificare present (are), corpus 0
 parifichiamo	1	parificare present (are), corpus 0
 parifico	1	parificare present (are), corpus 0
 parlassimo	68	parlare subjunctive-past (are), corpus 4
-parlaste	65	parlare past (are), corpus 3
+parlaste	65	parlare subjunctive-past (are), corpus 3
 parlasti	1	parlare past (are), corpus 0
 parlavate	80	parlare imperfect (are), corpus 13
-parlerai	82	parlare future (are), corpus 16
+parlerai	83	parlare future (are), corpus 18
 parlerei	77	parlare conditional (are), corpus 10
 parleremmo	54	parlare conditional (are), corpus 1
 parlereste	79	parlare conditional (are), corpus 12
 parleresti	80	parlare conditional (are), corpus 13
-parlerete	82	parlare future (are), corpus 15
+parlerete	82	parlare future (are), corpus 16
 parliate	86	parlare subjunctive (are), corpus 23
 parodiamo	1	parodiare present (are), corpus 0
 parodiavamo	1	parodiare imperfect (are), corpus 0
@@ -12654,7 +12654,7 @@ partecipai	80	partecipare past (are), corpus 13
 partecipammo	68	partecipare past (are), corpus 4
 partecipassi	1	partecipare subjunctive-past (are), corpus 0
 partecipassimo	1	partecipare subjunctive-past (are), corpus 0
-partecipaste	1	partecipare past (are), corpus 0
+partecipaste	1	partecipare subjunctive-past (are), corpus 0
 partecipasti	1	partecipare past (are), corpus 0
 partecipavamo	1	partecipare imperfect (are), corpus 0
 partecipavate	1	partecipare imperfect (are), corpus 0
@@ -12681,7 +12681,7 @@ partiremo	93	partire future (ire), corpus 48
 partirete	80	partire future (ire), corpus 13
 partissi	75	partire subjunctive-past (ire), corpus 8
 partissimo	1	partire subjunctive-past (ire), corpus 0
-partiste	1	partire past (ire), corpus 0
+partiste	1	partire subjunctive-past (ire), corpus 0
 partisti	1	partire past (ire), corpus 0
 partivamo	1	partire imperfect (ire), corpus 0
 partivate	1	partire imperfect (ire), corpus 0
@@ -12710,7 +12710,7 @@ pascolavo	1	pascolare imperfect (are), corpus 0
 pascoliamo	1	pascolare present (are), corpus 0
 passassi	61	passare subjunctive-past (are), corpus 2
 passassimo	1	passare subjunctive-past (are), corpus 0
-passaste	1	passare past (are), corpus 0
+passaste	1	passare subjunctive-past (are), corpus 0
 passasti	1	passare past (are), corpus 0
 passavate	1	passare imperfect (are), corpus 0
 passavi	1	passare imperfect (are), corpus 0
@@ -12827,7 +12827,7 @@ penetrai	1	penetrare past (are), corpus 0
 penetrammo	1	penetrare past (are), corpus 0
 penetrassi	1	penetrare subjunctive-past (are), corpus 0
 penetrassimo	1	penetrare subjunctive-past (are), corpus 0
-penetraste	1	penetrare past (are), corpus 0
+penetraste	1	penetrare subjunctive-past (are), corpus 0
 penetrasti	1	penetrare past (are), corpus 0
 penetravamo	1	penetrare imperfect (are), corpus 0
 penetravate	1	penetrare imperfect (are), corpus 0
@@ -12840,7 +12840,7 @@ penetrerò	1	penetrare future (are), corpus 0
 penetriamo	1	penetrare subjunctive (are), corpus 0
 penetriate	1	penetrare subjunctive (are), corpus 0
 pensassimo	65	pensare subjunctive-past (are), corpus 3
-pensaste	61	pensare past (are), corpus 2
+pensaste	61	pensare subjunctive-past (are), corpus 2
 pensasti	61	pensare past (are), corpus 2
 pensavate	84	pensare imperfect (are), corpus 19
 penserei	68	pensare conditional (are), corpus 4
@@ -12860,7 +12860,7 @@ percepisci	65	percepire present (ire-isc), corpus 3
 percepisco	75	percepire present (ire-isc), corpus 8
 percepissi	1	percepire subjunctive-past (ire), corpus 0
 percepissimo	1	percepire subjunctive-past (ire), corpus 0
-percepiste	1	percepire past (ire), corpus 0
+percepiste	1	percepire subjunctive-past (ire), corpus 0
 percepisti	1	percepire past (ire), corpus 0
 percepivamo	1	percepire imperfect (ire), corpus 0
 percepivate	1	percepire imperfect (ire), corpus 0
@@ -12897,7 +12897,7 @@ perdeste	65	perdere subjunctive-past (ere), corpus 3
 perdevamo	68	perdere imperfect (ere), corpus 4
 perdevate	68	perdere imperfect (ere), corpus 4
 perdevi	68	perdere imperfect (ere), corpus 4
-perdevo	78	perdere imperfect (ere), corpus 11
+perdevo	79	perdere imperfect (ere), corpus 12
 perdiate	75	perdere subjunctive (ere), corpus 8
 perdonai	75	perdonare past (are), corpus 8
 perdonammo	65	perdonare past (are), corpus 3
@@ -12954,7 +12954,7 @@ periremo	61	perire future (ire), corpus 2
 perirete	54	perire future (ire), corpus 1
 perirò	1	perire future (ire), corpus 0
 perissimo	1	perire subjunctive-past (ire), corpus 0
-periste	1	perire past (ire), corpus 0
+periste	1	perire subjunctive-past (ire), corpus 0
 peristi	1	perire past (ire), corpus 0
 perlustrate	1	perlustrare present (are), corpus 0
 perlustravamo	1	perlustrare imperfect (are), corpus 0
@@ -13024,7 +13024,7 @@ perpetuai	1	perpetuare past (are), corpus 0
 perpetuammo	1	perpetuare past (are), corpus 0
 perpetuassi	1	perpetuare subjunctive-past (are), corpus 0
 perpetuassimo	1	perpetuare subjunctive-past (are), corpus 0
-perpetuaste	1	perpetuare past (are), corpus 0
+perpetuaste	1	perpetuare subjunctive-past (are), corpus 0
 perpetuasti	1	perpetuare past (are), corpus 0
 perpetuavamo	1	perpetuare imperfect (are), corpus 0
 perpetuavate	1	perpetuare imperfect (are), corpus 0
@@ -13044,7 +13044,7 @@ perseguii	1	perseguire past (ire), corpus 0
 perseguimmo	1	perseguire past (ire), corpus 0
 perseguissi	1	perseguire subjunctive-past (ire), corpus 0
 perseguissimo	1	perseguire subjunctive-past (ire), corpus 0
-perseguiste	1	perseguire past (ire), corpus 0
+perseguiste	1	perseguire subjunctive-past (ire), corpus 0
 perseguisti	1	perseguire past (ire), corpus 0
 perseguitai	1	perseguitare past (are), corpus 0
 perseguitammo	1	perseguitare past (are), corpus 0
@@ -13118,7 +13118,7 @@ pesai	54	pesare past (are), corpus 1
 pesammo	1	pesare past (are), corpus 0
 pesassi	1	pesare subjunctive-past (are), corpus 0
 pesassimo	1	pesare subjunctive-past (are), corpus 0
-pesaste	1	pesare past (are), corpus 0
+pesaste	1	pesare subjunctive-past (are), corpus 0
 pesasti	1	pesare past (are), corpus 0
 pesavamo	1	pesare imperfect (are), corpus 0
 pesavate	1	pesare imperfect (are), corpus 0
@@ -13295,11 +13295,11 @@ porgiamo	54	porgere present (ere), corpus 1
 porgo	72	porgere present (ere), corpus 6
 portassi	75	portare subjunctive-past (are), corpus 8
 portassimo	79	portare subjunctive-past (are), corpus 12
-portaste	1	portare past (are), corpus 0
+portaste	1	portare subjunctive-past (are), corpus 0
 portasti	54	portare past (are), corpus 1
 portavamo	61	portare imperfect (are), corpus 2
 portavate	61	portare imperfect (are), corpus 2
-portavi	65	portare imperfect (are), corpus 3
+portavi	68	portare imperfect (are), corpus 4
 porteremmo	1	portare conditional (are), corpus 0
 porteremo	90	portare future (are), corpus 34
 portereste	54	portare conditional (are), corpus 1
@@ -13310,7 +13310,7 @@ posai	1	posare past (are), corpus 0
 posammo	1	posare past (are), corpus 0
 posassi	1	posare subjunctive-past (are), corpus 0
 posassimo	1	posare subjunctive-past (are), corpus 0
-posaste	1	posare past (are), corpus 0
+posaste	1	posare subjunctive-past (are), corpus 0
 posasti	1	posare past (are), corpus 0
 posavamo	1	posare imperfect (are), corpus 0
 posavate	1	posare imperfect (are), corpus 0
@@ -13382,7 +13382,7 @@ praticai	1	praticare past (are), corpus 0
 praticammo	1	praticare past (are), corpus 0
 praticassi	1	praticare subjunctive-past (are), corpus 0
 praticassimo	1	praticare subjunctive-past (are), corpus 0
-praticaste	1	praticare past (are), corpus 0
+praticaste	1	praticare subjunctive-past (are), corpus 0
 praticasti	1	praticare past (are), corpus 0
 praticavamo	1	praticare imperfect (are), corpus 0
 praticavate	1	praticare imperfect (are), corpus 0
@@ -13416,7 +13416,7 @@ precipitai	70	precipitare past (are), corpus 5
 precipitammo	1	precipitare past (are), corpus 0
 precipitassi	1	precipitare subjunctive-past (are), corpus 0
 precipitassimo	1	precipitare subjunctive-past (are), corpus 0
-precipitaste	1	precipitare past (are), corpus 0
+precipitaste	1	precipitare subjunctive-past (are), corpus 0
 precipitasti	1	precipitare past (are), corpus 0
 precipitavamo	1	precipitare imperfect (are), corpus 0
 precipitavate	1	precipitare imperfect (are), corpus 0
@@ -13464,7 +13464,7 @@ predicai	1	predicare past (are), corpus 0
 predicammo	1	predicare past (are), corpus 0
 predicassi	1	predicare subjunctive-past (are), corpus 0
 predicassimo	1	predicare subjunctive-past (are), corpus 0
-predicaste	1	predicare past (are), corpus 0
+predicaste	1	predicare subjunctive-past (are), corpus 0
 predicasti	1	predicare past (are), corpus 0
 predicavamo	1	predicare imperfect (are), corpus 0
 predicavate	1	predicare imperfect (are), corpus 0
@@ -13502,7 +13502,7 @@ preferirete	1	preferire future (ire), corpus 0
 preferirò	54	preferire future (ire), corpus 1
 preferissi	1	preferire subjunctive-past (ire), corpus 0
 preferissimo	1	preferire subjunctive-past (ire), corpus 0
-preferiste	1	preferire past (ire), corpus 0
+preferiste	1	preferire subjunctive-past (ire), corpus 0
 preferisti	1	preferire past (ire), corpus 0
 preferivamo	1	preferire imperfect (ire), corpus 0
 preferivate	1	preferire imperfect (ire), corpus 0
@@ -13522,7 +13522,7 @@ pregai	77	pregare past (are), corpus 10
 pregammo	65	pregare past (are), corpus 3
 pregassi	1	pregare subjunctive-past (are), corpus 0
 pregassimo	1	pregare subjunctive-past (are), corpus 0
-pregaste	1	pregare past (are), corpus 0
+pregaste	1	pregare subjunctive-past (are), corpus 0
 pregasti	1	pregare past (are), corpus 0
 pregavamo	70	pregare imperfect (are), corpus 5
 pregavate	61	pregare imperfect (are), corpus 2
@@ -13608,7 +13608,7 @@ preparai	93	preparare past (are), corpus 48
 preparammo	82	preparare past (are), corpus 15
 preparassi	65	preparare subjunctive-past (are), corpus 3
 preparassimo	1	preparare subjunctive-past (are), corpus 0
-preparaste	1	preparare past (are), corpus 0
+preparaste	1	preparare subjunctive-past (are), corpus 0
 preparasti	1	preparare past (are), corpus 0
 preparavamo	54	preparare imperfect (are), corpus 1
 preparavate	1	preparare imperfect (are), corpus 0
@@ -13647,7 +13647,7 @@ prescrivo	1	prescrivere present (ere), corpus 0
 presentammo	61	presentare past (are), corpus 2
 presentassi	1	presentare subjunctive-past (are), corpus 0
 presentassimo	54	presentare subjunctive-past (are), corpus 1
-presentaste	1	presentare past (are), corpus 0
+presentaste	1	presentare subjunctive-past (are), corpus 0
 presentasti	1	presentare past (are), corpus 0
 presentavamo	1	presentare imperfect (are), corpus 0
 presentavate	1	presentare imperfect (are), corpus 0
@@ -13678,7 +13678,7 @@ preservai	1	preservare past (are), corpus 0
 preservammo	1	preservare past (are), corpus 0
 preservassi	1	preservare subjunctive-past (are), corpus 0
 preservassimo	1	preservare subjunctive-past (are), corpus 0
-preservaste	1	preservare past (are), corpus 0
+preservaste	1	preservare subjunctive-past (are), corpus 0
 preservasti	1	preservare past (are), corpus 0
 preservavamo	1	preservare imperfect (are), corpus 0
 preservavate	1	preservare imperfect (are), corpus 0
@@ -13717,7 +13717,7 @@ prestai	87	prestare past (are), corpus 25
 prestammo	54	prestare past (are), corpus 1
 prestassi	1	prestare subjunctive-past (are), corpus 0
 prestassimo	1	prestare subjunctive-past (are), corpus 0
-prestaste	1	prestare past (are), corpus 0
+prestaste	1	prestare subjunctive-past (are), corpus 0
 prestasti	1	prestare past (are), corpus 0
 prestavamo	1	prestare imperfect (are), corpus 0
 prestavate	1	prestare imperfect (are), corpus 0
@@ -13807,7 +13807,7 @@ privilegiammo	1	privilegiare past (are), corpus 0
 privilegiamo	1	privilegiare subjunctive (are), corpus 0
 privilegiassi	1	privilegiare subjunctive-past (are), corpus 0
 privilegiassimo	1	privilegiare subjunctive-past (are), corpus 0
-privilegiaste	1	privilegiare past (are), corpus 0
+privilegiaste	1	privilegiare subjunctive-past (are), corpus 0
 privilegiasti	1	privilegiare past (are), corpus 0
 privilegiavamo	1	privilegiare imperfect (are), corpus 0
 privilegiavate	1	privilegiare imperfect (are), corpus 0
@@ -13839,7 +13839,7 @@ proclamai	1	proclamare past (are), corpus 0
 proclamammo	1	proclamare past (are), corpus 0
 proclamassi	1	proclamare subjunctive-past (are), corpus 0
 proclamassimo	1	proclamare subjunctive-past (are), corpus 0
-proclamaste	1	proclamare past (are), corpus 0
+proclamaste	1	proclamare subjunctive-past (are), corpus 0
 proclamasti	1	proclamare past (are), corpus 0
 proclamavamo	1	proclamare imperfect (are), corpus 0
 proclamavate	1	proclamare imperfect (are), corpus 0
@@ -13855,7 +13855,7 @@ procurai	1	procurare past (are), corpus 0
 procurammo	1	procurare past (are), corpus 0
 procurassi	1	procurare subjunctive-past (are), corpus 0
 procurassimo	1	procurare subjunctive-past (are), corpus 0
-procuraste	1	procurare past (are), corpus 0
+procuraste	1	procurare subjunctive-past (are), corpus 0
 procurasti	1	procurare past (are), corpus 0
 procuravamo	1	procurare imperfect (are), corpus 0
 procuravate	1	procurare imperfect (are), corpus 0
@@ -13951,7 +13951,7 @@ proibisci	1	proibire present (ire-isc), corpus 0
 proibisco	86	proibire present (ire-isc), corpus 23
 proibissi	1	proibire subjunctive-past (ire), corpus 0
 proibissimo	1	proibire subjunctive-past (ire), corpus 0
-proibiste	1	proibire past (ire), corpus 0
+proibiste	1	proibire subjunctive-past (ire), corpus 0
 proibisti	1	proibire past (ire), corpus 0
 proibivamo	1	proibire imperfect (ire), corpus 0
 proibivate	1	proibire imperfect (ire), corpus 0
@@ -13995,7 +13995,7 @@ promettevamo	1	promettere imperfect (ere), corpus 0
 promettevate	1	promettere imperfect (ere), corpus 0
 promettevi	1	promettere imperfect (ere), corpus 0
 promettevo	1	promettere imperfect (ere), corpus 0
-prometti	87	promettere present (ere), corpus 27
+prometti	88	promettere present (ere), corpus 28
 promettiamo	61	promettere present (ere), corpus 2
 promulgai	1	promulgare past (are), corpus 0
 promulgammo	1	promulgare past (are), corpus 0
@@ -14039,7 +14039,7 @@ pronunciai	1	pronunciare past (are), corpus 0
 pronunciammo	1	pronunciare past (are), corpus 0
 pronunciassi	1	pronunciare subjunctive-past (are), corpus 0
 pronunciassimo	1	pronunciare subjunctive-past (are), corpus 0
-pronunciaste	1	pronunciare past (are), corpus 0
+pronunciaste	1	pronunciare subjunctive-past (are), corpus 0
 pronunciasti	1	pronunciare past (are), corpus 0
 pronunciavamo	1	pronunciare imperfect (are), corpus 0
 pronunciavate	1	pronunciare imperfect (are), corpus 0
@@ -14058,7 +14058,7 @@ propagandi	1	propagandare present (are), corpus 0
 propagandiamo	1	propagandare present (are), corpus 0
 propagassi	1	propagare subjunctive-past (are), corpus 0
 propagassimo	1	propagare subjunctive-past (are), corpus 0
-propagaste	1	propagare past (are), corpus 0
+propagaste	1	propagare subjunctive-past (are), corpus 0
 propagasti	1	propagare past (are), corpus 0
 propagavamo	1	propagare imperfect (are), corpus 0
 propagavate	1	propagare imperfect (are), corpus 0
@@ -14113,7 +14113,7 @@ proseguirete	1	proseguire future (ire), corpus 0
 proseguirò	1	proseguire future (ire), corpus 0
 proseguissi	1	proseguire subjunctive-past (ire), corpus 0
 proseguissimo	1	proseguire subjunctive-past (ire), corpus 0
-proseguiste	1	proseguire past (ire), corpus 0
+proseguiste	1	proseguire subjunctive-past (ire), corpus 0
 proseguisti	1	proseguire past (ire), corpus 0
 proseguivamo	1	proseguire imperfect (ire), corpus 0
 proseguivate	1	proseguire imperfect (ire), corpus 0
@@ -14174,7 +14174,7 @@ protestiamo	1	protestare present (are), corpus 0
 provammo	82	provare past (are), corpus 15
 provassi	61	provare subjunctive-past (are), corpus 2
 provassimo	61	provare subjunctive-past (are), corpus 2
-provaste	1	provare past (are), corpus 0
+provaste	1	provare subjunctive-past (are), corpus 0
 provasti	1	provare past (are), corpus 0
 provavamo	72	provare imperfect (are), corpus 6
 provavate	61	provare imperfect (are), corpus 2
@@ -14198,7 +14198,7 @@ provocai	61	provocare past (are), corpus 2
 provocammo	1	provocare past (are), corpus 0
 provocassi	1	provocare subjunctive-past (are), corpus 0
 provocassimo	1	provocare subjunctive-past (are), corpus 0
-provocaste	1	provocare past (are), corpus 0
+provocaste	1	provocare subjunctive-past (are), corpus 0
 provocasti	1	provocare past (are), corpus 0
 provocavamo	1	provocare imperfect (are), corpus 0
 provocavate	1	provocare imperfect (are), corpus 0
@@ -14233,7 +14233,7 @@ pubblicai	54	pubblicare past (are), corpus 1
 pubblicammo	1	pubblicare past (are), corpus 0
 pubblicassi	1	pubblicare subjunctive-past (are), corpus 0
 pubblicassimo	1	pubblicare subjunctive-past (are), corpus 0
-pubblicaste	1	pubblicare past (are), corpus 0
+pubblicaste	1	pubblicare subjunctive-past (are), corpus 0
 pubblicasti	1	pubblicare past (are), corpus 0
 pubblicavamo	1	pubblicare imperfect (are), corpus 0
 pubblicavate	1	pubblicare imperfect (are), corpus 0
@@ -14276,7 +14276,7 @@ punisci	65	punire present (ire-isc), corpus 3
 punisco	70	punire present (ire-isc), corpus 5
 punissi	1	punire subjunctive-past (ire), corpus 0
 punissimo	1	punire subjunctive-past (ire), corpus 0
-puniste	1	punire past (ire), corpus 0
+puniste	1	punire subjunctive-past (ire), corpus 0
 punisti	1	punire past (ire), corpus 0
 punivamo	1	punire imperfect (ire), corpus 0
 punivate	1	punire imperfect (ire), corpus 0
@@ -14286,7 +14286,7 @@ puntai	1	puntare past (are), corpus 0
 puntammo	54	puntare past (are), corpus 1
 puntassi	1	puntare subjunctive-past (are), corpus 0
 puntassimo	1	puntare subjunctive-past (are), corpus 0
-puntaste	1	puntare past (are), corpus 0
+puntaste	1	puntare subjunctive-past (are), corpus 0
 puntasti	1	puntare past (are), corpus 0
 puntavamo	1	puntare imperfect (are), corpus 0
 puntavate	1	puntare imperfect (are), corpus 0
@@ -14319,7 +14319,7 @@ qualificai	1	qualificare past (are), corpus 0
 qualificammo	1	qualificare past (are), corpus 0
 qualificassi	1	qualificare subjunctive-past (are), corpus 0
 qualificassimo	1	qualificare subjunctive-past (are), corpus 0
-qualificaste	1	qualificare past (are), corpus 0
+qualificaste	1	qualificare subjunctive-past (are), corpus 0
 qualificasti	1	qualificare past (are), corpus 0
 qualificavamo	1	qualificare imperfect (are), corpus 0
 qualificavate	1	qualificare imperfect (are), corpus 0
@@ -14369,7 +14369,7 @@ raccontai	78	raccontare past (are), corpus 11
 raccontammo	1	raccontare past (are), corpus 0
 raccontassi	65	raccontare subjunctive-past (are), corpus 3
 raccontassimo	1	raccontare subjunctive-past (are), corpus 0
-raccontaste	1	raccontare past (are), corpus 0
+raccontaste	1	raccontare subjunctive-past (are), corpus 0
 raccontasti	1	raccontare past (are), corpus 0
 raccontavamo	61	raccontare imperfect (are), corpus 2
 raccontavate	61	raccontare imperfect (are), corpus 2
@@ -14425,7 +14425,7 @@ radunai	1	radunare past (are), corpus 0
 radunammo	1	radunare past (are), corpus 0
 radunassi	1	radunare subjunctive-past (are), corpus 0
 radunassimo	1	radunare subjunctive-past (are), corpus 0
-radunaste	1	radunare past (are), corpus 0
+radunaste	1	radunare subjunctive-past (are), corpus 0
 radunasti	1	radunare past (are), corpus 0
 radunavamo	1	radunare imperfect (are), corpus 0
 radunavate	1	radunare imperfect (are), corpus 0
@@ -14517,7 +14517,7 @@ rallentai	54	rallentare past (are), corpus 1
 rallentammo	1	rallentare past (are), corpus 0
 rallentassi	1	rallentare subjunctive-past (are), corpus 0
 rallentassimo	1	rallentare subjunctive-past (are), corpus 0
-rallentaste	1	rallentare past (are), corpus 0
+rallentaste	1	rallentare subjunctive-past (are), corpus 0
 rallentasti	1	rallentare past (are), corpus 0
 rallentavamo	1	rallentare imperfect (are), corpus 0
 rallentavate	1	rallentare imperfect (are), corpus 0
@@ -14562,7 +14562,7 @@ rappresentai	54	rappresentare past (are), corpus 1
 rappresentammo	1	rappresentare past (are), corpus 0
 rappresentassi	1	rappresentare subjunctive-past (are), corpus 0
 rappresentassimo	1	rappresentare subjunctive-past (are), corpus 0
-rappresentaste	1	rappresentare past (are), corpus 0
+rappresentaste	1	rappresentare subjunctive-past (are), corpus 0
 rappresentasti	1	rappresentare past (are), corpus 0
 rappresentavamo	1	rappresentare imperfect (are), corpus 0
 rappresentavate	1	rappresentare imperfect (are), corpus 0
@@ -14585,7 +14585,7 @@ rasentavi	1	rasentare imperfect (are), corpus 0
 rasentavo	1	rasentare imperfect (are), corpus 0
 rasentiamo	1	rasentare present (are), corpus 0
 rasento	1	rasentare present (are), corpus 0
-rassegnai	1	rassegnare past (are), corpus 0
+rassegnai	54	rassegnare past (are), corpus 1
 rassegnammo	1	rassegnare past (are), corpus 0
 rassegnaste	1	rassegnare past (are), corpus 0
 rassegnasti	1	rassegnare past (are), corpus 0
@@ -14664,7 +14664,7 @@ reagisci	65	reagire present (ire-isc), corpus 3
 reagisco	1	reagire present (ire-isc), corpus 0
 reagissi	1	reagire subjunctive-past (ire), corpus 0
 reagissimo	1	reagire subjunctive-past (ire), corpus 0
-reagiste	1	reagire past (ire), corpus 0
+reagiste	1	reagire subjunctive-past (ire), corpus 0
 reagisti	1	reagire past (ire), corpus 0
 reagivamo	1	reagire imperfect (ire), corpus 0
 reagivate	1	reagire imperfect (ire), corpus 0
@@ -14673,7 +14673,7 @@ reagivo	1	reagire imperfect (ire), corpus 0
 realizzammo	61	realizzare past (are), corpus 2
 realizzassi	1	realizzare subjunctive-past (are), corpus 0
 realizzassimo	1	realizzare subjunctive-past (are), corpus 0
-realizzaste	1	realizzare past (are), corpus 0
+realizzaste	1	realizzare subjunctive-past (are), corpus 0
 realizzasti	1	realizzare past (are), corpus 0
 realizzavamo	1	realizzare imperfect (are), corpus 0
 realizzavate	1	realizzare imperfect (are), corpus 0
@@ -14690,7 +14690,7 @@ recammo	1	recare past (are), corpus 0
 recapitiamo	1	recapitare present (are), corpus 0
 recassi	1	recare subjunctive-past (are), corpus 0
 recassimo	1	recare subjunctive-past (are), corpus 0
-recaste	1	recare past (are), corpus 0
+recaste	1	recare subjunctive-past (are), corpus 0
 recasti	1	recare past (are), corpus 0
 recavamo	1	recare imperfect (are), corpus 0
 recavate	1	recare imperfect (are), corpus 0
@@ -14721,7 +14721,7 @@ recitai	1	recitare past (are), corpus 0
 recitammo	1	recitare past (are), corpus 0
 recitassi	1	recitare subjunctive-past (are), corpus 0
 recitassimo	1	recitare subjunctive-past (are), corpus 0
-recitaste	1	recitare past (are), corpus 0
+recitaste	1	recitare subjunctive-past (are), corpus 0
 recitasti	1	recitare past (are), corpus 0
 recitavamo	1	recitare imperfect (are), corpus 0
 recitavate	1	recitare imperfect (are), corpus 0
@@ -14737,7 +14737,7 @@ reclamai	1	reclamare past (are), corpus 0
 reclamammo	1	reclamare past (are), corpus 0
 reclamassi	1	reclamare subjunctive-past (are), corpus 0
 reclamassimo	1	reclamare subjunctive-past (are), corpus 0
-reclamaste	1	reclamare past (are), corpus 0
+reclamaste	1	reclamare subjunctive-past (are), corpus 0
 reclamasti	1	reclamare past (are), corpus 0
 reclamavamo	1	reclamare imperfect (are), corpus 0
 reclamavate	1	reclamare imperfect (are), corpus 0
@@ -14762,7 +14762,7 @@ recuperai	1	recuperare past (are), corpus 0
 recuperammo	1	recuperare past (are), corpus 0
 recuperassi	1	recuperare subjunctive-past (are), corpus 0
 recuperassimo	1	recuperare subjunctive-past (are), corpus 0
-recuperaste	1	recuperare past (are), corpus 0
+recuperaste	1	recuperare subjunctive-past (are), corpus 0
 recuperasti	1	recuperare past (are), corpus 0
 recuperavamo	1	recuperare imperfect (are), corpus 0
 recuperavate	1	recuperare imperfect (are), corpus 0
@@ -14808,11 +14808,11 @@ reggevate	1	reggere imperfect (ere), corpus 0
 reggevi	61	reggere imperfect (ere), corpus 2
 reggevo	54	reggere imperfect (ere), corpus 1
 reggiamo	1	reggere present (ere), corpus 0
-reggo	68	reggere present (ere), corpus 4
+reggo	70	reggere present (ere), corpus 5
 registrai	68	registrare past (are), corpus 4
 registrassi	1	registrare subjunctive-past (are), corpus 0
 registrassimo	1	registrare subjunctive-past (are), corpus 0
-registraste	54	registrare past (are), corpus 1
+registraste	54	registrare subjunctive-past (are), corpus 1
 registrasti	54	registrare past (are), corpus 1
 registravamo	1	registrare imperfect (are), corpus 0
 registravate	1	registrare imperfect (are), corpus 0
@@ -14857,7 +14857,7 @@ regolarizzi	1	regolarizzare present (are), corpus 0
 regolarizziamo	1	regolarizzare present (are), corpus 0
 regolassi	1	regolare subjunctive-past (are), corpus 0
 regolassimo	1	regolare subjunctive-past (are), corpus 0
-regolaste	1	regolare past (are), corpus 0
+regolaste	1	regolare subjunctive-past (are), corpus 0
 regolasti	1	regolare past (are), corpus 0
 regolavamo	1	regolare imperfect (are), corpus 0
 regolavate	1	regolare imperfect (are), corpus 0
@@ -15021,7 +15021,7 @@ respiriate	1	respirare subjunctive (are), corpus 0
 respirino	1	respirare subjunctive (are), corpus 0
 restassi	70	restare subjunctive-past (are), corpus 5
 restassimo	54	restare subjunctive-past (are), corpus 1
-restaste	1	restare past (are), corpus 0
+restaste	1	restare subjunctive-past (are), corpus 0
 restasti	1	restare past (are), corpus 0
 restaurai	1	restaurare past (are), corpus 0
 restaurammo	1	restaurare past (are), corpus 0
@@ -15052,7 +15052,7 @@ restituirò	82	restituire future (ire), corpus 16
 restituisco	75	restituire present (ire-isc), corpus 8
 restituissi	1	restituire subjunctive-past (ire), corpus 0
 restituissimo	1	restituire subjunctive-past (ire), corpus 0
-restituiste	1	restituire past (ire), corpus 0
+restituiste	1	restituire subjunctive-past (ire), corpus 0
 restituisti	1	restituire past (ire), corpus 0
 restituivamo	1	restituire imperfect (ire), corpus 0
 restituivate	1	restituire imperfect (ire), corpus 0
@@ -15127,7 +15127,7 @@ riacquistai	1	riacquistare past (are), corpus 0
 riacquistammo	1	riacquistare past (are), corpus 0
 riacquistassi	1	riacquistare subjunctive-past (are), corpus 0
 riacquistassimo	1	riacquistare subjunctive-past (are), corpus 0
-riacquistaste	1	riacquistare past (are), corpus 0
+riacquistaste	1	riacquistare subjunctive-past (are), corpus 0
 riacquistasti	1	riacquistare past (are), corpus 0
 riacquistiamo	1	riacquistare present (are), corpus 0
 riadattai	1	riadattare past (are), corpus 0
@@ -15265,7 +15265,7 @@ ribellai	1	ribellare past (are), corpus 0
 ribellammo	1	ribellare past (are), corpus 0
 ribellassi	1	ribellare subjunctive-past (are), corpus 0
 ribellassimo	1	ribellare subjunctive-past (are), corpus 0
-ribellaste	1	ribellare past (are), corpus 0
+ribellaste	1	ribellare subjunctive-past (are), corpus 0
 ribellasti	1	ribellare past (are), corpus 0
 ribellavamo	1	ribellare imperfect (are), corpus 0
 ribellavate	1	ribellare imperfect (are), corpus 0
@@ -15358,7 +15358,7 @@ richiamai	54	richiamare past (are), corpus 1
 richiamammo	1	richiamare past (are), corpus 0
 richiamassi	1	richiamare subjunctive-past (are), corpus 0
 richiamassimo	1	richiamare subjunctive-past (are), corpus 0
-richiamaste	1	richiamare past (are), corpus 0
+richiamaste	1	richiamare subjunctive-past (are), corpus 0
 richiamasti	1	richiamare past (are), corpus 0
 richiamavamo	1	richiamare imperfect (are), corpus 0
 richiamavate	1	richiamare imperfect (are), corpus 0
@@ -15371,7 +15371,7 @@ richiameremo	86	richiamare future (are), corpus 23
 richiamereste	1	richiamare conditional (are), corpus 0
 richiameresti	1	richiamare conditional (are), corpus 0
 richiamerete	68	richiamare future (are), corpus 4
-richiamerò	94	richiamare future (are), corpus 53
+richiamerò	95	richiamare future (are), corpus 54
 richiamiate	1	richiamare subjunctive (are), corpus 0
 richiederai	1	richiedere future (ere), corpus 0
 richiederei	1	richiedere conditional (ere), corpus 0
@@ -15537,7 +15537,7 @@ ricoprirete	1	ricoprire future (ire), corpus 0
 ricoprirò	1	ricoprire future (ire), corpus 0
 ricoprissi	1	ricoprire subjunctive-past (ire), corpus 0
 ricoprissimo	1	ricoprire subjunctive-past (ire), corpus 0
-ricopriste	1	ricoprire past (ire), corpus 0
+ricopriste	1	ricoprire subjunctive-past (ire), corpus 0
 ricopristi	1	ricoprire past (ire), corpus 0
 ricoprite	1	ricoprire present (ire), corpus 0
 ricoprivamo	1	ricoprire imperfect (ire), corpus 0
@@ -15548,7 +15548,7 @@ ricopro	1	ricoprire present (ire), corpus 0
 ricordammo	1	ricordare past (are), corpus 0
 ricordassi	70	ricordare subjunctive-past (are), corpus 5
 ricordassimo	1	ricordare subjunctive-past (are), corpus 0
-ricordaste	54	ricordare past (are), corpus 1
+ricordaste	54	ricordare subjunctive-past (are), corpus 1
 ricordasti	1	ricordare past (are), corpus 0
 ricordavamo	1	ricordare imperfect (are), corpus 0
 ricordavate	1	ricordare imperfect (are), corpus 0
@@ -15688,7 +15688,7 @@ rientrai	1	rientrare past (are), corpus 0
 rientrammo	54	rientrare past (are), corpus 1
 rientrassi	1	rientrare subjunctive-past (are), corpus 0
 rientrassimo	1	rientrare subjunctive-past (are), corpus 0
-rientraste	1	rientrare past (are), corpus 0
+rientraste	1	rientrare subjunctive-past (are), corpus 0
 rientrasti	1	rientrare past (are), corpus 0
 rientravamo	1	rientrare imperfect (are), corpus 0
 rientravate	1	rientrare imperfect (are), corpus 0
@@ -15739,7 +15739,7 @@ riferirò	54	riferire future (ire), corpus 1
 riferisci	77	riferire present (ire-isc), corpus 10
 riferissi	65	riferire subjunctive-past (ire), corpus 3
 riferissimo	1	riferire subjunctive-past (ire), corpus 0
-riferiste	1	riferire past (ire), corpus 0
+riferiste	1	riferire subjunctive-past (ire), corpus 0
 riferisti	1	riferire past (ire), corpus 0
 riferivamo	1	riferire imperfect (ire), corpus 0
 riferivate	1	riferire imperfect (ire), corpus 0
@@ -15758,7 +15758,7 @@ rifiutai	78	rifiutare past (are), corpus 11
 rifiutammo	65	rifiutare past (are), corpus 3
 rifiutassi	54	rifiutare subjunctive-past (are), corpus 1
 rifiutassimo	1	rifiutare subjunctive-past (are), corpus 0
-rifiutaste	54	rifiutare past (are), corpus 1
+rifiutaste	54	rifiutare subjunctive-past (are), corpus 1
 rifiutasti	1	rifiutare past (are), corpus 0
 rifiutavamo	1	rifiutare imperfect (are), corpus 0
 rifiutavate	1	rifiutare imperfect (are), corpus 0
@@ -15854,7 +15854,7 @@ riguardai	1	riguardare past (are), corpus 0
 riguardammo	1	riguardare past (are), corpus 0
 riguardassi	1	riguardare subjunctive-past (are), corpus 0
 riguardassimo	1	riguardare subjunctive-past (are), corpus 0
-riguardaste	1	riguardare past (are), corpus 0
+riguardaste	1	riguardare subjunctive-past (are), corpus 0
 riguardasti	1	riguardare past (are), corpus 0
 riguardavamo	1	riguardare imperfect (are), corpus 0
 riguardavate	1	riguardare imperfect (are), corpus 0
@@ -15887,7 +15887,7 @@ rilasciammo	1	rilasciare past (are), corpus 0
 rilasciamo	54	rilasciare subjunctive (are), corpus 1
 rilasciassi	1	rilasciare subjunctive-past (are), corpus 0
 rilasciassimo	1	rilasciare subjunctive-past (are), corpus 0
-rilasciaste	1	rilasciare past (are), corpus 0
+rilasciaste	1	rilasciare subjunctive-past (are), corpus 0
 rilasciasti	1	rilasciare past (are), corpus 0
 rilasciavamo	1	rilasciare imperfect (are), corpus 0
 rilasciavate	1	rilasciare imperfect (are), corpus 0
@@ -15897,7 +15897,7 @@ rilassai	61	rilassare past (are), corpus 2
 rilassammo	68	rilassare past (are), corpus 4
 rilassaste	1	rilassare past (are), corpus 0
 rilassasti	1	rilassare past (are), corpus 0
-rilassi	88	rilassare present (are), corpus 28
+rilassi	88	rilassare present (are), corpus 29
 rilassiamo	70	rilassare present (are), corpus 5
 rileggete	68	rileggere present (ere), corpus 4
 rileggi	74	rileggere present (ere), corpus 7
@@ -16150,7 +16150,7 @@ rinunciammo	1	rinunciare past (are), corpus 0
 rinunciamo	65	rinunciare subjunctive (are), corpus 3
 rinunciassi	1	rinunciare subjunctive-past (are), corpus 0
 rinunciassimo	1	rinunciare subjunctive-past (are), corpus 0
-rinunciaste	1	rinunciare past (are), corpus 0
+rinunciaste	1	rinunciare subjunctive-past (are), corpus 0
 rinunciasti	1	rinunciare past (are), corpus 0
 rinunciate	61	rinunciare subjunctive (are), corpus 2
 rinunciavamo	1	rinunciare imperfect (are), corpus 0
@@ -16218,7 +16218,7 @@ ripartirete	1	ripartire future (ire), corpus 0
 ripartirò	54	ripartire future (ire), corpus 1
 ripartissi	1	ripartire subjunctive-past (ire), corpus 0
 ripartissimo	1	ripartire subjunctive-past (ire), corpus 0
-ripartiste	1	ripartire past (ire), corpus 0
+ripartiste	1	ripartire subjunctive-past (ire), corpus 0
 ripartisti	1	ripartire past (ire), corpus 0
 ripartivamo	1	ripartire imperfect (ire), corpus 0
 ripartivate	1	ripartire imperfect (ire), corpus 0
@@ -16274,7 +16274,7 @@ riportai	1	riportare past (are), corpus 0
 riportammo	1	riportare past (are), corpus 0
 riportassi	1	riportare subjunctive-past (are), corpus 0
 riportassimo	1	riportare subjunctive-past (are), corpus 0
-riportaste	1	riportare past (are), corpus 0
+riportaste	1	riportare subjunctive-past (are), corpus 0
 riportasti	1	riportare past (are), corpus 0
 riportavamo	1	riportare imperfect (are), corpus 0
 riportavate	1	riportare imperfect (are), corpus 0
@@ -16292,7 +16292,7 @@ riposai	75	riposare past (are), corpus 8
 riposammo	54	riposare past (are), corpus 1
 riposassi	61	riposare subjunctive-past (are), corpus 2
 riposassimo	1	riposare subjunctive-past (are), corpus 0
-riposaste	61	riposare past (are), corpus 2
+riposaste	61	riposare subjunctive-past (are), corpus 2
 riposasti	1	riposare past (are), corpus 0
 riposavamo	1	riposare imperfect (are), corpus 0
 riposavate	1	riposare imperfect (are), corpus 0
@@ -16309,7 +16309,7 @@ riposizionaste	1	riposizionare past (are), corpus 0
 riposizionasti	1	riposizionare past (are), corpus 0
 riposizioni	1	riposizionare present (are), corpus 0
 riposizioniamo	1	riposizionare present (are), corpus 0
-riprenderai	74	riprendere future (ere), corpus 7
+riprenderai	75	riprendere future (ere), corpus 8
 riprenderemo	76	riprendere future (ere), corpus 9
 riprenderete	65	riprendere future (ere), corpus 3
 riprenderò	77	riprendere future (ere), corpus 10
@@ -16395,7 +16395,7 @@ risalirete	1	risalire future (ire), corpus 0
 risalirò	1	risalire future (ire), corpus 0
 risalissi	1	risalire subjunctive-past (ire), corpus 0
 risalissimo	1	risalire subjunctive-past (ire), corpus 0
-risaliste	1	risalire past (ire), corpus 0
+risaliste	1	risalire subjunctive-past (ire), corpus 0
 risalisti	1	risalire past (ire), corpus 0
 risalivamo	54	risalire imperfect (ire), corpus 1
 risalivate	1	risalire imperfect (ire), corpus 0
@@ -16583,7 +16583,7 @@ rispecchiammo	1	rispecchiare past (are), corpus 0
 rispecchiamo	1	rispecchiare subjunctive (are), corpus 0
 rispecchiassi	1	rispecchiare subjunctive-past (are), corpus 0
 rispecchiassimo	1	rispecchiare subjunctive-past (are), corpus 0
-rispecchiaste	1	rispecchiare past (are), corpus 0
+rispecchiaste	1	rispecchiare subjunctive-past (are), corpus 0
 rispecchiasti	1	rispecchiare past (are), corpus 0
 rispecchiavamo	1	rispecchiare imperfect (are), corpus 0
 rispecchiavate	1	rispecchiare imperfect (are), corpus 0
@@ -16604,7 +16604,7 @@ rispettai	1	rispettare past (are), corpus 0
 rispettammo	1	rispettare past (are), corpus 0
 rispettassi	1	rispettare subjunctive-past (are), corpus 0
 rispettassimo	1	rispettare subjunctive-past (are), corpus 0
-rispettaste	1	rispettare past (are), corpus 0
+rispettaste	1	rispettare subjunctive-past (are), corpus 0
 rispettasti	1	rispettare past (are), corpus 0
 rispettavamo	1	rispettare imperfect (are), corpus 0
 rispettavate	1	rispettare imperfect (are), corpus 0
@@ -16671,7 +16671,7 @@ risultai	54	risultare past (are), corpus 1
 risultammo	1	risultare past (are), corpus 0
 risultassi	1	risultare subjunctive-past (are), corpus 0
 risultassimo	1	risultare subjunctive-past (are), corpus 0
-risultaste	1	risultare past (are), corpus 0
+risultaste	1	risultare subjunctive-past (are), corpus 0
 risultasti	1	risultare past (are), corpus 0
 risultavamo	1	risultare imperfect (are), corpus 0
 risultavate	1	risultare imperfect (are), corpus 0
@@ -16738,7 +16738,7 @@ ritirai	61	ritirare past (are), corpus 2
 ritirammo	1	ritirare past (are), corpus 0
 ritirassi	1	ritirare subjunctive-past (are), corpus 0
 ritirassimo	1	ritirare subjunctive-past (are), corpus 0
-ritiraste	1	ritirare past (are), corpus 0
+ritiraste	1	ritirare subjunctive-past (are), corpus 0
 ritirasti	1	ritirare past (are), corpus 0
 ritiravamo	1	ritirare imperfect (are), corpus 0
 ritiravate	1	ritirare imperfect (are), corpus 0
@@ -16756,7 +16756,7 @@ ritornai	79	ritornare past (are), corpus 12
 ritornammo	61	ritornare past (are), corpus 2
 ritornassi	1	ritornare subjunctive-past (are), corpus 0
 ritornassimo	1	ritornare subjunctive-past (are), corpus 0
-ritornaste	1	ritornare past (are), corpus 0
+ritornaste	1	ritornare subjunctive-past (are), corpus 0
 ritornasti	1	ritornare past (are), corpus 0
 ritornavamo	1	ritornare imperfect (are), corpus 0
 ritornavate	1	ritornare imperfect (are), corpus 0
@@ -16774,7 +16774,7 @@ ritrattiate	1	ritrattare subjunctive (are), corpus 0
 ritrovammo	1	ritrovare past (are), corpus 0
 ritrovassi	1	ritrovare subjunctive-past (are), corpus 0
 ritrovassimo	1	ritrovare subjunctive-past (are), corpus 0
-ritrovaste	1	ritrovare past (are), corpus 0
+ritrovaste	1	ritrovare subjunctive-past (are), corpus 0
 ritrovasti	1	ritrovare past (are), corpus 0
 ritrovavamo	1	ritrovare imperfect (are), corpus 0
 ritrovavate	1	ritrovare imperfect (are), corpus 0
@@ -16805,17 +16805,17 @@ riunisci	1	riunire present (ire-isc), corpus 0
 riunisco	1	riunire present (ire-isc), corpus 0
 riunissi	1	riunire subjunctive-past (ire), corpus 0
 riunissimo	1	riunire subjunctive-past (ire), corpus 0
-riuniste	1	riunire past (ire), corpus 0
+riuniste	1	riunire subjunctive-past (ire), corpus 0
 riunisti	1	riunire past (ire), corpus 0
 riunivamo	1	riunire imperfect (ire), corpus 0
 riunivate	1	riunire imperfect (ire), corpus 0
 riunivi	1	riunire imperfect (ire), corpus 0
 riunivo	1	riunire imperfect (ire), corpus 0
 riusano	1	riusare present (are), corpus 0
-riuscirei	85	riuscire conditional (ire), corpus 21
+riuscirei	85	riuscire conditional (ire), corpus 22
 riuscireste	54	riuscire conditional (ire), corpus 1
 riusciresti	80	riuscire conditional (ire), corpus 13
-riusciste	54	riuscire past (ire), corpus 1
+riusciste	54	riuscire subjunctive-past (ire), corpus 1
 riuscisti	1	riuscire past (ire), corpus 0
 riuscivamo	89	riuscire imperfect (ire), corpus 32
 riuscivate	65	riuscire imperfect (ire), corpus 3
@@ -16861,7 +16861,7 @@ rivelai	1	rivelare past (are), corpus 0
 rivelammo	1	rivelare past (are), corpus 0
 rivelassi	1	rivelare subjunctive-past (are), corpus 0
 rivelassimo	1	rivelare subjunctive-past (are), corpus 0
-rivelaste	1	rivelare past (are), corpus 0
+rivelaste	1	rivelare subjunctive-past (are), corpus 0
 rivelasti	1	rivelare past (are), corpus 0
 rivelavamo	1	rivelare imperfect (are), corpus 0
 rivelavate	1	rivelare imperfect (are), corpus 0
@@ -16913,7 +16913,7 @@ rivestirete	1	rivestire future (ire), corpus 0
 rivestirò	1	rivestire future (ire), corpus 0
 rivestissi	1	rivestire subjunctive-past (ire), corpus 0
 rivestissimo	1	rivestire subjunctive-past (ire), corpus 0
-rivestiste	1	rivestire past (ire), corpus 0
+rivestiste	1	rivestire subjunctive-past (ire), corpus 0
 rivestisti	1	rivestire past (ire), corpus 0
 rivestivamo	1	rivestire imperfect (ire), corpus 0
 rivestivate	1	rivestire imperfect (ire), corpus 0
@@ -17031,7 +17031,7 @@ rubai	79	rubare past (are), corpus 12
 rubammo	65	rubare past (are), corpus 3
 rubassi	1	rubare subjunctive-past (are), corpus 0
 rubassimo	1	rubare subjunctive-past (are), corpus 0
-rubaste	54	rubare past (are), corpus 1
+rubaste	54	rubare subjunctive-past (are), corpus 1
 rubasti	54	rubare past (are), corpus 1
 rubavamo	61	rubare imperfect (are), corpus 2
 rubavate	61	rubare imperfect (are), corpus 2
@@ -17047,7 +17047,7 @@ ruotai	1	ruotare past (are), corpus 0
 ruotammo	1	ruotare past (are), corpus 0
 ruotassi	1	ruotare subjunctive-past (are), corpus 0
 ruotassimo	1	ruotare subjunctive-past (are), corpus 0
-ruotaste	1	ruotare past (are), corpus 0
+ruotaste	1	ruotare subjunctive-past (are), corpus 0
 ruotasti	1	ruotare past (are), corpus 0
 ruotavamo	1	ruotare imperfect (are), corpus 0
 ruotavate	1	ruotare imperfect (are), corpus 0
@@ -17122,7 +17122,7 @@ saltavi	1	saltare imperfect (are), corpus 0
 saltavo	70	saltare imperfect (are), corpus 5
 saltellate	1	saltellare present (are), corpus 0
 saltelliamo	1	saltellare present (are), corpus 0
-salterai	1	saltare future (are), corpus 0
+salterai	54	saltare future (are), corpus 1
 salteremo	1	saltare future (are), corpus 0
 salterete	1	saltare future (are), corpus 0
 salterò	61	saltare future (are), corpus 2
@@ -17151,7 +17151,7 @@ salvai	76	salvare past (are), corpus 9
 salvammo	54	salvare past (are), corpus 1
 salvassi	1	salvare subjunctive-past (are), corpus 0
 salvassimo	1	salvare subjunctive-past (are), corpus 0
-salvaste	1	salvare past (are), corpus 0
+salvaste	1	salvare subjunctive-past (are), corpus 0
 salvasti	1	salvare past (are), corpus 0
 salvavamo	1	salvare imperfect (are), corpus 0
 salvavate	1	salvare imperfect (are), corpus 0
@@ -17216,7 +17216,7 @@ sbarcai	1	sbarcare past (are), corpus 0
 sbarcammo	1	sbarcare past (are), corpus 0
 sbarcassi	1	sbarcare subjunctive-past (are), corpus 0
 sbarcassimo	1	sbarcare subjunctive-past (are), corpus 0
-sbarcaste	1	sbarcare past (are), corpus 0
+sbarcaste	1	sbarcare subjunctive-past (are), corpus 0
 sbarcasti	1	sbarcare past (are), corpus 0
 sbarcavamo	1	sbarcare imperfect (are), corpus 0
 sbarcavate	1	sbarcare imperfect (are), corpus 0
@@ -17363,7 +17363,7 @@ scambiammo	70	scambiare past (are), corpus 5
 scambiamo	76	scambiare subjunctive (are), corpus 9
 scambiassi	1	scambiare subjunctive-past (are), corpus 0
 scambiassimo	54	scambiare subjunctive-past (are), corpus 1
-scambiaste	1	scambiare past (are), corpus 0
+scambiaste	1	scambiare subjunctive-past (are), corpus 0
 scambiasti	1	scambiare past (are), corpus 0
 scambiavamo	1	scambiare imperfect (are), corpus 0
 scambiavate	1	scambiare imperfect (are), corpus 0
@@ -17403,7 +17403,7 @@ scappai	72	scappare past (are), corpus 6
 scappammo	1	scappare past (are), corpus 0
 scappassi	1	scappare subjunctive-past (are), corpus 0
 scappassimo	1	scappare subjunctive-past (are), corpus 0
-scappaste	1	scappare past (are), corpus 0
+scappaste	1	scappare subjunctive-past (are), corpus 0
 scappasti	1	scappare past (are), corpus 0
 scappavamo	1	scappare imperfect (are), corpus 0
 scappavate	1	scappare imperfect (are), corpus 0
@@ -17450,7 +17450,7 @@ scatenai	1	scatenare past (are), corpus 0
 scatenammo	1	scatenare past (are), corpus 0
 scatenassi	1	scatenare subjunctive-past (are), corpus 0
 scatenassimo	1	scatenare subjunctive-past (are), corpus 0
-scatenaste	1	scatenare past (are), corpus 0
+scatenaste	1	scatenare subjunctive-past (are), corpus 0
 scatenasti	1	scatenare past (are), corpus 0
 scatenavamo	1	scatenare imperfect (are), corpus 0
 scatenavate	1	scatenare imperfect (are), corpus 0
@@ -17508,7 +17508,7 @@ scavalchiamo	1	scavalcare present (are), corpus 0
 scavammo	1	scavare past (are), corpus 0
 scavassi	1	scavare subjunctive-past (are), corpus 0
 scavassimo	1	scavare subjunctive-past (are), corpus 0
-scavaste	1	scavare past (are), corpus 0
+scavaste	1	scavare subjunctive-past (are), corpus 0
 scavasti	1	scavare past (are), corpus 0
 scavavamo	1	scavare imperfect (are), corpus 0
 scavavate	1	scavare imperfect (are), corpus 0
@@ -17589,7 +17589,7 @@ schierai	1	schierare past (are), corpus 0
 schierammo	1	schierare past (are), corpus 0
 schierassi	1	schierare subjunctive-past (are), corpus 0
 schierassimo	1	schierare subjunctive-past (are), corpus 0
-schieraste	1	schierare past (are), corpus 0
+schieraste	1	schierare subjunctive-past (are), corpus 0
 schierasti	1	schierare past (are), corpus 0
 schieravamo	1	schierare imperfect (are), corpus 0
 schieravate	1	schierare imperfect (are), corpus 0
@@ -17674,7 +17674,7 @@ scivolai	65	scivolare past (are), corpus 3
 scivolammo	1	scivolare past (are), corpus 0
 scivolassi	1	scivolare subjunctive-past (are), corpus 0
 scivolassimo	1	scivolare subjunctive-past (are), corpus 0
-scivolaste	1	scivolare past (are), corpus 0
+scivolaste	1	scivolare subjunctive-past (are), corpus 0
 scivolasti	1	scivolare past (are), corpus 0
 scivolavamo	61	scivolare imperfect (are), corpus 2
 scivolavate	61	scivolare imperfect (are), corpus 2
@@ -17803,7 +17803,7 @@ scontrai	54	scontrare past (are), corpus 1
 scontrammo	1	scontrare past (are), corpus 0
 scontrassi	1	scontrare subjunctive-past (are), corpus 0
 scontrassimo	1	scontrare subjunctive-past (are), corpus 0
-scontraste	1	scontrare past (are), corpus 0
+scontraste	1	scontrare subjunctive-past (are), corpus 0
 scontrasti	1	scontrare past (are), corpus 0
 scontravamo	1	scontrare imperfect (are), corpus 0
 scontravate	1	scontrare imperfect (are), corpus 0
@@ -17835,7 +17835,7 @@ scoppiammo	68	scoppiare past (are), corpus 4
 scoppiamo	1	scoppiare subjunctive (are), corpus 0
 scoppiassi	1	scoppiare subjunctive-past (are), corpus 0
 scoppiassimo	1	scoppiare subjunctive-past (are), corpus 0
-scoppiaste	1	scoppiare past (are), corpus 0
+scoppiaste	1	scoppiare subjunctive-past (are), corpus 0
 scoppiasti	1	scoppiare past (are), corpus 0
 scoppiavamo	1	scoppiare imperfect (are), corpus 0
 scoppiavate	1	scoppiare imperfect (are), corpus 0
@@ -17846,7 +17846,7 @@ scopriate	54	scoprire subjunctive (ire), corpus 1
 scoprimmo	72	scoprire past (ire), corpus 6
 scoprissi	1	scoprire subjunctive-past (ire), corpus 0
 scoprissimo	1	scoprire subjunctive-past (ire), corpus 0
-scopriste	1	scoprire past (ire), corpus 0
+scopriste	1	scoprire subjunctive-past (ire), corpus 0
 scopristi	1	scoprire past (ire), corpus 0
 scoprite	78	scoprire present (ire), corpus 11
 scoprivamo	1	scoprire imperfect (ire), corpus 0
@@ -17926,7 +17926,7 @@ scrivessimo	1	scrivere subjunctive-past (ere), corpus 0
 scriveste	1	scrivere subjunctive-past (ere), corpus 0
 scrivevamo	61	scrivere imperfect (ere), corpus 2
 scrivevate	61	scrivere imperfect (ere), corpus 2
-scrivevi	68	scrivere imperfect (ere), corpus 4
+scrivevi	70	scrivere imperfect (ere), corpus 5
 scriviate	65	scrivere subjunctive (ere), corpus 3
 scrutavamo	1	scrutare imperfect (are), corpus 0
 scrutavate	1	scrutare imperfect (are), corpus 0
@@ -17973,7 +17973,7 @@ segnalai	68	segnalare past (are), corpus 4
 segnalammo	1	segnalare past (are), corpus 0
 segnalassi	1	segnalare subjunctive-past (are), corpus 0
 segnalassimo	1	segnalare subjunctive-past (are), corpus 0
-segnalaste	1	segnalare past (are), corpus 0
+segnalaste	1	segnalare subjunctive-past (are), corpus 0
 segnalasti	1	segnalare past (are), corpus 0
 segnalavamo	1	segnalare imperfect (are), corpus 0
 segnalavate	1	segnalare imperfect (are), corpus 0
@@ -17987,7 +17987,7 @@ segnaliate	1	segnalare subjunctive (are), corpus 0
 segnammo	1	segnare past (are), corpus 0
 segnassi	1	segnare subjunctive-past (are), corpus 0
 segnassimo	1	segnare subjunctive-past (are), corpus 0
-segnaste	1	segnare past (are), corpus 0
+segnaste	1	segnare subjunctive-past (are), corpus 0
 segnasti	1	segnare past (are), corpus 0
 segnavamo	1	segnare imperfect (are), corpus 0
 segnavate	1	segnare imperfect (are), corpus 0
@@ -18008,7 +18008,7 @@ seguireste	54	seguire conditional (ire), corpus 1
 seguiresti	54	seguire conditional (ire), corpus 1
 seguissi	1	seguire subjunctive-past (ire), corpus 0
 seguissimo	1	seguire subjunctive-past (ire), corpus 0
-seguiste	1	seguire past (ire), corpus 0
+seguiste	1	seguire subjunctive-past (ire), corpus 0
 seguisti	1	seguire past (ire), corpus 0
 seguitai	1	seguitare past (are), corpus 0
 seguitammo	1	seguitare past (are), corpus 0
@@ -18036,7 +18036,7 @@ sembrai	1	sembrare past (are), corpus 0
 sembrammo	1	sembrare past (are), corpus 0
 sembrassi	80	sembrare subjunctive-past (are), corpus 13
 sembrassimo	1	sembrare subjunctive-past (are), corpus 0
-sembraste	61	sembrare past (are), corpus 2
+sembraste	61	sembrare subjunctive-past (are), corpus 2
 sembrasti	1	sembrare past (are), corpus 0
 sembravamo	76	sembrare imperfect (are), corpus 9
 sembravate	93	sembrare imperfect (are), corpus 47
@@ -18049,7 +18049,7 @@ sembreremo	68	sembrare future (are), corpus 4
 sembrereste	1	sembrare conditional (are), corpus 0
 sembreresti	1	sembrare conditional (are), corpus 0
 sembrerete	1	sembrare future (are), corpus 0
-sembrerò	68	sembrare future (are), corpus 4
+sembrerò	72	sembrare future (are), corpus 6
 sembriamo	79	sembrare subjunctive (are), corpus 12
 sembriate	1	sembrare subjunctive (are), corpus 0
 seminai	1	seminare past (are), corpus 0
@@ -18081,15 +18081,15 @@ sentiremmo	1	sentire conditional (ire), corpus 0
 sentireste	61	sentire conditional (ire), corpus 2
 sentiresti	65	sentire conditional (ire), corpus 3
 sentissi	70	sentire subjunctive-past (ire), corpus 5
-sentissimo	54	sentire subjunctive-past (ire), corpus 1
-sentiste	54	sentire past (ire), corpus 1
+sentissimo	65	sentire subjunctive-past (ire), corpus 3
+sentiste	54	sentire subjunctive-past (ire), corpus 1
 sentisti	70	sentire past (ire), corpus 5
 sentivate	75	sentire imperfect (ire), corpus 8
 separai	54	separare past (are), corpus 1
 separammo	68	separare past (are), corpus 4
 separassi	1	separare subjunctive-past (are), corpus 0
 separassimo	1	separare subjunctive-past (are), corpus 0
-separaste	1	separare past (are), corpus 0
+separaste	1	separare subjunctive-past (are), corpus 0
 separasti	1	separare past (are), corpus 0
 separavamo	1	separare imperfect (are), corpus 0
 separavate	1	separare imperfect (are), corpus 0
@@ -18154,7 +18154,7 @@ servirete	61	servire future (ire), corpus 2
 servirò	1	servire future (ire), corpus 0
 servissi	1	servire subjunctive-past (ire), corpus 0
 servissimo	1	servire subjunctive-past (ire), corpus 0
-serviste	1	servire past (ire), corpus 0
+serviste	1	servire subjunctive-past (ire), corpus 0
 servisti	1	servire past (ire), corpus 0
 servivamo	1	servire imperfect (ire), corpus 0
 servivate	1	servire imperfect (ire), corpus 0
@@ -18190,7 +18190,7 @@ sfidai	61	sfidare past (are), corpus 2
 sfidammo	1	sfidare past (are), corpus 0
 sfidassi	1	sfidare subjunctive-past (are), corpus 0
 sfidassimo	1	sfidare subjunctive-past (are), corpus 0
-sfidaste	1	sfidare past (are), corpus 0
+sfidaste	1	sfidare subjunctive-past (are), corpus 0
 sfidasti	1	sfidare past (are), corpus 0
 sfidavamo	1	sfidare imperfect (are), corpus 0
 sfidavate	1	sfidare imperfect (are), corpus 0
@@ -18311,7 +18311,7 @@ sfruttai	1	sfruttare past (are), corpus 0
 sfruttammo	1	sfruttare past (are), corpus 0
 sfruttassi	1	sfruttare subjunctive-past (are), corpus 0
 sfruttassimo	1	sfruttare subjunctive-past (are), corpus 0
-sfruttaste	1	sfruttare past (are), corpus 0
+sfruttaste	1	sfruttare subjunctive-past (are), corpus 0
 sfruttasti	1	sfruttare past (are), corpus 0
 sfruttavamo	1	sfruttare imperfect (are), corpus 0
 sfruttavate	1	sfruttare imperfect (are), corpus 0
@@ -18379,7 +18379,7 @@ sgretolate	1	sgretolare present (are), corpus 0
 sgretoli	1	sgretolare present (are), corpus 0
 sgretoliamo	1	sgretolare present (are), corpus 0
 sgridate	61	sgridare present (are), corpus 2
-sgridi	1	sgridare present (are), corpus 0
+sgridi	54	sgridare present (are), corpus 1
 sgridiamo	1	sgridare present (are), corpus 0
 sguainano	1	sguainare present (are), corpus 0
 sguaini	54	sguainare present (are), corpus 1
@@ -18404,7 +18404,7 @@ significai	1	significare past (are), corpus 0
 significammo	1	significare past (are), corpus 0
 significassi	1	significare subjunctive-past (are), corpus 0
 significassimo	1	significare subjunctive-past (are), corpus 0
-significaste	1	significare past (are), corpus 0
+significaste	1	significare subjunctive-past (are), corpus 0
 significasti	1	significare past (are), corpus 0
 significavamo	1	significare imperfect (are), corpus 0
 significavate	1	significare imperfect (are), corpus 0
@@ -18650,7 +18650,7 @@ soffrirete	68	soffrire future (ire), corpus 4
 soffrirò	1	soffrire future (ire), corpus 0
 soffrissi	1	soffrire subjunctive-past (ire), corpus 0
 soffrissimo	1	soffrire subjunctive-past (ire), corpus 0
-soffriste	1	soffrire past (ire), corpus 0
+soffriste	1	soffrire subjunctive-past (ire), corpus 0
 soffristi	1	soffrire past (ire), corpus 0
 soffrite	76	soffrire present (ire), corpus 9
 soffrivamo	1	soffrire imperfect (ire), corpus 0
@@ -18715,7 +18715,7 @@ sollevai	61	sollevare past (are), corpus 2
 sollevammo	1	sollevare past (are), corpus 0
 sollevassi	1	sollevare subjunctive-past (are), corpus 0
 sollevassimo	1	sollevare subjunctive-past (are), corpus 0
-sollevaste	1	sollevare past (are), corpus 0
+sollevaste	1	sollevare subjunctive-past (are), corpus 0
 sollevasti	1	sollevare past (are), corpus 0
 sollevavamo	1	sollevare imperfect (are), corpus 0
 sollevavate	1	sollevare imperfect (are), corpus 0
@@ -18784,7 +18784,7 @@ sopportai	65	sopportare past (are), corpus 3
 sopportammo	1	sopportare past (are), corpus 0
 sopportassi	1	sopportare subjunctive-past (are), corpus 0
 sopportassimo	1	sopportare subjunctive-past (are), corpus 0
-sopportaste	1	sopportare past (are), corpus 0
+sopportaste	1	sopportare subjunctive-past (are), corpus 0
 sopportasti	1	sopportare past (are), corpus 0
 sopportavamo	1	sopportare imperfect (are), corpus 0
 sopportavate	1	sopportare imperfect (are), corpus 0
@@ -18897,7 +18897,7 @@ sorvegliammo	1	sorvegliare past (are), corpus 0
 sorvegliamo	1	sorvegliare subjunctive (are), corpus 0
 sorvegliassi	1	sorvegliare subjunctive-past (are), corpus 0
 sorvegliassimo	1	sorvegliare subjunctive-past (are), corpus 0
-sorvegliaste	1	sorvegliare past (are), corpus 0
+sorvegliaste	1	sorvegliare subjunctive-past (are), corpus 0
 sorvegliasti	1	sorvegliare past (are), corpus 0
 sorvegliavamo	1	sorvegliare imperfect (are), corpus 0
 sorvegliavate	1	sorvegliare imperfect (are), corpus 0
@@ -18925,7 +18925,7 @@ sospettai	61	sospettare past (are), corpus 2
 sospettammo	1	sospettare past (are), corpus 0
 sospettassi	54	sospettare subjunctive-past (are), corpus 1
 sospettassimo	1	sospettare subjunctive-past (are), corpus 0
-sospettaste	1	sospettare past (are), corpus 0
+sospettaste	1	sospettare subjunctive-past (are), corpus 0
 sospettasti	1	sospettare past (are), corpus 0
 sospettavamo	54	sospettare imperfect (are), corpus 1
 sospettavate	1	sospettare imperfect (are), corpus 0
@@ -18970,11 +18970,11 @@ sostituiremmo	1	sostituire conditional (ire), corpus 0
 sostituireste	1	sostituire conditional (ire), corpus 0
 sostituiresti	1	sostituire conditional (ire), corpus 0
 sostituirete	1	sostituire future (ire), corpus 0
-sostituirò	65	sostituire future (ire), corpus 3
+sostituirò	68	sostituire future (ire), corpus 4
 sostituisco	54	sostituire present (ire-isc), corpus 1
 sostituissi	1	sostituire subjunctive-past (ire), corpus 0
 sostituissimo	1	sostituire subjunctive-past (ire), corpus 0
-sostituiste	1	sostituire past (ire), corpus 0
+sostituiste	1	sostituire subjunctive-past (ire), corpus 0
 sostituisti	1	sostituire past (ire), corpus 0
 sostituivamo	1	sostituire imperfect (ire), corpus 0
 sostituivate	1	sostituire imperfect (ire), corpus 0
@@ -19108,7 +19108,7 @@ spando	1	spandere present (ere), corpus 0
 sparammo	54	sparare past (are), corpus 1
 sparassi	54	sparare subjunctive-past (are), corpus 1
 sparassimo	1	sparare subjunctive-past (are), corpus 0
-sparaste	1	sparare past (are), corpus 0
+sparaste	1	sparare subjunctive-past (are), corpus 0
 sparasti	1	sparare past (are), corpus 0
 sparavamo	1	sparare imperfect (are), corpus 0
 sparavate	1	sparare imperfect (are), corpus 0
@@ -19133,7 +19133,7 @@ sparirete	54	sparire future (ire), corpus 1
 sparirò	1	sparire future (ire), corpus 0
 sparissi	1	sparire subjunctive-past (ire), corpus 0
 sparissimo	1	sparire subjunctive-past (ire), corpus 0
-spariste	1	sparire past (ire), corpus 0
+spariste	1	sparire subjunctive-past (ire), corpus 0
 sparisti	1	sparire past (ire), corpus 0
 sparivamo	1	sparire imperfect (ire), corpus 0
 sparivate	1	sparire imperfect (ire), corpus 0
@@ -19262,7 +19262,7 @@ spettai	1	spettare past (are), corpus 0
 spettammo	1	spettare past (are), corpus 0
 spettassi	1	spettare subjunctive-past (are), corpus 0
 spettassimo	1	spettare subjunctive-past (are), corpus 0
-spettaste	1	spettare past (are), corpus 0
+spettaste	1	spettare subjunctive-past (are), corpus 0
 spettasti	1	spettare past (are), corpus 0
 spettavamo	1	spettare imperfect (are), corpus 0
 spettavate	1	spettare imperfect (are), corpus 0
@@ -19317,7 +19317,7 @@ spiegai	82	spiegare past (are), corpus 15
 spiegammo	1	spiegare past (are), corpus 0
 spiegassi	1	spiegare subjunctive-past (are), corpus 0
 spiegassimo	1	spiegare subjunctive-past (are), corpus 0
-spiegaste	1	spiegare past (are), corpus 0
+spiegaste	1	spiegare subjunctive-past (are), corpus 0
 spiegasti	1	spiegare past (are), corpus 0
 spiegavamo	1	spiegare imperfect (are), corpus 0
 spiegavate	1	spiegare imperfect (are), corpus 0
@@ -19402,7 +19402,7 @@ sposai	72	sposare past (are), corpus 6
 sposammo	68	sposare past (are), corpus 4
 sposassi	61	sposare subjunctive-past (are), corpus 2
 sposassimo	54	sposare subjunctive-past (are), corpus 1
-sposaste	54	sposare past (are), corpus 1
+sposaste	54	sposare subjunctive-past (are), corpus 1
 sposasti	1	sposare past (are), corpus 0
 sposavamo	1	sposare imperfect (are), corpus 0
 sposavate	61	sposare imperfect (are), corpus 2
@@ -19417,7 +19417,7 @@ spostai	72	spostare past (are), corpus 6
 spostammo	1	spostare past (are), corpus 0
 spostassi	1	spostare subjunctive-past (are), corpus 0
 spostassimo	1	spostare subjunctive-past (are), corpus 0
-spostaste	1	spostare past (are), corpus 0
+spostaste	1	spostare subjunctive-past (are), corpus 0
 spostasti	1	spostare past (are), corpus 0
 spostavamo	1	spostare imperfect (are), corpus 0
 spostavate	1	spostare imperfect (are), corpus 0
@@ -19519,7 +19519,7 @@ stabilirete	1	stabilire future (ire), corpus 0
 stabilirò	1	stabilire future (ire), corpus 0
 stabilissi	1	stabilire subjunctive-past (ire), corpus 0
 stabilissimo	1	stabilire subjunctive-past (ire), corpus 0
-stabiliste	1	stabilire past (ire), corpus 0
+stabiliste	1	stabilire subjunctive-past (ire), corpus 0
 stabilisti	1	stabilire past (ire), corpus 0
 stabilivamo	1	stabilire imperfect (ire), corpus 0
 stabilivate	1	stabilire imperfect (ire), corpus 0
@@ -19529,7 +19529,7 @@ stabilizzai	1	stabilizzare past (are), corpus 0
 stabilizzammo	1	stabilizzare past (are), corpus 0
 stabilizzassi	1	stabilizzare subjunctive-past (are), corpus 0
 stabilizzassimo	1	stabilizzare subjunctive-past (are), corpus 0
-stabilizzaste	1	stabilizzare past (are), corpus 0
+stabilizzaste	1	stabilizzare subjunctive-past (are), corpus 0
 stabilizzasti	1	stabilizzare past (are), corpus 0
 stabilizzavamo	1	stabilizzare imperfect (are), corpus 0
 stabilizzavate	1	stabilizzare imperfect (are), corpus 0
@@ -19545,7 +19545,7 @@ staccai	61	staccare past (are), corpus 2
 staccammo	1	staccare past (are), corpus 0
 staccassi	1	staccare subjunctive-past (are), corpus 0
 staccassimo	1	staccare subjunctive-past (are), corpus 0
-staccaste	1	staccare past (are), corpus 0
+staccaste	1	staccare subjunctive-past (are), corpus 0
 staccasti	1	staccare past (are), corpus 0
 staccavamo	1	staccare imperfect (are), corpus 0
 staccavate	1	staccare imperfect (are), corpus 0
@@ -19708,7 +19708,7 @@ strappai	68	strappare past (are), corpus 4
 strappammo	1	strappare past (are), corpus 0
 strappassi	1	strappare subjunctive-past (are), corpus 0
 strappassimo	1	strappare subjunctive-past (are), corpus 0
-strappaste	1	strappare past (are), corpus 0
+strappaste	1	strappare subjunctive-past (are), corpus 0
 strappasti	1	strappare past (are), corpus 0
 strappavamo	1	strappare imperfect (are), corpus 0
 strappavate	1	strappare imperfect (are), corpus 0
@@ -19779,7 +19779,7 @@ studiai	93	studiare past (are), corpus 48
 studiammo	80	studiare past (are), corpus 13
 studiassi	61	studiare subjunctive-past (are), corpus 2
 studiassimo	1	studiare subjunctive-past (are), corpus 0
-studiaste	1	studiare past (are), corpus 0
+studiaste	1	studiare subjunctive-past (are), corpus 0
 studiasti	1	studiare past (are), corpus 0
 studiavamo	72	studiare imperfect (are), corpus 6
 studiavate	61	studiare imperfect (are), corpus 2
@@ -19828,7 +19828,7 @@ subisci	1	subire present (ire-isc), corpus 0
 subisco	1	subire present (ire-isc), corpus 0
 subissi	1	subire subjunctive-past (ire), corpus 0
 subissimo	1	subire subjunctive-past (ire), corpus 0
-subiste	1	subire past (ire), corpus 0
+subiste	1	subire subjunctive-past (ire), corpus 0
 subisti	1	subire past (ire), corpus 0
 subivamo	1	subire imperfect (ire), corpus 0
 subivate	1	subire imperfect (ire), corpus 0
@@ -19880,7 +19880,7 @@ suggeriresti	54	suggerire conditional (ire), corpus 1
 suggerisci	72	suggerire present (ire-isc), corpus 6
 suggerissi	1	suggerire subjunctive-past (ire), corpus 0
 suggerissimo	1	suggerire subjunctive-past (ire), corpus 0
-suggeriste	1	suggerire past (ire), corpus 0
+suggeriste	1	suggerire subjunctive-past (ire), corpus 0
 suggeristi	1	suggerire past (ire), corpus 0
 suggerivamo	1	suggerire imperfect (ire), corpus 0
 suggerivate	1	suggerire imperfect (ire), corpus 0
@@ -19890,7 +19890,7 @@ suonai	78	suonare past (are), corpus 11
 suonammo	70	suonare past (are), corpus 5
 suonassi	54	suonare subjunctive-past (are), corpus 1
 suonassimo	54	suonare subjunctive-past (are), corpus 1
-suonaste	54	suonare past (are), corpus 1
+suonaste	54	suonare subjunctive-past (are), corpus 1
 suonasti	1	suonare past (are), corpus 0
 suonavate	72	suonare imperfect (are), corpus 6
 suonavi	72	suonare imperfect (are), corpus 6
@@ -19903,7 +19903,7 @@ superai	77	superare past (are), corpus 10
 superammo	72	superare past (are), corpus 6
 superassi	1	superare subjunctive-past (are), corpus 0
 superassimo	1	superare subjunctive-past (are), corpus 0
-superaste	1	superare past (are), corpus 0
+superaste	1	superare subjunctive-past (are), corpus 0
 superasti	1	superare past (are), corpus 0
 superavamo	1	superare imperfect (are), corpus 0
 superavate	1	superare imperfect (are), corpus 0
@@ -19916,7 +19916,7 @@ supereremo	61	superare future (are), corpus 2
 superereste	1	superare conditional (are), corpus 0
 supereresti	1	superare conditional (are), corpus 0
 supererete	65	superare future (are), corpus 3
-supererò	61	superare future (are), corpus 2
+supererò	65	superare future (are), corpus 3
 superiate	1	superare subjunctive (are), corpus 0
 supervisionai	1	supervisionare past (are), corpus 0
 supervisionammo	1	supervisionare past (are), corpus 0
@@ -19941,7 +19941,7 @@ supportai	1	supportare past (are), corpus 0
 supportammo	1	supportare past (are), corpus 0
 supportassi	1	supportare subjunctive-past (are), corpus 0
 supportassimo	1	supportare subjunctive-past (are), corpus 0
-supportaste	1	supportare past (are), corpus 0
+supportaste	1	supportare subjunctive-past (are), corpus 0
 supportasti	1	supportare past (are), corpus 0
 supportavamo	1	supportare imperfect (are), corpus 0
 supportavate	1	supportare imperfect (are), corpus 0
@@ -19981,7 +19981,7 @@ suscitai	1	suscitare past (are), corpus 0
 suscitammo	1	suscitare past (are), corpus 0
 suscitassi	1	suscitare subjunctive-past (are), corpus 0
 suscitassimo	1	suscitare subjunctive-past (are), corpus 0
-suscitaste	1	suscitare past (are), corpus 0
+suscitaste	1	suscitare subjunctive-past (are), corpus 0
 suscitasti	1	suscitare past (are), corpus 0
 suscitavamo	1	suscitare imperfect (are), corpus 0
 suscitavate	1	suscitare imperfect (are), corpus 0
@@ -20105,7 +20105,7 @@ sviluppai	1	sviluppare past (are), corpus 0
 sviluppammo	1	sviluppare past (are), corpus 0
 sviluppassi	1	sviluppare subjunctive-past (are), corpus 0
 sviluppassimo	1	sviluppare subjunctive-past (are), corpus 0
-sviluppaste	1	sviluppare past (are), corpus 0
+sviluppaste	1	sviluppare subjunctive-past (are), corpus 0
 sviluppasti	1	sviluppare past (are), corpus 0
 sviluppavamo	1	sviluppare imperfect (are), corpus 0
 sviluppavate	1	sviluppare imperfect (are), corpus 0
@@ -20183,7 +20183,7 @@ tagliai	80	tagliare past (are), corpus 13
 tagliammo	54	tagliare past (are), corpus 1
 tagliassi	61	tagliare subjunctive-past (are), corpus 2
 tagliassimo	1	tagliare subjunctive-past (are), corpus 0
-tagliaste	1	tagliare past (are), corpus 0
+tagliaste	1	tagliare subjunctive-past (are), corpus 0
 tagliasti	1	tagliare past (are), corpus 0
 tagliavamo	1	tagliare imperfect (are), corpus 0
 tagliavate	1	tagliare imperfect (are), corpus 0
@@ -20267,7 +20267,7 @@ tendevo	1	tendere imperfect (ere), corpus 0
 tendiate	1	tendere subjunctive (ere), corpus 0
 tentassi	1	tentare subjunctive-past (are), corpus 0
 tentassimo	1	tentare subjunctive-past (are), corpus 0
-tentaste	1	tentare past (are), corpus 0
+tentaste	1	tentare subjunctive-past (are), corpus 0
 tentasti	1	tentare past (are), corpus 0
 tentavamo	1	tentare imperfect (are), corpus 0
 tentavate	1	tentare imperfect (are), corpus 0
@@ -20295,7 +20295,7 @@ terminai	1	terminare past (are), corpus 0
 terminammo	1	terminare past (are), corpus 0
 terminassi	1	terminare subjunctive-past (are), corpus 0
 terminassimo	1	terminare subjunctive-past (are), corpus 0
-terminaste	1	terminare past (are), corpus 0
+terminaste	1	terminare subjunctive-past (are), corpus 0
 terminasti	1	terminare past (are), corpus 0
 terminavamo	1	terminare imperfect (are), corpus 0
 terminavate	1	terminare imperfect (are), corpus 0
@@ -20347,7 +20347,7 @@ testimoniai	1	testimoniare past (are), corpus 0
 testimoniammo	1	testimoniare past (are), corpus 0
 testimoniassi	1	testimoniare subjunctive-past (are), corpus 0
 testimoniassimo	1	testimoniare subjunctive-past (are), corpus 0
-testimoniaste	1	testimoniare past (are), corpus 0
+testimoniaste	1	testimoniare subjunctive-past (are), corpus 0
 testimoniasti	1	testimoniare past (are), corpus 0
 testimoniavamo	1	testimoniare imperfect (are), corpus 0
 testimoniavate	1	testimoniare imperfect (are), corpus 0
@@ -20372,7 +20372,7 @@ tirai	82	tirare past (are), corpus 16
 tirammo	1	tirare past (are), corpus 0
 tirassi	1	tirare subjunctive-past (are), corpus 0
 tirassimo	1	tirare subjunctive-past (are), corpus 0
-tiraste	1	tirare past (are), corpus 0
+tiraste	1	tirare subjunctive-past (are), corpus 0
 tirasti	1	tirare past (are), corpus 0
 tiravamo	1	tirare imperfect (are), corpus 0
 tiravate	1	tirare imperfect (are), corpus 0
@@ -20393,7 +20393,7 @@ toccai	83	toccare past (are), corpus 17
 toccammo	1	toccare past (are), corpus 0
 toccassi	70	toccare subjunctive-past (are), corpus 5
 toccassimo	1	toccare subjunctive-past (are), corpus 0
-toccaste	1	toccare past (are), corpus 0
+toccaste	1	toccare subjunctive-past (are), corpus 0
 toccasti	1	toccare past (are), corpus 0
 toccavamo	1	toccare imperfect (are), corpus 0
 toccavate	1	toccare imperfect (are), corpus 0
@@ -20432,12 +20432,12 @@ tormenterò	1	tormentare future (are), corpus 0
 tormentiamo	1	tormentare present (are), corpus 0
 tornammo	70	tornare past (are), corpus 5
 tornassimo	68	tornare subjunctive-past (are), corpus 4
-tornaste	1	tornare past (are), corpus 0
+tornaste	1	tornare subjunctive-past (are), corpus 0
 tornasti	1	tornare past (are), corpus 0
 tornavamo	54	tornare imperfect (are), corpus 1
 tornavate	1	tornare imperfect (are), corpus 0
 tornavi	1	tornare imperfect (are), corpus 0
-tornavo	84	tornare imperfect (are), corpus 20
+tornavo	85	tornare imperfect (are), corpus 21
 tornerei	76	tornare conditional (are), corpus 9
 torneremmo	1	tornare conditional (are), corpus 0
 tornereste	1	tornare conditional (are), corpus 0
@@ -20537,7 +20537,7 @@ tramandai	1	tramandare past (are), corpus 0
 tramandammo	1	tramandare past (are), corpus 0
 tramandassi	1	tramandare subjunctive-past (are), corpus 0
 tramandassimo	1	tramandare subjunctive-past (are), corpus 0
-tramandaste	1	tramandare past (are), corpus 0
+tramandaste	1	tramandare subjunctive-past (are), corpus 0
 tramandasti	1	tramandare past (are), corpus 0
 tramandavamo	1	tramandare imperfect (are), corpus 0
 tramandavate	1	tramandare imperfect (are), corpus 0
@@ -20547,7 +20547,7 @@ tramandiamo	1	tramandare subjunctive (are), corpus 0
 tramandiate	1	tramandare subjunctive (are), corpus 0
 tramassi	1	tramare subjunctive-past (are), corpus 0
 tramassimo	1	tramare subjunctive-past (are), corpus 0
-tramaste	1	tramare past (are), corpus 0
+tramaste	1	tramare subjunctive-past (are), corpus 0
 tramasti	1	tramare past (are), corpus 0
 tramate	1	tramare present (are), corpus 0
 tramavamo	1	tramare imperfect (are), corpus 0
@@ -20618,7 +20618,7 @@ trascineremo	1	trascinare future (are), corpus 0
 trascinerete	1	trascinare future (are), corpus 0
 trascinerò	1	trascinare future (are), corpus 0
 trasciniamo	1	trascinare present (are), corpus 0
-trascorrerai	78	trascorrere future (ere), corpus 11
+trascorrerai	79	trascorrere future (ere), corpus 12
 trascorreremo	72	trascorrere future (ere), corpus 6
 trascorrerete	77	trascorrere future (ere), corpus 10
 trascorrerò	83	trascorrere future (ere), corpus 18
@@ -20661,7 +20661,7 @@ trasferirò	65	trasferire future (ire), corpus 3
 trasferisci	72	trasferire present (ire-isc), corpus 6
 trasferissi	1	trasferire subjunctive-past (ire), corpus 0
 trasferissimo	1	trasferire subjunctive-past (ire), corpus 0
-trasferiste	1	trasferire past (ire), corpus 0
+trasferiste	1	trasferire subjunctive-past (ire), corpus 0
 trasferisti	1	trasferire past (ire), corpus 0
 trasferivamo	61	trasferire imperfect (ire), corpus 2
 trasferivate	61	trasferire imperfect (ire), corpus 2
@@ -20674,7 +20674,7 @@ trasformai	1	trasformare past (are), corpus 0
 trasformammo	1	trasformare past (are), corpus 0
 trasformassi	1	trasformare subjunctive-past (are), corpus 0
 trasformassimo	1	trasformare subjunctive-past (are), corpus 0
-trasformaste	1	trasformare past (are), corpus 0
+trasformaste	1	trasformare subjunctive-past (are), corpus 0
 trasformasti	1	trasformare past (are), corpus 0
 trasformavamo	1	trasformare imperfect (are), corpus 0
 trasformavate	1	trasformare imperfect (are), corpus 0
@@ -20724,7 +20724,7 @@ trasportai	61	trasportare past (are), corpus 2
 trasportammo	1	trasportare past (are), corpus 0
 trasportassi	1	trasportare subjunctive-past (are), corpus 0
 trasportassimo	1	trasportare subjunctive-past (are), corpus 0
-trasportaste	1	trasportare past (are), corpus 0
+trasportaste	1	trasportare subjunctive-past (are), corpus 0
 trasportasti	1	trasportare past (are), corpus 0
 trasportavamo	1	trasportare imperfect (are), corpus 0
 trasportavate	1	trasportare imperfect (are), corpus 0
@@ -20739,7 +20739,7 @@ trasportiate	1	trasportare subjunctive (are), corpus 0
 trattammo	1	trattare past (are), corpus 0
 trattassi	54	trattare subjunctive-past (are), corpus 1
 trattassimo	1	trattare subjunctive-past (are), corpus 0
-trattaste	1	trattare past (are), corpus 0
+trattaste	1	trattare subjunctive-past (are), corpus 0
 trattasti	1	trattare past (are), corpus 0
 trattavamo	1	trattare imperfect (are), corpus 0
 trattavate	1	trattare imperfect (are), corpus 0
@@ -20818,7 +20818,7 @@ troncaste	1	troncare past (are), corpus 0
 troncasti	1	troncare past (are), corpus 0
 tronchiamo	1	troncare subjunctive (are), corpus 0
 tronchiate	1	troncare subjunctive (are), corpus 0
-trovaste	61	trovare past (are), corpus 2
+trovaste	61	trovare subjunctive-past (are), corpus 2
 trovasti	1	trovare past (are), corpus 0
 trovavate	1	trovare imperfect (are), corpus 0
 trovavi	72	trovare imperfect (are), corpus 6
@@ -20991,7 +20991,7 @@ utilizzai	61	utilizzare past (are), corpus 2
 utilizzammo	70	utilizzare past (are), corpus 5
 utilizzassi	1	utilizzare subjunctive-past (are), corpus 0
 utilizzassimo	1	utilizzare subjunctive-past (are), corpus 0
-utilizzaste	1	utilizzare past (are), corpus 0
+utilizzaste	1	utilizzare subjunctive-past (are), corpus 0
 utilizzasti	1	utilizzare past (are), corpus 0
 utilizzavamo	1	utilizzare imperfect (are), corpus 0
 utilizzavate	1	utilizzare imperfect (are), corpus 0
@@ -21026,7 +21026,7 @@ vagai	54	vagare past (are), corpus 1
 vagammo	54	vagare past (are), corpus 1
 vagassi	1	vagare subjunctive-past (are), corpus 0
 vagassimo	1	vagare subjunctive-past (are), corpus 0
-vagaste	1	vagare past (are), corpus 0
+vagaste	1	vagare subjunctive-past (are), corpus 0
 vagasti	1	vagare past (are), corpus 0
 vagate	1	vagare present (are), corpus 0
 vagavamo	54	vagare imperfect (are), corpus 1
@@ -21088,7 +21088,7 @@ vantai	1	vantare past (are), corpus 0
 vantammo	1	vantare past (are), corpus 0
 vantassi	1	vantare subjunctive-past (are), corpus 0
 vantassimo	1	vantare subjunctive-past (are), corpus 0
-vantaste	1	vantare past (are), corpus 0
+vantaste	1	vantare subjunctive-past (are), corpus 0
 vantasti	1	vantare past (are), corpus 0
 vantavamo	1	vantare imperfect (are), corpus 0
 vantavate	1	vantare imperfect (are), corpus 0
@@ -21117,7 +21117,7 @@ variammo	1	variare past (are), corpus 0
 variamo	54	varare subjunctive (are), corpus 1
 variassi	1	variare subjunctive-past (are), corpus 0
 variassimo	1	variare subjunctive-past (are), corpus 0
-variaste	1	variare past (are), corpus 0
+variaste	1	variare subjunctive-past (are), corpus 0
 variasti	1	variare past (are), corpus 0
 variavamo	1	variare imperfect (are), corpus 0
 variavate	1	variare imperfect (are), corpus 0
@@ -21136,7 +21136,7 @@ vegliammo	1	vegliare past (are), corpus 0
 vegliamo	1	vegliare subjunctive (are), corpus 0
 vegliassi	1	vegliare subjunctive-past (are), corpus 0
 vegliassimo	1	vegliare subjunctive-past (are), corpus 0
-vegliaste	1	vegliare past (are), corpus 0
+vegliaste	1	vegliare subjunctive-past (are), corpus 0
 vegliasti	1	vegliare past (are), corpus 0
 vegliavamo	1	vegliare imperfect (are), corpus 0
 vegliavate	1	vegliare imperfect (are), corpus 0
@@ -21188,7 +21188,7 @@ venerai	1	venerare past (are), corpus 0
 venerammo	1	venerare past (are), corpus 0
 venerassi	1	venerare subjunctive-past (are), corpus 0
 venerassimo	1	venerare subjunctive-past (are), corpus 0
-veneraste	1	venerare past (are), corpus 0
+veneraste	1	venerare subjunctive-past (are), corpus 0
 venerasti	1	venerare past (are), corpus 0
 veneravamo	1	venerare imperfect (are), corpus 0
 veneravate	1	venerare imperfect (are), corpus 0
@@ -21205,7 +21205,7 @@ verificai	1	verificare past (are), corpus 0
 verificammo	1	verificare past (are), corpus 0
 verificassi	1	verificare subjunctive-past (are), corpus 0
 verificassimo	1	verificare subjunctive-past (are), corpus 0
-verificaste	1	verificare past (are), corpus 0
+verificaste	1	verificare subjunctive-past (are), corpus 0
 verificasti	1	verificare past (are), corpus 0
 verificavamo	1	verificare imperfect (are), corpus 0
 verificavate	1	verificare imperfect (are), corpus 0
@@ -21227,7 +21227,7 @@ vernicio	1	verniciare present (are), corpus 0
 versammo	1	versare past (are), corpus 0
 versassi	1	versare subjunctive-past (are), corpus 0
 versassimo	1	versare subjunctive-past (are), corpus 0
-versaste	1	versare past (are), corpus 0
+versaste	1	versare subjunctive-past (are), corpus 0
 versasti	1	versare past (are), corpus 0
 versavamo	54	versare imperfect (are), corpus 1
 versavate	54	versare imperfect (are), corpus 1
@@ -21253,7 +21253,7 @@ vestirete	1	vestire future (ire), corpus 0
 vestirò	61	vestire future (ire), corpus 2
 vestissi	1	vestire subjunctive-past (ire), corpus 0
 vestissimo	1	vestire subjunctive-past (ire), corpus 0
-vestiste	1	vestire past (ire), corpus 0
+vestiste	1	vestire subjunctive-past (ire), corpus 0
 vestisti	1	vestire past (ire), corpus 0
 vestivate	1	vestire imperfect (ire), corpus 0
 vestivi	68	vestire imperfect (ire), corpus 4
@@ -21267,7 +21267,7 @@ viaggiammo	65	viaggiare past (are), corpus 3
 viaggiamo	80	viaggiare subjunctive (are), corpus 13
 viaggiassi	54	viaggiare subjunctive-past (are), corpus 1
 viaggiassimo	1	viaggiare subjunctive-past (are), corpus 0
-viaggiaste	1	viaggiare past (are), corpus 0
+viaggiaste	1	viaggiare subjunctive-past (are), corpus 0
 viaggiasti	1	viaggiare past (are), corpus 0
 viaggiavamo	68	viaggiare imperfect (are), corpus 4
 viaggiavate	1	viaggiare imperfect (are), corpus 0
@@ -21283,7 +21283,7 @@ vietai	1	vietare past (are), corpus 0
 vietammo	1	vietare past (are), corpus 0
 vietassi	1	vietare subjunctive-past (are), corpus 0
 vietassimo	1	vietare subjunctive-past (are), corpus 0
-vietaste	1	vietare past (are), corpus 0
+vietaste	1	vietare subjunctive-past (are), corpus 0
 vietasti	1	vietare past (are), corpus 0
 vietavamo	1	vietare imperfect (are), corpus 0
 vietavate	1	vietare imperfect (are), corpus 0
@@ -21313,7 +21313,7 @@ violai	1	violare past (are), corpus 0
 violammo	1	violare past (are), corpus 0
 violassi	1	violare subjunctive-past (are), corpus 0
 violassimo	1	violare subjunctive-past (are), corpus 0
-violaste	1	violare past (are), corpus 0
+violaste	1	violare subjunctive-past (are), corpus 0
 violasti	1	violare past (are), corpus 0
 violavamo	1	violare imperfect (are), corpus 0
 violavate	1	violare imperfect (are), corpus 0
@@ -21341,7 +21341,7 @@ visitai	93	visitare past (are), corpus 45
 visitammo	83	visitare past (are), corpus 18
 visitassi	72	visitare subjunctive-past (are), corpus 6
 visitassimo	68	visitare subjunctive-past (are), corpus 4
-visitaste	1	visitare past (are), corpus 0
+visitaste	1	visitare subjunctive-past (are), corpus 0
 visitasti	1	visitare past (are), corpus 0
 visitavamo	1	visitare imperfect (are), corpus 0
 visitavate	1	visitare imperfect (are), corpus 0
@@ -21373,7 +21373,7 @@ volai	61	volare past (are), corpus 2
 volammo	65	volare past (are), corpus 3
 volassi	1	volare subjunctive-past (are), corpus 0
 volassimo	1	volare subjunctive-past (are), corpus 0
-volaste	1	volare past (are), corpus 0
+volaste	1	volare subjunctive-past (are), corpus 0
 volasti	1	volare past (are), corpus 0
 volavamo	61	volare imperfect (are), corpus 2
 volavate	61	volare imperfect (are), corpus 2
@@ -21414,7 +21414,7 @@ votai	68	votare past (are), corpus 4
 votammo	1	votare past (are), corpus 0
 votassi	1	votare subjunctive-past (are), corpus 0
 votassimo	1	votare subjunctive-past (are), corpus 0
-votaste	1	votare past (are), corpus 0
+votaste	1	votare subjunctive-past (are), corpus 0
 votasti	1	votare past (are), corpus 0
 votavamo	1	votare imperfect (are), corpus 0
 votavate	1	votare imperfect (are), corpus 0

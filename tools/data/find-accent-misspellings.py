@@ -22,6 +22,9 @@ its accented form only when all of these hold:
    nb: å, ä, ö, æ, ø are letters of their own, har/här are two words);
 5. the plain form is not an acronym (dell'ETA) and not in RULES_DIR/LANG.keep.
 
+The list is read as build-dict.py makes it with LANG.respellings: an old
+spelling (idéia) is a misspelling of the current one already.
+
 When unsure, the word stays valid and the accented form is only offered as
 a suggestion. OUT lists `plain<TAB>accented<TAB>evidence`; build-dict.py
 reads it. Review the diff of OUT when it changes.
@@ -46,6 +49,18 @@ def read_list(path):
                     if l.split("#", 1)[0].strip()]
     except FileNotFoundError:
         return []
+
+
+def apply_respellings(words, rules_dir, lang):
+    """The list as build-dict.py makes it with RULES_DIR/LANG.respellings
+    (find-respellings.py): current spellings in, with at least the old
+    one's frequency; old ones out (kind `old`, not `both`)."""
+    for line in read_list(f"{rules_dir}/{lang}.respellings"):
+        old, new, kind = line.split("\t")[:3]
+        f = words.pop(old, 0) if kind == "old" else words.get(old, 0)
+        if f or new in words:
+            words[new] = max(f, words.get(new, 0))
+    return words
 
 
 def read_wordlist(path):
@@ -100,7 +115,9 @@ def main():
         elif parts[0] == "min-freq":
             # build-dict.py leaves rarer entries out
             words = {w: f for w, f in words.items() if f >= int(parts[1])}
-            lower = {w.lower() for w in words}
+    # Old spellings are misspellings of the current ones already.
+    words = apply_respellings(words, args.rules_dir, args.lang)
+    lower = {w.lower() for w in words}
     keep = set(read_list(f"{args.rules_dir}/{args.lang}.keep"))
 
     def known(w):

@@ -131,16 +131,45 @@ def add_supplement(words, path):
     return added
 
 
+def apply_respellings(words, path):
+    """Apply RULES_DIR/LANG.respellings (find-respellings.py): the current
+    form gets at least the old form's frequency (added if missing); an old
+    form of kind `old` becomes a misspelling of it (added if missing), one
+    of kind `both` stays. Returns (added, marked)."""
+    added = marked = 0
+    for line in read_list(path):
+        old, new, kind = line.split("\t")[:3]
+        eo, en = words.get(old), words.get(new)
+        if eo is None and en is None:
+            sys.exit(f"{path}: neither {old!r} nor {new!r} is in the wordlist")
+        if eo is not None and eo["attrs"] & ATTR_MISSPELLING:
+            continue
+        f = max(eo["f"] if eo else 0, en["f"] if en else 0)
+        if en is None:
+            words[new] = {"f": f, "attrs": 0, "target": None}
+            added += 1
+        elif not en["attrs"] & ATTR_MISSPELLING:
+            en["f"] = f
+        else:
+            sys.exit(f"{path}: {new!r} is a misspelling in the wordlist")
+        if kind == "old":
+            words[old] = {"f": f, "attrs": ATTR_MISSPELLING, "target": new}
+            marked += 1
+    return added, marked
+
+
 def apply_boosts(words, path):
-    """Raise frequencies from RULES_DIR/LANG.boost (find-boosts.py)."""
-    raised = 0
+    """Set the everyday frequencies of RULES_DIR/LANG.boost (find-boosts.py),
+    raised or lowered. Returns (raised, lowered)."""
+    raised = lowered = 0
     for line in read_list(path):
         w, f = line.split("\t")[:2]
         e = words.get(w)
-        if e is not None and int(f) > e["f"] and not e["attrs"] & ATTR_MISSPELLING:
+        if e is not None and int(f) != e["f"] and not e["attrs"] & ATTR_MISSPELLING:
+            raised += int(f) > e["f"]
+            lowered += int(f) < e["f"]
             e["f"] = int(f)
-            raised += 1
-    return raised
+    return raised, lowered
 
 
 def mark_misspellings(words, path):
@@ -165,7 +194,8 @@ def read_rules(path):
     for line in read_list(path):
         parts = line.split()
         if parts[0] in ("paradigm", "paradigm-plain", "only-marks", "no-misspellings",
-                        "capitalised-nouns", "min-freq", "one-source", "suffix", "compound"):
+                        "capitalised-nouns", "min-freq", "one-source", "suffix", "compound",
+                        "final-apostrophe", "respell", "respell-accent"):
             continue   # settings for the generators (min-freq, suffix, compound: also main())
         flags = RULE_FINAL if "final" in parts[2:] else 0
         if not 1 <= len(parts[0]) <= 3 or len(parts[1]) != 1:
@@ -435,9 +465,10 @@ def main():
             dropped += 1
     supplemented = add_supplement(words, f"{args.rules_dir}/{args.lang}.supplement")
     forms = add_supplement(words, f"{args.rules_dir}/{args.lang}.forms")
+    respelled_new, respelled = apply_respellings(words, f"{args.rules_dir}/{args.lang}.respellings")
     marked = mark_misspellings(words, f"{args.rules_dir}/{args.lang}.misspellings")
     marked += mark_misspellings(words, f"{args.rules_dir}/{args.lang}.manual-misspellings")
-    boosted = apply_boosts(words, f"{args.rules_dir}/{args.lang}.boost")
+    raised, lowered = apply_boosts(words, f"{args.rules_dir}/{args.lang}.boost")
     rules = read_rules(f"{args.rules_dir}/{args.lang}.rules")
 
     root, order = build_trie(words)
@@ -557,9 +588,10 @@ def main():
         fh.write(out)
 
     print(f"{args.lang}: {len(words)} entries ({dropped} below min-freq dropped, {supplemented} supplement, {forms} verb forms, "
-          f"{boosted} raised), "
+          f"{raised} raised, {lowered} lowered), "
           f"{len(order)} nodes, "
-          f"{len(alphabet)} chars, {len(attrs)} attrs ({marked} accent misspellings), "
+          f"{len(alphabet)} chars, {len(attrs)} attrs ({marked} accent misspellings, "
+          f"{respelled} old spellings, {respelled_new} current forms added), "
           f"{len(rules)} rules, {len(pair_rows)} pair rows ({entries} next words), "
           f"letter model {letter_ngrams} n-grams ({len(letters) / 1e6:.2f} MB, {letter_mean:.2f} nats a letter), "
           f"{len(out) / 1e6:.1f} MB")

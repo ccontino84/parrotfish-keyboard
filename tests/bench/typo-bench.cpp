@@ -4,7 +4,7 @@
 // Correction and autocorrect accuracy on generated typos (milestone 1).
 //
 //   typo-bench -l data/layouts/it.layout -d build/data/it.pfd [-d OTHER.pfd]...
-//              [-o oov-it.txt] [-n 1000] [-s SEED] [-u] [-D] [-P name=value]... [-v]
+//              [-o tests/data/unknown-it.txt] [-n 1000] [-s SEED] [-u] [-D] [-P name=value]... [-v]
 //
 // The first dictionary is the language typed. Further dictionaries are
 // loaded as extra typing languages; the text is taken to be clearly in the

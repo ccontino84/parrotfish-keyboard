@@ -10,10 +10,20 @@
                                  the standard benchmark suite; results stored
   tools/pf runs                  stored suite runs
   tools/pf compare [A [B]]       two runs side by side (default: the last two)
+  tools/pf table [LABEL]         a stored run's main numbers, one line per language
+  tools/pf sweep NAME "V1 V2..." [--quick N] [--best K] [--score EXPR]
+                                 two stages: all values on the first N texts of
+                                 each case, then the best K on the whole suite
+  tools/pf diff A B [CASES]      the words whose outcome (fixed, wrong, left; kept,
+                                 changed) differs between two runs, per case
+  tools/pf failures [CASES] [--run LABEL] [--param NAME=VALUE]...
+                                 the typos and misspellings not fixed, sorted by
+                                 cause, per case (sentence-bench -C dumps)
   tools/pf check                 lint, test, suite, compare with the last run
                                  (without --param):
                                  exit 1 if a number got worse beyond --tolerance
   tools/pf rpm [--version V]     phone RPM with sfdk, copied where configured
+               [--from-source]   (dictionaries built on this PC unless --from-source)
   tools/pf config                the settings in use
 
 Settings that belong to one machine live outside the repo, in
@@ -38,13 +48,17 @@ import argparse
 import concurrent.futures
 import configparser
 import datetime
+import gzip
+import hashlib
 import json
+import math
 import os
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PHONE_LAYOUT = "data/layouts/phone-qwerty.layout"
@@ -91,9 +105,11 @@ def spec_version():
 
 # --- the suite -----------------------------------------------------------
 
-def parse_summary(text):
-    """The metrics of a bench's `summary:` line, in %."""
-    line = next((l for l in text.splitlines() if l.startswith("summary:")), "")
+def parse_summary(text, setting=None):
+    """The metrics of a bench's `summary:` line (`summary[SETTING]:` for a
+    -Y setting), in %."""
+    start = f"summary[{setting}]:" if setting else "summary:"
+    line = next((l for l in text.splitlines() if l.startswith(start)), "")
     m = {}
     if "typos fixed" in line:
         pats = {"fixed": r"typos fixed ([\d.]+)%", "wrong": r"wrong ([\d.]+)%",
@@ -115,6 +131,31 @@ def parse_summary(text):
     return m
 
 
+# The 13 typing languages, and the texts of each (pt serves pt_BR and pt_PT).
+LANGUAGES = ["en", "it", "de", "fr", "es", "pt_BR", "pt_PT", "nl", "sv", "da", "nb", "fi", "ro"]
+
+
+def language_group(lang, first=False):
+    """The dictionaries loaded with `lang` in the suite: a typical set of
+    typing languages; in the group's order, or `lang` first. The order
+    matters (the typos use the first dictionary's letters): the cases of
+    alpha88 keep theirs."""
+    for group in (["en", "it", "de"], ["fr", "es", "en"]):
+        if lang in group:
+            return [lang] + [l for l in group if l != lang] if first else group
+    return [lang, "en"]
+
+
+def layout_of(lang):
+    """The keyboard the suite types `lang` on: QWERTY ÅÖÄ for the Nordic
+    languages, else QWERTY (also for de and fr, as up to alpha88)."""
+    return "data/layouts/phone-nordic.layout" if lang in ("sv", "da", "nb", "fi") else PHONE_LAYOUT
+
+
+def text_of(src, lang):
+    return f"tests/data/{src}-{lang.split('_')[0]}.txt"
+
+
 def suite_cases(build_dir, cfg, tmp):
     """(name, command, metrics to keep or None for all)."""
     d = lambda langs: sum((["-d", f"{build_dir}/data/{l}.pfd"] for l in langs), [])
@@ -123,11 +164,10 @@ def suite_cases(build_dir, cfg, tmp):
     cases = []
     # Typos in running text: wrong keys, missing and extra letters, missing
     # spaces, the number row, uncertain taps, names mixed in.
-    for lang, langs in [("en", ["en", "it", "de"]), ("it", ["en", "it", "de"]), ("de", ["en", "it", "de"]),
-                        ("fr", ["fr", "es", "en"]), ("es", ["fr", "es", "en"])]:
-        args = [sentence, "-l", PHONE_LAYOUT, "-t", f"tests/data/tatoeba-{lang}.txt"] + d(langs) + \
+    for lang in LANGUAGES:
+        args = [sentence, "-l", layout_of(lang), "-t", text_of("tatoeba", lang)] + d(language_group(lang)) + \
                ["-m", lang, "-X", "-N", "75", "-T", "-K"]
-        oov = f"{build_dir}/data/oov-{lang}.txt"
+        oov = os.path.join(REPO, "tests", "data", f"unknown-{lang}.txt")
         if os.path.exists(oov):
             args += ["-o", oov]
         cases.append((f"typos-{lang}", args, None))
@@ -144,27 +184,36 @@ def suite_cases(build_dir, cfg, tmp):
                      f"tests/data/tatoeba-{b}.txt", "-n", "300", "-s", "1"], stdout=f, check=True)
             cases.append((f"mixed-{kind}-{a}-{b}", [sentence, "-l", PHONE_LAYOUT, "-t", path] +
                           d(["en", "it", "de"]) + ["-m", a, "-r", "0"], ["correct_changed"]))
+    # ... and between English and each other language, with that language's
+    # group loaded.
+    for lang in LANGUAGES[3:]:
+        for a, b in [(lang, "en"), ("en", lang)]:
+            for kind in ["insert", "switch"]:
+                path = os.path.join(tmp, f"{kind}-{a}-{b}.txt")
+                with open(path, "w") as f:
+                    run([sys.executable, "-I", "tools/eval/mix-sentences.py", kind, text_of("tatoeba", a),
+                         text_of("tatoeba", b), "-n", "300", "-s", "1"], stdout=f, check=True)
+                cases.append((f"mixed-{kind}-{a}-{b}", [sentence, "-l", layout_of(lang), "-t", path] +
+                              d(language_group(lang)) + ["-m", a, "-r", "0"], ["correct_changed"]))
     # Real misspellings (recieve, propio) from lists of this machine
     # ([misspellings] in the settings), in running text: no other typos.
     if cfg.has_section("misspellings"):
         for name, value in cfg.items("misspellings"):
             lang, _, path = value.partition(":")
             lang, path = lang.strip(), os.path.expanduser(path.strip())
-            langs = [lang] + ([l for l in ["en", "it", "de"] if l != lang][:2] if lang in ("en", "it", "de")
-                              else [l for l in ["fr", "es", "en"] if l != lang][:2] if lang in ("fr", "es")
-                              else ["en"])
-            text = f"tests/data/sentences-{lang.split('_')[0]}.txt"
+            langs = language_group(lang, first=True)
+            text = text_of("sentences", lang)
             if os.path.exists(path) and os.path.exists(os.path.join(REPO, text)) \
                     and all(os.path.exists(f"{build_dir}/data/{l}.pfd") for l in langs):
-                cases.append((f"missp-{name}", [sentence, "-l", PHONE_LAYOUT, "-t", text] + d(langs) +
+                cases.append((f"missp-{name}", [sentence, "-l", layout_of(lang), "-t", text] + d(langs) +
                               ["-m", lang, "-N", "75", "-r", "0", "-W", path],
                               ["missp_fixed", "missp_wrong", "missp_left", "missp_acc_fixed", "missp_acc_wrong",
                                "missp_acc_left", "correct_changed"]))
     # Next words and keystrokes saved.
-    for lang in ["en", "it", "de"]:
+    for lang in LANGUAGES:
         for src in ["tatoeba", "sentences"]:
-            cases.append((f"nextword-{src}-{lang}", [nextword, "-l", PHONE_LAYOUT, "-t", f"tests/data/{src}-{lang}.txt"]
-                          + d(["en", "it", "de"]) + ["-m", lang], None))
+            cases.append((f"nextword-{src}-{lang}", [nextword, "-l", layout_of(lang), "-t", text_of(src, lang)]
+                          + d(language_group(lang)) + ["-m", lang], None))
     # More test texts of this machine ([eval] in the settings).
     if cfg.has_section("eval"):
         for name, value in cfg.items("eval"):
@@ -178,14 +227,17 @@ def suite_cases(build_dir, cfg, tmp):
 
 
 def run_case(case):
+    """Runs one bench command: (name, metrics, seconds)."""
     name, cmd, keep = case
+    t0 = time.monotonic()
     out = run(cmd, capture_output=True, text=True)
+    seconds = time.monotonic() - t0
     if out.returncode != 0:
-        return name, {"error": out.stderr.strip()[-300:]}
+        return name, {"error": out.stderr.strip()[-300:]}, seconds
     m = parse_summary(out.stdout)
     if keep:
         m = {k: v for k, v in m.items() if k in keep}
-    return name, m
+    return name, m, seconds
 
 
 def results_dir(cfg):
@@ -194,30 +246,182 @@ def results_dir(cfg):
     return path
 
 
-def run_suite(args, cfg):
+_file_hashes = {}
+
+
+def file_hash(path):
+    st = os.stat(path)
+    key = (path, st.st_size, st.st_mtime_ns)
+    if key not in _file_hashes:
+        h = hashlib.sha256()
+        with open(path, "rb") as f:
+            for block in iter(lambda: f.read(1 << 20), b""):
+                h.update(block)
+        _file_hashes[key] = h.hexdigest()
+    return _file_hashes[key]
+
+
+def fingerprint(cmd, tmp):
+    """What a case's numbers depend on: its command (temporary paths left
+    out) and the contents of every file it names: the bench (with the
+    engine, linked in), dictionaries, layout, texts, lists."""
+    h = hashlib.sha256()
+    for arg in cmd:
+        path = arg if os.path.isabs(arg) else os.path.join(REPO, arg)
+        h.update((arg.replace(tmp, "<tmp>") if tmp else arg).encode() + b"\0")
+        if os.path.isfile(path):
+            h.update(file_hash(path).encode())
+    return h.hexdigest()[:16]
+
+
+def text_count(cmd):
+    """The texts (lines) a sentence- or nextword-bench command types: those
+    of its -t file, at most -n (2000)."""
+    path, limit = None, 2000
+    for i, a in enumerate(cmd[:-1]):
+        if a == "-t":
+            path = cmd[i + 1]
+        elif a == "-n":
+            limit = int(cmd[i + 1])
+    if not path:
+        return 0
+    path = path if os.path.isabs(path) else os.path.join(REPO, path)
+    with open(path, encoding="utf-8") as f:
+        n = sum(1 for line in f if line.strip() and not line.startswith("#"))
+    return min(n, limit)
+
+
+def shard_jobs(name, cmd, shards):
+    """The commands of a case split into `shards` ranges of its texts."""
+    n = text_count(cmd)
+    if shards <= 1 or n < 2 * shards or "-A" in cmd or "-n" in cmd:
+        return [(name, 0, cmd)]
+    bounds = [n * i // shards for i in range(shards + 1)]
+    return [(name, i, cmd + ["-k", str(bounds[i]), "-n", str(bounds[i + 1]), "-Z"]) for i in range(shards)]
+
+
+def run_job(job):
+    """One shard (or a whole case): (name, shard, stdout or None, error, seconds)."""
+    name, shard, cmd = job
+    t0 = time.monotonic()
+    out = run(cmd, capture_output=True, text=True)
+    seconds = time.monotonic() - t0
+    if out.returncode != 0:
+        return name, shard, None, out.stderr.strip()[-300:], seconds
+    return name, shard, out.stdout, "", seconds
+
+
+def run_suite(args, cfg, label=None, store=True):
+    """Runs the suite (args: param, only, replay, all, jobs, no_shard,
+    texts) and stores a record per setting: the run, and one per --replay
+    setting (label[SETTINGS]). Cases whose fingerprint matches a stored run
+    are copied from it unless --all (or --replay)."""
     build(args.build)
+    replay = list(getattr(args, "replay", None) or [])
+    texts = getattr(args, "texts", None)
+    dirty = bool(git("status", "--porcelain", "--untracked-files=no"))
+    label = label or args.label or spec_version() + ("+dirty" if dirty else "")
+    stamp = datetime.datetime.now().isoformat(timespec="seconds")
+    base_name = f"{stamp.replace(':', '')}-{re.sub(r'[^A-Za-z0-9.~+_-]', '_', label)}"
+    words_dir = os.path.join(results_dir(cfg), base_name + ".words")
+    runs = stored_runs(cfg)
     with tempfile.TemporaryDirectory() as tmp:
         cases = suite_cases(args.build, cfg, tmp)
         params = sum((["-P", p] for p in args.param or []), [])
-        cases = [(n, cmd + params, keep) for n, cmd, keep in cases]
+        cases = [(n, cmd + params + (["-n", str(texts)] if texts else []), keep) for n, cmd, keep in cases]
         if args.only:
             cases = [c for c in cases if re.search(args.only, c[0])]
+        prints = {n: fingerprint(cmd, tmp) for n, cmd, _ in cases}
+        # Reuse: the newest stored run with the same fingerprint for a case.
+        reused, metrics, seconds = {}, {}, {}
+        if not getattr(args, "all", False) and not replay:
+            for n, _, _ in cases:
+                for file, rec in reversed(runs):
+                    if rec.get("fingerprints", {}).get(n) == prints[n] and "error" not in rec["cases"].get(n, {"error": 1}):
+                        reused[n] = rec.get("reused", {}).get(n, file)   # the run that ran it
+                        metrics[n] = rec["cases"][n]
+                        seconds[n] = rec.get("timing", {}).get("cases", {}).get(n, 0)
+                        break
+        todo = [c for c in cases if c[0] not in reused]
+        # Longest first (by the last run's times; new cases before all), so
+        # that the cores stay busy to the end; cases longer than an even
+        # share of the work are split by texts (same numbers: -k, -J).
+        last = next((r["timing"]["cases"] for _, r in reversed(runs) if r.get("timing")), {})
+        total = sum(last.get(n, 0) for n, _, _ in todo)
+        share = max(3.0, total / max(1, args.jobs))
+        os.makedirs(words_dir, exist_ok=True)
+        jobs = []
+        for n, cmd, _ in todo:
+            extra = sum((["-Y", r] for r in replay), [])
+            if "sentence-bench" in cmd[0]:
+                extra += ["-O", os.path.join(words_dir, n + ".{shard}.tsv")]
+            k = 1 if getattr(args, "no_shard", False) else min(16, math.ceil(last.get(n, 0) / share))
+            for name, shard, c in shard_jobs(n, cmd + extra, k):
+                jobs.append((name, shard, [a.replace("{shard}", str(shard)) for a in c]))
+        jobs.sort(key=lambda j: -last.get(j[0], float("inf")) / max(1, sum(1 for x in jobs if x[0] == j[0])))
+        cpu0, t0 = os.times(), time.monotonic()
         with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
-            metrics = dict(pool.map(run_case, cases))
-    dirty = bool(git("status", "--porcelain", "--untracked-files=no"))
-    label = args.label or spec_version() + ("+dirty" if dirty else "")
-    record = {"label": label, "commit": git("rev-parse", "--short", "HEAD"), "dirty": dirty,
-              "params": args.param or [],
-              "date": datetime.datetime.now().isoformat(timespec="seconds"), "cases": metrics}
-    name = f"{record['date'].replace(':', '')}-{re.sub(r'[^A-Za-z0-9.~+_-]', '_', label)}.json"
-    path = os.path.join(results_dir(cfg), name)
-    with open(path, "w") as f:
-        json.dump(record, f, indent=1, sort_keys=True)
+            done = list(pool.map(run_job, jobs))
+        cpu1 = os.times()
+        # Shards joined (the bench adds their counts up), metrics per setting.
+        keys = {n: keep for n, _, keep in cases}
+        cmd0 = {n: cmd[0] for n, cmd, _ in cases}
+        variants = {r: {} for r in replay}
+        for n, _, _ in todo:
+            parts = sorted((d for d in done if d[0] == n), key=lambda d: d[1])
+            seconds[n] = sum(d[4] for d in parts)
+            error = next((d[3] for d in parts if d[2] is None), None)
+            if error is not None:
+                metrics[n] = {"error": error}
+                continue
+            text = "".join(d[2] for d in parts)
+            if len(parts) > 1:
+                text = run([cmd0[n], "-J"], input=text, capture_output=True, text=True).stdout
+            keep = keys[n]
+            pick = lambda m: {k: v for k, v in m.items() if not keep or k in keep}
+            metrics[n] = pick(parse_summary(text))
+            for r in replay:
+                variants[r][n] = pick(parse_summary(text, r))
+            # The words' outcomes, shards in order, one file per setting.
+            outs = [os.path.join(words_dir, f"{n}.{d[1]}.tsv") for d in parts]
+            if all(os.path.exists(o) for o in outs):
+                lines = []
+                for o in outs:
+                    with open(o, encoding="utf-8") as f:
+                        lines += f.readlines()
+                    os.remove(o)
+                for v in range(len(replay) + 1):
+                    sub = os.path.join(results_dir(cfg), (base_name if v == 0 else f"{base_name}-r{v}") + ".words")
+                    os.makedirs(sub, exist_ok=True)
+                    with gzip.open(os.path.join(sub, n + ".tsv.gz"), "wt", encoding="utf-8") as f:
+                        f.writelines(l.split("\t", 1)[1] for l in lines if l.split("\t", 1)[0] == str(v))
+        timing = {"wall": round(time.monotonic() - t0, 2),
+                  "cpu": round(cpu1.children_user + cpu1.children_system - cpu0.children_user - cpu0.children_system, 2),
+                  "cases": {n: round(t, 2) for n, t in seconds.items()}}
+    if os.path.isdir(words_dir) and not os.listdir(words_dir):
+        os.rmdir(words_dir)
+    records = []
+    for v, r in enumerate([None] + replay):
+        rec_label = label if r is None else f"{label}[{r}]"
+        record = {"label": rec_label, "commit": git("rev-parse", "--short", "HEAD"), "dirty": dirty,
+                  "params": (args.param or []) + (r.split(",") if r else []), "date": stamp,
+                  "cases": metrics if r is None else variants[r], "timing": timing,
+                  "fingerprints": prints if r is None else {}, "reused": reused if r is None else {},
+                  "texts": texts}
+        if r is not None:
+            record["replayed"] = r
+        path = os.path.join(results_dir(cfg), (base_name if v == 0 else f"{base_name}-r{v}") + ".json")
+        if store:
+            with open(path, "w") as f:
+                json.dump(record, f, indent=1, sort_keys=True)
+        records.append((path, record))
     errors = [n for n, m in metrics.items() if "error" in m]
     for n in errors:
         print(f"pf: {n} failed: {metrics[n]['error']}", file=sys.stderr)
-    print(f"stored {path} ({len(metrics)} cases)")
-    return path, record
+    for path, record in records:
+        print(f"stored {path} ({len(record['cases'])} cases" + (f", {len(reused)} reused" if reused and path == records[0][0] else "")
+              + f"; wall {timing['wall']:.1f} s, CPU {timing['cpu']:.1f} s)")
+    return records[0][0], records[0][1]
 
 
 # --- comparing runs ----------------------------------------------------------
@@ -244,8 +448,18 @@ def compare(a, b, tolerance):
     """Prints the cases side by side; returns the regressions."""
     worse = []
     print(f"{'case':28} {'metric':16} {a['label'][:14]:>14} {b['label'][:14]:>14} {'change':>8}")
+    missing = {"a": 0, "b": 0}
     for case in sorted(set(a["cases"]) | set(b["cases"])):
-        ma, mb = a["cases"].get(case, {}), b["cases"].get(case, {})
+        ma, mb = a["cases"].get(case), b["cases"].get(case)
+        # A case only one run has (a partial run, --only) or that failed:
+        # shown, not left out.
+        if ma is None or mb is None or "error" in ma or "error" in mb:
+            def state(m):
+                return "missing" if m is None else "error" if "error" in m else "ok"
+            sa, sb = state(ma), state(mb)
+            missing["a" if sa != "ok" else "b"] += 1
+            print(f"{case:28} {'(case)':16} {sa:>14} {sb:>14}")
+            continue
         for metric in sorted(set(ma) | set(mb)):
             if metric == "error":
                 continue
@@ -263,6 +477,8 @@ def compare(a, b, tolerance):
                     worse.append((case, metric, va, vb))
             if abs(delta) > 1e-9 or not args_quiet:
                 print(f"{case:28} {metric:16} {va:14.2f} {vb:14.2f} {delta:+8.2f}{flag}")
+    if missing["a"] or missing["b"]:
+        print(f"cases missing or failed: {missing['a']} in {a['label']}, {missing['b']} in {b['label']}")
     return worse
 
 
@@ -312,6 +528,314 @@ def cmd_compare(args, cfg):
     return 0
 
 
+def words_of(cfg, file, case):
+    """The word outcomes of `case` in the stored run `file` (following a
+    reused case to the run that ran it): {(text, word): (kind, typed, target, got)}."""
+    path = os.path.join(results_dir(cfg), file)
+    with open(path) as f:
+        rec = json.load(f)
+    if case in rec.get("reused", {}) and rec["reused"][case] != file:
+        return words_of(cfg, rec["reused"][case], case)
+    tsv = os.path.join(results_dir(cfg), file[:-5] + ".words", case + ".tsv.gz")
+    if not os.path.exists(tsv):
+        return None
+    out = {}
+    with gzip.open(tsv, "rt", encoding="utf-8") as f:
+        for line in f:
+            t, w, kind, typed, target, got = line.rstrip("\n").split("\t")
+            out[(int(t), int(w))] = (kind, typed, target, got)
+    return out
+
+
+def outcome(entry):
+    """fixed, wrong or left (a typo or misspelling); kept or changed (a
+    correct or unknown word); a word missing from the outcomes is kept."""
+    if entry is None:
+        return "kept"
+    kind, typed, target, got = entry
+    if kind in ("clean", "unknown word"):
+        return "kept" if got.lower() == target.lower() else "changed"
+    if got.lower() == target.lower():
+        return "fixed"
+    return "left" if got == typed else "wrong"
+
+
+def cmd_diff(args, cfg):
+    """The words whose outcome differs between two runs, per case."""
+    from collections import Counter, defaultdict
+    runs = stored_runs(cfg)
+    def pick(key):
+        for file, rec in reversed(runs):
+            if key in (rec["label"], file, file[:-5]):
+                return file, rec
+        sys.exit(f"pf: no stored run {key!r} (pf runs lists them)")
+    (fa, ra), (fb, rb) = pick(args.a), pick(args.b)
+    cases = sorted(c for c in set(ra["cases"]) & set(rb["cases"]) if re.search(args.cases, c))
+    totals = Counter()
+    for case in cases:
+        wa, wb = words_of(cfg, fa, case), words_of(cfg, fb, case)
+        if wa is None or wb is None:
+            continue   # not a sentence-bench case, or a run from before pf diff
+        moves, typed_differs = defaultdict(list), 0
+        for key in sorted(set(wa) | set(wb)):
+            a, b = wa.get(key), wb.get(key)
+            if a and b and a[:3] != b[:3]:
+                typed_differs += 1   # other typos drawn (the runs differ in more than the decision)
+                continue
+            oa, ob = outcome(a), outcome(b)
+            if oa != ob:
+                moves[(oa, ob)].append(a or b)
+        if not moves and not typed_differs:
+            continue
+        got = {}   # (typed, target): what each run gave (first seen)
+        for key in sorted(set(wa) | set(wb)):
+            a, b = wa.get(key), wb.get(key)
+            e = a or b
+            got.setdefault((e[1], e[2]), (a[3] if a else e[1], b[3] if b else e[1]))
+        n = sum(len(v) for v in moves.values())
+        print(f"\n== {case}: {n} words changed outcome" + (f" ({typed_differs} typed differently, left out)" if typed_differs else ""))
+        for (oa, ob), entries in sorted(moves.items(), key=lambda m: -len(m[1])):
+            totals[(oa, ob)] += len(entries)
+            by_word = Counter((e[1], e[2]) for e in entries)
+            shown = []
+            for (typed, target), k in by_word.most_common(args.top):
+                ga, gb = got[(typed, target)]
+                shown.append(f"{typed} ({target}: {ga} / {gb})" + (f" x{k}" if k > 1 else ""))
+            print(f"  {oa + ' → ' + ob:18} {len(entries):5}  " + ", ".join(shown))
+    if totals:
+        print("\nall cases: " + ", ".join(f"{a} → {b} {n}" for (a, b), n in totals.most_common()))
+    else:
+        print("no word changed outcome (or no word outcomes stored: runs from pf suite since bench-tools)")
+    return 0
+
+
+def score_of(record, expr):
+    """A run's score: `expr` over the metrics averaged over the cases that
+    have them (e.g. -wer_after, fixed-4*wrong)."""
+    sums, counts = {}, {}
+    for m in record["cases"].values():
+        for k, v in m.items():
+            if k != "error":
+                sums[k] = sums.get(k, 0) + v
+                counts[k] = counts.get(k, 0) + 1
+    means = {k: sums[k] / counts[k] for k in sums}
+    names = set(re.findall(r"[A-Za-z_]\w*", expr))
+    return eval(expr, {"__builtins__": {}}, {k: means.get(k, 0.0) for k in names})
+
+
+def is_decision_param(build_dir, assignment):
+    """Whether the engine can replay `assignment` (isDecisionParam): the
+    bench refuses -Y otherwise."""
+    out = run([f"{build_dir}/tests/sentence-bench", "-l", PHONE_LAYOUT, "-t", "tests/data/apostrophes.txt",
+               "-d", f"{build_dir}/data/en.pfd", "-E", "-Y", assignment], capture_output=True, text=True)
+    return out.returncode == 0
+
+
+def cmd_sweep(args, cfg):
+    """Two stages: every value on the first --quick texts of each case,
+    then the whole suite for the --best few; decision parameters replayed
+    on one search (sentence-bench -Y), others run one by one."""
+    build(args.build)
+    values = args.values.split()
+    settings = [f"{args.name}={v}" for v in values]
+    replay = all(is_decision_param(args.build, s) for s in settings)
+    label = args.label or f"sweep-{args.name}"
+
+    def stage(texts, chosen, suffix):
+        ns = argparse.Namespace(build=args.build, param=args.param, only=args.only, jobs=args.jobs, all=False,
+                                no_shard=False, texts=texts, label=None, replay=chosen if replay else None)
+        _, base = run_suite(ns, cfg, label=label + suffix)
+        scores = {"(base)": score_of(base, args.score)}
+        if replay:
+            for s in chosen:
+                rec = find_run(stored_runs(cfg), f"{label + suffix}[{s}]")
+                scores[s] = score_of(rec, args.score)
+        else:
+            for s in chosen:
+                ns.param = (args.param or []) + [s]
+                _, rec = run_suite(ns, cfg, label=f"{label + suffix}[{s}]")
+                scores[s] = score_of(rec, args.score)
+        return scores
+
+    # Replayed values cost little more than one run: all on the whole
+    # suite, unless --quick asks for the first stage anyway.
+    quick_texts = args.quick if args.quick is not None else (0 if replay else 300)
+    quick = stage(quick_texts, settings, "-quick") if quick_texts else None
+    ranked = sorted(settings, key=lambda s: -quick[s]) if quick else settings
+    best = ranked[:args.best] if quick else settings
+    full = stage(None, best, "")
+    if not quick:
+        ranked = sorted(settings, key=lambda s: -full[s])
+        quick = {}
+    print(f"\nsweep {args.name} ({'replayed' if replay else 'one run each'}), score {args.score}:")
+    print(f"{'setting':32} {'quick':>10} {'full':>10}")
+    for s in ["(base)"] + ranked:
+        q = f"{quick[s]:10.3f}" if s in quick else f"{'-':>10}"
+        print(f"{s:32} {q} {full[s]:10.3f}" if s in full else f"{s:32} {q} {'-':>10}")
+    top = max(best, key=lambda s: full[s])
+    print(f"then: tools/pf compare {label} '{label}[{top}]'; tools/pf diff {label} '{label}[{top}]'")
+    return 0
+
+
+def cmd_table(args, cfg):
+    """One line per language: the main numbers of a stored run."""
+    runs = stored_runs(cfg)
+    if not runs:
+        sys.exit("pf: no stored runs (pf suite)")
+    rec = find_run(runs, args.label) if args.label else runs[-1][1]
+    cases = rec["cases"]
+    get = lambda case, metric: cases.get(case, {}).get(metric)
+    cols = [("typos fixed", lambda l: get(f"typos-{l}", "fixed")),
+            ("wrong", lambda l: get(f"typos-{l}", "wrong")),
+            ("WER after", lambda l: get(f"typos-{l}", "wer_after")),
+            ("unknown chg", lambda l: get(f"typos-{l}", "unknown_changed")),
+            ("mixed chg", lambda l: max((m.get("correct_changed", 0) for c, m in cases.items()
+                                         if c.startswith("mixed-") and l in c.split("-")[2:]), default=None)),
+            ("missp fixed", lambda l: get(f"missp-{l}", "missp_fixed")),
+            ("missp wrong", lambda l: get(f"missp-{l}", "missp_wrong")),
+            ("KSR tatoeba", lambda l: get(f"nextword-tatoeba-{l}", "ksr")),
+            ("KSR sentences", lambda l: get(f"nextword-sentences-{l}", "ksr"))]
+    print(f"{rec['label']} ({rec['commit']}{', dirty' if rec['dirty'] else ''}); mixed chg: the most of its mixed-* cases")
+    print(f"{'lang':6}" + "".join(f"{name:>14}" for name, _ in cols))
+    for lang in LANGUAGES:
+        vals = [f(lang) for _, f in cols]
+        print(f"{lang:6}" + "".join(f"{'-' if v is None else f'{v:.2f}':>14}" for v in vals))
+    return 0
+
+
+# --- failures by cause -------------------------------------------------------
+
+CAUSES = [
+    ("a-missing", "target in no loaded dictionary"),
+    ("b-not-reached", "target not among the candidates"),
+    ("c-commoner", "a commoner word ranks first"),
+    ("d-unknown", "target first, the unknown-word hypothesis the main rival"),
+    ("e-rule", "target first, a rule kept it out"),
+    ("f-other", "another word ranks first (taps, context)"),
+]
+
+
+def classify(e):
+    """The cause of one failure of the -C dump (a typo or misspelling not
+    fixed, or fixed to another word): (cause, detail)."""
+    if e["target_lp"] is None:
+        return "a-missing", ""
+    if e["target_rank"] < 0:
+        return "b-not-reached", ""
+    complete = [c for c in e["cands"] if not c[4]]
+    first = complete[0] if complete else None
+    target = e["target"].lower()
+    if first is None or first[0].lower() != target:
+        if e["capital"] and e["target"][:1].islower():
+            return "e-rule", "capital"
+        if first is not None and first[2] is not None and first[2] > e["target_lp"]:
+            return "c-commoner", first[0]
+        return "f-other", first[0] if first else ""
+    reason = e["reason"]
+    if reason == "applied" and e["typed"][:1].isdigit():
+        return "e-rule", "leading digit (handler)"
+    if reason.startswith("below-"):
+        rest = 1 - e["conf"] - e["unknown"]
+        if e["unknown"] >= e["conf"] or e["unknown"] >= rest:
+            return "d-unknown", reason
+        return "e-rule", reason
+    if reason in ("applied", "case-fix"):
+        return "f-other", reason
+    return "e-rule", reason
+
+
+def failures_of(path):
+    """The fixable typos and misspellings of a dump that were not fixed,
+    and the correct or unknown words that were changed."""
+    fails, changed, fixable = [], [], 0
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            e = json.loads(line)
+            kind = e["kind"]
+            if kind in ("clean", "unknown word"):
+                if e["got"].lower() != e["target"].lower():
+                    changed.append(e)
+                continue
+            if e["valid"] or kind == "real word":
+                continue   # typed a word of some language: not counted as fixable
+            fixable += 1
+            if not (e["fired"] and e["got"].lower() == e["target"].lower()):
+                fails.append(e)
+    return fixable, fails, changed
+
+
+def print_failures(case, fixable, fails, changed, top):
+    from collections import Counter, defaultdict
+    wrong = sum(1 for e in fails if e["fired"])
+    print(f"\n== {case}: {fixable} fixable, {len(fails)} failed ({len(fails) - wrong} left, {wrong} fixed wrong)")
+    by = defaultdict(list)
+    for e in fails:
+        cause, detail = classify(e)
+        by[cause].append((e, detail))
+    summary = {}
+    for cause, what in CAUSES:
+        items = by.get(cause, [])
+        summary[cause] = len(items)
+        if not items:
+            continue
+        print(f"  {cause:14} {len(items):5} {100.0 * len(items) / max(1, len(fails)):5.1f}%  {what}")
+        details = Counter(d for _, d in items if d)
+        if cause in ("d-unknown", "e-rule") and details:
+            print("      " + ", ".join(f"{d} {n}" for d, n in details.most_common(8)))
+        words = Counter(e["target"].lower() for e, _ in items)
+        # An example each: typed→what it became, or typed: the word first.
+        example = {}
+        for e, d in items:
+            example.setdefault(e["target"].lower(), e["typed"] + (
+                "→" + e["got"] if e["fired"] else ": " + d + " first" if cause in ("c-commoner", "f-other") and d else ""))
+        shown = [f"{w} {n} ({example[w]})" for w, n in words.most_common(top)]
+        print("      " + ", ".join(shown))
+    if changed:
+        words = Counter((e["typed"], e["got"]) for e in changed)
+        print(f"  changed (correct or unknown words): {len(changed)}; "
+              + ", ".join(f"{t}→{g} {n}" for (t, g), n in words.most_common(top)))
+    return summary
+
+
+def cmd_failures(args, cfg):
+    params = list(args.param or [])
+    if args.run:
+        rec = find_run(stored_runs(cfg), args.run)
+        params = rec.get("params", []) + params
+        if rec["commit"] != git("rev-parse", "--short", "HEAD") or rec["dirty"]:
+            print(f"pf failures: {args.run} was run at {rec['commit']}{' (dirty)' if rec['dirty'] else ''}; "
+                  f"this is HEAD {git('rev-parse', '--short', 'HEAD')}: the numbers may differ", file=sys.stderr)
+    build(args.build)
+    out_dir = os.path.join(REPO, args.build, "failures")
+    os.makedirs(out_dir, exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        cases = [c for c in suite_cases(args.build, cfg, tmp)
+                 if c[1][0].endswith("sentence-bench") and re.search(args.cases, c[0])]
+        if not cases:
+            sys.exit(f"pf failures: no sentence-bench case matches {args.cases!r}")
+        extra = sum((["-P", p] for p in params), [])
+        jobs = [(n, cmd + extra + ["-C", os.path.join(out_dir, n + ".jsonl")] + (["-G"] if args.all_words else []), keep)
+                for n, cmd, keep in cases]
+        with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
+            done = list(pool.map(run_case, jobs))
+    for n, m, _ in done:
+        if "error" in m:
+            print(f"pf: {n} failed: {m['error']}", file=sys.stderr)
+    table = {}
+    for n, _, _ in sorted(done):
+        path = os.path.join(out_dir, n + ".jsonl")
+        if os.path.exists(path):
+            fixable, fails, changed = failures_of(path)
+            table[n] = (fixable, print_failures(n, fixable, fails, changed, args.top))
+    print(f"\n{'case':20} {'failed':>7}" + "".join(f"{c[:6]:>9}" for c, _ in CAUSES) + "   (% of the fixable)")
+    for n, (fixable, summary) in table.items():
+        failed = sum(summary.values())
+        print(f"{n:20} {100.0 * failed / max(1, fixable):6.1f}%"
+              + "".join(f"{100.0 * summary[c] / max(1, fixable):8.1f}%" for c, _ in CAUSES))
+    print(f"(dumps in {out_dir})")
+    return 0
+
+
 def cmd_check(args, cfg):
     global args_quiet
     args_quiet = True
@@ -347,9 +871,26 @@ def cmd_rpm(args, cfg):
     target = setting(cfg, "sfdk", "target", "SailfishOS-5.1.0.11-aarch64")
     log = os.path.join(REPO, args.build, "sfdk-build.log")
     os.makedirs(os.path.dirname(log), exist_ok=True)
+    # The dictionaries are the same files on any machine: built here (a
+    # minute) instead of in the SDK's build engine (most of the RPM's
+    # time), and copied by the RPM's build if their inputs match
+    # (data/CMakeLists.txt: prebuilt/). --from-source: build them there.
+    prebuilt = os.path.join(REPO, "prebuilt")
+    shutil.rmtree(prebuilt, ignore_errors=True)
+    if not args.from_source:
+        build(args.build)
+        data = os.path.join(REPO, args.build, "data")
+        os.makedirs(prebuilt)
+        for name in os.listdir(data):
+            if name.endswith(".pfd") or name == "inputs.sha256":
+                shutil.copy(os.path.join(data, name), prebuilt)
     # sfdk forgets the target between commands: set it in the same shell.
-    with open(log, "w") as f:
-        code = run(["sh", "-c", f"sfdk config target={target} && sfdk build"], stdout=f, stderr=subprocess.STDOUT).returncode
+    try:
+        with open(log, "w") as f:
+            code = run(["sh", "-c", f"sfdk config target={target} && sfdk build"], stdout=f,
+                       stderr=subprocess.STDOUT).returncode
+    finally:
+        shutil.rmtree(prebuilt, ignore_errors=True)
     rpms = [n for n in os.listdir(os.path.join(REPO, "RPMS")) if f"-{version}-" in n and n.endswith(".rpm")] \
         if os.path.isdir(os.path.join(REPO, "RPMS")) else []
     if code != 0 or not rpms:
@@ -393,9 +934,44 @@ def main():
         s.add_argument("--jobs", type=int, default=os.cpu_count())
         s.add_argument("--tolerance", type=float, default=0.2, help="points a number may get worse (check)")
         s.add_argument("--param", action="append", help="engine parameter for every bench, NAME=VALUE")
+        s.add_argument("--all", action="store_true", help="run every case, even those a stored run has the same "
+                       "fingerprint for (bench, dictionaries, texts, parameters)")
+        s.add_argument("--no-shard", action="store_true", help="don't split long cases by texts")
         if name == "suite":
             s.add_argument("--only", help="only cases matching this regular expression")
+            s.add_argument("--replay", action="append", metavar="NAME=VALUE[,NAME=VALUE]",
+                           help="also these decision settings, replayed on the same searches (sentence-bench -Y); "
+                                "stored as LABEL[SETTINGS]")
+            s.add_argument("--texts", type=int, help="only the first N texts of each case (a quick run)")
     sub.add_parser("runs")
+    w = sub.add_parser("sweep")
+    w.add_argument("name", help="an engine parameter")
+    w.add_argument("values", help="its values, e.g. \"0.4 0.5 0.6\"")
+    w.add_argument("--quick", type=int, help="texts per case in the first stage (default 300; 0, and the default "
+                   "for decision parameters, which are replayed: none)")
+    w.add_argument("--best", type=int, default=2, help="values run on the whole suite")
+    w.add_argument("--score", default="-wer_after",
+                   help="what ranks them: metrics averaged over the cases (default -wer_after)")
+    w.add_argument("--only", help="only cases matching this regular expression")
+    w.add_argument("--param", action="append", help="engine parameter for every run, NAME=VALUE")
+    w.add_argument("--label", help="label of the runs (default sweep-NAME)")
+    w.add_argument("--jobs", type=int, default=os.cpu_count())
+    d = sub.add_parser("diff")
+    d.add_argument("a")
+    d.add_argument("b")
+    d.add_argument("cases", nargs="?", default=".", help="cases (regular expression)")
+    d.add_argument("--top", type=int, default=10, help="words shown per change")
+    f = sub.add_parser("failures")
+    f.add_argument("cases", nargs="?", default="^(typos|missp)-",
+                   help="sentence-bench cases of the suite (regular expression; default: typos and misspellings)")
+    f.add_argument("--run", help="a stored run: its --param settings (the build must be its commit)")
+    f.add_argument("--param", action="append", help="engine parameter, NAME=VALUE")
+    f.add_argument("--top", type=int, default=12, help="words shown per cause")
+    f.add_argument("--all-words", action="store_true",
+                   help="the dumps (build/failures/CASE.jsonl) hold every word (sentence-bench -G)")
+    f.add_argument("--jobs", type=int, default=os.cpu_count())
+    t = sub.add_parser("table")
+    t.add_argument("label", nargs="?", help="a stored run (default: the last)")
     c = sub.add_parser("compare")
     c.add_argument("a", nargs="?")
     c.add_argument("b", nargs="?")
@@ -404,11 +980,13 @@ def main():
     r = sub.add_parser("rpm")
     r.add_argument("--version", help="set the spec's Version first, e.g. 0.1.0~alpha71")
     r.add_argument("--no-copy", action="store_true")
+    r.add_argument("--from-source", action="store_true",
+                   help="build the dictionaries in the SDK too (as a release build does)")
     sub.add_parser("config")
     args = ap.parse_args()
     _, cfg = config()
     commands = {"lint": cmd_lint, "test": cmd_test, "bench": cmd_bench, "suite": cmd_suite, "runs": cmd_runs,
-                "compare": cmd_compare, "check": cmd_check, "rpm": cmd_rpm, "config": cmd_config}
+                "compare": cmd_compare, "table": cmd_table, "diff": cmd_diff, "sweep": cmd_sweep, "failures": cmd_failures, "check": cmd_check, "rpm": cmd_rpm, "config": cmd_config}
     sys.exit(commands[args.command](args, cfg))
 
 

@@ -5,7 +5,7 @@
 //
 //   nextword-bench -l data/layouts/phone-qwerty.layout -t tests/data/tatoeba-en.txt
 //                  -d build/data/en.pfd [-d OTHER.pfd]... [-n 2000] [-m LANG]
-//                  [-P name=value]... [-v]
+//                  [-P name=value]... [-v] [-Y SETTINGS]... [-k START] [-Z | -J]
 //
 // Each line is a new text (lines starting with # are skipped), with all
 // dictionaries loaded and Normal strength, as sentence-bench. -m LANG starts
@@ -26,6 +26,14 @@
 //
 // -v prints each word missed by the next-word top 3, with the suggestions
 // and the letters typed before it was picked. The last line sums up.
+//
+// -Y name=value[,...] (repeatable) replays the decision with other
+// settings (Engine::decide on each search; isDecisionParam() only): the
+// keystrokes depend on it a little (the autocorrection comes first in the
+// bar). Each adds a summary[SETTINGS]: line. -k START leaves out the first
+// START lines (with -n END: lines START+1..END, a shard of the text); -Z
+// adds counts lines, which -J (reading them on stdin, no other option)
+// adds up into the summary lines of the whole text (tools/pf shards).
 
 #include "parrotfish/engine.h"
 #include "typos.h"   // lower, isLetter
@@ -33,6 +41,8 @@
 #include <algorithm>
 #include <cstdio>
 #include <fstream>
+#include <iostream>
+#include <map>
 #include <sstream>
 
 using namespace parrotfish;
@@ -62,6 +72,65 @@ int rank3(const std::vector<Suggestion> &s, const std::u32string &word)
     return -1;
 }
 
+// The counts behind the summary: next words (word 1, rest), unknown words,
+// and per decision setting the words picked and the taps.
+struct Counts {
+    int words[2] = {0, 0}, top1[2] = {0, 0}, top3[2] = {0, 0};
+    long unknown = 0, letters = 0, picked = 0, pickedNext = 0, taps = 0;
+    std::vector<long> values() const
+    {
+        return {words[0], words[1], top1[0], top1[1], top3[0], top3[1], unknown, letters, picked, pickedNext, taps};
+    }
+    void add(const std::vector<long> &v)
+    {
+        for (int g = 0; g < 2; ++g) {
+            words[g] += static_cast<int>(v[g]);
+            top1[g] += static_cast<int>(v[2 + g]);
+            top3[g] += static_cast<int>(v[4 + g]);
+        }
+        unknown += v[6]; letters += v[7]; picked += v[8]; pickedNext += v[9]; taps += v[10];
+    }
+};
+
+std::string summaryText(const Counts &c)
+{
+    const int words = c.words[0] + c.words[1], top1 = c.top1[0] + c.top1[1], top3 = c.top3[0] + c.top3[1];
+    char buf[400];
+    std::snprintf(buf, sizeof buf, "next word top1 %.1f%% top3 %.1f%%, after word 1 top1 %.1f%% top3 %.1f%%,"
+                  " KSR %.1f%%, unknown %.1f%%", pct(top1, words), pct(top3, words), pct(c.top1[1], c.words[1]),
+                  pct(c.top3[1], c.words[1]), c.letters ? 100.0 * (1.0 - double(c.taps) / c.letters) : 0.0,
+                  pct(static_cast<int>(c.unknown), words));
+    return buf;
+}
+
+// -J: the counts lines of shards on stdin, added up per setting.
+int joinCounts()
+{
+    std::vector<std::string> order;
+    std::map<std::string, Counts> sums;
+    for (std::string line; std::getline(std::cin, line);) {
+        if (line.compare(0, 6, "counts") != 0)
+            continue;
+        const size_t colon = line.find(": ");
+        const std::string key = line.substr(6, colon - 6);
+        std::istringstream in(line.substr(colon + 2));
+        std::vector<long> v;
+        for (long x; in >> x;)
+            v.push_back(x);
+        if (v.size() != 11)
+            return 2;
+        if (!sums.count(key))
+            order.push_back(key);
+        sums[key].add(v);
+    }
+    for (const std::string &key : order)
+        if (!key.empty())
+            std::printf("summary%s: %s\n", key.c_str(), summaryText(sums[key]).c_str());
+    if (sums.count(""))
+        std::printf("summary: %s\n", summaryText(sums[""]).c_str());
+    return 0;
+}
+
 std::string top3(const std::vector<Suggestion> &s)
 {
     std::string out;
@@ -76,8 +145,9 @@ int main(int argc, char **argv)
 {
     std::string layoutPath, textPath, remembered;
     std::vector<std::string> dictPaths;
-    int maxLines = 2000;
-    bool verbose = false;
+    int maxLines = 2000, skipLines = 0;
+    bool verbose = false, printCounts = false;
+    std::vector<std::string> variantSpecs;
     EngineParams params;
     params.corrector.completions = true;   // as on the phone
     params.strength = Strength::Normal;    // the phone's default
@@ -89,12 +159,34 @@ int main(int argc, char **argv)
         else if (a == "-n" && i + 1 < argc) maxLines = std::stoi(argv[++i]);
         else if (a == "-m" && i + 1 < argc) remembered = argv[++i];
         else if (a == "-v") verbose = true;
+        else if (a == "-Y" && i + 1 < argc) variantSpecs.push_back(argv[++i]);
+        else if (a == "-k" && i + 1 < argc) skipLines = std::stoi(argv[++i]);
+        else if (a == "-Z") printCounts = true;
+        else if (a == "-J") return joinCounts();
         else if (a == "-P" && i + 1 < argc) {
             if (!setParam(params, argv[++i])) {
                 std::fprintf(stderr, "unknown parameter %s\n", argv[i]);
                 return 2;
             }
         }
+    }
+    std::vector<EngineParams> variants;
+    for (const std::string &spec : variantSpecs) {
+        EngineParams v = params;
+        std::istringstream in(spec);
+        for (std::string a; std::getline(in, a, ',');) {
+            const std::string name = a.substr(0, a.find('='));
+            if (!isDecisionParam(name) || !setParam(v, a)) {
+                std::fprintf(stderr, "-Y %s: %s is not a decision parameter (isDecisionParam)\n", spec.c_str(),
+                             name.c_str());
+                return 2;
+            }
+        }
+        if ((v.strength == Strength::Strong) != (params.strength == Strength::Strong)) {
+            std::fprintf(stderr, "-Y %s: Strong searches differently, it can't be replayed\n", spec.c_str());
+            return 2;
+        }
+        variants.push_back(v);
     }
     std::ifstream lf(layoutPath);
     std::stringstream ls;
@@ -129,18 +221,23 @@ int main(int argc, char **argv)
     Stats groups[GroupCount];
     int lines = 0, unknown = 0, picked = 0, pickedNext = 0;
     long letters = 0, taps = 0;
+    std::vector<long> vTaps(variants.size(), 0), vPicked(variants.size(), 0), vPickedNext(variants.size(), 0);
     std::string line;
     while (std::getline(tf, line) && lines < maxLines) {
         if (line.empty() || line[0] == '#')
             continue;
         ++lines;
+        if (lines <= skipLines)
+            continue;   // -k: another shard's
         // The line with the apostrophes words() uses, so that each word is
         // found in it and the context keeps the punctuation (a new sentence).
         std::u32string text = utf8::decode(line);
         for (char32_t &c : text)
             if (c == 0x2019 || c == 0x02BC)
                 c = U'\'';
-        const std::vector<std::u32string> ws = words(text);
+        // A final apostrophe stays where it is part of the word (po'):
+        // bench::typedWords().
+        const std::vector<std::u32string> ws = typedWords(text, engine);
         size_t pos = 0;
         for (size_t wi = 0; wi < ws.size(); ++wi) {
             const std::u32string &target = ws[wi];
@@ -168,16 +265,41 @@ int main(int argc, char **argv)
 
             // Letters typed until the word is among the first three.
             size_t typed = 0;
-            if (r < 0) {
+            std::vector<size_t> vTyped(variants.size(), 0);
+            if (r < 0 && variants.empty()) {
                 for (typed = 1; typed < target.size(); ++typed)
                     if (rank3(engine.process(tapsFor(target.substr(0, typed))).suggestions, target) >= 0)
                         break;
+            } else if (r < 0) {
+                // -Y: each prefix searched once, decided for each setting.
+                std::vector<bool> done(variants.size() + 1, false);
+                size_t left = done.size();
+                for (size_t n = 1; n < target.size() && left > 0; ++n) {
+                    const Searched found = engine.search(tapsFor(target.substr(0, n)));
+                    for (size_t v = 0; v < done.size(); ++v) {
+                        if (done[v] || rank3(engine.decide(found, v ? variants[v - 1] : params).suggestions, target) < 0)
+                            continue;
+                        done[v] = true;
+                        --left;
+                        (v ? vTyped[v - 1] : typed) = n;
+                    }
+                }
+                for (size_t v = 0; v < done.size(); ++v)
+                    if (!done[v])
+                        (v ? vTyped[v - 1] : typed) = target.size();
             }
             letters += target.size() + 1;
             taps += typed + 1;
             if (typed < target.size()) {
                 ++picked;
                 if (typed == 0) ++pickedNext;
+            }
+            for (size_t v = 0; v < variants.size(); ++v) {
+                vTaps[v] += vTyped[v] + 1;
+                if (vTyped[v] < target.size()) {
+                    ++vPicked[v];
+                    if (vTyped[v] == 0) ++vPickedNext[v];
+                }
             }
             if (verbose && r < 0) {
                 const std::vector<std::u32string> before = words(context);
@@ -204,9 +326,31 @@ int main(int argc, char **argv)
     std::printf("unknown words %.1f%%; picked %.1f%% of words (%.1f%% before the first letter);"
                 " taps %ld of %ld\n", pct(unknown, all.words), pct(picked, all.words),
                 pct(pickedNext, all.words), taps, letters);
-    std::printf("summary: next word top1 %.1f%% top3 %.1f%%, after word 1 top1 %.1f%% top3 %.1f%%,"
-                " KSR %.1f%%, unknown %.1f%%\n", pct(all.top1, all.words), pct(all.top3, all.words),
-                pct(groups[Rest].top1, groups[Rest].words), pct(groups[Rest].top3, groups[Rest].words),
-                letters ? 100.0 * (1.0 - double(taps) / letters) : 0.0, pct(unknown, all.words));
+    Counts counts;
+    for (int g = 0; g < 2; ++g) {
+        counts.words[g] = groups[g].words;
+        counts.top1[g] = groups[g].top1;
+        counts.top3[g] = groups[g].top3;
+    }
+    counts.unknown = unknown;
+    counts.letters = letters;
+    for (size_t v = 0; v <= variants.size(); ++v) {
+        counts.picked = v ? vPicked[v - 1] : picked;
+        counts.pickedNext = v ? vPickedNext[v - 1] : pickedNext;
+        counts.taps = v ? vTaps[v - 1] : taps;
+        const std::string key = v ? "[" + variantSpecs[v - 1] + "]" : "";
+        if (printCounts) {
+            std::string line;
+            for (long x : counts.values())
+                line += " " + std::to_string(x);
+            std::printf("counts%s:%s\n", key.c_str(), line.c_str());
+        }
+        if (v)
+            std::printf("summary%s: %s\n", key.c_str(), summaryText(counts).c_str());
+    }
+    counts.picked = picked;
+    counts.pickedNext = pickedNext;
+    counts.taps = taps;
+    std::printf("summary: %s\n", summaryText(counts).c_str());
     return 0;
 }

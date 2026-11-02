@@ -44,15 +44,73 @@ tools/pf test                   # build, unit and QML tests
 tools/pf suite                  # the standard benchmark suite, stored with its commit
 tools/pf suite --label try --param otherLanguageMargin=8   # an experiment
 tools/pf compare alpha70 try    # two runs side by side, better/WORSE marked
+tools/pf diff alpha70 try       # the words whose outcome changed
+tools/pf sweep normalConfidence "0.4 0.5 0.6"   # a parameter's values, ranked
+tools/pf failures               # typos left or fixed wrong, sorted by cause
 tools/pf check                  # before a release: lint, tests, suite, and
                                 # exit 1 if a number got worse than the last run
 tools/pf rpm --version 0.1.0~alpha71   # phone RPM (sfdk), copied if configured
 ```
 
-The suite: typos in running text (en, it, de; fr, es) with the number row,
+`pf rpm` builds the dictionaries on the PC and hands them to the RPM's build
+in `prebuilt/` (git-ignored, removed afterwards) with a fingerprint of their
+inputs; the RPM's build copies them only if its inputs have the same
+fingerprint (`data/CMakeLists.txt`), else builds them itself. The files are
+byte for byte the same either way; the RPM takes about 40 s instead of
+10 minutes. `pf rpm --from-source` builds them in the SDK, as a release build
+(no `prebuilt/`) does.
+
+The suite, for all 13 languages: typos in running text with the number row,
 uncertain taps and names mixed in; codes with a digit; words of another
 language in mixed texts; next words and keystrokes saved; real misspellings
-from your own lists. Settings of one machine are in
+from your own lists. Each language is typed with a typical set of
+dictionaries loaded (en, it, de together; fr, es, en; the others with en)
+on QWERTY, or QWERTY ÅÖÄ for sv, da, nb, fi. `pf table [LABEL]` shows a
+run's main numbers, one line per language; `pf compare` marks the cases
+one of the runs lacks or failed. Each run stores its wall and CPU time
+(per case too); the cases run longest first.
+
+Faster runs and sweeps:
+
+- `pf suite` reuses a case whose fingerprint (the bench binary, with the
+  engine linked in, and the contents of every file it reads: dictionaries,
+  layout, texts, lists; its options and `--param`s) matches a stored run,
+  and runs only the others: after a change to Italian data only the cases
+  that load it run again; nothing changed, about 2 s. `--all` runs
+  everything. Cases longer than an even share of the work are split by
+  texts across the cores (`-k`, `-Z`, joined by the bench's `-J`: the same
+  numbers); `--no-shard` doesn't.
+- Decision settings (the parameters only `Engine::decide` reads:
+  `isDecisionParam` in `engine.cpp`: confidence thresholds, margins,
+  `unknown*`, strength other than Strong) are replayed on the same searches:
+  `pf suite --label L --replay normalConfidence=0.6 --replay
+  unknownBase=7,normalShortConfidence=0.7` stores `L` and `L[SETTINGS]`
+  for each, the same numbers as runs with `--param`, for about the time of
+  one run.
+- `pf sweep NAME "V1 V2 ..."`: replayed in one run if NAME is a decision
+  parameter; otherwise two stages: every value on the first 300 texts of
+  each case (`--quick N`; the test texts are random samples, so the first
+  lines are one too), then the `--best K` (2) on the whole suite. Ranked by
+  `--score` (default `-wer_after`: metrics averaged over the cases).
+- `pf diff A B [CASES]`: the words whose outcome changed between two runs
+  (fixed, wrong, left; correct words kept, changed), per case, with counts
+  and examples (typed (meant: what A gave / what B gave)). `pf suite`
+  keeps each sentence-bench case's words with a typo or a change
+  (`sentence-bench -O`, about 0.8 MB a run, next to the run's file).
+
+Why typos stay unfixed: `pf failures [CASES] [--param NAME=VALUE]` reruns
+the suite's sentence-bench cases (default `^(typos|missp)-`) with `-C`
+(each typo, misspelling and changed word with the engine's candidates and
+`Result::reason`) and sorts every typo or misspelling not fixed, or fixed
+to another word, by cause: (a) the target is in no loaded dictionary; (b)
+it is not among the candidates; (c) a commoner word ranks first; (d) it
+ranks first, but the "unknown word" hypothesis is its main rival (the
+confidence falls short); (e) it ranks first and a rule keeps it out (the
+reason: language not sure, another language's word, the confidence
+thresholds against other candidates, digits, a capital after a word...);
+(f) another word ranks first for other reasons (taps, context). Per case:
+counts, the commonest target words of each cause with an example, the
+changed correct words; then a table of causes per case. Settings of one machine are in
 `~/.config/parrotfish-dev.ini` (`tools/pf config`): where results go
 (outside the repo), where `pf rpm` copies the RPM, the sfdk target, more
 test texts of your own for the next-word cases (`[eval]`,
@@ -65,7 +123,7 @@ Benchmarks:
 
 ```sh
 build/tests/typo-bench -l data/layouts/de.layout -d build/data/de.pfd [-d build/data/en.pfd] \
-    [-o build/data/oov-de.txt] [-n 1000] [-P gentleConfidence=0.7]
+    [-o tests/data/unknown-de.txt] [-n 1000] [-P gentleConfidence=0.7]
 build/tests/lang-bench -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd [-P switchProb=0.01]
 ```
 
@@ -76,7 +134,10 @@ build/tests/sentence-bench -l data/layouts/en.layout -t tests/data/tatoeba-it.tx
     -d build/data/it.pfd -d build/data/en.pfd -d build/data/de.pfd [-P strength=2]
 ```
 
-Each sentence is a new text; `-m it` starts it leaning towards a language as
+Words keep a final apostrophe only where the word with it is in a loaded
+dictionary (Italian po'); closing quotes and possessives the dictionaries
+don't have (boys') are typed without it (`tests/bench/typos.h`,
+`typedWords`; `-E` prints the words as typed). Each sentence is a new text; `-m it` starts it leaning towards a language as
 the plugin does (the last text's), `-B` adds the first word of a text and
 2-letter words separately, `-F` types only the first words. `-R` makes
 the typos real words (wad for was; for Strong, `-P strength=3`): the
@@ -89,7 +150,7 @@ keys go mostly sideways, 10% up or down):
 ```sh
 build/tests/sentence-bench -l data/layouts/phone-qwerty.layout -t tests/data/sentences-en.txt -m en \
     -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd \
-    -X -N 75 -o build/data/oov-en.txt [-S slips.log [-M]]
+    -X -N 75 -o tests/data/unknown-en.txt [-S slips.log [-M]]
 tools/eval/bench-sweep.sh normalConfidence "0.3 0.5 0.7 0.85" ...same arguments...
 ```
 
@@ -274,19 +335,20 @@ goverment), not a new word. It reads, from
 | `<lang>.keep` | plain spellings that are words of their own, never marked as misspellings (pt `forca`, ro `frumoasa`) | hand |
 | `<lang>.misspellings` | accent-less spellings that are not words (`perche` → `perché`) | `tools/data/find-accent-misspellings.py`, reviewed |
 | `<lang>.supplement` | common words missing from the AOSP list (`uomo`, `überhaupt`) | `tools/data/find-supplement.py`, reviewed |
-| `<lang>.boost` | raised frequencies of everyday words (`penso`, `voglio`) | `tools/data/find-boosts.py`, reviewed |
+| `<lang>.boost` | everyday frequencies: raised for words common in Tatoeba (`penso`, `I'm`), lowered for written-text function words (`in`, `of`); rank mapping, see the script | `tools/data/find-boosts.py`, reviewed |
 | `<lang>.paradigms`, `<lang>.paradigm-skip` | regular verb endings, irregular verbs to leave alone | hand |
 | `<lang>.forms` | missing forms of regular verbs (`riuscivi`) | `tools/data/complete-paradigms.py`, review a sample |
 | `supplement.stop` | Tatoeba example names and over-used words, kept out of all generated data | hand |
 | `../pairs/<lang>.tsv.gz` | starting next-word data (word pairs) | `tools/data/count-pairs.py` |
 
 The generated lists need the sentence corpora (Common Voice, CC0; Tatoeba,
-CC BY 2.0 FR; about 400 MB), which are not in the repo. To regenerate the
-lists and the test lists of unknown real words (`build/data/oov-*.txt`):
+CC BY 2.0 FR; about 900 MB), which are not in the repo: keep them in a
+`corpora` folder next to the repo (`../corpora`). To regenerate the lists
+and the test lists of unknown real words (`tests/data/unknown-*.txt`):
 
 ```sh
-tools/data/regenerate-lists.sh ~/corpora --fetch    # without --fetch: reuse ~/corpora
-tools/data/regenerate-lists.sh ~/corpora es fr      # only these languages
+tools/data/regenerate-lists.sh ../corpora --fetch   # without --fetch: reuse ../corpora
+tools/data/regenerate-lists.sh ../corpora es fr     # only these languages
 git diff data/rules                            # review before committing
 ```
 

@@ -2,19 +2,20 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LicenseRef-TBD
 #
-# Regenerates data/rules/<lang>.{misspellings,supplement,forms,boost}, the starting
+# Regenerates data/rules/<lang>.{respellings,misspellings,supplement,forms,boost}, the starting
 # next-word data data/pairs/<lang>.tsv.gz and the test lists
-# build/data/oov-<lang>.txt from the sentence corpora.
+# tests/data/unknown-<lang>.txt from the sentence corpora.
 #
-#   tools/data/regenerate-lists.sh CORPUS_DIR [--fetch] [LANG...]
+#   tools/data/regenerate-lists.sh CORPUS_DIR [--fetch | --reuse-counts] [LANG...]
 #
 # --fetch downloads Common Voice (sparse clone) and the Tatoeba exports into
-# CORPUS_DIR first. Without LANG, all languages. Review the diff of
-# data/rules afterwards.
+# CORPUS_DIR first. --reuse-counts keeps the word counts made by an earlier
+# run (CORPUS_DIR/<src>-{cv,tatoeba,all}.tsv). Without LANG, all languages.
+# Review the diff of data/rules afterwards.
 set -eu
 C=$1
 shift
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 mkdir -p "$C" build/data
 
 ALL="en it de es fr pt_BR pt_PT nl sv da nb ro fi"
@@ -47,6 +48,11 @@ if [ "${1:-}" = "--fetch" ]; then
             "https://downloads.tatoeba.org/exports/per_language/$t/${t}_sentences.tsv.bz2"
     done
 fi
+COUNT=1
+if [ "${1:-}" = "--reuse-counts" ]; then
+    shift
+    COUNT=
+fi
 LANGS=${*:-$ALL}
 echo "Common Voice commit: $(git -C "$C/cv" rev-parse HEAD)"
 
@@ -54,6 +60,7 @@ echo "Common Voice commit: $(git -C "$C/cv" rev-parse HEAD)"
 exclude() { echo "--exclude tests/data/sentences-$(src $1).txt --exclude tests/data/tatoeba-$(src $1).txt"; }
 
 for s in $(for l in $LANGS; do src $l; done | sort -u); do
+    [ -n "$COUNT" ] || break
     t="$C/$(tatoeba $s)_sentences.tsv.bz2"
     python3 -I tools/data/count-words.py "$C/$s-cv.tsv" $(cvfiles $s) $(exclude $s) &
     python3 -I tools/data/count-words.py "$C/$s-tatoeba.tsv" "$t" $(exclude $s) &
@@ -67,6 +74,8 @@ for l in $LANGS; do
     # other Portuguese list is the same language).
     others=""
     for m in $ALL; do [ $(src $m) = $s ] || others="$others --other $(aosp $m)"; done
+    # Old spellings first: the other lists read the dictionary with them.
+    python3 -I tools/data/find-respellings.py $l "$(aosp $l)" "$C/$s-all.tsv" data/rules data/rules/$l.respellings
     python3 -I tools/data/find-accent-misspellings.py $l "$(aosp $l)" "$C/$s-all.tsv" data/rules data/rules/$l.misspellings
     python3 -I tools/data/find-supplement.py $l "$(aosp $l)" "$C/$s-cv.tsv" "$C/$s-tatoeba.tsv" data/rules \
         data/rules/$l.supplement $others
@@ -74,11 +83,12 @@ for l in $LANGS; do
         data/rules/$l.forms
     python3 -I tools/data/find-boosts.py $l "$(aosp $l)" data/rules/$l.supplement "$C/$s-tatoeba.tsv" data/rules \
         data/rules/$l.boost
-    python3 -I tools/data/make-oov-list.py "$C/$s-cv.tsv" "$(aosp $l)" data/rules/$l.supplement build/data/oov-$l.txt
+    python3 -I tools/data/make-oov-list.py $l "$C/$s-cv.tsv" "$C/$s-tatoeba.tsv" "$(aosp $l)" data/rules \
+        tests/data/unknown-$l.txt $([ $l = da ] && echo --no-cv)
 done
 
 for l in $LANGS; do
     python3 -I tools/data/count-pairs.py data/pairs/$l.tsv.gz "$(aosp $l)" data/rules/$l.supplement data/rules \
-        $(cvfiles $l) "$C/$(tatoeba $l)_sentences.tsv.bz2" $(exclude $l) &
+        $(cvfiles $l) "$C/$(tatoeba $l)_sentences.tsv.bz2" $(exclude $l) --respellings data/rules/$l.respellings &
 done
 wait

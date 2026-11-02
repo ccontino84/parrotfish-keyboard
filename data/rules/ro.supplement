@@ -4,32 +4,32 @@
 # (CC0) and Tatoeba (CC BY 2.0 FR) sentences; see THIRD-PARTY.md. Review changes.
 # Frequency fit: f = 82.6 + 8.19 ln(rate per million), 6198 words.
 # word	f	evidence
-s-a	147	cv 216 tatoeba 879
-s-au	136	cv 75 tatoeba 168
+s-a	147	cv 216 tatoeba 880
+s-au	136	cv 75 tatoeba 170
 m-am	135	cv 37 tatoeba 252
-într-o	135	cv 47 tatoeba 205
-să-l	133	cv 30 tatoeba 203
-nu-i	132	cv 15 tatoeba 320
-să-i	132	cv 28 tatoeba 164
-într-un	132	cv 39 tatoeba 107
-și-a	132	cv 15 tatoeba 319
-mi-a	131	cv 10 tatoeba 308
+într-o	135	cv 47 tatoeba 207
+să-l	133	cv 30 tatoeba 204
+nu-i	132	cv 15 tatoeba 321
+să-i	132	cv 28 tatoeba 165
+într-un	132	cv 39 tatoeba 108
+și-a	132	cv 15 tatoeba 320
+mi-a	131	cv 10 tatoeba 309
 l-am	130	cv 13 tatoeba 185
 ne-am	130	cv 30 tatoeba 96
-niciun	130	cv 49 tatoeba 58
+niciun	130	cv 49 tatoeba 59
 nu-mi	130	cv 15 tatoeba 186
 să-mi	130	cv 11 tatoeba 218
 i-a	129	cv 10 tatoeba 212
-m-a	128	cv 10 tatoeba 161
+m-a	128	cv 10 tatoeba 162
 l-a	127	cv 9 tatoeba 142
 s-ar	127	cv 17 tatoeba 79
 într-adevăr	127	cv 38 tatoeba 30
 euro	126	cv 34 tatoeba 28
 de-a	125	cv 20 tatoeba 44
+domnule	125	cv 36 tatoeba 20
 i-am	125	cv 6 tatoeba 146
 n-am	125	cv 6 tatoeba 121
 ne-a	125	cv 11 tatoeba 65
-domnule	124	cv 36 tatoeba 19
 mi-am	124	cv 6 tatoeba 115
 nu-l	123	cv 6 tatoeba 88
 să-și	123	cv 5 tatoeba 99

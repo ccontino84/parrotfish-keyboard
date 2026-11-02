@@ -160,8 +160,11 @@ struct EngineParams {
     // Real misspellings (-W, in news text) fixed -0.5 to -2.4 points, all
     // of them capitalised words in titles (Cheif Editior). Costs 3 to 5 do
     // about as well; 4 keeps Mr Cant (2 does not). German at 4: typos fixed
-    // -0.7 points.
-    double capitalLowerCost = 4.0;
+    // -0.7 points. alpha88: 5, with the everyday frequencies (can't 160 ->
+    // 166 made Mr Cant can't again at 4; 4.5 is the least that keeps it):
+    // against 4, real misspellings fixed -0.1 to -0.3 points (capitalised
+    // title words), names changed es 0.71 -> 0.65 %, slips the same.
+    double capitalLowerCost = 5.0;
     double capitalLowerCostNouns = 2.0;
     // Tap distances up and down: 0 = in key widths, 1 = in key heights
     // (KeyModel heightShare). Also sets which keys are neighbours.
@@ -191,17 +194,80 @@ struct Suggestion {
     bool completion = false;  // longer than the taps (only with completions on)
 };
 
+// Why autocorrect did or did not replace the word (Result::reason): which
+// decision of Engine::process ended it. For tools (the benches' candidate
+// dump, pf failures); it changes nothing.
+enum class Reason : uint8_t {
+    None,              // nothing to decide: no taps, no dictionary, or too long
+    Applied,           // replaced by the best fix (Strong's real-word fixes too: realWordFix)
+    CaseFix,           // replaced: a valid word in its stored capitalisation (haus -> Haus)
+    NoCandidate,       // no complete word to fix it to
+    Digits,            // a digit in the word: no fix is a slip onto the digit
+    LanguageNotSure,   // the fix's language below autocorrectConfidence (first word: firstWord*)
+    Offensive,         // the fix is an offensive word
+    StrengthOff,       // autocorrect off
+    OtherLanguage,     // a word of a less likely typing language: fix not otherLanguageMargin likelier
+    TypedIsWord,       // a valid word, not a case fix, Strong's real-word fix not tried
+    StrongMargin,      // Strong: the fix is less than strongMargin likelier than the valid word
+    SlipShortcut,      // Strong: a slip word (foe) whose fix the previous word doesn't support
+    BelowNormal,       // Normal/Strong: confidence below normalConfidence (5+ letters or same letters)
+    BelowTwoLetter,    // ... below normalTwoLetterConfidence (2 letters)
+    BelowShort,        // ... below normalShortConfidence (3-4 letters)
+    TooShort,          // fewer letters than normalMinLength / gentleMinLength
+    BelowGentle,       // Gentle: confidence below gentleConfidence
+    GentleChanges,     // Gentle: more edits or changes than it makes
+};
+const char *reasonName(Reason reason);
+
 struct Result {
     std::u32string typed;           // the taps as typed
     bool typedIsWord = false;       // valid in a likely language
     std::vector<Suggestion> suggestions;   // best first; never contains `typed`
     int autocorrect = -1;           // index into suggestions applied on Space, or -1
     double confidence = 0;          // share of probability of suggestions[0]
+    // Share of "an intended word missing from the dictionaries" in the same
+    // total (0 for a valid word). For tools.
+    double unknownShare = 0;
     // Strong only: the autocorrection replaces a valid word, this many nats
     // likelier than it.
     bool realWordFix = false;
     double margin = 0;
+    Reason reason = Reason::None;
 };
+
+// What Engine::search found for some taps, before the decision
+// (Engine::decide): the candidates merged over the languages, whether the
+// taps are a word, and the context the search saw.
+struct Searched {
+    std::vector<Tap> taps;
+    std::u32string typed;            // the taps as typed
+    bool searched = false;           // false: nothing to decide (no taps or dictionaries, too long)
+    bool typedIsWord = false;        // valid in a likely language
+    bool wordInSomeLanguage = false; // valid in some typing language
+    bool validAsTyped = false;       // not only in another case (jaime: Jaime only)
+    bool typedHasShortcut = false, typedHasSlipShortcut = false;
+    std::u32string caseFix;          // the stored capitalisation, if it differs (haus → Haus)
+    std::vector<double> weights;     // the languages' weights
+    bool sentenceStart = true;
+    std::u32string prev;             // the previous word, if any
+    size_t textWords = 0;            // words in the text before
+    // One candidate, its spellings in all languages merged (probEqual: with
+    // all languages equally likely).
+    struct Merged {
+        Suggestion s;
+        std::u32string key;
+        double prob = 0;
+        double probEqual = 0;
+        double bestCost = 1e300;
+    };
+    std::vector<Merged> merged;
+};
+
+// The parameters Engine::decide uses that Engine::search does not: a
+// decision with other values of these can be replayed on a search
+// (sentence-bench -Y). strength too, as long as neither value is Strong
+// (Strong's search also weighs the typed word).
+bool isDecisionParam(const std::string &name);
 
 // The engine for one text field: all typing languages at once, weighted
 // by the language tracker.
@@ -230,7 +296,14 @@ public:
     // A word was committed (typed, chosen or autocorrected).
     void commit(const std::u32string &word);
 
+    // decide(search(taps), params()).
     Result process(const std::vector<Tap> &taps) const;
+    // The two halves of process(): the candidates, and what to show and
+    // whether to autocorrect, with `params`' decision settings
+    // (isDecisionParam; the others must be params()' own).
+    Searched search(const std::vector<Tap> &taps) const;
+    // (By value: decide() works on its own copy; process() moves.)
+    Result decide(Searched searched, const EngineParams &params) const;
 
     // Next-word suggestions for the text before the cursor, when no word is
     // being typed: sentence starters at the start of a sentence (capitalised),

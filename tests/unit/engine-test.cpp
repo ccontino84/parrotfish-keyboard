@@ -470,6 +470,51 @@ void testUncertainTaps()
 
 } // namespace
 
+void testOldSpellings()
+{
+    // Brazilian Portuguese: the AOSP list predates the 2009 reform
+    // (data/rules/pt_BR.respellings). The current spelling stays, the old
+    // one becomes it.
+    Setup br({"pt_BR", "en"}, "en");
+    br.engine.startText(u("Eu tenho "), {1.0, 0.01});
+    br.engine.setStrength(Strength::Normal);
+    for (const char *w : {"ideias", "cinquenta", "voo", "heroico", "assembleia", "frequente"})
+        CHECK_EQ(br.space(w), w);
+    CHECK_EQ(br.space("idéias"), "ideias");
+    CHECK_EQ(br.space("cinqüenta"), "cinquenta");
+    CHECK_EQ(br.space("vôo"), "voo");
+    CHECK_EQ(br.space("heróico"), "heroico");
+    CHECK_EQ(br.space("papéis"), "papéis");     // oxytone: keeps its accent
+    // European Portuguese: both spellings of silent consonants in use.
+    Setup pt({"pt_PT", "en"}, "en");
+    pt.engine.startText(u("Eu tenho a "), {1.0, 0.01});
+    pt.engine.setStrength(Strength::Normal);
+    for (const char *w : {"perceção", "percepção", "ação", "acção", "facto", "contacto"})
+        CHECK_EQ(pt.space(w), w);
+    CHECK_EQ(pt.space("heróico"), "heroico");
+    // German: spellings of before 1996 from older texts.
+    Setup de({"de", "en"}, "de");
+    de.engine.startText(u("Ich weiß, "), {1.0, 0.01});
+    de.engine.setStrength(Strength::Normal);
+    CHECK_EQ(de.space("daß"), "dass");
+    CHECK_EQ(de.space("Fluß"), "Fluss");
+    CHECK_EQ(de.space("Fuß"), "Fuß");           // long vowel: ß stays
+    // Romanian: î inside a word before 1993.
+    Setup ro({"ro", "en"}, "en");
+    ro.engine.setStrength(Strength::Normal);
+    CHECK_EQ(ro.space("cînd"), "când");
+    // Spanish: imperatives with pronouns take an accent; the list had some
+    // without (es.respellings), others only in conversation (one-source
+    // tatoeba). Verb forms beside a noun with an accent stay (titulo).
+    Setup es({"es", "en"}, "en");
+    es.engine.startText(u("Por favor, "), {1.0, 0.01});
+    es.engine.setStrength(Strength::Normal);
+    for (const char *w : {"muéstrame", "déjame", "cuéntame", "titulo", "calculo"})
+        CHECK_EQ(es.space(w), w);
+    CHECK_EQ(es.space("muestrame"), "muéstrame");
+    CHECK_EQ(es.space("dejame"), "déjame");
+}
+
 void testMoreLanguages()
 {
     // Danish: aa, oe, ae stand for å, ø, æ, and a plain o reaches ø.
@@ -566,12 +611,29 @@ void testContractions()
         CHECK(r.autocorrect == 0 && r.suggestions[0].word == u("I'm"));
     }
     s.engine.setStrength(Strength::Normal);
+    // Everyday frequencies (find-boosts.py, build-dict.py): written-text
+    // function words come down, conversation words go up. AOSP: in 210,
+    // I'm 116; Tatoeba in:I'm 3.5:1, about 15-20 steps.
+    {
+        const Dictionary &d = s.engine.dictionary(0);
+        auto freq = [&](const char *w) {
+            const uint32_t n = d.findExact(u(w));
+            return n ? static_cast<int>(d.node(n).freq) : -1;
+        };
+        CHECK(freq("in") < 210);
+        CHECK(freq("in") - freq("I'm") <= 25);
+    }
 
     // German text: im is a word.
     Setup de({"de", "en"});
     de.engine.setStrength(Strength::Normal);
     de.engine.startText(u("Wir waren gestern "));
     CHECK(de.engine.process(tapsFor(u("im"))).autocorrect < 0);
+    // Everyday frequencies (find-boosts.py): süß is common in conversation
+    // (Tatoeba aus:süß 40:1, the AOSP list e^10:1), so suss is not taken for
+    // a slip onto aus.
+    de.engine.startText(u("Das ist "));
+    CHECK(de.space("suss") != "aus");
 
     // Letters that are a word only with a capital (the name Jaime, the
     // acronym MN) are not capitalised when another reading is likelier:
@@ -696,6 +758,58 @@ void testCapitalNames()
     e.startText(u("Ich habe "), de);
     r = e.process(tapsFor(u("Hinger")));
     CHECK(r.autocorrect < 0 && !r.suggestions.empty() && r.suggestions[0].word == u("Hunger"));
+    // A rare name typed in lower case (Suess) does not keep the letters
+    // as a word: suess is süß.
+    e.startText(u("Der Kuchen ist wirklich sehr "), de);
+    r = e.process(tapsFor(u("suess")));
+    CHECK(r.autocorrect >= 0 && r.suggestions[r.autocorrect].word == u("süß"));
+    // ok (stored as OK, rare in written text) stays: confidence 0.58-0.68
+    // for in/il, below the two-letter threshold. A guard for step 6g.
+    e.startText(u("Ja, alles "), de);
+    r = e.process(tapsFor(u("ok")));
+    CHECK(r.autocorrect < 0);
+    std::vector<double> it(3, 1.0);
+    it[e.languageIndex("it")] *= 3.0;
+    e.setLayout(layout("it"));
+    e.startText(u("Tutto "), it);
+    r = e.process(tapsFor(u("ok")));
+    CHECK(r.autocorrect < 0);
+}
+
+void testSlipShortcuts()
+{
+    // Strong: a valid word that AOSP lists as mostly a slip (foe: for) is
+    // fixed where the previous word is known to be followed by the fix,
+    // and left alone elsewhere; contractions (id: I'd) are never fixed.
+    Setup s({"en", "it", "de"});
+    s.engine.setStrength(Strength::Strong);
+    auto space = [&](const std::string &before, const std::string &typed) {
+        s.engine.startText(u(before));
+        return s.space(typed);
+    };
+    CHECK_EQ(space("Thanks ", "foe"), "for");
+    CHECK_EQ(space("I was waiting ", "foe"), "for");
+    CHECK_EQ(space("He was my worst ", "foe"), "foe");
+    CHECK_EQ(space("a friend or a ", "foe"), "foe");
+    CHECK_EQ(space("I think ", "id"), "id");
+    CHECK_EQ(space("Yesterday after work ", "ill"), "ill");
+    // Normal never replaces a valid word.
+    s.engine.setStrength(Strength::Normal);
+    CHECK_EQ(space("Thanks ", "foe"), "foe");
+}
+
+void testFinalApostrophe()
+{
+    // Italian po' is a word (find-supplement.py: final-apostrophe), not
+    // a slip for può; perche' still becomes perché.
+    Setup s({"it", "en", "de"});
+    s.engine.setStrength(Strength::Normal);
+    // (Contexts long enough for the language to be sure: autocorrect
+    // waits until then.)
+    s.engine.startText(u("Oggi sono andato al mare e ho aspettato un "));
+    CHECK_EQ(s.space("po'"), "po'");
+    s.engine.startText(u("Oggi sono andato al mare ma non so "));
+    CHECK_EQ(s.space("perche'"), "perché");
 }
 
 void testStrengths()
@@ -711,6 +825,28 @@ void testStrengths()
     CHECK_EQ(s.space("freind"), "freind");
     CHECK_EQ(s.space("becuase"), "because");
     s.engine.setStrength(Strength::Normal);
+}
+
+void testReasons()
+{
+    // Result::reason: which decision ended Engine::process (for tools).
+    Setup s({"en"});
+    auto reason = [&](const std::string &before, const std::string &typed) {
+        s.engine.startText(u(before));
+        return std::string(reasonName(s.type(typed).reason));
+    };
+    s.engine.setStrength(Strength::Normal);
+    CHECK_EQ(reason("Yesterday after work I ", "freind"), "applied");
+    CHECK_EQ(reason("Yesterday after work I ", "form"), "typed-is-word");
+    s.engine.setStrength(Strength::Gentle);
+    CHECK_EQ(reason("Yesterday after work I ", "freind"), "below-gentle");
+    s.engine.setStrength(Strength::Strong);
+    CHECK_EQ(reason("He was my worst ", "foe"), "slip-shortcut");
+    s.engine.setStrength(Strength::Off);
+    CHECK_EQ(reason("Yesterday after work I ", "freind"), "strength-off");
+    Setup de({"de"});
+    de.engine.setStrength(Strength::Normal);
+    CHECK_EQ(std::string(reasonName(de.type("haus").reason)), "case-fix");
 }
 
 int main(int argc, char **argv)
@@ -742,7 +878,11 @@ int main(int argc, char **argv)
     testUnknownWords();
     testCapitalNames();
     testStrengths();
+    testSlipShortcuts();
+    testFinalApostrophe();
+    testReasons();
     testMoreLanguages();
+    testOldSpellings();
     if (failures)
         std::printf("%d check(s) failed\n", failures);
     else

@@ -12,3 +12,11 @@ paradigm-plain as ar er ir
 paradigm-plain es ar er ir
 paradigm-plain an ar er ir
 paradigm-plain en ar er ir
+
+# Imperatives and gerunds with pronouns take an accent (muéstrame, háblame):
+# the list has some without (muestrame, hablame), so they were never fixed.
+# The accent falls three or more syllables from the end.
+respell-accent (?:me|te|se|nos|os)?(?:lo|la|le|los|las|les)?|(?:me|te|se|nos|os) [áéíóú](?:[^aeiouáéíóú]*[aeiou]+){2,}[^aeiou]*$
+# Conversational words (déjame, cuéntame) are in Tatoeba, rarely in Common
+# Voice: a word seen this often in Tatoeba is added.
+one-source 20 tatoeba

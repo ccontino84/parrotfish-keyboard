@@ -10,3 +10,8 @@ min-freq 74
 # the list (aşa -> așa).
 ş ș
 ţ ț
+
+# find-respellings.py: â inside a word was written î until 1993 (cînd,
+# sînt: când, sunt); the list has the current forms. Only lowercase words
+# (after a prefix î stays: neînțeles; the corpus decides).
+respell (?<=[a-zăâîșțşţ])î(?=[a-zăâîșțşţ]) â lower list

@@ -30,8 +30,8 @@ has 109, sentences-ro 673, tatoeba-nb 796). fi was drawn the same way on
 that day (sentences-fi has 151):
 
 ```sh
-tools/data/sample-sentences.py tests/data/sentences-es.txt ~/corpora/cv/server/data/es/*.txt
-tools/data/sample-sentences.py tests/data/tatoeba-es.txt ~/corpora/spa_sentences.tsv.bz2 --min-words 4 --max-words 20
+tools/data/sample-sentences.py tests/data/sentences-es.txt ../corpora/cv/server/data/es/*.txt
+tools/data/sample-sentences.py tests/data/tatoeba-es.txt ../corpora/spa_sentences.tsv.bz2 --min-words 4 --max-words 20
 ```
 
 (Leave out the Common Voice files that `cvfiles` in
@@ -45,3 +45,11 @@ dictionaries were built from.
 written for the project. With a number row they are typed as one word;
 `sentence-bench -N 75 -o tests/data/alnum.txt` checks that autocorrect
 leaves them alone.
+
+`unknown-LANG.txt`: real words the dictionary lacks (names, rare words),
+seen at least 5 times in Common Voice or Tatoeba (Danish: Tatoeba only, its
+Common Voice text is older literature), without spelling variants of
+dictionary words. The suite inserts them typed correctly (`-o`): autocorrect
+must leave them alone. Made by `tools/data/make-oov-list.py` from
+`tools/data/regenerate-lists.sh`; kept here so every checkout benchmarks the
+same words (CC BY 2.0 FR and CC0, like the sentences).

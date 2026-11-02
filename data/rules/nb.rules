@@ -9,3 +9,7 @@ aa å
 # find-accent-misspellings.py: å, ä, ö, æ, ø are letters of their own, so
 # a plain spelling is often another word (har/här, made/måde).
 no-misspellings
+
+# find-respellings.py: aa for å before the 1917 reform (paa: på), in older
+# texts. Only lowercase words: names keep their aa (Aasen).
+respell aa å lower

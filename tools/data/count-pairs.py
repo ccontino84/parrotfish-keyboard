@@ -5,11 +5,13 @@
 
 Usage: count-pairs.py OUT.tsv.gz WORDLIST.combined.gz SUPPLEMENT RULES_DIR FILE...
                       [--prev N] [--next K] [--min-count C] [--exclude TEST_FILE]...
+                      [--respellings RESPELLINGS]
 
 FILE is plain text (one sentence per line) or a Tatoeba export, as for
 count-words.py. Words are compared in lowercase. For the N most frequent
 words, OUT keeps the K most frequent next words that are in the wordlist
-or the supplement, as `prev<TAB>next<TAB>count`. Next words are written in
+or the supplement (with the current spellings of RESPELLINGS, not the
+old ones), as `prev<TAB>next<TAB>count`. Next words are written in
 their most frequent spelling inside sentences (German `Dank`). `<s>` is
 the start of a sentence, `<any>` the overall most frequent words (a fallback), and a line
 `prev<TAB>*<TAB>total` gives the number of all continuations of `prev`.
@@ -57,6 +59,7 @@ def main():
     ap.add_argument("--next", type=int, default=12)
     ap.add_argument("--min-count", type=int, default=2)
     ap.add_argument("--exclude", action="append", default=[])
+    ap.add_argument("--respellings", help="LANG.respellings of find-respellings.py")
     args = ap.parse_args()
 
     known = set()
@@ -68,6 +71,12 @@ def main():
                     known.add(fields["word"].lower())
     for line in read_list(args.supplement):
         known.add(line.split("\t")[0].lower())
+    # Current spellings in, old ones out (find-respellings.py, as build-dict.py).
+    for line in read_list(args.respellings) if args.respellings else []:
+        old, new, kind = line.split("\t")[:3]
+        known.add(new.lower())
+        if kind == "old":
+            known.discard(old.lower())
     stop = {w.lower() for w in read_list(f"{args.rules_dir}/supplement.stop")}
     known -= stop
 

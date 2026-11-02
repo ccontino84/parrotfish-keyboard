@@ -7,3 +7,6 @@ __pycache__/
 /RPMS/
 /.sfdk/
 /documentation.list
+
+# Dictionaries built on the PC for a local RPM (tools/pf rpm)
+/prebuilt/

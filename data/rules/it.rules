@@ -1,8 +1,10 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LicenseRef-TBD
 # A final vowel followed by an apostrophe stands for an accented vowel
-# (perche' -> perché, citta' -> città). Real truncations (po', di') are
-# in the dictionary or the keep list and are matched first.
+# (perche' -> perché, citta' -> città). Real truncations (po', mo') are
+# in the dictionary (find-supplement.py: final-apostrophe) and are matched
+# first.
+final-apostrophe
 a' à final
 e' è final
 e' é final

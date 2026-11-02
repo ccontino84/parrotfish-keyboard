@@ -1,53 +1,117 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LicenseRef-TBD
-"""List real words that a dictionary doesn't know, for typo-bench -o.
+"""List real words that a dictionary doesn't know, for the benchmarks' -o.
 
-Usage: make-oov-list.py COUNTS.tsv WORDLIST.combined.gz SUPPLEMENT OUT [--min-count N]
+Usage: make-oov-list.py LANG CV.tsv TATOEBA.tsv WORDLIST.combined.gz RULES_DIR OUT
+                        [--min-count N]
 
-COUNTS.tsv comes from count-words.py over proofread sentences. A word that
-occurs at least N times there but is in neither the wordlist nor the
-supplement is a real word the user may type (a name, a rare word, a new
-word): autocorrect must leave it alone.
+CV.tsv and TATOEBA.tsv come from count-words.py over proofread sentences
+(Common Voice, Tatoeba). A word of 3+ letters seen at least N times in
+either is a real word the user may type (a name, a rare word, a new word):
+autocorrect must leave it alone. It is listed unless the dictionary has it
+as build-dict.py makes it (the wordlist from `min-freq` up, RULES_DIR/LANG.
+supplement, .forms, .misspellings, .manual-misspellings, .respellings), or
+has a word spelled the same but for accents, ß/ss or Romanian ş/ș, ţ/ț
+(Mendonca, colônia in pt_PT, noştri): such a word is a variant of a known
+one, and changing it is no error. In languages with `no-misspellings` (sv,
+da, nb, fi), å, ä, ö, æ, ø count as letters of their own (förlägen is not
+förlagen). Old spellings (daß, paa, idéia) are in .respellings already.
+
+Both sources: Common Voice has many names and rare words (Wikipedia
+sentences), but in some languages mostly old literature (Danish: skulde,
+høit); Tatoeba is everyday language (verb forms, new words, names).
 """
 
 import argparse
 import gzip
 import re
+import unicodedata
+
+OWN_LETTERS = "åäöæø"
+# Letters without a Unicode decomposition, typed as a plain letter.
+BASE_EXTRA = {"ø": "o", "æ": "a", "œ": "o"}
+
+
+def fold(word, keep=""):
+    """Lowercase without accents; the letters in `keep` stay as they are."""
+    s = "".join(c if c in keep else BASE_EXTRA.get(c, c) for c in word.lower())
+    s = "".join(c if c in keep else unicodedata.normalize("NFD", c) for c in s)
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    return s.replace("ß", "ss")
+
+
+def read_list(path):
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return [l.split("#", 1)[0].strip() for l in fh
+                    if l.split("#", 1)[0].strip()]
+    except FileNotFoundError:
+        return []
+
+
+def read_counts(path):
+    """{lowercase: (count, cased spelling, its count inside sentences)}"""
+    counts = {}
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            parts = line.rstrip("\n").split("\t")
+            counts[parts[0]] = (int(parts[1]), parts[2] if len(parts) > 2 else parts[0],
+                                int(parts[3]) if len(parts) > 3 else 0)
+    return counts
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("counts")
+    ap.add_argument("lang")
+    ap.add_argument("cv")
+    ap.add_argument("tatoeba")
     ap.add_argument("wordlist")
-    ap.add_argument("supplement")
+    ap.add_argument("rules_dir")
     ap.add_argument("out")
+    ap.add_argument("--no-cv", action="store_true",
+                    help="Tatoeba only (da: Common Voice has old literature, staaer, bleve)")
     ap.add_argument("--min-count", type=int, default=5)
     args = ap.parse_args()
+
+    rules = [l.split() for l in read_list(f"{args.rules_dir}/{args.lang}.rules")]
+    floor = max([int(r[1]) for r in rules if r[0] == "min-freq"] or [0])
+    keep = OWN_LETTERS if any(r[0] == "no-misspellings" for r in rules) else ""
 
     known = set()
     with gzip.open(args.wordlist, "rt", encoding="utf-8") as fh:
         for line in fh:
             if line.startswith(" word="):
-                known.add(line[6:line.index(",")].lower())
-    with open(args.supplement, encoding="utf-8") as fh:
-        for line in fh:
-            if not line.startswith("#"):
-                known.add(line.split("\t")[0].lower())
+                fields = dict(kv.split("=", 1) for kv in line.strip().split(","))
+                if int(fields["f"]) >= floor or fields.get("not_a_word") == "true":
+                    known.add(fields["word"])
+    for kind, columns in (("supplement", 1), ("forms", 1), ("misspellings", 2),
+                          ("manual-misspellings", 2), ("respellings", 2)):
+        for line in read_list(f"{args.rules_dir}/{args.lang}.{kind}"):
+            known.update(line.split("\t")[:columns])
+    lower = {w.lower() for w in known}
+    folded = {fold(w, keep) for w in known}
 
-    out = []
-    with open(args.counts, encoding="utf-8") as fh:
-        for line in fh:
-            parts = line.rstrip("\n").split("\t")
-            w, c = parts[0], int(parts[1])
-            if c < args.min_count:
-                break
-            cased = parts[2] if len(parts) > 2 else w
-            if len(w) >= 3 and w not in known and re.fullmatch(r"[^\W\d_]+", w):
-                out.append(cased)
+    cv, tat = ({} if args.no_cv else read_counts(args.cv)), read_counts(args.tatoeba)
+    none = (0, "", 0)
+    out, variants = [], 0
+    for w in sorted(set(cv) | set(tat), key=lambda k: (-(cv.get(k, none)[0] + tat.get(k, none)[0]), k)):
+        a, b = cv.get(w, none), tat.get(w, none)
+        if max(a[0], b[0]) < args.min_count or len(w) < 3 or w in lower \
+                or not re.fullmatch(r"[^\W\d_]+", w):
+            continue
+        if fold(w, keep) in folded:
+            variants += 1
+            continue
+        out.append(a[1] if a[0] and (a[2] >= b[2] or not b[0]) else b[1])
     with open(args.out, "w", encoding="utf-8") as fh:
+        fh.write("# SPDX-FileCopyrightText: Tatoeba contributors (tatoeba.org), Mozilla Common Voice contributors\n"
+                 "# SPDX-License-Identifier: LicenseRef-CC-BY-2.0-FR AND CC0-1.0\n"
+                 f"# Generated by tools/data/make-oov-list.py: words seen {args.min_count}+ times in "
+                 f"{'Tatoeba' if args.no_cv else 'Common Voice or Tatoeba'}, missing from the\n"
+                 "# dictionary, also with other accents (typo-bench/sentence-bench -o: autocorrect must leave them).\n")
         fh.write("\n".join(out) + "\n")
-    print(f"{args.out}: {len(out)} words")
+    print(f"{args.out}: {len(out)} words ({variants} variants of known words left out)")
 
 
 if __name__ == "__main__":

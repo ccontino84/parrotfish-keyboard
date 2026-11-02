@@ -7,7 +7,8 @@
 //                  -d build/data/it.pfd [-d OTHER.pfd]... [-n 2000] [-r 0.3]
 //                  [-s SEED] [-m LANG] [-B] [-F] [-D] [-R] [-P name=value]... [-v]
 //                  [-S slips.log [-M] | -U] [-N PCT] [-X] [-o OOV.txt [-u RATE]] [-L]
-//                  [-T [-K]] [-W pairs.tsv [-w RATE] [-c N] [-A]]
+//                  [-T [-K]] [-W pairs.tsv [-w RATE] [-c N] [-A]] [-E] [-C DUMP [-G]] [-Y SETTINGS]...
+//                  [-k START] [-Z | -J] [-O OUTCOMES]
 //
 // Words of real sentences are typed one by one with the earlier words as
 // context, as on the phone (all dictionaries loaded, equal starting weights,
@@ -59,6 +60,36 @@
 // words left out), for thresholds by length, and the same for the words
 // typed with a capital after a word ("capital": names, German nouns).
 //
+// Words are split as bench::typedWords() does (typos.h): a final apostrophe
+// stays only where the word with it is a dictionary word (po'). -E prints
+// the words of each text as they would be typed, and nothing else.
+//
+// -C DUMP writes one JSON line for each word typed with a typo or a
+// misspelling, and each word changed: typed, target, the outcome, the
+// engine's Result::reason, confidence and unknownShare, the target's rank
+// among the suggestions and the first 8 suggestions ([word, cost, log P of
+// the word or null if no dictionary has it, changes, completion]); for
+// tools/pf failures. Off by default (nothing is computed without it).
+// -G: every word, also those typed right and left as they are.
+//
+// -Y name=value[,name=value...] (repeatable) replays the decision with
+// other settings on each word's search (Engine::search once, then
+// Engine::decide for each): only parameters isDecisionParam() lists
+// (thresholds, margins, unknown*; strength unless Strong). Each adds a line
+// summary[SETTINGS]: before the summary, the same numbers as a run with
+// -P SETTINGS, for little more time than one run.
+//
+// -k START types the first START texts without the engine (their typos are
+// still drawn, so that the rest get the same ones): with -n END, texts
+// START+1..END, a shard of the run. -Z adds counts lines; -J (no other
+// option) reads them on stdin and adds them up into the summary lines of
+// the whole run (tools/pf shards long cases so).
+//
+// -O OUTCOMES writes a line for each word typed with a typo or a
+// misspelling and each word changed, for each setting (0: the bench's, 1..:
+// the -Y ones): setting, text, word, kind, typed, target, what Space gave,
+// tab-separated (tools/pf diff pairs two runs' words).
+//
 // The last line sums up: typos fixed and fixed wrong, correct and unknown
 // words changed, and the word error rate before and after autocorrect
 // (wrong words / typed words; a word typed with its neighbour as one,
@@ -71,6 +102,7 @@
 #include <chrono>
 #include <cstdio>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <sstream>
 
@@ -104,6 +136,74 @@ double pct(int a, int b)
     return b ? 100.0 * a / b : 0.0;
 }
 
+bool isMisspelledKind(int kind)
+{
+    return kind == Misspelled || kind == MisspelledAccents;
+}
+
+// The counts of one run of the decision (the bench's own, or a -Y variant).
+struct Tally {
+    Stats stats[KindCount];
+    GroupStats groups[GroupCount];
+    LengthStats lengths[LengthCount], capitals;
+    int typedWords = 0, wrongBefore = 0, wrongAfter = 0;
+};
+
+// The counts behind the summary line (-Z), and back (-J).
+std::vector<long> summaryCounts(const Tally &t, bool misspellings)
+{
+    std::vector<long> v = {misspellings ? 1 : 0, t.typedWords, t.wrongBefore, t.wrongAfter};
+    for (const Stats &s : t.stats)
+        v.insert(v.end(), {s.total, s.realWord, s.top1, s.top3, s.fixed, s.wrong});
+    return v;
+}
+
+bool addCounts(Tally &t, bool *misspellings, const std::vector<long> &v)
+{
+    if (v.size() != 4 + 6 * KindCount)
+        return false;
+    *misspellings = *misspellings || v[0];
+    t.typedWords += v[1]; t.wrongBefore += v[2]; t.wrongAfter += v[3];
+    for (int k = 0; k < KindCount; ++k) {
+        Stats &s = t.stats[k];
+        const long *x = &v[4 + 6 * k];
+        s.total += x[0]; s.realWord += x[1]; s.top1 += x[2]; s.top3 += x[3]; s.fixed += x[4]; s.wrong += x[5];
+    }
+    return true;
+}
+
+// The summary line's numbers (after "summary: "), from the counts.
+std::string summaryText(const Tally &t, bool misspellings)
+{
+    const Stats *stats = t.stats;
+    Stats all;
+    for (int k = 0; k < KindCount; ++k) {
+        if (k == Clean || k == Unknown || isMisspelledKind(k))
+            continue;
+        const Stats &s = stats[k];
+        all.total += s.total; all.realWord += s.realWord; all.top1 += s.top1; all.top3 += s.top3;
+        all.fixed += s.fixed; all.wrong += s.wrong;
+    }
+    const int fixable = all.total - all.realWord;
+    auto misspText = [&](int k) {
+        const Stats &s = stats[k];
+        const int n = s.total - s.realWord;
+        char buf[160];
+        std::snprintf(buf, sizeof buf, "fixed %.1f%% wrong %.1f%% left %.1f%%", pct(s.fixed, n), pct(s.wrong, n),
+                      pct(n - s.fixed - s.wrong, n));
+        return std::string(buf);
+    };
+    char buf[512];
+    std::snprintf(buf, sizeof buf, "typos fixed %.1f%% wrong %.1f%%, correct changed %.2f%%, unknown changed %.2f%%,"
+                  " WER %.2f%% -> %.2f%%", pct(all.fixed, fixable), pct(all.wrong, fixable),
+                  pct(stats[Clean].wrong, stats[Clean].total), pct(stats[Unknown].wrong, stats[Unknown].total),
+                  pct(t.wrongBefore, t.typedWords), pct(t.wrongAfter, t.typedWords));
+    std::string out = buf;
+    if (misspellings)
+        out += ", misspellings " + misspText(Misspelled) + ", accents only " + misspText(MisspelledAccents);
+    return out;
+}
+
 bool isMisspelled(int kind)
 {
     return kind == Misspelled || kind == MisspelledAccents;
@@ -130,6 +230,34 @@ bool parsePair(const std::string &line, std::u32string *typed, std::u32string *c
     return true;
 }
 
+// -J: counts lines on stdin, added up per setting, as summary lines.
+int joinCounts()
+{
+    std::vector<std::string> order;
+    std::map<std::string, Tally> sums;
+    bool misspellings = false;
+    for (std::string line; std::getline(std::cin, line);) {
+        if (line.compare(0, 6, "counts") != 0)
+            continue;
+        const size_t colon = line.find(": ");
+        const std::string key = line.substr(6, colon - 6);
+        std::istringstream in(line.substr(colon + 2));
+        std::vector<long> v;
+        for (long x; in >> x;)
+            v.push_back(x);
+        if (!sums.count(key))
+            order.push_back(key);
+        if (!addCounts(sums[key], &misspellings, v))
+            return 2;
+    }
+    for (const std::string &key : order)
+        if (!key.empty())
+            std::printf("summary%s: %s\n", key.c_str(), summaryText(sums[key], misspellings).c_str());
+    if (sums.count(""))
+        std::printf("summary: %s\n", summaryText(sums[""], misspellings).c_str());
+    return 0;
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -139,13 +267,16 @@ int main(int argc, char **argv)
     int maxSentences = 2000;
     double rate = 0.3;
     unsigned seed = 1;
-    bool verbose = false, breakdown = false, byLength = false, firstOnly = false, doubles = false, realWords = false;
-    std::string remembered, slipsPath, oovPath, misspPath;
+    bool verboseOpt = false, breakdown = false, byLength = false, firstOnly = false, doubles = false, realWords = false;
+    std::string remembered, slipsPath, oovPath, misspPath, dumpPath, outcomesPath;
+    bool dumpAll = false;   // -G: -C dumps every word, not only slips and changes
+    std::vector<std::string> variantSpecs;
     bool uniform = false, mirrored = false, extraKinds = false, uncertainTaps = false, keepBoth = false;
     int numberPct = 0;
     double unknownRate = 0.1, misspRate = 1.0;
     int misspCap = 3;
-    bool pairsAlone = false;
+    bool pairsAlone = false, echoWords = false, printCounts = false;
+    int skipTexts = 0;
     EngineParams params;
     params.corrector.completions = true;   // as on the phone
     params.strength = Strength::Normal;    // the phone's default (the engine's is Gentle)
@@ -163,7 +294,7 @@ int main(int argc, char **argv)
         else if (a == "-F") firstOnly = breakdown = true;
         else if (a == "-D") doubles = true;
         else if (a == "-R") realWords = true;
-        else if (a == "-v") verbose = true;
+        else if (a == "-v") verboseOpt = true;
         else if (a == "-S" && i + 1 < argc) slipsPath = argv[++i];
         else if (a == "-U") uniform = true;
         else if (a == "-M") mirrored = true;
@@ -177,12 +308,40 @@ int main(int argc, char **argv)
         else if (a == "-w" && i + 1 < argc) misspRate = std::stod(argv[++i]);
         else if (a == "-c" && i + 1 < argc) misspCap = std::stoi(argv[++i]);
         else if (a == "-A") pairsAlone = true;
+        else if (a == "-E") echoWords = true;
+        else if (a == "-C" && i + 1 < argc) dumpPath = argv[++i];
+        else if (a == "-G") dumpAll = true;
+        else if (a == "-O" && i + 1 < argc) outcomesPath = argv[++i];
+        else if (a == "-Y" && i + 1 < argc) variantSpecs.push_back(argv[++i]);
+        else if (a == "-k" && i + 1 < argc) skipTexts = std::stoi(argv[++i]);
+        else if (a == "-Z") printCounts = true;
+        else if (a == "-J") return joinCounts();
         else if (a == "-P" && i + 1 < argc) {
             if (!setParam(params, argv[++i])) {
                 std::fprintf(stderr, "unknown parameter %s\n", argv[i]);
                 return 2;
             }
         }
+    }
+    // -Y: decision settings replayed on each word's search (only the
+    // parameters Engine::decide alone reads).
+    std::vector<EngineParams> variants;
+    for (const std::string &spec : variantSpecs) {
+        EngineParams v = params;
+        std::istringstream in(spec);
+        for (std::string a; std::getline(in, a, ',');) {
+            const std::string name = a.substr(0, a.find('='));
+            if (!isDecisionParam(name) || !setParam(v, a)) {
+                std::fprintf(stderr, "-Y %s: %s is not a decision parameter (isDecisionParam)\n", spec.c_str(),
+                             name.c_str());
+                return 2;
+            }
+        }
+        if ((v.strength == Strength::Strong) != (params.strength == Strength::Strong)) {
+            std::fprintf(stderr, "-Y %s: Strong searches differently, it can't be replayed\n", spec.c_str());
+            return 2;
+        }
+        variants.push_back(v);
     }
     std::ifstream lf(layoutPath);
     std::stringstream ls;
@@ -261,6 +420,8 @@ int main(int argc, char **argv)
     if (!oovPath.empty()) {
         std::ifstream of(oovPath);
         for (std::string w; std::getline(of, w);) {
+            if (!w.empty() && w[0] == '#')
+                continue;
             const std::u32string u = utf8::decode(w);
             if (u.size() < 3 || !isPlain(u) || u.find(U'\'') != std::u32string::npos)
                 continue;
@@ -297,6 +458,58 @@ int main(int argc, char **argv)
     }
     std::map<std::u32string, int> misspUsed;   // times each correct word was misspelled (-c)
 
+    // -C: one JSON line per typed word that had a typo or misspelling, or
+    // was changed: what was typed and meant, the outcome, the engine's
+    // reason and the candidates (pf failures sorts the failures by cause).
+    std::FILE *dump = nullptr;
+    if (!dumpPath.empty() && !(dump = std::fopen(dumpPath.c_str(), "w"))) {
+        std::fprintf(stderr, "-C %s: cannot write\n", dumpPath.c_str());
+        return 2;
+    }
+    std::FILE *outcomes = nullptr;
+    if (!outcomesPath.empty() && !(outcomes = std::fopen(outcomesPath.c_str(), "w"))) {
+        std::fprintf(stderr, "-O %s: cannot write\n", outcomesPath.c_str());
+        return 2;
+    }
+    auto json = [](const std::u32string &w) {
+        std::string out = "\"";
+        for (char c : utf8::encode(w)) {
+            if (c == '"' || c == '\\')
+                out += '\\';
+            out += c;
+        }
+        return out + "\"";
+    };
+    // The best log probability of a word (each word of a two-word target)
+    // in the loaded dictionaries, as a word (not a listed misspelling); 1 if
+    // some word is in none of them.
+    auto wordLogProb = [&](const std::u32string &words) {
+        double total = 0;
+        std::u32string w;
+        for (size_t i = 0; i <= words.size(); ++i) {
+            if (i < words.size() && words[i] != U' ') {
+                w.push_back(words[i]);
+                continue;
+            }
+            double best = 1;
+            for (size_t d = 0; d < engine.languageCount(); ++d) {
+                const Dictionary &dict = engine.dictionary(d);
+                for (const std::u32string &v : {w, lower(w)}) {
+                    const uint32_t node = dict.find(v);
+                    if (node && !(dict.attributes(node) & format::AttrMisspelling)) {
+                        const double lp = dict.logProb(dict.node(node).freq);
+                        best = best > 0 ? lp : std::max(best, lp);
+                    }
+                }
+            }
+            if (best > 0)
+                return 1.0;
+            total += best;
+            w.clear();
+        }
+        return total;
+    };
+
     // Typo kinds to pick from.
     std::vector<Kind> kinds;
     for (int k = Neighbour; k <= (doubles ? DoubleExtra : Double); ++k)
@@ -313,11 +526,9 @@ int main(int argc, char **argv)
     const std::u32string aboveSpace = U"cvbnm";
     std::uniform_real_distribution<double> coin(0.0, 1.0);
 
-    Stats stats[KindCount];
-    GroupStats groups[GroupCount];
-    LengthStats lengths[LengthCount], capitals;
+    std::vector<Tally> tallies(1 + variants.size());   // the bench's, then each -Y variant's
     double totalUs = 0, maxUs = 0;
-    int searches = 0, sentences = 0, typedWords = 0, wrongBefore = 0, wrongAfter = 0;
+    int searches = 0, sentences = 0;
     // The texts: the sentences, or with -A one for each pair: three words of
     // a sentence, then the pair's correct word or words (one entry).
     // ends[i]: word i ends a sentence (. ! ? … after it, before the next
@@ -332,7 +543,7 @@ int main(int argc, char **argv)
         for (char32_t &c : text)
             if (c == 0x2019 || c == 0x02BC)
                 c = U'\'';   // as words() reads them
-        texts.push_back(words(text));
+        texts.push_back(bench::typedWords(text, engine));
         std::vector<bool> ends(texts.back().size(), false);
         size_t pos = 0;
         for (size_t i = 0; i < ends.size(); ++i) {
@@ -345,6 +556,15 @@ int main(int argc, char **argv)
             ends[i] = gap.find_first_of(U".!?\u2026") != std::u32string::npos;
         }
         textEnds.push_back(ends);
+    }
+    if (echoWords) {   // -E: the words as typed, one text a line
+        for (const std::vector<std::u32string> &t : texts) {
+            std::string line;
+            for (const std::u32string &w : t)
+                line += (line.empty() ? "" : " | ") + utf8::encode(w);
+            std::printf("%s\n", line.c_str());
+        }
+        return 0;
     }
     if (pairsAlone && !texts.empty()) {
         std::vector<std::vector<std::u32string>> alone;
@@ -481,9 +701,9 @@ int main(int argc, char **argv)
                         typed = target;
                     }
                 }
-                if (firstOnly && !context.empty()) {
+                if ((firstOnly && !context.empty()) || static_cast<int>(ti) < skipTexts) {
                     context += target + after(wi);
-                    continue;   // the same typos as without -F
+                    continue;   // the same typos as without -F; -k: another shard's text
                 }
                 engine.startText(context, prior);
                 const auto t0 = std::chrono::steady_clock::now();
@@ -492,19 +712,62 @@ int main(int argc, char **argv)
                     taps[uncertainAt].initial = uncertainOther;
                     taps[uncertainAt].chLifted = shownLifted;
                 }
-                const Result r = engine.process(taps);
+                // With -Y the search once, then the decision for each setting.
+                Searched found;
+                Result r0, rv;
+                if (variants.empty()) {
+                    r0 = engine.process(taps);
+                } else {
+                    found = engine.search(taps);
+                    r0 = engine.decide(found, params);
+                }
                 const double us = std::chrono::duration<double, std::micro>(
                     std::chrono::steady_clock::now() - t0).count();
                 totalUs += us;
                 maxUs = std::max(maxUs, us);
                 ++searches;
 
+                for (size_t v = 0; v <= variants.size(); ++v) {
+                const Result &r = v == 0 ? r0 : (rv = engine.decide(found, variants[v - 1]));
+                Tally &tally = tallies[v];
+                Stats *stats = tally.stats;
+                GroupStats *groups = tally.groups;
+                LengthStats *lengths = tally.lengths;
+                LengthStats &capitals = tally.capitals;
+                int &typedWords = tally.typedWords, &wrongBefore = tally.wrongBefore, &wrongAfter = tally.wrongAfter;
+                const bool verbose = verboseOpt && v == 0;
                 Stats &s = stats[kind];
                 ++s.total;
                 // A leading digit is typed as it is, and so are the letters
                 // after it (the handler: 2nd, 5om).
                 const bool fired = r.autocorrect >= 0 && !(typed[0] >= U'0' && typed[0] <= U'9');
                 const std::u32string got = fired ? r.suggestions[r.autocorrect].word : typed;
+                if (outcomes && ((kind != Clean && kind != Unknown) || lower(got) != lower(target)))
+                    std::fprintf(outcomes, "%zu\t%zu\t%zu\t%s\t%s\t%s\t%s\n", v, ti, wi, kindName(kind),
+                                 utf8::encode(typed).c_str(), utf8::encode(target).c_str(), utf8::encode(got).c_str());
+                if (dump && v == 0 && (dumpAll || (kind != Clean && kind != Unknown) || lower(got) != lower(target))) {
+                    int rank = -1;
+                    for (size_t k = 0; k < r.suggestions.size() && rank < 0; ++k)
+                        if (lower(r.suggestions[k].word) == lower(target))
+                            rank = static_cast<int>(k);
+                    const double lp = wordLogProb(target);
+                    std::fprintf(dump, "{\"s\":%zu,\"w\":%zu,\"kind\":\"%s\",\"typed\":%s,\"target\":%s,\"got\":%s,"
+                                       "\"fired\":%s,\"valid\":%s,\"capital\":%s,\"conf\":%.4f,\"unknown\":%.4f,"
+                                       "\"reason\":\"%s\",\"target_lp\":%s,\"target_rank\":%d,\"cands\":[",
+                                 ti, wi, kindName(kind), json(typed).c_str(), json(target).c_str(),
+                                 json(got).c_str(), fired ? "true" : "false",
+                                 r.typedIsWord ? "true" : "false",
+                                 !context.empty() && context.compare(context.size() - 2, 2, U". ") != 0 && utf8::isUpper(typed[0]) ? "true" : "false",
+                                 r.confidence, r.unknownShare, reasonName(r.reason),
+                                 lp > 0 ? "null" : std::to_string(lp).c_str(), rank);
+                    for (size_t k = 0; k < r.suggestions.size() && k < 8; ++k) {
+                        const Suggestion &c = r.suggestions[k];
+                        const double clp = wordLogProb(c.word);
+                        std::fprintf(dump, "%s[%s,%.3f,%s,%d,%d]", k ? "," : "", json(c.word).c_str(), c.cost,
+                                     clp > 0 ? "null" : std::to_string(clp).c_str(), c.changes, c.completion ? 1 : 0);
+                    }
+                    std::fprintf(dump, "]}\n");
+                }
                 const int group = context.empty() ? First : typed.size() <= 2 ? Short : Rest;
                 GroupStats &g = groups[group];
                 char tag[48] = "";
@@ -573,11 +836,15 @@ int main(int argc, char **argv)
                                     r.suggestions.empty() ? "-" : utf8::encode(r.suggestions[0].word).c_str(),
                                     rank, fired ? " (autocorrected)" : "", tag);
                 }
+                }   // variants
             }
             context += target + after(wi);
         }
     }
 
+    const Stats *stats = tallies[0].stats;
+    const GroupStats *groups = tallies[0].groups;
+    const LengthStats *lengths = tallies[0].lengths, &capitals = tallies[0].capitals;
     std::printf("%s, %zu languages, %d sentences, typo rate %.2f, seed %u\n", textPath.c_str(),
                 engine.languageCount(), sentences, rate, seed);
     std::printf("%-14s %6s %8s %7s %7s %10s %10s\n", "typo", "words", "realword", "top1", "top3",
@@ -645,13 +912,14 @@ int main(int argc, char **argv)
         }
     }
     std::printf("time per word: mean %.0f µs, max %.0f µs\n", totalUs / searches, maxUs);
-    std::printf("summary: typos fixed %.1f%% wrong %.1f%%, correct changed %.2f%%, unknown changed %.2f%%,"
-                " WER %.2f%% -> %.2f%%", pct(all.fixed, fixable), pct(all.wrong, fixable),
-                pct(stats[Clean].wrong, stats[Clean].total), pct(stats[Unknown].wrong, stats[Unknown].total),
-                pct(wrongBefore, typedWords), pct(wrongAfter, typedWords));
-    if (!misspPath.empty())
-        std::printf(", misspellings %s, accents only %s", misspText(Misspelled).c_str(),
-                    misspText(MisspelledAccents).c_str());
-    std::printf("\n");
+    for (size_t v = 0; v < tallies.size() && printCounts; ++v) {
+        std::string line;
+        for (long x : summaryCounts(tallies[v], !misspPath.empty()))
+            line += " " + std::to_string(x);
+        std::printf("counts%s:%s\n", v ? ("[" + variantSpecs[v - 1] + "]").c_str() : "", line.c_str());
+    }
+    for (size_t v = 1; v < tallies.size(); ++v)
+        std::printf("summary[%s]: %s\n", variantSpecs[v - 1].c_str(), summaryText(tallies[v], !misspPath.empty()).c_str());
+    std::printf("summary: %s\n", summaryText(tallies[0], !misspPath.empty()).c_str());
     return 0;
 }

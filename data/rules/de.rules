@@ -12,3 +12,10 @@ only-marks ß
 
 # German nouns are capitalised: find-supplement.py keeps capitalised words.
 capitalised-nouns
+
+# find-respellings.py: the 1996 spelling reform. The list is current; older
+# texts in the corpora write ß after a short vowel where it ends a word or
+# comes before a consonant (daß, muß, Fluß, wußte: dass, muss, Fluss,
+# wusste). Such a word is an old spelling when the list has the ss form
+# and the corpus prefers it (Fuß, Spaß, groß stay: ß after a long vowel).
+respell ß(?![aeiouäöüy]) ss

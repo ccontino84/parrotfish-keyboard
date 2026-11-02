@@ -28,7 +28,9 @@ and Tatoeba (CC BY 2.0 FR) sentences. A word is added when:
 
 With `one-source N` in LANG.rules, a word seen at least N times in the two
 sources together also counts for rule 1, even if one source lacks it: the
-Finnish Common Voice text is too small to confirm most word forms. Its
+Finnish Common Voice text is too small to confirm most word forms. With
+`one-source N tatoeba`, N times in Tatoeba alone (conversation that Common
+Voice's read text lacks). Its
 frequency comes from a fit over both sources counted as one. With
 `no-misspellings`, å, ä, ö, æ and ø are letters of their own (vaara and
 väärä are two words): rule 2 doesn't count them as accent variants.
@@ -58,6 +60,9 @@ def fold(word, keep=""):
     return s.replace("ß", "ss")
 
 
+FINAL_APOSTROPHE_MIN = 20   # occurrences in each source of a word ending in '
+
+
 def read_list(path):
     try:
         with open(path, encoding="utf-8") as fh:
@@ -65,6 +70,18 @@ def read_list(path):
                     if l.split("#", 1)[0].strip()]
     except FileNotFoundError:
         return []
+
+
+def apply_respellings(words, rules_dir, lang):
+    """The list as build-dict.py makes it with RULES_DIR/LANG.respellings
+    (find-respellings.py): current spellings in, with at least the old
+    one's frequency; old ones out (kind `old`, not `both`)."""
+    for line in read_list(f"{rules_dir}/{lang}.respellings"):
+        old, new, kind = line.split("\t")[:3]
+        f = words.pop(old, 0) if kind == "old" else words.get(old, 0)
+        if f or new in words:
+            words[new] = max(f, words.get(new, 0))
+    return words
 
 
 def read_wordlist(path):
@@ -106,11 +123,25 @@ def main():
     rules = [l.split() for l in read_list(f"{args.rules_dir}/{args.lang}.rules")]
     capitalised_nouns = any(r[0] == "capitalised-nouns" for r in rules)
     one_source = max([int(r[1]) for r in rules if r[0] == "one-source"] or [0])
+    # `one-source N tatoeba`: only Tatoeba may be the one source (Spanish
+    # déjame, cuéntame: conversation, rare in Common Voice's read text,
+    # whose own words are encyclopaedic: demersal, óblast).
+    tatoeba_only = any(r[0] == "one-source" and "tatoeba" in r[2:] for r in rules)
     keep = OWN_LETTERS if any(r[0] == "no-misspellings" for r in rules) else ""
+    # Words ending in an apostrophe (Italian po', mo'): elsewhere a final
+    # apostrophe is a closing quote or a plural possessive (dogs').
+    final_apostrophe = any(r[0] == "final-apostrophe" for r in rules)
+    # The vowel a final apostrophe stands for (perche' for perché), from
+    # the rules: such a form is a misspelling, not a word.
+    accent_rules = [(r[0][:-1], r[1]) for r in rules
+                    if len(r) >= 2 and len(r[0]) == 2 and r[0].endswith("'") and len(r[1]) == 1]
     # Entries below `min-freq` are left out of the dictionary (build-dict.py):
     # here they count as missing.
     floor = max([int(r[1]) for r in rules if r[0] == "min-freq"] or [0])
     words = {w: f for w, f in read_wordlist(args.wordlist).items() if f >= floor}
+    # Old spellings (idéias) are misspellings of their current forms
+    # (ideias), which count as in the list.
+    words = apply_respellings(words, args.rules_dir, args.lang)
     lower = {}
     for w, f in words.items():
         lower[w.lower()] = max(f, lower.get(w.lower(), 0))
@@ -156,14 +187,32 @@ def main():
 
     added, skipped = [], {"variant": 0, "other": 0, "name": 0, "stop": 0}
     none = (0, "", 0, 0)
+    # One source: the commonest spelling of each word without accents in
+    # Tatoeba, so that dejame (24) is not added beside déjame (366).
+    commonest = {}
+    if tatoeba_only:
+        for k, v in tat.items():
+            f = fold(k, keep)
+            if v[0] > commonest.get(f, (0, ""))[0]:
+                commonest[f] = (v[0], k)
     for w in (set(cv) | set(tat)) if one_source else (set(cv) & set(tat)):
         c1, cased1, cc1, inner1 = cv.get(w, none)
         c2, cased2, cc2, inner2 = tat.get(w, none)
         both = c1 >= args.min_each and c2 >= args.min_each and c1 + c2 >= args.min_total
-        if not both and not (one_source and c1 + c2 >= one_source):
+        if not both and not (one_source and (c2 if tatoeba_only else c1 + c2) >= one_source):
             continue
-        if len(w) < 2 or w.endswith("'"):
+        if not both and tatoeba_only and commonest[fold(w, keep)][1] != w \
+                and commonest[fold(w, keep)][0] >= 3 * c2:
+            skipped["variant"] += 1
             continue
+        if len(w) < 2:
+            continue
+        if w.endswith("'"):
+            # Common Voice also splits elided articles from their word (dell'
+            # anno): such a form must be common in both sources.
+            if not final_apostrophe or len(w) < 3 or min(c1, c2) < FINAL_APOSTROPHE_MIN or any(
+                    w[-2] == v and (w[:-2] + a) in lower for v, a in accent_rules):
+                continue
         # Spelling: the most frequent form inside sentences, in both sources.
         cased = cased1 if cc1 >= cc2 else cased2
         # Where nouns are capitalised, case tells words apart (dank, Dank):

@@ -24,6 +24,14 @@ add_test(NAME sentence-bench-misspellings
                  -n 20 -r 0 -W ${CMAKE_CURRENT_SOURCE_DIR}/data/misspellings-smoke.tsv -A)
 set_tests_properties(sentence-bench-misspellings PROPERTIES
                      PASS_REGULAR_EXPRESSION "misspelling +4 typed, 0 words in some language, of the rest fixed")
+# bench::typedWords(): a final apostrophe stays only on dictionary words (po').
+add_test(NAME bench-final-apostrophes
+         COMMAND sentence-bench -l ${PROJECT_SOURCE_DIR}/data/layouts/phone-qwerty.layout
+                 -t ${CMAKE_CURRENT_SOURCE_DIR}/data/apostrophes.txt -d ${PROJECT_BINARY_DIR}/data/it.pfd
+                 -d ${PROJECT_BINARY_DIR}/data/en.pfd -E)
+set_tests_properties(bench-final-apostrophes PROPERTIES
+                     PASS_REGULAR_EXPRESSION "un \\| po' \\| di.*girls' \\| room.*boys \\| toys.*said \\| hello \\| to.*casa \\| de \\| nonni"
+                     FAIL_REGULAR_EXPRESSION "hello'|boys'|de'")
 
 # The QML tests (tests/qml): the handler with the plugin, on the PC.
 find_program(QMLTESTRUNNER NAMES qmltestrunner-qt5 qmltestrunner)

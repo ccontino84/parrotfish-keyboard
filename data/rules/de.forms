@@ -242,7 +242,7 @@ billigst	41	billigen present (en), corpus 1
 billigtest	1	billigen past (en), corpus 0
 billigtet	1	billigen past (en), corpus 0
 bindest	55	binden present (en), corpus 4
-bittest	80	bitten present (en), corpus 45
+bittest	80	bitten present (en), corpus 46
 blendest	1	blenden present (en), corpus 0
 blickst	57	blicken present (en), corpus 5
 blicktest	1	blicken past (en), corpus 0
@@ -361,7 +361,7 @@ ergreifst	41	ergreifen present (en), corpus 1
 ergänztest	1	ergänzen past (en), corpus 0
 ergänztet	1	ergänzen past (en), corpus 0
 erhebst	1	erheben present (en), corpus 0
-erinnerst	97	erinnern present (ern), corpus 240
+erinnerst	97	erinnern present (ern), corpus 241
 erinnertest	41	erinnern past (ern), corpus 1
 erinnertet	41	erinnern past (ern), corpus 1
 erklärst	76	erklären present (en), corpus 31
@@ -436,8 +436,8 @@ flankiertet	1	flankieren past (en), corpus 0
 flehst	1	flehen present (en), corpus 0
 fliegst	75	fliegen present (en), corpus 27
 flüstere	41	flüstern present (ern), corpus 1
-flüsterst	41	flüstern present (ern), corpus 1
-folgst	69	folgen present (en), corpus 16
+flüsterst	48	flüstern present (ern), corpus 2
+folgst	70	folgen present (en), corpus 17
 folgtest	1	folgen past (en), corpus 0
 folgtet	1	folgen past (en), corpus 0
 forderst	63	fordern present (ern), corpus 9
@@ -529,8 +529,8 @@ hervorragst	1	hervorragen present (en), corpus 0
 hinausgehe	1	hinausgehen present (en), corpus 0
 hinausgehst	59	hinausgehen present (en), corpus 6
 hockst	1	hocken present (en), corpus 0
-hoffst	62	hoffen present (en), corpus 8
-hofftest	41	hoffen past (en), corpus 1
+hoffst	63	hoffen present (en), corpus 9
+hofftest	48	hoffen past (en), corpus 2
 hofftet	41	hoffen past (en), corpus 1
 hängst	67	hängen present (en), corpus 13
 hängtest	1	hängen past (en), corpus 0
@@ -569,7 +569,7 @@ klettere	63	klettern present (ern), corpus 9
 kletterst	55	klettern present (ern), corpus 4
 klettertest	1	klettern past (ern), corpus 0
 klettertet	1	klettern past (ern), corpus 0
-klingst	74	klingen present (en), corpus 26
+klingst	75	klingen present (en), corpus 28
 kommentiere	64	kommentieren present (en), corpus 10
 kommentierst	48	kommentieren present (en), corpus 2
 kommentiertest	41	kommentieren past (en), corpus 1
@@ -631,7 +631,7 @@ leitetet	1	leiten past (en), corpus 0
 leuchtest	41	leuchten present (en), corpus 1
 leuchtetest	1	leuchten past (en), corpus 0
 leuchtetet	1	leuchten past (en), corpus 0
-liebtest	74	lieben past (en), corpus 26
+liebtest	75	lieben past (en), corpus 27
 liebtet	48	lieben past (en), corpus 2
 liegst	82	liegen present (en), corpus 56
 lobst	41	loben present (en), corpus 1
@@ -833,7 +833,7 @@ spanntet	1	spannen past (en), corpus 0
 spieltest	57	spielen past (en), corpus 5
 spieltet	41	spielen past (en), corpus 1
 sprechst	1	sprechen present (en), corpus 0
-sprecht	97	sprechen present (en), corpus 243
+sprecht	97	sprechen present (en), corpus 246
 spreize	48	spreizen present (en), corpus 2
 springst	61	springen present (en), corpus 7
 stabilisiere	1	stabilisieren present (en), corpus 0
@@ -879,7 +879,7 @@ strahltet	1	strahlen past (en), corpus 0
 strebst	57	streben present (en), corpus 5
 strebtest	1	streben past (en), corpus 0
 strebtet	1	streben past (en), corpus 0
-störst	71	stören present (en), corpus 19
+störst	72	stören present (en), corpus 22
 störtest	48	stören past (en), corpus 2
 störtet	1	stören past (en), corpus 0
 stütztest	1	stützen past (en), corpus 0
@@ -908,7 +908,7 @@ trefft	64	treffen present (en), corpus 10
 treibst	74	treiben present (en), corpus 25
 tretest	1	treten present (en), corpus 0
 tretet	61	treten present (en), corpus 7
-trinkst	96	trinken present (en), corpus 218
+trinkst	96	trinken present (en), corpus 219
 triumphiere	52	triumphieren present (en), corpus 3
 triumphierst	1	triumphieren present (en), corpus 0
 triumphiertest	1	triumphieren past (en), corpus 0
@@ -926,7 +926,7 @@ unterdrückst	1	unterdrücken present (en), corpus 0
 unterdrücktest	1	unterdrücken past (en), corpus 0
 unterdrücktet	1	unterdrücken past (en), corpus 0
 unterhaltest	1	unterhalten present (en), corpus 0
-unterhaltet	63	unterhalten present (en), corpus 9
+unterhaltet	64	unterhalten present (en), corpus 10
 unterstehe	41	unterstehen present (en), corpus 1
 unterstehst	41	unterstehen present (en), corpus 1
 unterstütztest	1	unterstützen past (en), corpus 0
@@ -985,7 +985,7 @@ verschärfst	1	verschärfen present (en), corpus 0
 verschärftest	1	verschärfen past (en), corpus 0
 verschärftet	1	verschärfen past (en), corpus 0
 versprechst	1	versprechen present (en), corpus 0
-versprecht	76	versprechen present (en), corpus 32
+versprecht	77	versprechen present (en), corpus 33
 verstärkst	1	verstärken present (en), corpus 0
 verstärktest	1	verstärken past (en), corpus 0
 verstärktet	1	verstärken past (en), corpus 0
@@ -1073,7 +1073,7 @@ wütetest	1	wüten past (en), corpus 0
 wütetet	1	wüten past (en), corpus 0
 zeichnst	1	zeichnen present (en), corpus 0
 zeichnt	1	zeichnen present (en), corpus 0
-zeigst	80	zeigen present (en), corpus 45
+zeigst	80	zeigen present (en), corpus 46
 zeigtest	41	zeigen past (en), corpus 1
 zeigtet	1	zeigen past (en), corpus 0
 zersetze	1	zersetzen present (en), corpus 0

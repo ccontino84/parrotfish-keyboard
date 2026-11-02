@@ -142,19 +142,37 @@ void Engine::commit(const std::u32string &word)
 
 Result Engine::process(const std::vector<Tap> &taps) const
 {
-    Result r;
+    return decide(search(taps), m_params);
+}
+
+Searched Engine::search(const std::vector<Tap> &taps) const
+{
+    Searched out;
+    out.taps = taps;
+    Searched &r = out;   // (the fields process() used to fill)
     for (const Tap &t : taps)
         r.typed.push_back(t.upper ? utf8::toUpper(t.ch) : t.ch);
     if (taps.empty() || m_dicts.empty() || taps.size() > MaxTaps)
-        return r;
-    const std::vector<double> &w = m_tracker.weights();
+        return out;
+    out.searched = true;
+    out.weights = m_tracker.weights();
+    out.sentenceStart = m_context.sentenceStart;
+    out.prev = m_context.prev;
+    out.textWords = m_textWords;
+    const std::vector<double> &w = out.weights;
 
     // Is the typed word valid in a likely language? In any typing language?
     const std::u32string typedLower = lower(r.typed);
-    std::u32string caseFix;   // the stored capitalisation, if it differs (haus → Haus)
-    bool wordInSomeLanguage = false;
-    bool typedHasShortcut = false;   // id: also I'd (Strong leaves it alone)
-    bool validAsTyped = false;       // not only in another case (jaime: Jaime only)
+    std::u32string &caseFix = out.caseFix;   // the stored capitalisation, if it differs (haus → Haus)
+    bool &wordInSomeLanguage = out.wordInSomeLanguage;
+    // id: also I'd, the same letters with an apostrophe (Strong leaves it
+    // alone). Other shortcuts (AOSP's list of words that are mostly slips:
+    // foe for for, cam for can) let Strong fix the word only where the
+    // previous word is known to be followed by the fix (thanks foe: for;
+    // my worst foe stays): the word-pair data keeps a word's commonest
+    // followers only, so without that, frequency alone would decide.
+    bool &typedHasShortcut = out.typedHasShortcut, &typedHasSlipShortcut = out.typedHasSlipShortcut;
+    bool &validAsTyped = out.validAsTyped;   // not only in another case (jaime: Jaime only)
     for (size_t i = 0; i < m_dicts.size(); ++i) {
         std::u32string stored;
         const uint32_t node = m_dicts[i]->find(r.typed, &stored);
@@ -165,8 +183,15 @@ Result Engine::process(const std::vector<Tap> &taps) const
         if (w[i] < m_params.validThreshold)
             continue;
         r.typedIsWord = true;
-        if (node && (m_dicts[i]->attributes(node) & format::AttrShortcut))
-            typedHasShortcut = true;
+        std::u32string target;
+        if (node && (m_dicts[i]->attributes(node, &target) & format::AttrShortcut)) {
+            std::u32string a = lower(target), b = typedLower;
+            a.erase(std::remove(a.begin(), a.end(), U'\''), a.end());
+            if (a == b)
+                typedHasShortcut = true;
+            else
+                typedHasSlipShortcut = true;
+        }
         const bool otherCase = node && stored != r.typed && lower(stored) == typedLower
                                && applyCase(stored, taps) != r.typed;
         if (!otherCase)
@@ -189,8 +214,8 @@ Result Engine::process(const std::vector<Tap> &taps) const
     // Spellings that differ only in case (zweiten, Zweiten) are one
     // suggestion, shown in its most likely spelling.
     // probEqual: the probability with all languages equally likely.
-    struct Merged { Suggestion s; std::u32string key; double prob = 0; double probEqual = 0; double bestCost = 1e300; };
-    std::vector<Merged> merged;
+    using Merged = Searched::Merged;
+    std::vector<Merged> &merged = out.merged;
     const bool useContext = m_params.pairWeight > 0 && !m_context.insideWord;
     // Most likely language first, so the others can be cut short.
     std::vector<size_t> order(m_dicts.size());
@@ -373,6 +398,28 @@ Result Engine::process(const std::vector<Tap> &taps) const
                 trySplit(k, k + 1, m_params.spaceKeyCost);
         }
     }
+    return out;
+}
+
+Result Engine::decide(Searched in, const EngineParams &params) const
+{
+    Result r;
+    r.typed = in.typed;
+    if (!in.searched)
+        return r;
+    // The search's findings, under the names process() gave them; params
+    // as m_params (the decision's settings may differ from the search's:
+    // isDecisionParam).
+    const EngineParams &p = params;
+    const std::vector<Tap> &taps = in.taps;
+    const std::vector<double> &w = in.weights;
+    const std::u32string typedLower = lower(r.typed);
+    r.typedIsWord = in.typedIsWord;
+    std::u32string caseFix = in.caseFix;
+    const bool wordInSomeLanguage = in.wordInSomeLanguage, validAsTyped = in.validAsTyped;
+    const bool typedHasShortcut = in.typedHasShortcut, typedHasSlipShortcut = in.typedHasSlipShortcut;
+    using Merged = Searched::Merged;
+    std::vector<Merged> &merged = in.merged;
 
     // A digit in the word (typed on the number row: h3llo) can only be a
     // slip onto the digit: the fix is the word as typed with a letter in the
@@ -427,11 +474,11 @@ Result Engine::process(const std::vector<Tap> &taps) const
             const int k = m_keys.indexOf(t.ch);
             tapCost += k >= 0 ? -std::log(m_keys.probability(k, k)) : 0.0;
         }
-        const double base = m_params.unknownBase;
+        const double base = p.unknownBase;
         const bool spelling = std::any_of(merged.begin(), merged.end(), [&](const Merged &m) {
             return canFix(m.s) && m.s.changes == 0;
         });
-        const bool useLetters = m_params.unknownLetterWeight > 0 && !spelling && !wordInSomeLanguage;
+        const bool useLetters = p.unknownLetterWeight > 0 && !spelling && !wordInSomeLanguage;
         // Long letters one change from a word are mostly that word
         // misspelled (recieve, goverment), short ones are often new words
         // (Ugo, Norn): when the likeliest fix is one word one change away,
@@ -442,18 +489,18 @@ Result Engine::process(const std::vector<Tap> &taps) const
             if (canFix(m.s) && (!likeliest || m.prob > likeliest->prob))
                 likeliest = &m;
         const bool nearWord = likeliest && (likeliest->s.changes <= 1
-                                            || (likeliest->s.changes == 2 && taps.size() >= m_params.unknownTwoChangeLength))
+                                            || (likeliest->s.changes == 2 && taps.size() >= p.unknownTwoChangeLength))
                               && likeliest->key.find(U' ') == std::u32string::npos;
-        const double flat = m_params.unknownPerLetter * taps.size();
-        const double longer = nearWord && taps.size() > m_params.unknownShortLength
-                              ? m_params.unknownLongLetterCost * (taps.size() - m_params.unknownShortLength)
+        const double flat = p.unknownPerLetter * taps.size();
+        const double longer = nearWord && taps.size() > p.unknownShortLength
+                              ? p.unknownLongLetterCost * (taps.size() - p.unknownShortLength)
                               : 0.0;
         double mixed = 0, equal = 0;
         for (size_t i = 0; i < m_dicts.size(); ++i) {
             const double letters = useLetters ? m_dicts[i]->letterCost(typedFolded) : -1.0;
             double cost = flat;
             if (letters >= 0) {
-                cost = m_params.unknownLetterWeight * (letters - m_params.unknownLetterRef);
+                cost = p.unknownLetterWeight * (letters - p.unknownLetterRef);
                 if (cost < flat)
                     cost = std::min(flat, cost + longer);
             }
@@ -473,6 +520,7 @@ Result Engine::process(const std::vector<Tap> &taps) const
         if (canFix(m.s))
             total += m.prob;
     }
+    r.unknownShare = total > 0 ? unknownProb / total : 0;
     std::sort(merged.begin(), merged.end(),
               [](const Merged &a, const Merged &b) { return a.prob > b.prob; });
 
@@ -490,8 +538,10 @@ Result Engine::process(const std::vector<Tap> &taps) const
         if (it != r.suggestions.end())
             std::rotate(r.suggestions.begin(), it, it + 1);
     }
-    if (r.suggestions.empty())
+    if (r.suggestions.empty()) {
+        r.reason = digits ? Reason::Digits : Reason::NoCandidate;
         return r;
+    }
 
     // Autocorrect considers complete words only: at Space the word is
     // finished, so the candidate is the best suggestion of the typed length.
@@ -502,8 +552,10 @@ Result Engine::process(const std::vector<Tap> &taps) const
             break;
         }
     }
-    if (candidate < 0)
+    if (candidate < 0) {
+        r.reason = digits ? Reason::Digits : Reason::NoCandidate;
         return r;
+    }
     const Suggestion best = r.suggestions[candidate];
 
     // Its share of the probability of all complete words and of "a word
@@ -520,8 +572,8 @@ Result Engine::process(const std::vector<Tap> &taps) const
     for (size_t i = 0; i < m_dicts.size(); ++i)
         if (best.languages & (1u << i))
             bestWeight = std::max(bestWeight, w[i]);
-    languageOk = bestWeight >= m_params.autocorrectConfidence;
-    if (!languageOk && m_textWords == 0 && bestWeight >= m_params.firstWordConfidence) {
+    languageOk = bestWeight >= p.autocorrectConfidence;
+    if (!languageOk && in.textWords == 0 && bestWeight >= p.firstWordConfidence) {
         // The first word: the same correction whichever language the text
         // is in, and sure enough with the lean and without it.
         double totalEqual = unknownProbEqual, bestEqual = 0, topEqual = 0;
@@ -535,10 +587,13 @@ Result Engine::process(const std::vector<Tap> &taps) const
         }
         const double shareEqual = totalEqual > 0 ? bestEqual / totalEqual : 0;
         languageOk = bestEqual >= topEqual
-                     && std::min(r.confidence, shareEqual) >= m_params.firstWordShare;
+                     && std::min(r.confidence, shareEqual) >= p.firstWordShare;
     }
-    if (!languageOk || (best.attrs & format::AttrOffensive) || m_params.strength == Strength::Off)
+    if (!languageOk || (best.attrs & format::AttrOffensive) || p.strength == Strength::Off) {
+        r.reason = !languageOk ? Reason::LanguageNotSure : (best.attrs & format::AttrOffensive) ? Reason::Offensive
+                                                                                                : Reason::StrengthOff;
         return r;
+    }
 
     // A word of a typing language that seems unlikely in the text (the
     // first words after a switch: Italian "Mi" after English text) is
@@ -552,21 +607,28 @@ Result Engine::process(const std::vector<Tap> &taps) const
         return out;
     };
     if (wordInSomeLanguage && !r.typedIsWord && letters(best.word) != letters(r.typed)) {
-        if (!std::isfinite(m_params.otherLanguageMargin))
+        if (!std::isfinite(p.otherLanguageMargin)) {
+            r.reason = Reason::OtherLanguage;
             return r;
+        }
         double typedProb = 0;
         for (size_t i = 0; i < m_dicts.size(); ++i) {
             std::u32string stored;
             const uint32_t node = m_dicts[i]->find(r.typed, &stored);
             if (!node || (m_dicts[i]->attributes(node) & format::AttrMisspelling) || w[i] <= 0)
                 continue;
+            // A name typed in lower case (suess: Suess) is not that word.
+            if (stored != r.typed && lower(stored) == typedLower && applyCase(stored, taps) != r.typed)
+                continue;
             const double tapCost = m_correctors[i]->matchCost(taps, stored);
             if (std::isfinite(tapCost))
-                typedProb += std::exp(-(tapCost + m_params.corrector.lmWeight * -m_dicts[i]->logProb(
+                typedProb += std::exp(-(tapCost + p.corrector.lmWeight * -m_dicts[i]->logProb(
                                             m_dicts[i]->node(node).freq) - std::log(w[i])));
         }
-        if (typedProb > 0 && std::log(bestProb / typedProb) < m_params.otherLanguageMargin)
+        if (typedProb > 0 && std::log(bestProb / typedProb) < p.otherLanguageMargin) {
+            r.reason = Reason::OtherLanguage;
             return r;
+        }
     }
 
     // A single letter is never replaced, except by itself in another case:
@@ -579,37 +641,63 @@ Result Engine::process(const std::vector<Tap> &taps) const
         // with Strong a much likelier word one slip away (after a word), but
         // not a word that also stands for another (id: I'd, ill: I'll).
         apply = !caseFix.empty() && best.word == caseFix;
-        if (!apply && m_params.strength == Strength::Strong && !typedHasShortcut && !m_context.prev.empty()
-                && !m_context.sentenceStart
-                && taps.size() >= m_params.strongMinLength
+        r.reason = apply ? Reason::CaseFix : Reason::TypedIsWord;
+        if (!apply && p.strength == Strength::Strong && !typedHasShortcut && !in.prev.empty()
+                && !in.sentenceStart
+                && taps.size() >= p.strongMinLength
                 && letters(best.word) != letters(r.typed)
                 && (neighbourSwap(r.typed, best.word) || swapped(r.typed, best.word))) {
             double typedProb = 0;
             for (const Merged &m : merged)
                 if (m.key == typedLower)
                     typedProb += m.prob;
-            if (typedProb > 0 && bestProb > 0) {
+            // A word that is mostly a slip: only with the previous word's
+            // support (see typedHasSlipShortcut).
+            bool supported = !typedHasSlipShortcut;
+            for (size_t i = 0; i < m_dicts.size() && !supported; ++i) {
+                if (!(best.languages & (1u << i)))
+                    continue;
+                const uint32_t prevNode = m_dicts[i]->find(in.prev);
+                if (!prevNode)
+                    continue;
+                for (const auto &n : m_dicts[i]->nextWords(prevNode))
+                    if (lower(n.first) == bestLower)
+                        supported = true;
+            }
+            r.reason = supported ? Reason::StrongMargin : Reason::SlipShortcut;
+            if (supported && typedProb > 0 && bestProb > 0) {
                 r.margin = std::log(bestProb / typedProb);
-                apply = r.realWordFix = r.margin >= m_params.strongMargin;
+                apply = r.realWordFix = r.margin >= p.strongMargin;
+                if (apply)
+                    r.reason = Reason::Applied;
             }
         }
-    } else if (m_params.strength == Strength::Gentle) {
-        const int maxChanges = taps.size() <= m_params.gentleShortLength ? 1 : 2;
-        apply = r.confidence >= m_params.gentleConfidence && best.edits <= 1
-                && best.changes <= maxChanges && (taps.size() >= m_params.gentleMinLength || caseOnly);
+    } else if (p.strength == Strength::Gentle) {
+        const int maxChanges = taps.size() <= p.gentleShortLength ? 1 : 2;
+        apply = r.confidence >= p.gentleConfidence && best.edits <= 1
+                && best.changes <= maxChanges && (taps.size() >= p.gentleMinLength || caseOnly);
         // Two letters: a neighbouring key, or only an accent (ca → ça on a
         // layout without ç), with a higher confidence.
-        if (!apply && taps.size() == 2 && r.confidence >= m_params.gentleTwoLetterConfidence)
+        if (!apply && taps.size() == 2 && r.confidence >= p.gentleTwoLetterConfidence)
             apply = neighbourSwap(r.typed, best.word)
-                    || (m_params.gentleTwoLetterAccents && fold(best.word) == fold(r.typed));
+                    || (p.gentleTwoLetterAccents && fold(best.word) == fold(r.typed));
+        r.reason = apply ? Reason::Applied
+                   : r.confidence < p.gentleConfidence ? Reason::BelowGentle
+                   : taps.size() < p.gentleMinLength && !caseOnly ? Reason::TooShort
+                                                                         : Reason::GentleChanges;
     } else {
         // Shorter words need more, unless only accents or apostrophes are
         // added (ca → ça, jai → j'ai).
         const bool sameLetters = letters(best.word) == letters(r.typed);
-        const double threshold = sameLetters || taps.size() > 4 ? m_params.normalConfidence
-                                 : taps.size() <= 2 ? m_params.normalTwoLetterConfidence
-                                                    : m_params.normalShortConfidence;
-        apply = r.confidence >= threshold && (taps.size() >= m_params.normalMinLength || caseOnly);
+        const double threshold = sameLetters || taps.size() > 4 ? p.normalConfidence
+                                 : taps.size() <= 2 ? p.normalTwoLetterConfidence
+                                                    : p.normalShortConfidence;
+        apply = r.confidence >= threshold && (taps.size() >= p.normalMinLength || caseOnly);
+        r.reason = apply ? Reason::Applied
+                   : !(taps.size() >= p.normalMinLength || caseOnly) ? Reason::TooShort
+                   : sameLetters || taps.size() > 4 ? Reason::BelowNormal
+                   : taps.size() <= 2 ? Reason::BelowTwoLetter
+                                      : Reason::BelowShort;
     }
     if (apply) {
         // What Space will type comes first in the bar.
@@ -734,6 +822,31 @@ char32_t Engine::resolveTap(const std::u32string &word, char32_t lifted, char32_
     return score(initial) > score(lifted) + m_params.tapSwitchMargin ? initial : lifted;
 }
 
+const char *reasonName(Reason reason)
+{
+    switch (reason) {
+    case Reason::None: return "none";
+    case Reason::Applied: return "applied";
+    case Reason::CaseFix: return "case-fix";
+    case Reason::NoCandidate: return "no-candidate";
+    case Reason::Digits: return "digits";
+    case Reason::LanguageNotSure: return "language-not-sure";
+    case Reason::Offensive: return "offensive";
+    case Reason::StrengthOff: return "strength-off";
+    case Reason::OtherLanguage: return "other-language";
+    case Reason::TypedIsWord: return "typed-is-word";
+    case Reason::StrongMargin: return "strong-margin";
+    case Reason::SlipShortcut: return "slip-shortcut";
+    case Reason::BelowNormal: return "below-normal";
+    case Reason::BelowTwoLetter: return "below-two-letter";
+    case Reason::BelowShort: return "below-short";
+    case Reason::TooShort: return "too-short";
+    case Reason::BelowGentle: return "below-gentle";
+    case Reason::GentleChanges: return "gentle-changes";
+    }
+    return "?";
+}
+
 std::vector<std::u32string> words(const std::u32string &text)
 {
     std::vector<std::u32string> out;
@@ -768,6 +881,17 @@ std::u32string applyCase(const std::u32string &word, const std::vector<Tap> &tap
         out[0] = utf8::toUpper(out[0]);
     }
     return out;
+}
+
+bool isDecisionParam(const std::string &name)
+{
+    static const char *const names[] = {
+        "autocorrectConfidence", "firstWordConfidence", "firstWordShare", "gentleConfidence", "normalConfidence",
+        "normalTwoLetterConfidence", "normalShortConfidence", "normalMinLength", "gentleMinLength",
+        "gentleShortLength", "gentleTwoLetterConfidence", "gentleTwoLetterAccents", "strongMargin",
+        "strongMinLength", "otherLanguageMargin", "unknownBase", "unknownPerLetter", "unknownLetterWeight",
+        "unknownLetterRef", "unknownShortLength", "unknownLongLetterCost", "unknownTwoChangeLength", "strength"};
+    return std::find(std::begin(names), std::end(names), name) != std::end(names);
 }
 
 bool setParam(EngineParams &p, const std::string &assignment)

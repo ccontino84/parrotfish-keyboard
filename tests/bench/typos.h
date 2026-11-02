@@ -29,6 +29,7 @@
 #pragma once
 
 #include "parrotfish/dictionary.h"
+#include "parrotfish/engine.h"
 #include "parrotfish/keymodel.h"
 #include "parrotfish/utf8.h"
 
@@ -68,6 +69,47 @@ inline std::u32string lower(std::u32string s)
 inline bool isLetter(char32_t c)
 {
     return parrotfish::utf8::toLower(c) != parrotfish::utf8::toUpper(c) || c == U'ß';
+}
+
+// The words of a line as the benches type them: parrotfish::words() (letters
+// with inner apostrophes and hyphens; typographic apostrophes become '),
+// and a final apostrophe kept where it is part of the word: the word with it
+// is a word of a loaded dictionary (Italian po', English girls'). Other
+// final apostrophes are left out, as before 2026-11-02: closing quotes
+// ('hello'), elisions and possessives the dictionaries don't have (de',
+// fahr', boys'). On the phone an apostrophe typed after letters goes into
+// the word, so those are typed with it too; the bench doesn't model quote
+// marks.
+inline std::vector<std::u32string> typedWords(const std::u32string &line, const parrotfish::Engine &engine)
+{
+    std::u32string text = line;
+    for (char32_t &c : text)
+        if (c == 0x2019 || c == 0x02BC)
+            c = U'\'';
+    std::vector<std::u32string> ws = parrotfish::words(text);
+    auto known = [&](const std::u32string &w) {
+        for (size_t d = 0; d < engine.languageCount(); ++d) {
+            const parrotfish::Dictionary &dict = engine.dictionary(d);
+            for (const std::u32string &v : {w, lower(w)}) {
+                const uint32_t node = dict.find(v);
+                if (node && !(dict.attributes(node) & parrotfish::format::AttrMisspelling))
+                    return true;
+            }
+        }
+        return false;
+    };
+    size_t pos = 0;
+    for (std::u32string &w : ws) {
+        const size_t at = text.find(w, pos);
+        if (at == std::u32string::npos)
+            break;   // can't happen: words() takes its words from text
+        pos = at + w.size();
+        if (pos < text.size() && text[pos] == U'\'' && known(w + U"'")) {
+            w += U'\'';
+            ++pos;
+        }
+    }
+    return ws;
 }
 
 class Typos

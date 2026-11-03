@@ -85,6 +85,21 @@ void PredictionEngine::setPreedit(const QString &preedit)
         return;
     m_preedit = preedit;
     emit preeditChanged();
+    // Not now: the handler sends the letter to the app after setting
+    // preedit, and the search (up to 15 ms on a phone between taps) must
+    // not hold it back. The bar follows on the next pass of the event loop;
+    // whatever needs the result earlier calls flush() first.
+    if (!m_updatePending) {
+        m_updatePending = true;
+        QMetaObject::invokeMethod(this, "flush", Qt::QueuedConnection);
+    }
+}
+
+void PredictionEngine::flush()
+{
+    if (!m_updatePending)
+        return;
+    m_updatePending = false;
     update();
 }
 
@@ -98,11 +113,13 @@ void PredictionEngine::setPreeditKeys(const QStringList &keys)
 
 void PredictionEngine::setLanguages(const QString &languages)
 {
+    flush();
     if (languages == m_languages)
         return;
     m_languages = languages;
     emit languagesChanged();
     loadLanguages();
+    m_contextValid = false;
     // The undo memory stays: it is kept per language, for when a language
     // is used again (and it is loaded before them at start).
     setContext(m_context);
@@ -146,6 +163,7 @@ void PredictionEngine::loadLanguages()
 
 void PredictionEngine::setLanguage(const QString &language)
 {
+    flush();
     if (language == m_language)
         return;
     m_language = language;
@@ -167,7 +185,7 @@ double PredictionEngine::confidence() const
 
 void PredictionEngine::setContext(const QString &textBefore)
 {
-    m_context = textBefore;
+    flush();
     // Starting leans (plan §5): the language the last text was in (×3) and
     // the layout's language (×2). The text already in the field soon
     // outweighs both; one distinctive word of another language switches.
@@ -178,9 +196,26 @@ void PredictionEngine::setContext(const QString &textBefore)
     const int hinted = m_engine.languageIndex(m_language.toLower().toStdString());
     if (hinted >= 0)
         prior[hinted] *= 2.0;
+    // At Space the handler passes the same text up to four times (the
+    // committed word, then the app's text and cursor, then the next word's
+    // first letter): read it once.
+    if (m_contextValid && textBefore == m_context && prior == m_contextPrior) {
+        if (m_preedit.isEmpty() && !m_nextValid)
+            update();
+        return;
+    }
+    QElapsedTimer timer;
+    timer.start();
+    m_context = textBefore;
+    m_contextValid = true;
+    m_contextPrior = prior;
+    m_nextValid = false;
     const QString lead = leadingLanguage();
     const double conf = confidence();
     m_engine.startText(toU32(textBefore), prior);
+    if (m_debug)
+        qInfo("parrotfish: context, %d characters, %.1f ms", static_cast<int>(textBefore.size()),
+              timer.nsecsElapsed() / 1e6);
     if (leadingLanguage() != lead || std::abs(confidence() - conf) > 0.01)
         emit leadingLanguageChanged();
     if (m_preedit.isEmpty())
@@ -189,6 +224,7 @@ void PredictionEngine::setContext(const QString &textBefore)
 
 int PredictionEngine::setKeys(const QJSValue &keys)
 {
+    flush();
     std::vector<parrotfish::Key> out;
     const int n = keys.property(QStringLiteral("length")).toInt();
     for (int i = 0; i < n; ++i) {
@@ -226,6 +262,7 @@ int PredictionEngine::setKeys(const QJSValue &keys)
 
 void PredictionEngine::setStrength(const QString &strength)
 {
+    flush();
     if (strength == m_strength)
         return;
     m_strength = strength;
@@ -235,6 +272,7 @@ void PredictionEngine::setStrength(const QString &strength)
 
 void PredictionEngine::setTuning(const QString &tuning)
 {
+    flush();
     if (tuning == m_tuning)
         return;
     m_tuning = tuning;
@@ -265,6 +303,7 @@ void PredictionEngine::applyParams()
     m_engine.setParams(params);
     m_layoutKeys = false;          // the handler passes the keys again
     loadFallbackLayout();
+    m_contextValid = false;
     setContext(m_context);
 }
 
@@ -301,6 +340,7 @@ QString PredictionEngine::fixLanguage(const QString &typed) const
 
 void PredictionEngine::rejectCorrection(const QString &typed)
 {
+    flush();
     const QString language = fixLanguage(typed), lower = typed.toLower();
     // A valid word fixed by Strong is left alone after one undo.
     int &count = m_undos[qMakePair(language, lower)];
@@ -313,6 +353,7 @@ void PredictionEngine::rejectCorrection(const QString &typed)
 
 void PredictionEngine::acceptCorrection(const QString &typed)
 {
+    flush();
     const QString language = fixLanguage(typed), lower = typed.toLower();
     if (!m_undos.remove(qMakePair(language, lower)))
         return;
@@ -323,6 +364,7 @@ void PredictionEngine::acceptCorrection(const QString &typed)
 
 void PredictionEngine::logSlips(const QString &typed, const QString &meant, const QString &how)
 {
+    flush();
     if (!m_debug)
         return;
     const std::u32string t = toU32(typed.toLower()), m = toU32(meant.toLower());
@@ -398,6 +440,7 @@ void PredictionEngine::logSlips(const QString &typed, const QString &meant, cons
 
 void PredictionEngine::countWord()
 {
+    flush();
     if (!m_debug)
         return;
     if (slipsHeader() != m_slipsHeader)
@@ -493,6 +536,7 @@ void PredictionEngine::update()
 {
     QStringList items;
     QString autocorrection;
+    m_nextValid = m_preedit.isEmpty();
     if (m_preedit.isEmpty()) {
         QElapsedTimer timer;
         timer.start();

@@ -5600,7 +5600,6 @@ Democracy
 Deng
 denme
 Denny
-despiértame
 Distribution
 Divisió
 Doors
@@ -5764,7 +5763,6 @@ rating
 Regan
 Reginald
 Reilly
-relájate
 Rencoret
 Renzo
 resorts
@@ -6116,7 +6114,6 @@ puzzles
 pádel
 pág
 Pánuco
-párate
 Pátzcuaro
 Qasi
 racemosa
@@ -8511,7 +8508,6 @@ Oldham
 Oldman
 Oller
 olvídalo
-olvídate
 Orontes
 Osnabrück
 Outlook
@@ -10146,7 +10142,6 @@ okapi
 Oki
 Olaechea
 Olazábal
-olvidate
 opioides
 Orbison
 Orient

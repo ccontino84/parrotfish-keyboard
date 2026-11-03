@@ -53,6 +53,8 @@ class PredictionEngine : public QAbstractListModel
     // The word Space or punctuation would put in place of the word being
     // typed; empty if it stays as typed. Always the first suggestion.
     Q_PROPERTY(QString autocorrection READ autocorrection NOTIFY predictionsChanged)
+    // Whether the debug file exists (read once at start): log details.
+    Q_PROPERTY(bool debug READ debug CONSTANT)
 
 public:
     enum Roles { TextRole = Qt::UserRole + 1 };
@@ -78,6 +80,7 @@ public:
     QString strength() const { return m_strength; }
     void setStrength(const QString &strength);
     QString autocorrection() const { return m_autocorrection; }
+    bool debug() const { return m_debug; }
     QString tuning() const { return m_tuning; }
     void setTuning(const QString &tuning);
     QString slipsConfig() const { return m_slipsConfig; }
@@ -124,6 +127,9 @@ public:
     // A diagnostic line for the journal, only while debugging is on. Never
     // pass typed text.
     Q_INVOKABLE void log(const QString &message) const;
+    // Brings the suggestions and `autocorrection` up to date with preedit
+    // now (they follow it on the next pass of the event loop otherwise).
+    Q_INVOKABLE void flush();
 
 signals:
     void preeditChanged();
@@ -153,6 +159,9 @@ private:
     QString m_languages;
     QString m_language;
     QString m_context;
+    std::vector<double> m_contextPrior;   // the starting leans m_context was read with
+    bool m_contextValid = false;   // the engine has read m_context (setContext)
+    bool m_nextValid = false;      // m_items are the next words for m_context
     QString m_remembered;
     QStringList m_items;
     QString m_strength = QStringLiteral("normal");
@@ -170,6 +179,7 @@ private:
     bool m_layoutKeys = false;   // keys came from the real layout
     std::vector<parrotfish::Key> m_keys;   // the last keys from the layout
     bool m_debug = false;
+    bool m_updatePending = false;   // preedit changed, update() not run yet
     QString m_slipsConfig;
     QString m_slipsHeader;   // the last header written to slips.log
     int m_slipsWords = 0;    // words typed since the last count in slips.log

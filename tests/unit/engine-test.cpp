@@ -192,6 +192,11 @@ void testCorrections()
     for (const Suggestion &s : de.type("mochte").suggestions)
         offered |= s8(s.word) == "möchte";
     CHECK(offered);
+    // Compounds of dictionary words stand (de.rules: compound ... unknown),
+    // unless one change from a word (compoundNearBonus).
+    de.engine.setStrength(Strength::Normal);
+    CHECK_EQ(de.space("Hausschlüsselbund"), "Hausschlüsselbund");
+    CHECK_EQ(de.space("beziehungweise"), "beziehungsweise");
 }
 
 void testOffensive()
@@ -525,6 +530,7 @@ void testOldSpellings()
     for (const char *w : {"muéstrame", "déjame", "cuéntame", "titulo", "calculo"})
         CHECK_EQ(es.space(w), w);
     CHECK_EQ(es.space("muestrame"), "muéstrame");
+    CHECK_EQ(es.space("olvidate"), "olvidate");   // olvídate (rarer than olvidaré) is offered
     CHECK_EQ(es.space("dejame"), "déjame");
 }
 

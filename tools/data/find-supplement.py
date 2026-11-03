@@ -30,8 +30,11 @@ With `one-source N` in LANG.rules, a word seen at least N times in the two
 sources together also counts for rule 1, even if one source lacks it: the
 Finnish Common Voice text is too small to confirm most word forms. With
 `one-source N tatoeba`, N times in Tatoeba alone (conversation that Common
-Voice's read text lacks). Its
-frequency comes from a fit over both sources counted as one. With
+Voice's read text lacks), its spellings without some accents counted with
+its commonest one. Its
+frequency comes from a fit over both sources counted as one.
+`supplement-min-total N` in LANG.rules sets --min-total for a language
+with little text (Romanian: niciuna 10 times). With
 `no-misspellings`, å, ä, ö, æ and ø are letters of their own (vaara and
 väärä are two words): rule 2 doesn't count them as accent variants.
 
@@ -123,6 +126,9 @@ def main():
     rules = [l.split() for l in read_list(f"{args.rules_dir}/{args.lang}.rules")]
     capitalised_nouns = any(r[0] == "capitalised-nouns" for r in rules)
     one_source = max([int(r[1]) for r in rules if r[0] == "one-source"] or [0])
+    for r in rules:
+        if r[0] == "supplement-min-total":
+            args.min_total = int(r[1])
     # `one-source N tatoeba`: only Tatoeba may be the one source (Spanish
     # déjame, cuéntame: conversation, rare in Common Voice's read text,
     # whose own words are encyclopaedic: demersal, óblast).
@@ -188,18 +194,25 @@ def main():
     added, skipped = [], {"variant": 0, "other": 0, "name": 0, "stop": 0}
     none = (0, "", 0, 0)
     # One source: the commonest spelling of each word without accents in
-    # Tatoeba, so that dejame (24) is not added beside déjame (366).
-    commonest = {}
+    # Tatoeba, so that dejame (24) is not added beside déjame (366). Its
+    # other spellings count as evidence that the word exists (olvídate 13,
+    # olvidate 11: the accent is often left out).
+    commonest, spellings = {}, {}
     if tatoeba_only:
         for k, v in tat.items():
             f = fold(k, keep)
+            spellings[f] = spellings.get(f, 0) + v[0]
             if v[0] > commonest.get(f, (0, ""))[0]:
                 commonest[f] = (v[0], k)
     for w in (set(cv) | set(tat)) if one_source else (set(cv) & set(tat)):
         c1, cased1, cc1, inner1 = cv.get(w, none)
         c2, cased2, cc2, inner2 = tat.get(w, none)
         both = c1 >= args.min_each and c2 >= args.min_each and c1 + c2 >= args.min_total
-        if not both and not (one_source and (c2 if tatoeba_only else c1 + c2) >= one_source):
+        if tatoeba_only and commonest.get(fold(w, keep), (0, ""))[1] == w:
+            c_one = spellings[fold(w, keep)]
+        else:
+            c_one = c2 if tatoeba_only else c1 + c2
+        if not both and not (one_source and c_one >= one_source):
             continue
         if not both and tatoeba_only and commonest[fold(w, keep)][1] != w \
                 and commonest[fold(w, keep)][0] >= 3 * c2:

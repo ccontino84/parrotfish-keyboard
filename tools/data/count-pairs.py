@@ -13,8 +13,10 @@ words, OUT keeps the K most frequent next words that are in the wordlist
 or the supplement (with the current spellings of RESPELLINGS, not the
 old ones), as `prev<TAB>next<TAB>count`. Next words are written in
 their most frequent spelling inside sentences (German `Dank`). `<s>` is
-the start of a sentence, `<any>` the overall most frequent words (a fallback), and a line
-`prev<TAB>*<TAB>total` gives the number of all continuations of `prev`.
+the start of a sentence, `<any>` the overall most frequent words (a fallback), a line
+`prev<TAB>*<TAB>total` gives the number of all continuations of `prev` and
+`prev<TAB>+<TAB>types` the number of different words that follow it (how
+much the kept next words say: Witten-Bell).
 Names in RULES_DIR/supplement.stop (corpus example names) are left out.
 """
 
@@ -56,7 +58,7 @@ def main():
     ap.add_argument("rules_dir")
     ap.add_argument("files", nargs="+")
     ap.add_argument("--prev", type=int, default=20000)
-    ap.add_argument("--next", type=int, default=12)
+    ap.add_argument("--next", type=int, default=64)
     ap.add_argument("--min-count", type=int, default=2)
     ap.add_argument("--exclude", action="append", default=[])
     ap.add_argument("--respellings", help="LANG.respellings of find-respellings.py")
@@ -122,6 +124,7 @@ def main():
             if not chosen:
                 continue
             fh.write(f"{prev}\t*\t{sum(nexts.values())}\n")
+            fh.write(f"{prev}\t+\t{len(nexts)}\n")
             for w, c in chosen:
                 fh.write(f"{prev}\t{spelling.get(w, w)}\t{c}\n")
 

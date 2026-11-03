@@ -5,6 +5,8 @@
 # real definite forms such as franceza included), and find-supplement.py
 # adds back the rarer ones in use.
 min-freq 74
+# Little text: a word in both sources 10 times in all is enough (niciuna).
+supplement-min-total 10
 
 # The cedilla letters of older keyboards stand for the comma-below ones of
 # the list (aşa -> așa).

@@ -44,6 +44,7 @@ Dictionary &Dictionary::operator=(Dictionary &&other) noexcept
         m_compoundParts = other.m_compoundParts;
         m_compoundLinks = std::move(other.m_compoundLinks);
         m_compoundsUnknown = other.m_compoundsUnknown;
+        m_capitalisedNouns = other.m_capitalisedNouns;
         m_letters = other.m_letters;
         m_letterKeys = other.m_letterKeys;
         m_letterCosts = other.m_letterCosts;
@@ -71,6 +72,7 @@ void Dictionary::close()
     m_compoundMin = m_compoundParts = 0;
     m_compoundLinks.clear();
     m_compoundsUnknown = false;
+    m_capitalisedNouns = false;
     m_letters = nullptr;
     m_letterKeys = nullptr;
     m_letterCosts = nullptr;
@@ -251,6 +253,10 @@ bool Dictionary::parseWordParts(const std::string &text)
         std::istringstream in(line);
         std::string kind, item;
         in >> kind;
+        if (kind == "capitalised-nouns") {
+            m_capitalisedNouns = true;
+            continue;
+        }
         if (kind == "compound") {
             if (!(in >> m_compoundMin >> m_compoundParts) || m_compoundMin == 0)
                 return false;
@@ -386,7 +392,7 @@ uint32_t Dictionary::attributes(uint32_t node, std::u32string *target) const
     return a->flags;
 }
 
-std::vector<std::pair<std::u32string, uint8_t>> Dictionary::nextWords(uint32_t prev) const
+std::vector<std::pair<std::u32string, uint8_t>> Dictionary::nextWords(uint32_t prev, size_t limit) const
 {
     std::vector<std::pair<std::u32string, uint8_t>> out;
     const format::PairRow *end = m_pairRows + m_header->pairRowCount;
@@ -394,10 +400,11 @@ std::vector<std::pair<std::u32string, uint8_t>> Dictionary::nextWords(uint32_t p
         [](const format::PairRow &r, uint32_t p) { return r.prev < p; });
     if (row == end || row->prev != prev)
         return out;
-    for (uint32_t i = row->first; i < row->first + row->count && i < m_header->pairEntryCount; ++i) {
+    const uint32_t count = static_cast<uint32_t>(std::min<size_t>(row->count, limit));
+    for (uint32_t i = row->first; i < row->first + count && i < m_header->pairEntryCount; ++i) {
         const format::PairEntry &e = m_pairEntries[i];
-        if (e.word < m_header->stringsSize)
-            out.emplace_back(utf8::decode(m_strings + e.word), e.freq);
+        if (e.word() < m_header->stringsSize)
+            out.emplace_back(utf8::decode(m_strings + e.word()), e.freq());
     }
     return out;
 }

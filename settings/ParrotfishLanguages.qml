@@ -67,6 +67,7 @@ Page {
                     automaticCheck: false
                     checked: on
                     text: modelData.name
+                    description: modelData.experimental ? qsTr("Experimental") : ""
                     enabled: !on || page.codes.length > 1
                     onClicked: languagesConfig.value = Languages.toggled(page.codes, modelData.code)
                 }

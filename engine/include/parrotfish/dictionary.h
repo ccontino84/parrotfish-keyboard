@@ -70,11 +70,13 @@ public:
     // word missing from the dictionary, made of known parts (plan 6g).
     bool isCompound(const std::u32string &word) const;
     bool hasWordForms() const { return !m_suffixes.empty() || m_compoundMin > 0; }
+    // The language capitalises its nouns (`capitalised-nouns`: German).
+    bool capitalisedNouns() const { return m_capitalisedNouns; }
 
     // Starting next-word data: the words that most often follow `prev` (a
     // terminal node, format::PairStart or format::PairAny), most frequent
     // first, with P(next | prev) on the 0..255 scale. Empty if none.
-    std::vector<std::pair<std::u32string, uint8_t>> nextWords(uint32_t prev) const;
+    std::vector<std::pair<std::u32string, uint8_t>> nextWords(uint32_t prev, size_t limit = SIZE_MAX) const;
 
     // The letter-pattern model (format::LetterModel): -log P(word) of a
     // string as a word of this language, its end included; `folded` is
@@ -114,6 +116,7 @@ private:
     // Scandinavian -s-: Arbeitsplatz, samenwerkingsovereenkomst).
     std::vector<std::u32string> m_compoundLinks;
     bool m_compoundsUnknown = false;
+    bool m_capitalisedNouns = false;
 
     const uint8_t *m_data = nullptr;
     size_t m_size = 0;

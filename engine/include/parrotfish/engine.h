@@ -61,6 +61,10 @@ struct EngineParams {
     // much likelier (nats), against two words typed without the space
     // (heefteen: heeft een), which the word pairs make likely.
     double compoundBonus = 8.0;
+    // The same when the likeliest fix is one word one change away
+    // (Bildungsystem: Bildungssystem, Aktivtäten: Aktivitäten): mostly that
+    // word misspelled.
+    double compoundNearBonus = 3.0;
     // Normal (and Strong) leave shorter input alone: a single letter is not
     // replaced (t → it, p → to were; the benches don't type such words).
     size_t normalMinLength = 2;
@@ -103,6 +107,12 @@ struct EngineParams {
     // pairWeight × P(word | previous word) + (1 - pairWeight) × P(word),
     // from the starting word-pair data (interpolated word-pair model).
     double pairWeight = 0.5;
+    // The previous word's likeliest next words that the search adds even
+    // when it didn't reach them (each one is matched against the taps).
+    size_t pairReach = 12;
+    // A word that is mostly a slip (foe: for) is fixed by Strong only when
+    // the fix is among the previous word's this many likeliest next words.
+    size_t pairSupportRank = 12;
     // Cost of "the typed letters are an intended word missing from the
     // dictionaries": unknownBase plus the taps, plus unknownLetterWeight ×
     // (-log P(letters) − unknownLetterRef) by the language's letter model
@@ -132,7 +142,8 @@ struct EngineParams {
     // in lower case (cant: can't) and often a name (I met Mr Cant), or a
     // word they store with its capital (London, German nouns): the words
     // stored in lower case cost capitalLowerCost nats more; in the
-    // languages that capitalise their nouns (German), where nouns made of
+    // languages that capitalise their nouns (`capitalised-nouns` in their
+    // rules: German), where nouns made of
     // verbs and adjectives (beim Essen, das Gute) and the polite Sie are
     // capitalised too, capitalLowerCostNouns.
     double capitalLowerCost = 5.0;
@@ -295,6 +306,21 @@ private:
     void typedWordStatus(Searched &out) const;
     void searchLanguages(Searched &out, bool capital) const;
     void addContext(size_t dict, const Searched &out, std::vector<Candidate> &cands) const;
+    // The context word's next words in a dictionary, by lowercase spelling
+    // (the first, likeliest of each). Cached: the context is the same for every letter
+    // of a word. The engine is used from one thread.
+    struct ContextNext {
+        bool valid = false;
+        bool sentenceStart = false;
+        std::u32string prev;
+        std::unordered_map<std::u32string, double> byKey;
+        std::vector<std::u32string> words;   // as stored, likeliest first
+    };
+    const ContextNext &contextNext(size_t dict) const;
+    mutable std::vector<ContextNext> m_contextNext;   // per dictionary; cleared by rebuild()
+    // P(word) with the previous word: pairWeight × P(word | prev) + (1 -
+    // pairWeight) × P(word).
+    double withContext(double pair, double uni) const;
     void searchSplits(Searched &out, bool capital) const;
     // Extra cost of a word stored in lower case typed with a capital after
     // a word (capitalLowerCost).

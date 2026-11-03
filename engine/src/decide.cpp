@@ -149,8 +149,6 @@ void Engine::unknownReading(Decision &d) const
         const int k = m_keys.indexOf(t.ch);
         tapCost += k >= 0 ? -std::log(m_keys.probability(k, k)) : 0.0;
     }
-    // A compound of dictionary words is a likelier missing word (compoundBonus).
-    const double base = p.unknownBase - (d.in.compound ? p.compoundBonus : 0.0);
     const bool spelling = std::any_of(d.merged.begin(), d.merged.end(), [&](const Merged &m) {
         return d.canFix(m.s) && m.s.changes == 0;
     });
@@ -164,6 +162,10 @@ void Engine::unknownReading(Decision &d) const
     const bool nearWord = likeliest && (likeliest->s.changes <= 1
                                         || (likeliest->s.changes == 2 && taps.size() >= p.unknownTwoChangeLength))
                           && likeliest->key.find(U' ') == std::u32string::npos;
+    // A compound of dictionary words is a likelier missing word, less so
+    // near a word (compoundBonus, compoundNearBonus).
+    const double base = p.unknownBase
+                        - (d.in.compound ? (nearWord ? p.compoundNearBonus : p.compoundBonus) : 0.0);
     const double flat = p.unknownPerLetter * taps.size();
     const double longer = nearWord && taps.size() > p.unknownShortLength
                           ? p.unknownLongLetterCost * (taps.size() - p.unknownShortLength)
@@ -342,7 +344,7 @@ bool Engine::fixValidWord(Decision &d) const
         const uint32_t prevNode = m_dicts[i]->find(in.prev);
         if (!prevNode)
             continue;
-        for (const auto &n : m_dicts[i]->nextWords(prevNode))
+        for (const auto &n : m_dicts[i]->nextWords(prevNode, p.pairSupportRank))
             if (lower(n.first) == d.bestLower)
                 supported = true;
     }

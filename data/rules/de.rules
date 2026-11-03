@@ -10,7 +10,9 @@ ss ß
 # umlaut forms are often both real words (mochte/möchte, bluten/Blüten).
 only-marks ß
 
-# German nouns are capitalised: find-supplement.py keeps capitalised words.
+# German nouns are capitalised: find-supplement.py keeps capitalised words;
+# the engine expects a capital after a word less to be a name (search.cpp:
+# capitalCost).
 capitalised-nouns
 
 # find-respellings.py: the 1996 spelling reform. The list is current; older

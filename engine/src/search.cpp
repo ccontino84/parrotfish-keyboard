@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <unordered_map>
 
 namespace parrotfish {
 
@@ -114,11 +115,22 @@ void Engine::typedWordStatus(Searched &out) const
     }
 }
 
+// P(next | prev) of a stored next word.
+static double pairFreqProb(uint8_t f)
+{
+    return std::exp((static_cast<int>(f) - 255) * format::LogStep);
+}
+
+double Engine::withContext(double pair, double uni) const
+{
+    return m_params.pairWeight * pair + (1.0 - m_params.pairWeight) * uni;
+}
+
 double Engine::capitalCost(size_t dict, const std::u32string &stored, bool capital) const
 {
     if (!capital || stored.empty() || utf8::isUpper(stored[0]))
         return 0.0;
-    return m_dicts[dict]->language() == "de" ? m_params.capitalLowerCostNouns : m_params.capitalLowerCost;
+    return m_dicts[dict]->capitalisedNouns() ? m_params.capitalLowerCostNouns : m_params.capitalLowerCost;
 }
 
 void Engine::searchLanguages(Searched &out, bool capital) const
@@ -157,11 +169,18 @@ void Engine::searchLanguages(Searched &out, bool capital) const
     }
 }
 
-void Engine::addContext(size_t i, const Searched &out, std::vector<Candidate> &cands) const
+const Engine::ContextNext &Engine::contextNext(size_t i) const
 {
-    // The previous word: P(word) = λ P(word | prev) + (1 - λ) P(word).
+    if (m_contextNext.size() != m_dicts.size())
+        m_contextNext.assign(m_dicts.size(), ContextNext());
+    ContextNext &c = m_contextNext[i];
+    if (c.valid && c.sentenceStart == m_context.sentenceStart && c.prev == m_context.prev)
+        return c;
+    c = ContextNext();
+    c.valid = true;
+    c.sentenceStart = m_context.sentenceStart;
+    c.prev = m_context.prev;
     const Dictionary &d = *m_dicts[i];
-    const std::vector<double> &w = out.weights;
     std::vector<std::pair<std::u32string, uint8_t>> next;
     if (m_context.sentenceStart) {
         next = d.nextWords(format::PairStart);
@@ -170,17 +189,29 @@ void Engine::addContext(size_t i, const Searched &out, std::vector<Candidate> &c
         if (node && !(d.attributes(node) & format::AttrMisspelling))
             next = d.nextWords(node);
     }
-    const double lambda = m_params.pairWeight;
+    // One lookup per candidate, however many next words are stored.
+    c.byKey.reserve(next.size());
+    c.words.reserve(next.size());
+    for (auto &n : next) {
+        c.byKey.emplace(lower(n.first), pairFreqProb(n.second));
+        c.words.push_back(std::move(n.first));
+    }
+    return c;
+}
+
+void Engine::addContext(size_t i, const Searched &out, std::vector<Candidate> &cands) const
+{
+    // The previous word: P(word) = λ P(word | prev) + (1 - λ) P(word).
+    const Dictionary &d = *m_dicts[i];
+    const std::vector<double> &w = out.weights;
+    const ContextNext &cn = contextNext(i);
     auto pairProb = [&](const std::u32string &word) {
-        const std::u32string key = lower(word);
-        for (const auto &n : next)
-            if (lower(n.first) == key)
-                return std::exp((static_cast<int>(n.second) - 255) * format::LogStep);
-        return 0.0;
+        const auto it = cn.byKey.find(lower(word));
+        return it == cn.byKey.end() ? 0.0 : it->second;
     };
     auto rescore = [&](Candidate &c) {
         const double uni = std::exp(d.logProb(c.freq));
-        const double mixed = lambda * pairProb(c.word) + (1.0 - lambda) * uni;
+        const double mixed = withContext(pairProb(c.word), uni);
         const double delta = m_params.corrector.lmWeight * (std::log(mixed) - std::log(uni));
         c.cost -= delta;
         c.wordCost -= delta;
@@ -210,8 +241,8 @@ void Engine::addContext(size_t i, const Searched &out, std::vector<Candidate> &c
         rescore(c);
         cands.push_back(c);
     };
-    for (const auto &n : next)
-        reach(n.first);   // likely next words
+    for (size_t k = 0; k < cn.words.size() && k < m_params.pairReach; ++k)
+        reach(cn.words[k]);   // likely next words
     // Strong weighs the typed word against its fixes: it must be there.
     if (m_params.strength == Strength::Strong && out.typedIsWord) {
         std::u32string stored;
@@ -249,10 +280,10 @@ void Engine::searchSplits(Searched &out, bool capital) const
         const std::u32string key = lower(word);
         for (const auto &nw : d.nextWords(prevNode))
             if (lower(nw.first) == key) {
-                pair = std::exp((static_cast<int>(nw.second) - 255) * format::LogStep);
+                pair = pairFreqProb(nw.second);
                 break;
             }
-        return std::log(m_params.pairWeight * pair + (1.0 - m_params.pairWeight) * std::exp(uni));
+        return std::log(withContext(pair, std::exp(uni)));
     };
     auto trySplit = [&](size_t leftEnd, size_t rightStart, double extra) {
         const std::vector<Tap> lt(taps.begin(), taps.begin() + leftEnd), rt(taps.begin() + rightStart, taps.end());

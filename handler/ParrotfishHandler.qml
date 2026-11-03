@@ -82,6 +82,13 @@ InputHandler {
     // True while commit() runs: an emptied preedit is then a committed word,
     // not a word deleted with Backspace.
     property bool _committing: false
+    // The text before the cursor once the app has the text commit() sent
+    // (the autocorrection, not the word as typed). Taken before sending:
+    // maliit adds a commit to its copy of the field at once, without a
+    // signal (not after a selection or a replacement), and the app reports
+    // it later; Android apps unverified.
+    property string _committedContext: ""
+    property string _loggedContext: ""   // debug log only
     // Whether the layout has digit keys among the letters (the number row):
     // they are in the engine's key map, and a digit can be part of a word.
     property bool _digitKeys: false
@@ -223,7 +230,7 @@ InputHandler {
         _applySwipe()
         if (active) {
             _updateLayout()
-            _contextChanged()
+            _contextChanged("open")
         }
     }
 
@@ -231,18 +238,18 @@ InputHandler {
         if (preedit.length > 0 && _lastPreedit.length === 0) {
             // A new word: refresh the keys and the language context first.
             _updateLayout()
-            _setContext(_contextBefore !== null ? _contextBefore : _textBefore())
+            _setContext(_contextBefore !== null ? _contextBefore : _textBefore(), "word")
             _contextBefore = null
         } else if (preedit.length === 0 && _lastPreedit.length > 0 && _committing) {
             // The word was committed. The app reports the new text a moment
             // later; until then, assume the word and a space.
-            _setContext(_textBefore() + _lastPreedit + " ")
+            _setContext(_committedContext, "commit")
             _rememberLanguage()
             predictionEngine.countWord()
         } else if (preedit.length === 0 && _lastPreedit.length > 0) {
             // The word was deleted letter by letter: only the text before it
             // counts (its last letter, say "i", is not a word typed).
-            _setContext(_textBefore())
+            _setContext(_textBefore(), "deleted")
         }
         _lastPreedit = preedit
         var keys = _tapKeys.slice(0, preedit.length)
@@ -255,8 +262,8 @@ InputHandler {
 
     Connections {
         target: MInputMethodQuick
-        onSurroundingTextChanged: inputHandler._contextChanged()
-        onCursorPositionChanged: inputHandler._contextChanged()
+        onSurroundingTextChanged: inputHandler._contextChanged("text")
+        onCursorPositionChanged: inputHandler._contextChanged("cursor")
     }
 
     function formatText(text) {
@@ -493,6 +500,7 @@ InputHandler {
         if (preedit === "")
             _reopened = null   // the word went back into was deleted and not retyped
         _committing = true
+        _committedContext = (_textBefore() + text).slice(-1000)   // as _textBefore()
         MInputMethodQuick.sendCommit(text)
         _committedDigit = _isDigit(text.slice(-1))
         preedit = ""
@@ -501,6 +509,7 @@ InputHandler {
 
     // Commits the word being typed, or its autocorrection, then `suffix`.
     function _commitWord(suffix) {
+        predictionEngine.flush()
         var typed = preedit
         var word = predictionEngine.autocorrection !== "" && !_afterDigit ? predictionEngine.autocorrection : typed
         // A single letter (English i → I) is fixed at Space only: i. (i.e.)
@@ -639,12 +648,25 @@ InputHandler {
         return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     }
 
-    function _contextChanged() {
+    function _contextChanged(why) {
         if (active && preedit.length === 0)
-            _setContext(_textBefore())
+            _setContext(_textBefore(), why)
     }
 
-    function _setContext(text) {
+    // `why`: what changed (debug log only).
+    function _setContext(text, why) {
+        if (predictionEngine.debug) {
+            // Lengths only, never the text.
+            var last = _loggedContext, same = 0
+            var n = Math.min(text.length, last.length)
+            while (same < n && text.charCodeAt(same) === last.charCodeAt(same))
+                ++same
+            predictionEngine.log("context from " + why + ": " + text.length + " characters"
+                                 + (text === last ? ", unchanged" : ", was " + last.length + ", first " + same + " the same")
+                                 + "; field " + (MInputMethodQuick.surroundingTextValid ? MInputMethodQuick.surroundingText.length : -1)
+                                 + ", cursor " + MInputMethodQuick.cursorPosition)
+            _loggedContext = text
+        }
         predictionEngine.rememberedLanguage = lastLanguageConfig.value
         predictionEngine.setContext(text)
     }

@@ -19,7 +19,7 @@ import struct
 import sys
 import unicodedata
 
-FORMAT_VERSION = 4
+FORMAT_VERSION = 5
 MAGIC = b"PFDICT\0\0"
 
 # Attribute flags (dictformat.h: AttrFlag)
@@ -194,9 +194,9 @@ def read_rules(path):
     for line in read_list(path):
         parts = line.split()
         if parts[0] in ("paradigm", "paradigm-plain", "only-marks", "no-misspellings",
-                        "capitalised-nouns", "min-freq", "one-source", "suffix", "compound",
+                        "capitalised-nouns", "min-freq", "one-source", "supplement-min-total", "suffix", "compound",
                         "final-apostrophe", "respell", "respell-accent"):
-            continue   # settings for the generators (min-freq, suffix, compound: also main())
+            continue   # settings for the generators (min-freq; suffix, compound, capitalised-nouns: also main())
         flags = RULE_FINAL if "final" in parts[2:] else 0
         if not 1 <= len(parts[0]) <= 3 or len(parts[1]) != 1:
             sys.exit(f"{path}: bad rule {line!r}")
@@ -205,10 +205,10 @@ def read_rules(path):
 
 
 def word_parts(path):
-    """The `suffix` and `compound` lines of a rules file, for the engine
-    (dictformat.h: Header::wordParts), or "" if none."""
+    """The `suffix`, `compound` and `capitalised-nouns` lines of a rules
+    file, for the engine (dictformat.h: Header::wordParts), or "" if none."""
     return "\n".join(" ".join(line.split()) for line in read_list(path)
-                     if line.split()[0] in ("suffix", "compound"))
+                     if line.split()[0] in ("suffix", "compound", "capitalised-nouns"))
 
 
 def min_freq(path):
@@ -223,8 +223,10 @@ def min_freq(path):
 def read_pairs(path, words, order):
     """Word pairs from count-pairs.py, resolved to trie nodes.
 
-    Returns {prev node: [(next node, f)]}, f on the 0..255 scale of the
-    conditional probability P(next | prev).
+    Returns ({prev node: [(next node, f)]}, {prev node: trust}): f on the
+    0..255 scale of the conditional probability P(next | prev); trust the
+    Witten-Bell weight total / (total + types) of the next words (`+` lines;
+    none in older pair files).
     """
     by_lower = {}
     for n in order:
@@ -242,7 +244,7 @@ def read_pairs(path, words, order):
     exact = {n.word: n.index for n in order
              if n.terminal and not words[n.word]["attrs"] & (ATTR_MISSPELLING | ATTR_OFFENSIVE)}
     rows = collections.defaultdict(list)
-    totals = {}
+    totals, trust = {}, {}
     with gzip.open(path, "rt", encoding="utf-8") as fh:
         for line in fh:
             prev, nxt, count = line.rstrip("\n").split("\t")
@@ -257,13 +259,17 @@ def read_pairs(path, words, order):
             if nxt == "*":
                 totals[key] = int(count)
                 continue
+            if nxt == "+":
+                if key in totals:
+                    trust[key] = totals[key] / (totals[key] + int(count))
+                continue
             # The exact spelling (German nouns), else any case.
             node = exact.get(nxt) or (by_lower[nxt.lower()][1] if nxt.lower() in by_lower else None)
             if node is not None and key in totals:
                 p = int(count) / totals[key]
                 f = max(1, min(255, round(255 + math.log(p) / STEP)))
                 rows[key].append((node, f))
-    return rows
+    return rows, trust
 
 
 def letter_model(words, order, min_count):
@@ -538,15 +544,19 @@ def main():
         cps = [ord(c) for c in inp] + [0] * (3 - len(inp))
         rule_bytes += struct.pack("<IIIII", *cps, ord(out), flags)
 
-    pair_rows = read_pairs(args.pairs, words, order) if args.pairs else {}
+    pair_rows, pair_trust = read_pairs(args.pairs, words, order) if args.pairs else ({}, {})
     row_bytes = bytearray()
     entry_bytes = bytearray()
     entries = 0
     for key in sorted(pair_rows):
         nexts = sorted(pair_rows[key], key=lambda x: -x[1])
-        row_bytes += struct.pack("<IIHH", key, entries, len(nexts), 0)
+        # The trust in 1/65535 (0: none stored, the engine's fixed weight).
+        trust = max(1, round(pair_trust[key] * 65535)) if key in pair_trust else 0
+        row_bytes += struct.pack("<IIHH", key, entries, len(nexts), trust)
         for node, f in nexts:
-            entry_bytes += struct.pack("<IB3x", word_string(order[node].word), f)
+            offset = word_string(order[node].word)
+            assert offset < 1 << 24, "a pair entry holds a 24-bit string offset"
+            entry_bytes += struct.pack("<I", offset | f << 24)
             entries += 1
 
     letters, letter_ngrams, letter_mean = letter_model(words, args.letter_order, args.letter_min_count)

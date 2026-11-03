@@ -41,6 +41,18 @@ alpha85 Gentle had its own unknownBase (6, against 8) and 0.5.
 
 ## The unknown-word reading
 
+`compoundNearBonus` 3 (2026-11-03): with `compoundBonus` 8 also near a
+word, misspelt compounds stayed (Bildungsystem, beziehungweise, informal-text
+German misspellings fixed 46.7 -> 45.5 % from alpha91 to alpha92). Suite,
+against 8 (the same at Normal and Strong): 4: 8 more fixed, nothing
+worse; 3: 23 more fixed, sogenanten -> sogenannten counted wrong (a valid
+spelling), Danish overvågningskameraet changed; 2: 33 more fixed, 3
+worse; 0: 48 more fixed, 21 unknown words changed (inflections:
+klasseværelset -> klasseværelser). Gentle: 3 and 4 fix 3-4 more. informal
+text at 3: German misspellings fixed 45.5 -> 46.1 %, other languages the
+same; the compounds left (Bildungsystem 0.68, vergleichweise 0.86) are
+the decision's `changeCost`.
+
 alpha92: calibrated on every word of the 13 typos cases (`pf failures
 --all-words`): the log-loss of fix / typed / other fell from 0.785 to 0.400
 with `unknownBase` 11.5, `unknownLetterWeight` 0.5 and `unknownOddsScale`
@@ -70,6 +82,22 @@ length, does worse.
 de, es), fixed wrong and names changed the same; 8 and less: more fixed
 wrong (de 1.4 -> 1.6 %).
 
+## The word before
+
+64 next words per previous word (`count-pairs.py --next`, alpha94; 12
+before), `pairReach` 12 and `pairSupportRank` 12 (the search adds, and
+Strong's slip rule trusts, only the likeliest 12 as before). Next words at
+ranks 13-64 are 15-23 % of held-out pairs, 4-15 % of chat pairs. Suite
+against alpha93 (2026-11-03): typos fixed +2.0 to +4.9 points at Normal and
+Strong, +3.3 to +6.0 at Gentle, error rate after correction lower in all 13
+languages; real misspellings fixed +3.1 to +8.3 (Gentle +5 to +13.4);
+keystrokes saved +0.3 to +1.8; fixed wrong -0.2 to +0.2, unknown words
+changed up to +0.28 (pt_PT quentinha -> que tinha, fi sinuna -> sinun).
+Weighing each word's next words by Witten-Bell trust instead of the fixed
+`pairWeight` 0.5 was not better (with `changeCost` 8-10 neither). Cost:
+dictionaries +0.2 to +0.5 MB with 4-byte entries (format 5); about 8 µs more per
+tap on the PC (next-word bench +8 %, typo bench +3 %).
+
 ## A capital after a word
 
 Words stored only in lower case are typed with a capital after a word in
@@ -97,3 +125,29 @@ at 8: 0.4 % of single foreign words, un -> in).
 ## Strong
 
 `strongMargin` 5 (about 150 times; sentence-bench -R, plan step 6).
+
+## Speed
+
+Phone (Jolla Phone, 2.0 and 2.4 GHz cores; plugin debug log while typing,
+alpha95): the search takes 1-5 ms for 1-5 letters and up to about 13 ms
+at 8 letters. Back to back it runs about 1.5 times slower than on the PC;
+with half a second between taps, 8-10 times slower (the clock drops
+between taps).
+
+- alpha95: a letter is shown before its search runs (the search is
+  queued); taps that come faster than the search share one search.
+- alpha96: the text before the cursor is read once per change. Before
+  that it was read up to four times per Space (the committed word, the
+  app's text, its cursor, the next word's first letter), about 0.5 ms on
+  the PC per read at 1,000 characters.
+- Not done: waiting a moment before searching. Taps are 150-300 ms apart,
+  Space needs the result at once, and the queue already merges fast taps.
+- Not done (2026-11-03): reusing the search when a letter is added. Which
+  candidates the search keeps depends on the whole input (the best score
+  so far, slips at the end, the unknown-word reading), so reuse means
+  restructuring the search: an estimated few days of work for 2-5 times
+  faster on long words only, while the slowest logged letter is about
+  13 ms. To revisit if learning makes the search slower or phone logs
+  pass about 30 ms.
+- Planned with learning: the results for the last few prefixes are kept,
+  so Backspace shows them without searching again.

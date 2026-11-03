@@ -21,6 +21,9 @@ QtObject {
     // Whether the editor moves its cursor for arrow keys and placing commits
     // (false: as an Android app).
     property bool movesCursor: true
+    // Whether a commit goes into surroundingText at once, as maliit's copy of
+    // the field does (no selection, no replacement), before the app reports.
+    property bool insertsCommits: false
     function _moveBy(n) {
         if (movesCursor)
             cursorPosition = Math.max(0, Math.min(surroundingText.length, cursorPosition + n))
@@ -38,6 +41,11 @@ QtObject {
     function sendCommit(text, replaceStart, replaceLength, cursorPos) {
         commits = commits.concat([[replaceStart, replaceLength, cursorPos]])
         committedText += text
+        if (insertsCommits && surroundingTextValid && !replaceLength && !replaceStart) {
+            surroundingText = surroundingText.substring(0, cursorPosition) + text
+                    + surroundingText.substring(cursorPosition)
+            cursorPosition += text.length
+        }
         if (text === "" && replaceLength === 0)
             _moveBy(replaceStart + Math.max(0, cursorPos))
     }

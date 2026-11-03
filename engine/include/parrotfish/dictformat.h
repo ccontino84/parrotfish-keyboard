@@ -13,7 +13,7 @@ namespace parrotfish {
 namespace format {
 
 constexpr char Magic[8] = {'P', 'F', 'D', 'I', 'C', 'T', 0, 0};
-constexpr uint32_t FormatVersion = 4;
+constexpr uint32_t FormatVersion = 5;
 
 struct Header {
     char magic[8];
@@ -29,9 +29,10 @@ struct Header {
     uint32_t stringsSize, stringsOffset;
     uint32_t pairRowCount, pairRowOffset;
     uint32_t pairEntryCount, pairEntryOffset;
-    // The `suffix` and `compound` lines of the language's rules, one per
-    // line (Dictionary::isWordForm): 1 + their offset in the strings
-    // section, or 0 for none (files made before them).
+    // The `suffix`, `compound` and `capitalised-nouns` lines of the
+    // language's rules, one per line (Dictionary::isWordForm,
+    // capitalisedNouns): 1 + their offset in the strings section, or 0 for
+    // none (files made before them).
     uint32_t wordParts;
     // Optional sections (Section), each with its own version: a reader
     // skips the tags it doesn't know and the versions it can't read.
@@ -102,14 +103,22 @@ struct PairRow {
     uint32_t prev;
     uint32_t first;         // index of the first entry
     uint16_t count;
-    uint16_t reserved;
+    // How much the next words say (Witten-Bell: total / (total + the number
+    // of different next words)) in 1/65535; 0: not stored. Not used by the
+    // engine: weighing by it was no better than the fixed pairWeight.
+    uint16_t trust;
 };
 
 struct PairEntry {
-    uint32_t word;          // offset of the next word in the strings section
-    uint8_t freq;           // P(next | prev) on the 0..255 scale
-    uint8_t reserved[3];
+    // The offset of the next word in the strings section (low 24 bits; the
+    // builder checks that the strings fit) and P(next | prev) on the 0..255
+    // scale (high 8 bits).
+    uint32_t packed;
+
+    uint32_t word() const { return packed & 0xFFFFFFu; }
+    uint8_t freq() const { return static_cast<uint8_t>(packed >> 24); }
 };
+static_assert(sizeof(PairEntry) == 4, "PairEntry is 4 bytes on disk");
 
 // The letter-pattern model (section `LTRS`, version 1): a character n-gram
 // of the list's words, lowercase without accents (AlphabetEntry::base),

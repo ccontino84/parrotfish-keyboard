@@ -3,24 +3,25 @@
 // SPDX-License-Identifier: LicenseRef-TBD
 //
 // The typing languages Parrotfish has dictionaries for (data/CMakeLists.txt),
-// for the settings. The dconf key /apps/parrotfish-keyboard/languages holds
+// for the settings. `experimental`: too little text to build and test its
+// data as well as the others' (Common Voice and Tatoeba). The dconf key /apps/parrotfish-keyboard/languages holds
 // the chosen codes separated by spaces; empty means the default below, the
 // same as the plugin's (PredictionEngine::loadLanguages).
 
 var all = [
-    { "code": "da", "name": "Dansk" },
+    { "code": "da", "name": "Dansk", "experimental": true },
     { "code": "de", "name": "Deutsch" },
     { "code": "en", "name": "English" },
     { "code": "es", "name": "Español" },
     { "code": "fr", "name": "Français" },
     { "code": "it", "name": "Italiano" },
     { "code": "nl", "name": "Nederlands" },
-    { "code": "nb", "name": "Norsk bokmål" },
+    { "code": "nb", "name": "Norsk bokmål", "experimental": true },
     { "code": "pt_BR", "name": "Português (Brasil)" },
     { "code": "pt_PT", "name": "Português (Portugal)" },
-    { "code": "ro", "name": "Română" },
-    { "code": "fi", "name": "Suomi" },
-    { "code": "sv", "name": "Svenska" }
+    { "code": "ro", "name": "Română", "experimental": true },
+    { "code": "fi", "name": "Suomi", "experimental": true },
+    { "code": "sv", "name": "Svenska", "experimental": true }
 ]
 
 // Every enabled language is searched on each keystroke (about 6 ms each

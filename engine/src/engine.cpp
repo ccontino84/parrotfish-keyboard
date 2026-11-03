@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <unordered_map>
 
 namespace parrotfish {
 
@@ -70,6 +71,7 @@ std::u32string Engine::fold(const std::u32string &word) const
 
 void Engine::rebuild()
 {
+    m_contextNext.clear();
     m_correctors.clear();
     m_keys = KeyModel(m_layout, m_layoutSigma, static_cast<float>(m_params.keyHeightShare));
     m_base.clear();
@@ -173,19 +175,21 @@ std::vector<Suggestion> Engine::predict(const std::u32string &textBefore, size_t
     const std::vector<double> &w = m_tracker.weights();
     struct Scored { std::u32string word; std::u32string key; double score; double best; };
     std::vector<Scored> merged;
+    std::unordered_map<std::u32string, size_t> index;   // key -> merged
     auto add = [&](const std::u32string &word, double score) {
-        const std::u32string key = lower(word);
-        for (Scored &s : merged) {
-            if (s.key == key) {
-                s.score += score;
-                if (score > s.best) {
-                    s.best = score;
-                    s.word = word;
-                }
-                return;
+        std::u32string key = lower(word);
+        const auto found = index.find(key);
+        if (found != index.end()) {
+            Scored &s = merged[found->second];
+            s.score += score;
+            if (score > s.best) {
+                s.best = score;
+                s.word = word;
             }
+            return;
         }
-        merged.push_back({word, key, score, score});
+        index.emplace(key, merged.size());
+        merged.push_back({word, std::move(key), score, score});
     };
     for (size_t i = 0; i < m_dicts.size(); ++i) {
         if (w[i] <= 1e-6)

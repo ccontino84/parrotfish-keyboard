@@ -24,6 +24,11 @@ QtObject {
     // Whether a commit goes into surroundingText at once, as maliit's copy of
     // the field does (no selection, no replacement), before the app reports.
     property bool insertsCommits: false
+    // Whether the field shows the preedit (the word being typed) in
+    // surroundingText, as some apps do.
+    property bool showsPreedit: false
+    property string _base: ""      // the text without the preedit
+    property int _baseCursor: -1   // -1: no preedit shown
     function _moveBy(n) {
         if (movesCursor)
             cursorPosition = Math.max(0, Math.min(surroundingText.length, cursorPosition + n))
@@ -37,10 +42,28 @@ QtObject {
     property var preedits: []   // [text, replaceStart, replaceLength, cursorPos]
     function sendPreedit(text, formatting, replaceStart, replaceLength, cursorPos) {
         preedits = preedits.concat([[text, replaceStart, replaceLength, cursorPos]])
+        if (!showsPreedit || !surroundingTextValid)
+            return
+        if (_baseCursor < 0) {
+            _base = surroundingText
+            _baseCursor = cursorPosition
+        }
+        surroundingText = _base.substring(0, _baseCursor) + text + _base.substring(_baseCursor)
+        cursorPosition = _baseCursor + text.length
     }
     function sendCommit(text, replaceStart, replaceLength, cursorPos) {
         commits = commits.concat([[replaceStart, replaceLength, cursorPos]])
         committedText += text
+        if (_baseCursor >= 0) {
+            // The field stays as the app last reported it (the preedit in
+            // it) until the app reports again: no change, no signal. With
+            // insertsCommits the commit takes the preedit's place at once.
+            if (insertsCommits) {
+                surroundingText = _base
+                cursorPosition = _baseCursor
+            }
+            _baseCursor = -1
+        }
         if (insertsCommits && surroundingTextValid && !replaceLength && !replaceStart) {
             surroundingText = surroundingText.substring(0, cursorPosition) + text
                     + surroundingText.substring(cursorPosition)

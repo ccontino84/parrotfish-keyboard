@@ -10,6 +10,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0
+import Parrotfish.Keyboard 1.0
 import "languages.js" as Languages
 
 Column {
@@ -40,7 +41,7 @@ Column {
 
             width: parent.width
             label: setting.label
-            description: setting.description
+            description: setting.descriptions ? setting.descriptions[currentIndex] : setting.description
             currentIndex: Math.max(0, setting.values.indexOf(config.value))
 
             menu: ContextMenu {
@@ -73,6 +74,12 @@ Column {
             { "key": "autocorrect", "label": qsTr("Autocorrect"), "description": "",
               "values": ["strong", "normal", "gentle", "off"], "default": "normal",
               "texts": [qsTr("Strong (experimental)"), qsTr("Normal"), qsTr("Gentle"), qsTr("Off")] },
+            { "key": "learning", "label": qsTr("Learning"), "description": "",
+              "values": ["on", "privacy", "off"], "default": "on",
+              "texts": [qsTr("On"), qsTr("Privacy"), qsTr("Off")],
+              "descriptions": [qsTr("Learns your words and what you type after them"),
+                               qsTr("Only stops corrections you undo"),
+                               qsTr("Learns nothing")] },
             { "key": "key-height", "label": qsTr("Key height"),
               "description": qsTr("In portrait"),
               "values": ["100", "90", "80"],
@@ -104,6 +111,16 @@ Column {
         ]
 
         delegate: settingBox
+    }
+
+    ValueButton {
+        label: qsTr("Learned words")
+        value: learnedWords.count
+        onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishLearned.qml"), { "learned": learnedWords })
+
+        LearnedWords {
+            id: learnedWords
+        }
     }
 
     TextSwitch {

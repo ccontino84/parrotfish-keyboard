@@ -88,6 +88,14 @@ InputHandler {
     // signal (not after a selection or a replacement), and the app reports
     // it later; Android apps unverified.
     property string _committedContext: ""
+    // The text before the word being typed, from when it started.
+    property string _wordContext: ""
+    // A commit was sent and the app hasn't reported its text since: the
+    // field may not have it yet (Android apps: maliit's copy isn't updated
+    // either), so the text before the cursor is _committedContext.
+    property bool _awaitingReport: false
+    // The field had text (it emptying ends a text, for learning).
+    property bool _fieldHadText: false
     property string _loggedContext: ""   // debug log only
     // Whether the layout has digit keys among the letters (the number row):
     // they are in the engine's key map, and a digit can be part of a word.
@@ -140,6 +148,7 @@ InputHandler {
         languages: languagesConfig.value
         strength: strengthConfig.value
         tuning: tuningConfig.value
+        learning: learningConfig.value
         slipsConfig: {
             var layout = keyboard.layout
             if (!layout || layout.keyHeightPercent === undefined)
@@ -193,6 +202,27 @@ InputHandler {
         defaultValue: ""
     }
 
+    // Bumped by the settings page after it changed learning.db.
+    ConfigurationValue {
+        id: learningChangedConfig
+        key: "/apps/parrotfish-keyboard/learning-changed"
+        defaultValue: 0
+        property string _seen   // the value last acted on (not a binding)
+        Component.onCompleted: _seen = String(value)
+        onValueChanged: {
+            if (String(value) === _seen)
+                return
+            _seen = String(value)
+            predictionEngine.reloadLearned()
+        }
+    }
+
+    ConfigurationValue {
+        id: learningConfig
+        key: "/apps/parrotfish-keyboard/learning"   // on, privacy, off
+        defaultValue: "on"
+    }
+
     ConfigurationValue {
         id: strengthConfig
         key: "/apps/parrotfish-keyboard/autocorrect"   // off, gentle, normal, strong
@@ -203,6 +233,7 @@ InputHandler {
         if (showApplicationSuggestions) {
             MInputMethodQuick.sendCommit(text, -MInputMethodQuick.cursorPosition,
                                          MInputMethodQuick.surroundingText.length)
+            _awaitingReport = false   // not followed: the field's text
         } else {
             applyPrediction(text, index)
         }
@@ -211,11 +242,13 @@ InputHandler {
     onRemove: {
         // We're using an unused key modifier flag as a back channel.
         MInputMethodQuick.sendKey(Qt.Key_Delete, 0x80000000, text)
+        _awaitingReport = false
     }
 
     onPaste: {
         inputHandler.commit(inputHandler.preedit)
         MInputMethodQuick.sendCommit(Clipboard.text)
+        inputHandler._awaitingReport = false
     }
 
     onActiveChanged: {
@@ -223,6 +256,8 @@ InputHandler {
             _interrupted = preedit
             commit(preedit)
         }
+        if (!active)
+            predictionEngine.endText()   // the keyboard closed: a text ends
         _correction = null
         _reopened = null
         _recentCorrections = []
@@ -238,11 +273,12 @@ InputHandler {
         if (preedit.length > 0 && _lastPreedit.length === 0) {
             // A new word: refresh the keys and the language context first.
             _updateLayout()
-            _setContext(_contextBefore !== null ? _contextBefore : _textBefore(), "word")
+            _wordContext = _contextBefore !== null ? _contextBefore : _currentTextBefore()
+            _setContext(_wordContext, "word")
             _contextBefore = null
         } else if (preedit.length === 0 && _lastPreedit.length > 0 && _committing) {
             // The word was committed. The app reports the new text a moment
-            // later; until then, assume the word and a space.
+            // later; until then, assume what was sent.
             _setContext(_committedContext, "commit")
             _rememberLanguage()
             predictionEngine.countWord()
@@ -262,8 +298,19 @@ InputHandler {
 
     Connections {
         target: MInputMethodQuick
-        onSurroundingTextChanged: inputHandler._contextChanged("text")
-        onCursorPositionChanged: inputHandler._contextChanged("cursor")
+        onSurroundingTextChanged: {
+            inputHandler._awaitingReport = false
+            // The field emptied (a message sent): a text ends.
+            var empty = MInputMethodQuick.surroundingTextValid && MInputMethodQuick.surroundingText === ""
+            if (empty && inputHandler._fieldHadText)
+                predictionEngine.endText()
+            inputHandler._fieldHadText = !empty
+            inputHandler._contextChanged("text")
+        }
+        onCursorPositionChanged: {
+            inputHandler._awaitingReport = false
+            inputHandler._contextChanged("cursor")
+        }
     }
 
     function formatText(text) {
@@ -294,6 +341,7 @@ InputHandler {
             predictionEngine.acceptCorrection(typed)   // forgets earlier undos
         if (!_checkManual(replacement, true) && picked)
             predictionEngine.logSlips(typed, replacement, "picked")
+        predictionEngine.countUse(typed === "" ? "next" : "picked", replacement)
         replacement = replacement + " "
         var before = _textBefore()
         commit(replacement)
@@ -347,6 +395,8 @@ InputHandler {
             for (var n = 0; n < length; ++n)
                 MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
             MInputMethodQuick.sendCommit(correction.typed + correction.suffix)
+            _awaitingReport = false
+            predictionEngine.replaceKept(correction.corrected, correction.typed)
             _recentUndos = _recentUndos.slice(-4).concat([{ "typed": correction.typed,
                                                             "corrected": correction.corrected }])
             predictionEngine.rejectCorrection(correction.typed)
@@ -376,6 +426,7 @@ InputHandler {
                     var before = _wordAtCursor()
                     resumed = before.length
                     if (resumed > 0) {
+                        predictionEngine.dropKept()   // the word goes on
                         _interrupted = ""
                         var text = MInputMethodQuick.surroundingText
                         var start = MInputMethodQuick.cursorPosition - resumed
@@ -418,8 +469,11 @@ InputHandler {
                         // Backspace key event, as for undo (Jolla's replacing
                         // commit failed in Android apps). Kept before ! ? : ;
                         // if the user wants it (mot ?).
-                        if (!_spaceBefore(pressedKey.text))
+                        if (!_spaceBefore(pressedKey.text)) {
                             MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+                            if (_awaitingReport)
+                                _committedContext = _committedContext.slice(0, -1)
+                        }
                         commit(pressedKey.text + " ")
                     } else {
                         commit(pressedKey.text)
@@ -447,6 +501,8 @@ InputHandler {
             _contextBefore = MInputMethodQuick.surroundingText.substring(Math.max(0, pos - 1000), pos)
             MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
             MInputMethodQuick.sendPreedit(word, undefined, -wordLength, wordLength)
+            _awaitingReport = false
+            predictionEngine.dropKept()   // being typed again
             preedit = word
             handled = true
         }
@@ -497,14 +553,24 @@ InputHandler {
     }
 
     function commit(text) {
-        if (preedit === "")
+        var hadWord = preedit !== ""
+        if (!hadWord)
             _reopened = null   // the word went back into was deleted and not retyped
         _committing = true
-        _committedContext = (_textBefore() + text).slice(-1000)   // as _textBefore()
+        // The text before the word being typed: some apps show it in the
+        // field they report (the field grows while typing), others don't.
+        var base = preedit !== "" ? _wordContext : _currentTextBefore()
+        _committedContext = (base + text).slice(-1000)   // as _textBefore()
+        predictionEngine.committed(base, text)   // learned once kept
+        _awaitingReport = true
         MInputMethodQuick.sendCommit(text)
         _committedDigit = _isDigit(text.slice(-1))
         preedit = ""
         _committing = false
+        // A word's commit sets the context when the preedit empties
+        // (onPreeditChanged); a sign or a space alone, here.
+        if (!hadWord && active)
+            _setContext(_committedContext, "commit")
     }
 
     // Commits the word being typed, or its autocorrection, then `suffix`.
@@ -523,6 +589,7 @@ InputHandler {
         var redone = _checkManual(word)
         commit(word + suffix)
         if (word !== typed) {
+            predictionEngine.countUse("fixed", word)
             _correction = { "typed": typed, "corrected": word, "suffix": suffix, "redone": redone }
             _recentCorrections = _recentCorrections.slice(-4).concat([{ "typed": typed, "corrected": word }])
         }
@@ -669,6 +736,12 @@ InputHandler {
         }
         predictionEngine.rememberedLanguage = lastLanguageConfig.value
         predictionEngine.setContext(text)
+    }
+
+    // The text before the cursor, or, until the app reports the last
+    // commit, what it will be.
+    function _currentTextBefore() {
+        return _awaitingReport ? _committedContext : _textBefore()
     }
 
     function _textBefore() {

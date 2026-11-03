@@ -6,12 +6,16 @@
 #include <QHash>
 #include <QPair>
 #include <QString>
+#include <QStringList>
+
+#include "parrotfish/learned.h"
 
 struct sqlite3;
 
-// What the keyboard keeps between sessions, in one SQLite file. Today: the
-// undo memory (typed words whose autocorrection the user undid, per language
-// of the text they were typed in). The engine
+// What the keyboard keeps between sessions, in one SQLite file, readable
+// only by the user: the undo memory (typed words whose autocorrection the
+// user undid, per language of the text they were typed in) and the learned
+// words and word pairs (parrotfish::Learned). The engine
 // keeps the data in memory; this file only stores it. Every table has a cap
 // and drops what was used least recently, so the file doesn't grow without
 // end. Without a file (it can't be opened), nothing is kept between sessions.
@@ -19,6 +23,8 @@ class LearningStore
 {
 public:
     explicit LearningStore(const QString &path);
+    // ~/.local/share/parrotfish-keyboard/learning.db
+    static QString defaultPath();
     ~LearningStore();
     LearningStore(const LearningStore &) = delete;
     LearningStore &operator=(const LearningStore &) = delete;
@@ -33,6 +39,23 @@ public:
     void setUndos(const QString &language, const QString &typed, int count);
 
     static const int MaxUndos = 1000;
+    // Undos in a row after which a word isn't corrected again.
+    static const int UndosToStop = 2;
+
+    // The learned data (Learned's own caps keep it bounded).
+    void loadLearned(parrotfish::Learned &learned) const;
+    // Stores what changed (Learned::takeChanges), in one transaction.
+    void saveLearned(const parrotfish::Learned &learned, const parrotfish::Learned::Changes &changes);
+
+    // For the settings page (another process; the keyboard reloads after a
+    // change): the words learned as new and those whose correction was
+    // undone at least `undosToStop` times, one per lowercase word (a new
+    // word's spelling first), sorted.
+    QStringList listedWords(int undosToStop) const;
+    // Forgets a word in every language: its count, its pairs, its undos.
+    void forgetWord(const QString &word);
+    // Forgets everything learned, the undo memory included.
+    void clearAll();
 
 private:
     bool exec(const char *sql);

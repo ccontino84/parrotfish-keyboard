@@ -38,6 +38,10 @@ KeyboardLayout {
     property string keyFill: keyFillConfig.value
     property string keyBorder: keyBorderConfig.value
     property string keyTuning: keyTuningConfig.value
+    // The sticky key's look (hidden /apps/parrotfish-keyboard/sticky-look):
+    // "function" (the default, alpha100: as Shift, Backspace, ?123 and
+    // Enter, 0.17) or "spacebar" (Jolla's spacebar, 0.07).
+    property string stickyLook: stickyLookConfig.value
     // The number row's own look (/apps/parrotfish-keyboard/number-row-fill:
     // same, none, flat, shaded, band; number-row-border: same, none, line,
     // raised; number-row-digits: normal, quiet). "same": the letters'.
@@ -141,6 +145,12 @@ KeyboardLayout {
         id: stickyConfig
         key: "/apps/parrotfish-keyboard/sticky-key"   // one of Arrangements.stickySigns
         defaultValue: "'"
+    }
+
+    ConfigurationValue {
+        id: stickyLookConfig
+        key: "/apps/parrotfish-keyboard/sticky-look"   // hidden: function, spacebar
+        defaultValue: "function"
     }
 
     ConfigurationValue {

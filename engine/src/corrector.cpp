@@ -369,6 +369,15 @@ struct Corrector::Search
     }
 };
 
+namespace {
+struct Cell { double cost; int edits; int changes; };
+} // namespace
+
+// Damerau-Levenshtein over taps × the word's letters (alphabet indices)
+// with the tap costs; the edit count rides along with the cost of each
+// cell. Fills `d` ((n + 1) × (m + 1)).
+static void matchTable(const Corrector::Search &s, const std::vector<int> &letters, std::vector<Cell> &d);
+
 double Corrector::matchCost(const std::vector<Tap> &taps, const std::u32string &word, int *edits,
                             int *changes) const
 {
@@ -376,61 +385,159 @@ double Corrector::matchCost(const std::vector<Tap> &taps, const std::u32string &
     if (taps.empty() || word.empty())
         return inf;
     Search s(*this, taps, 0.0, inf);
-    const uint32_t a = m_dict.alphabetSize();
-    // Alphabet index of each letter of the word.
     std::vector<int> letters;
+    if (!alphabetIndices(word, letters, false))
+        return inf;
+    std::vector<Cell> d;
+    matchTable(s, letters, d);
+    const Cell &c = d.back();
+    if (edits)
+        *edits = c.edits;
+    if (changes)
+        *changes = c.changes;
+    return c.cost;
+}
+
+bool Corrector::alphabetIndices(const std::u32string &word, std::vector<int> &out, bool lowerFallback) const
+{
+    out.clear();
+    const uint32_t a = m_dict.alphabetSize();
     for (char32_t c : word) {
         int found = -1;
         for (uint32_t li = 0; li < a && found < 0; ++li)
             if (m_dict.letter(li).cp == static_cast<uint32_t>(c))
                 found = static_cast<int>(li);
+        if (found < 0 && lowerFallback) {
+            const char32_t lowerC = utf8::toLower(c);   // a learned name: Mitton
+            for (uint32_t li = 0; li < a && found < 0 && lowerC != c; ++li)
+                if (m_dict.letter(li).cp == static_cast<uint32_t>(lowerC))
+                    found = static_cast<int>(li);
+        }
         if (found < 0)
-            return inf;
-        letters.push_back(found);
+            return false;
+        out.push_back(found);
     }
-    const size_t n = taps.size(), m = letters.size();
+    return true;
+}
+
+std::vector<int> Corrector::letters(const std::u32string &word) const
+{
+    std::vector<int> out;
+    if (!alphabetIndices(word, out, true))
+        out.clear();
+    return out;
+}
+
+std::vector<Corrector::WordMatch> Corrector::matchWords(const std::vector<Tap> &taps,
+                                                        const std::vector<std::u32string> &words) const
+{
+    std::vector<std::vector<int>> indexed;
+    indexed.reserve(words.size());
+    for (const std::u32string &w : words)
+        indexed.push_back(letters(w));
+    return matchLetters(taps, indexed);
+}
+
+std::vector<Corrector::WordMatch> Corrector::matchLetters(const std::vector<Tap> &taps,
+                                                          const std::vector<std::vector<int>> &words) const
+{
+    std::vector<WordMatch> out(words.size());
+    if (taps.empty())
+        return out;
+    Search s(*this, taps, 0.0, std::numeric_limits<double>::infinity());
+    const size_t n = taps.size();
+    const uint32_t a = m_dict.alphabetSize();
+    auto close = [&](size_t i, int letter) { return s.tapCost[i * a + letter] <= m_params.farTap; };
+    std::vector<Cell> d;
+    std::vector<int> prefix;
+    for (size_t w = 0; w < words.size(); ++w) {
+        const std::vector<int> &letters = words[w];
+        const size_t m = letters.size();
+        if (m == 0)
+            continue;
+        // Cheap first check: the first tap is near the first letter, or one
+        // of them is a missing, extra or swapped letter.
+        if (!close(0, letters[0]) && !(n > 1 && close(1, letters[0])) && !(m > 1 && close(0, letters[1])))
+            continue;
+        // Too short or too long for the edits (completions: any longer word).
+        if (m + static_cast<size_t>(m_params.maxEdits) < n
+                || (!m_params.completions && m > n + static_cast<size_t>(m_params.maxEdits)))
+            continue;
+        // Only the first letters can match the taps: the table stops there
+        // (missing letters and skipped ' - . beyond the taps cost edits or
+        // little; two more for those).
+        const size_t cols = std::min(m, n + static_cast<size_t>(m_params.maxEdits) + 2);
+        prefix.assign(letters.begin(), letters.begin() + static_cast<long>(cols));
+        matchTable(s, prefix, d);
+        WordMatch &r = out[w];
+        if (cols == m) {
+            const Cell &full = d[n * (cols + 1) + m];
+            if (std::isfinite(full.cost)) {
+                r.tapCost = full.cost;
+                r.edits = full.edits;
+                r.changes = full.changes;
+            }
+        }
+        if (!m_params.completions)
+            continue;
+        // Its beginning typed without a slip, as the trie search completes.
+        for (size_t j = 1; j < m && j <= cols; ++j) {
+            const Cell &c = d[n * (cols + 1) + j];
+            if (!std::isfinite(c.cost) || c.edits > 0 || c.cost > s.literalCost + m_params.completionSlack)
+                continue;
+            const double cost = c.cost + m_params.completionCost * static_cast<double>(m - j);
+            if (cost < r.tapCost) {
+                r.tapCost = cost;
+                r.edits = 0;
+                r.changes = c.changes;
+                r.extraLetters = static_cast<int>(m - j);
+            }
+        }
+    }
+    return out;
+}
+
+static void matchTable(const Corrector::Search &s, const std::vector<int> &letters, std::vector<Cell> &d)
+{
+    constexpr double inf = std::numeric_limits<double>::infinity();
+    const CorrectorParams &p = s.p;
+    const Dictionary &dict = s.d;
+    const uint32_t a = s.a;
+    const size_t n = s.n, m = letters.size();
     auto tc = [&](size_t i, size_t j) -> double {
         const float t = s.tapCost[i * a + letters[j]];
-        return t <= m_params.farTap ? t : inf;
+        return t <= p.farTap ? t : inf;
     };
-    // Damerau-Levenshtein over taps × letters with the tap costs; the edit
-    // count rides along with the cost of each cell.
-    struct Cell { double cost; int edits; int changes; };
-    std::vector<Cell> d((n + 1) * (m + 1), Cell{inf, 0, 0});
+    d.assign((n + 1) * (m + 1), Cell{inf, 0, 0});
     auto at = [&](size_t i, size_t j) -> Cell & { return d[i * (m + 1) + j]; };
     at(0, 0) = {0.0, 0, 0};
     for (size_t i = 0; i <= n; ++i) {
         for (size_t j = 0; j <= m; ++j) {
             Cell &c = at(i, j);
             auto relax = [&](const Cell &from, double add, int e, int ch) {
-                if (from.cost + add < c.cost && from.edits + e <= m_params.maxEdits)
+                if (from.cost + add < c.cost && from.edits + e <= p.maxEdits)
                     c = {from.cost + add, from.edits + e, from.changes + ch};
             };
             if (i > 0 && j > 0) {
-                const format::AlphabetEntry &l = m_dict.letter(letters[j - 1]);
-                const int changed = (l.lower != taps[i - 1].ch && l.base != baseOf(taps[i - 1].ch)) ? 1 : 0;
+                const format::AlphabetEntry &l = dict.letter(letters[j - 1]);
+                const int changed = (l.lower != s.taps[i - 1].ch && l.base != s.c.baseOf(s.taps[i - 1].ch)) ? 1 : 0;
                 relax(at(i - 1, j - 1), tc(i - 1, j - 1), 0, changed);
             }
             if (i > 0)
                 relax(at(i - 1, j), s.insertCost[i - 1], 1, 1);
             if (j > 0) {
-                const char32_t letter = m_dict.letter(letters[j - 1]).cp;
+                const char32_t letter = dict.letter(letters[j - 1]).cp;
                 const bool punct = letter == U'\'' || letter == U'-' || letter == U'.';
                 const bool doubled = j > 1 && letters[j - 1] == letters[j - 2];
-                relax(at(i, j - 1), punct ? m_params.punctuationSkipped
-                                          : doubled ? std::min(m_params.deletion, m_params.doubledDeletion)
-                                                    : m_params.deletion,
+                relax(at(i, j - 1), punct ? p.punctuationSkipped
+                                          : doubled ? std::min(p.deletion, p.doubledDeletion)
+                                                    : p.deletion,
                       punct ? 0 : 1, punct ? 0 : 1);
             }
             if (i > 1 && j > 1)
-                relax(at(i - 2, j - 2), m_params.transposition + tc(i - 1, j - 2) + tc(i - 2, j - 1), 1, 1);
+                relax(at(i - 2, j - 2), p.transposition + tc(i - 1, j - 2) + tc(i - 2, j - 1), 1, 1);
         }
     }
-    if (edits)
-        *edits = at(n, m).edits;
-    if (changes)
-        *changes = at(n, m).changes;
-    return at(n, m).cost;
 }
 
 bool setParam(CorrectorParams &p, const std::string &assignment)

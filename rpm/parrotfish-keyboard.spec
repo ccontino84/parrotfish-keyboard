@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LicenseRef-TBD
 
 Name:       parrotfish-keyboard
-Version:    0.1.0~alpha98
+Version:    0.1.0~alpha105
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LicenseRef-TBD AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR

@@ -5,6 +5,7 @@
 
 #include "parrotfish/corrector.h"
 #include "parrotfish/languagetracker.h"
+#include "parrotfish/learned.h"
 
 #include <memory>
 #include <unordered_map>
@@ -110,6 +111,23 @@ struct EngineParams {
     // The previous word's likeliest next words that the search adds even
     // when it didn't reach them (each one is matched against the taps).
     size_t pairReach = 12;
+    // What the user typed (Learned, Engine::setLearned): a word's
+    // probability is (1 - μ) P(dictionary) + μ P(user), μ = learnedWeight ×
+    // n / (n + learnedK) with n the words counted in its language; the
+    // same for a word's next words, with learnedPairWeight, learnedPairK
+    // and the next words counted after that word. Values to tune (bench
+    // learning mode); without learned data nothing changes.
+    double learnedWeight = 0.25;
+    double learnedK = 2000;
+    double learnedPairWeight = 0.5;
+    double learnedPairK = 10;
+    // The search also tries the learned new words and, of the user's
+    // learnedReach most used words, those the user makes at least
+    // learnedReachRatio times likelier than the dictionary (they may be
+    // past the corrector's best few). 0: 500 gave +0.2 points of
+    // keystrokes saved for +27% time per letter (TUNING.md).
+    size_t learnedReach = 0;
+    double learnedReachRatio = 2.0;
     // A word that is mostly a slip (foe: for) is fixed by Strong only when
     // the fix is among the previous word's this many likeliest next words.
     size_t pairSupportRank = 12;
@@ -148,6 +166,13 @@ struct EngineParams {
     // capitalised too, capitalLowerCostNouns.
     double capitalLowerCost = 5.0;
     double capitalLowerCostNouns = 2.0;
+    // The other way round: a fix that changes letters into a word stored
+    // with a capital (a name: Ettore), typed with a lowercase first letter
+    // (ertore: errore), costs nameLowerCost nats more; nameLowerCostNouns in
+    // the languages that capitalise their nouns (huas: Haus). A name typed
+    // in lower case without a slip stays a capitalisation fix.
+    double nameLowerCost = 0.0;
+    double nameLowerCostNouns = 0.0;
     // Tap distances up and down: 0 = in key widths, 1 = in key heights
     // (KeyModel heightShare). Also sets which keys are neighbours.
     double keyHeightShare = 0.0;
@@ -300,17 +325,46 @@ public:
 
     const LanguageTracker &tracker() const { return m_tracker; }
 
+    // What the user typed (learned.h), not owned; null: nothing learned is
+    // used. Read at every search and prediction (it may change between
+    // them: the engine follows Learned::version()).
+    void setLearned(const Learned *learned)
+    {
+        m_learned = learned;
+        m_learnedCache.clear();   // another object, or reloaded: versions start over
+        m_contextNext.clear();
+    }
+    const Learned *learned() const { return m_learned; }
+    // Whether `word` is a word of a typing language's dictionary (not a
+    // listed misspelling; a form its rules allow), ignoring case: what
+    // Learned::add calls known.
+    bool isKnown(const std::u32string &word) const;
+    // The user kept `word` after `textBefore` (the text before it): adds it
+    // to `learned` in the text's leading language, with the word before it
+    // in the same sentence. The plugin and the benches learn through this.
+    // The word before the end of `textBefore` in the same sentence; empty at
+    // a sentence start (as Learned keys its pairs).
+    static std::u32string previousWord(const std::u32string &textBefore);
+    // `language`: the text's language when the word was committed (the
+    // plugin learns a word once it is kept, a little later); empty: the
+    // leading language now.
+    void learn(Learned &learned, const std::u32string &textBefore, const std::u32string &word,
+               const std::string &language = std::string()) const;
+
 private:
     void rebuild();
     // search() in steps (search.cpp).
     void typedWordStatus(Searched &out) const;
     void searchLanguages(Searched &out, bool capital) const;
-    void addContext(size_t dict, const Searched &out, std::vector<Candidate> &cands) const;
+    // The previous word and the learned data (useContext: the previous
+    // word is used; else only the learned data).
+    void addContext(size_t dict, const Searched &out, std::vector<Candidate> &cands, bool useContext) const;
     // The context word's next words in a dictionary, by lowercase spelling
     // (the first, likeliest of each). Cached: the context is the same for every letter
     // of a word. The engine is used from one thread.
     struct ContextNext {
         bool valid = false;
+        uint64_t learnedVersion = 0;
         bool sentenceStart = false;
         std::u32string prev;
         std::unordered_map<std::u32string, double> byKey;
@@ -318,6 +372,36 @@ private:
     };
     const ContextNext &contextNext(size_t dict) const;
     mutable std::vector<ContextNext> m_contextNext;   // per dictionary; cleared by rebuild()
+    // Per dictionary: its language's learned data, if any (with words
+    // counted), μ, and the learned words the search also tries (learnedReach).
+    struct LearnedCache {
+        uint64_t version = UINT64_MAX;
+        // The reach list is rebuilt when the learned new words change or
+        // every learnedReachEvery changes (the most used words move slowly).
+        uint64_t reachVersion = UINT64_MAX, reachNewWords = UINT64_MAX;
+        const Learned::Language *lang = nullptr;
+        double mu = 0;
+        struct Reach {
+            std::u32string word;   // a new word as learned, a dictionary word as stored
+            std::u32string key;
+            bool isNew = false;
+            uint8_t freq = 0;
+            uint32_t attrs = 0;
+        };
+        std::vector<Reach> reach;
+        std::vector<std::vector<int>> reachLetters;   // reach[k].word for Corrector::matchLetters
+    };
+    const LearnedCache &learnedCache(size_t dict) const;
+    mutable std::vector<LearnedCache> m_learnedCache;   // per dictionary; cleared by rebuild()
+    const Learned *m_learned = nullptr;
+    // P(word) with the user's use of it: (1 - μ) dictUni + μ P(user).
+    static double learnedUni(const LearnedCache &lc, const std::u32string &key, double dictUni);
+    // The next words of `prev` (or of a sentence start) in one dictionary
+    // with P(next | prev), blended with the user's (learnedPair*),
+    // likeliest first. anyFallback: without any, the commonest words at 0.3
+    // of their probability (Engine::predict).
+    std::vector<std::pair<std::u32string, double>> nextWords(size_t dict, bool sentenceStart,
+                                                             const std::u32string &prev, bool anyFallback) const;
     // P(word) with the previous word: pairWeight × P(word | prev) + (1 -
     // pairWeight) × P(word).
     double withContext(double pair, double uni) const;

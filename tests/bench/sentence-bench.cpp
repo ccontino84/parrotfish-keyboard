@@ -9,6 +9,7 @@
 //                  [-S slips.log [-M] | -U] [-N PCT] [-X] [-o OOV.txt [-u RATE]] [-L]
 //                  [-T [-K]] [-W pairs.tsv [-w RATE] [-c N] [-A]] [-E] [-C DUMP [-G]] [-Y SETTINGS]...
 //                  [-k START] [-Z | -J] [-O OUTCOMES]
+//                  [-Q [-q name=value]... [-H LINES] [-x RATE]] [-V LINES]
 //
 // Words of real sentences are typed one by one with the earlier words as
 // context, as on the phone (all dictionaries loaded, equal starting weights,
@@ -72,6 +73,15 @@
 // tools/pf failures. Off by default (nothing is computed without it).
 // -G: every word, also those typed right and left as they are.
 //
+// -Q learns as one user (Engine::learn, as the plugin): each word is kept
+// as meant, but a word the engine got wrong (a typo left or fixed into
+// another word) is kept as it came out a share -x of the time (0.25: the
+// user didn't notice); -H LINES lines make one text (1), -q sets
+// LearnParams. -V LINES: the first LINES lines are typed without typos and
+// learned, not counted (with or without -Q: the same words measured). The
+// learned words that aren't words of the texts (or the -o list) are typos
+// learned: "learned typos".
+//
 // -Y name=value[,name=value...] (repeatable) replays the decision with
 // other settings on each word's search (Engine::search once, then
 // Engine::decide for each): only parameters isDecisionParam() lists
@@ -104,6 +114,8 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <random>
+#include <set>
 #include <sstream>
 
 using namespace parrotfish;
@@ -277,6 +289,10 @@ int main(int argc, char **argv)
     int misspCap = 3;
     bool pairsAlone = false, echoWords = false, printCounts = false;
     int skipTexts = 0;
+    bool learn = false;
+    int textLines = 1, warmTexts = 0;
+    double typoKeepRate = 0.25;
+    LearnParams learnParams;
     EngineParams params;
     params.corrector.completions = true;   // as on the phone
     params.strength = Strength::Normal;    // the phone's default (the engine's is Gentle)
@@ -314,6 +330,16 @@ int main(int argc, char **argv)
         else if (a == "-O" && i + 1 < argc) outcomesPath = argv[++i];
         else if (a == "-Y" && i + 1 < argc) variantSpecs.push_back(argv[++i]);
         else if (a == "-k" && i + 1 < argc) skipTexts = std::stoi(argv[++i]);
+        else if (a == "-Q") learn = true;
+        else if (a == "-H" && i + 1 < argc) textLines = std::max(1, std::stoi(argv[++i]));
+        else if (a == "-V" && i + 1 < argc) warmTexts = std::stoi(argv[++i]);
+        else if (a == "-x" && i + 1 < argc) typoKeepRate = std::stod(argv[++i]);
+        else if (a == "-q" && i + 1 < argc) {
+            if (!setParam(learnParams, argv[++i])) {
+                std::fprintf(stderr, "unknown learning parameter %s\n", argv[i]);
+                return 2;
+            }
+        }
         else if (a == "-Z") printCounts = true;
         else if (a == "-J") return joinCounts();
         else if (a == "-P" && i + 1 < argc) {
@@ -578,7 +604,38 @@ int main(int argc, char **argv)
         for (size_t i = 0; i < texts.size(); ++i)
             textEnds[i].assign(texts[i].size(), false);
     }
+    Learned learned(learnParams);
+    if (learn)
+        engine.setLearned(&learned);
+    std::mt19937 learnRng(seed);   // apart: the typos stay the same with -Q
+    std::set<std::u32string> textWords;   // the texts' words and the -o list: not typos
+    for (const std::vector<std::u32string> &t : texts)
+        for (const std::u32string &w : t)
+            textWords.insert(lower(w));
+    for (const std::u32string &w : unknown)
+        textWords.insert(lower(w));
+    // Keeps `word` (one word or more) after `context`, as the plugin would.
+    auto keep = [&](const std::u32string &ctx, const std::u32string &word) {
+        std::u32string before = ctx;
+        for (const std::u32string &w : words(word)) {
+            engine.learn(learned, before, w);
+            before += w + U' ';
+        }
+    };
     for (size_t ti = 0; ti < texts.size(); ++ti) {
+        if (learn && ti > 0 && ti % static_cast<size_t>(textLines) == 0)
+            learned.endText();
+        if (static_cast<int>(ti) < warmTexts) {   // -V: typed and learned, not counted
+            std::u32string context;
+            for (size_t wi = 0; wi < texts[ti].size(); ++wi) {
+                if (learn) {
+                    engine.startText(context, prior);
+                    keep(context, texts[ti][wi]);
+                }
+                context += texts[ti][wi] + (textEnds[ti][wi] ? U". " : U" ");
+            }
+            continue;
+        }
         ++sentences;
         std::vector<std::u32string> ws = texts[ti];
         std::vector<bool> ends = textEnds[ti];
@@ -837,6 +894,16 @@ int main(int argc, char **argv)
                                     rank, fired ? " (autocorrected)" : "", tag);
                 }
                 }   // variants
+                if (learn) {
+                    // The user notices a wrong word, mostly: kept as meant.
+                    const bool fired = r0.autocorrect >= 0 && !(typed[0] >= U'0' && typed[0] <= U'9');
+                    const std::u32string got = fired ? r0.suggestions[r0.autocorrect].word : typed;
+                    const bool unnoticed = lower(got) != lower(target)
+                                           && std::uniform_real_distribution<double>(0, 1)(learnRng) < typoKeepRate;
+                    keep(context, unnoticed ? got : target);
+                }
+            } else if (learn) {
+                keep(context, target);
             }
             context += target + after(wi);
         }
@@ -910,6 +977,24 @@ int main(int argc, char **argv)
                         pct(l.wrong, l.fixable), l.clean, pct(l.cleanWrong, l.clean), l.unknown,
                         pct(l.unknownWrong, l.unknown));
         }
+    }
+    if (learn) {
+        size_t newWords = 0, pending = 0, pairs = 0, used = 0;
+        std::vector<std::string> typosLearned;
+        for (const std::string &code : learned.languages()) {
+            const Learned::Language *l = learned.language(code);
+            pairs += l->pairs;
+            for (const auto &w : l->words) {
+                (w.second.pending ? pending : w.second.isNew ? newWords : used) += 1;
+                if (!w.second.pending && w.second.isNew && !textWords.count(w.first))
+                    typosLearned.push_back(utf8::encode(w.second.spelling));
+            }
+        }
+        std::string sample;
+        for (size_t k = 0; k < typosLearned.size() && k < 10; ++k)
+            sample += " " + typosLearned[k];
+        std::printf("learned: %zu words counted, %zu new words (%zu pending), %zu pairs; learned typos %zu%s\n",
+                    used, newWords, pending, pairs, typosLearned.size(), sample.c_str());
     }
     std::printf("time per word: mean %.0f µs, max %.0f µs\n", totalUs / searches, maxUs);
     for (size_t v = 0; v < tallies.size() && printCounts; ++v) {

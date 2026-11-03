@@ -5,6 +5,7 @@
 //   engine-test DICT_DIR LAYOUT_DIR
 
 #include "parrotfish/engine.h"
+#include "parrotfish/learned.h"
 #include "parrotfish/utf8.h"
 
 #include <algorithm>
@@ -868,6 +869,149 @@ void testReasons()
     CHECK_EQ(std::string(reasonName(de.type("haus").reason)), "case-fix");
 }
 
+void testLearnedRules()
+{
+    CHECK(learnableNewWord(u("Mitton")));
+    CHECK(learnableNewWord(u("NASA")));
+    CHECK(!learnableNewWord(u("NASAX")));
+    CHECK(!learnableNewWord(u("mp3")));
+    CHECK(!learnableNewWord(u("x")));
+
+    // Learned after 3 different texts, not 3 uses in one.
+    Learned l;
+    for (int k = 0; k < 3; ++k)
+        l.add("en", u("Mitton"), false, u("met"), true);
+    CHECK(l.language("en")->word(u("mitton")) == nullptr);
+    l.endText();
+    l.add("en", u("Mitton"), false, u("met"), true);
+    CHECK(l.language("en")->word(u("mitton")) == nullptr);
+    l.endText();
+    l.add("en", u("Mitton"), false, u("met"), true);
+    const Learned::Word *w = l.language("en")->word(u("mitton"));
+    CHECK(w != nullptr && w->isNew && s8(w->spelling) == "Mitton");
+    CHECK(l.isLearnedNew(u("MITTON")));
+    CHECK(l.language("it") == nullptr);   // per language
+    // No pairs with it while pending; then pairs between real words.
+    CHECK(l.language("en")->next.count(u("met")) == 1);
+    CHECK(l.language("en")->next.at(u("met")).at(u("mitton")) == 1);
+    l.add("en", u("said"), true, u("Mitton"), false);
+    CHECK(l.language("en")->next.at(u("mitton")).at(u("said")) == 1);
+    l.forget(u("mitton"));
+    CHECK(!l.isLearnedNew(u("Mitton")));
+    CHECK(l.language("en")->next.count(u("mitton")) == 0);
+    CHECK(l.language("en")->next.count(u("met")) == 0);
+
+    // Too slow: the third text comes after the window, the count starts over.
+    LearnParams p;
+    p.newWordWindow = 100;
+    Learned slow(p);
+    slow.add("en", u("zorbel"), false, u(""), false);
+    slow.endText();
+    slow.add("en", u("zorbel"), false, u(""), false);
+    for (int k = 0; k < 120; ++k)
+        slow.add("en", u("the"), true, u(""), false);
+    slow.endText();
+    slow.add("en", u("zorbel"), false, u(""), false);
+    CHECK(slow.language("en")->word(u("zorbel")) == nullptr);
+    // A sentence start's capital is not the word's.
+    slow.endText();
+    slow.add("en", u("zorbel"), false, u("a"), true);
+    slow.endText();
+    slow.add("en", u("Zorbel"), false, u(""), false);
+    w = slow.language("en")->word(u("zorbel"));
+    CHECK(w != nullptr && s8(w->spelling) == "zorbel");
+
+    // Fading by words typed.
+    LearnParams f;
+    f.fadeEvery = 10;
+    f.fade = 0.5;
+    Learned fading(f);
+    fading.add("en", u("rare"), true, u(""), false);
+    for (int k = 0; k < 30; ++k)
+        fading.add("en", u("the"), true, u(""), false);
+    CHECK(fading.language("en")->word(u("rare")) == nullptr);   // 1 → 0.5 → 0.25: gone
+    CHECK(fading.language("en")->word(u("the")) != nullptr);
+
+    // Changes for storage, and loading them back.
+    Learned a;
+    a.add("en", u("the"), true, u(""), false);
+    a.add("en", u("house"), true, u("the"), true);
+    Learned::Changes c = a.takeChanges();
+    CHECK(c.words.size() == 2 && c.pairs.size() == 2 && c.languages.count("en") == 1 && !c.cleared);
+    CHECK(a.takeChanges().empty());
+    a.forget(u("house"));
+    c = a.takeChanges();
+    CHECK(c.words.count({"en", u("house")}) == 1 && c.pairs.count(std::make_tuple(std::string("en"), u("the"), u("house"))) == 1);
+    for (int k = 0; k < 3; ++k) {
+        a.add("en", u("Mitton"), false, u("the"), true);
+        a.endText();
+    }
+    Learned b;
+    for (const auto &w : a.language("en")->words)
+        b.restoreWord("en", w.first, w.second);
+    for (const auto &p : a.language("en")->next)
+        for (const auto &n : p.second)
+            b.restorePair("en", p.first, n.first, n.second);
+    b.restoreLanguage("en", a.language("en")->typed, a.language("en")->nextFade);
+    b.finishRestore();
+    CHECK(b.isLearnedNew(u("mitton")));
+    CHECK(b.language("en")->total == a.language("en")->total);
+    CHECK(b.language("en")->pairs == a.language("en")->pairs);
+    CHECK(b.takeChanges().empty());
+    a.clear();
+    CHECK(a.takeChanges().cleared);
+}
+
+void testLearnedEngine()
+{
+    Setup s({"en", "it", "de"});
+    Learned l;
+    s.engine.setLearned(&l);
+    s.engine.startText(u("I met "));
+    const std::string before = s.space("zorbel");
+    // The user keeps typing it, in three texts.
+    for (int k = 0; k < 3; ++k) {
+        CHECK(!s.engine.isKnown(u("zorbel")));
+        l.add("en", u("I"), true, u(""), false);
+        l.add("en", u("met"), true, u("I"), true);
+        l.add("en", u("zorbel"), false, u("met"), true);
+        l.add("en", u("today"), true, u("zorbel"), false);
+        l.endText();
+    }
+    s.engine.startText(u("I met "));
+    CHECK_EQ(s.space("zorbel"), "zorbel");   // a word now: left alone
+    // Suggested while typed, and as a correction.
+    const Result r = s.type("zorb");
+    bool suggested = false;
+    for (const Suggestion &g : r.suggestions)
+        suggested = suggested || s8(g.word) == "zorbel";
+    CHECK(suggested);
+    CHECK_EQ(s.space("zprbel"), "zorbel");
+    // Next words: after "met", zorbel comes up; after zorbel, today.
+    const auto next = s.engine.predict(u("I met "));
+    CHECK(!next.empty() && std::any_of(next.begin(), next.end(), [](const Suggestion &g) { return s8(g.word) == "zorbel"; }));
+    const auto after = s.engine.predict(u("I met zorbel "));
+    CHECK(!after.empty() && s8(after[0].word) == "today");
+    // A word close to a common one: corrected until learned, then left.
+    s.engine.startText(u("I met "));
+    CHECK_EQ(s.space("tomorow"), "tomorrow");
+    for (int k = 0; k < 3; ++k) {
+        l.add("en", u("tomorow"), false, u("met"), true);
+        l.endText();
+    }
+    CHECK_EQ(s.space("tomorow"), "tomorow");
+    CHECK_EQ(s.space("tomorrow"), "tomorrow");
+    // Forgotten: as before.
+    l.forget(u("tomorow"));
+    CHECK_EQ(s.space("tomorow"), "tomorrow");
+    l.forget(u("zorbel"));
+    s.engine.startText(u("I met "));
+    CHECK_EQ(s.space("zorbel"), before);
+    // Without learned data the engine is as it was.
+    s.engine.setLearned(nullptr);
+    CHECK_EQ(s.space("zorbel"), before);
+}
+
 int main(int argc, char **argv)
 {
     if (argc < 3) {
@@ -902,6 +1046,8 @@ int main(int argc, char **argv)
     testReasons();
     testMoreLanguages();
     testOldSpellings();
+    testLearnedRules();
+    testLearnedEngine();
     if (failures)
         std::printf("%d check(s) failed\n", failures);
     else

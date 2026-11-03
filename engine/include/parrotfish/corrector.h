@@ -95,8 +95,30 @@ public:
     double matchCost(const std::vector<Tap> &taps, const std::u32string &word, int *edits = nullptr,
                      int *changes = nullptr) const;
 
+    // The taps against words that are not in the dictionary (learned
+    // words), with one setup for all: each word typed in full, or with
+    // completions on, its beginning typed without a slip (as search()
+    // completes). tapCost infinity: the taps can't be that word.
+    struct WordMatch {
+        double tapCost = std::numeric_limits<double>::infinity();
+        int edits = 0;
+        int changes = 0;
+        int extraLetters = 0;
+    };
+    std::vector<WordMatch> matchWords(const std::vector<Tap> &taps, const std::vector<std::u32string> &words) const;
+    // The same with the words already as alphabet indices (letters()):
+    // for a list matched at every tap.
+    std::vector<WordMatch> matchLetters(const std::vector<Tap> &taps, const std::vector<std::vector<int>> &words) const;
+    // A word as alphabet indices for matchLetters (a capital not in the
+    // alphabet: its lowercase letter); empty if a letter isn't in it.
+    std::vector<int> letters(const std::u32string &word) const;
+
+    struct Search;   // (corrector.cpp)
+
 private:
-    struct Search;
+    // The alphabet index of each letter (with lowerFallback, a capital not
+    // in the alphabet: its lowercase letter). False if a letter isn't in it.
+    bool alphabetIndices(const std::u32string &word, std::vector<int> &out, bool lowerFallback) const;
     const Dictionary &m_dict;
     const KeyModel &m_keys;
     CorrectorParams m_params;
@@ -106,6 +128,7 @@ private:
     std::vector<uint8_t> m_punctuation;  // per alphabet entry: ' - . (may be left out)
     std::vector<uint8_t> m_ruleOutput;   // per alphabet entry: made by a spelling rule
 
+public:
     char32_t baseOf(char32_t ch) const;
 };
 

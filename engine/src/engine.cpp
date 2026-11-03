@@ -72,6 +72,7 @@ std::u32string Engine::fold(const std::u32string &word) const
 void Engine::rebuild()
 {
     m_contextNext.clear();
+    m_learnedCache.clear();
     m_correctors.clear();
     m_keys = KeyModel(m_layout, m_layoutSigma, static_cast<float>(m_params.keyHeightShare));
     m_base.clear();
@@ -194,22 +195,8 @@ std::vector<Suggestion> Engine::predict(const std::u32string &textBefore, size_t
     for (size_t i = 0; i < m_dicts.size(); ++i) {
         if (w[i] <= 1e-6)
             continue;
-        const Dictionary &d = *m_dicts[i];
-        std::vector<std::pair<std::u32string, uint8_t>> next;
-        double weight = w[i];
-        if (sentenceStart) {
-            next = d.nextWords(format::PairStart);
-        } else {
-            const uint32_t node = d.find(prev);
-            if (node && !(d.attributes(node) & format::AttrMisspelling))
-                next = d.nextWords(node);
-        }
-        if (next.empty()) {
-            next = d.nextWords(format::PairAny);
-            weight *= 0.3;   // a fallback: less sure than a real word pair
-        }
-        for (const auto &n : next)
-            add(n.first, weight * std::exp((static_cast<int>(n.second) - 255) * format::LogStep));
+        for (const auto &n : nextWords(i, sentenceStart, prev, true))
+            add(n.first, w[i] * n.second);
     }
     std::sort(merged.begin(), merged.end(),
               [](const Scored &a, const Scored &b) { return a.score > b.score; });
@@ -227,6 +214,182 @@ std::vector<Suggestion> Engine::predict(const std::u32string &textBefore, size_t
             out.push_back(sug);
     }
     return out;
+}
+
+std::vector<std::pair<std::u32string, double>> Engine::nextWords(size_t i, bool sentenceStart,
+                                                                 const std::u32string &prev, bool anyFallback) const
+{
+    const Dictionary &d = *m_dicts[i];
+    std::vector<std::pair<std::u32string, uint8_t>> stored;
+    if (sentenceStart) {
+        stored = d.nextWords(format::PairStart);
+    } else if (!prev.empty()) {
+        const uint32_t node = d.find(prev);
+        if (node && !(d.attributes(node) & format::AttrMisspelling))
+            stored = d.nextWords(node);
+    }
+    double scale = 1.0;
+    if (stored.empty() && anyFallback) {
+        stored = d.nextWords(format::PairAny);
+        scale = 0.3;   // a fallback: less sure than a real word pair
+    }
+    std::vector<std::pair<std::u32string, double>> out;
+    out.reserve(stored.size());
+    for (auto &n : stored)
+        out.emplace_back(std::move(n.first),
+                         scale * std::exp((static_cast<int>(n.second) - 255) * format::LogStep));
+
+    // The user's next words after the same word.
+    const LearnedCache &lc = learnedCache(i);
+    if (!lc.lang || (!sentenceStart && prev.empty()))
+        return out;
+    const std::u32string prevKey = sentenceStart ? std::u32string() : lower(prev);
+    const auto next = lc.lang->next.find(prevKey);
+    if (next == lc.lang->next.end())
+        return out;
+    const double m = lc.lang->nextTotal.at(prevKey);
+    const double nu = m_params.learnedPairWeight * m / (m + m_params.learnedPairK);
+    if (m <= 0 || nu <= 0)
+        return out;
+    std::unordered_map<std::u32string, size_t> index;
+    for (size_t k = 0; k < out.size(); ++k) {
+        out[k].second *= 1.0 - nu;
+        index.emplace(lower(out[k].first), k);
+    }
+    // The user's likeliest followers, as many as the dictionary keeps.
+    constexpr size_t MaxUserNext = 64;
+    std::vector<std::pair<std::u32string, double>> user(next->second.begin(), next->second.end());
+    if (user.size() > MaxUserNext) {
+        std::nth_element(user.begin(), user.begin() + MaxUserNext - 1, user.end(),
+                         [](const std::pair<std::u32string, double> &a, const std::pair<std::u32string, double> &b) {
+                             return a.second > b.second;
+                         });
+        user.resize(MaxUserNext);
+    }
+    for (const auto &n : user) {
+        const double p = nu * n.second / m;
+        const auto found = index.find(n.first);
+        if (found != index.end()) {
+            out[found->second].second += p;
+            continue;
+        }
+        // A word in use (pairs are kept between real words: known or
+        // learned), as the user types it.
+        const Learned::Word *lw = lc.lang->word(n.first);
+        if (!lw)
+            continue;
+        index.emplace(n.first, out.size());
+        out.emplace_back(lw->spelling, p);
+    }
+    std::stable_sort(out.begin(), out.end(),
+                     [](const std::pair<std::u32string, double> &a, const std::pair<std::u32string, double> &b) {
+                         return a.second > b.second;
+                     });
+    return out;
+}
+
+bool Engine::isKnown(const std::u32string &word) const
+{
+    const std::u32string key = lower(word);
+    for (const auto &d : m_dicts) {
+        const uint32_t node = d->find(word);
+        if (node ? !(d->attributes(node) & format::AttrMisspelling) : d->isWordForm(key))
+            return true;
+    }
+    return false;
+}
+
+std::u32string Engine::previousWord(const std::u32string &textBefore)
+{
+    const Context ctx = parseContext(textBefore);
+    return ctx.sentenceStart ? std::u32string() : ctx.prev;
+}
+
+void Engine::learn(Learned &learned, const std::u32string &textBefore, const std::u32string &word,
+                   const std::string &language) const
+{
+    const int lead = m_tracker.leading();
+    if ((lead < 0 && language.empty()) || word.empty())
+        return;
+    const Context ctx = parseContext(textBefore);
+    const std::u32string prev = ctx.sentenceStart ? std::u32string() : ctx.prev;
+    learned.add(language.empty() ? this->language(static_cast<size_t>(lead)) : language, word, isKnown(word), prev,
+                !prev.empty() && isKnown(prev));
+}
+
+double Engine::learnedUni(const LearnedCache &lc, const std::u32string &key, double dictUni)
+{
+    if (!lc.lang)
+        return dictUni;
+    const Learned::Word *w = lc.lang->word(key);
+    const double user = w ? w->count / lc.lang->total : 0.0;
+    return (1.0 - lc.mu) * dictUni + lc.mu * user;
+}
+
+const Engine::LearnedCache &Engine::learnedCache(size_t i) const
+{
+    if (m_learnedCache.size() != m_dicts.size())
+        m_learnedCache.assign(m_dicts.size(), LearnedCache());
+    LearnedCache &c = m_learnedCache[i];
+    const uint64_t version = m_learned ? m_learned->version() : 0;
+    if (c.version == version)
+        return c;
+    c.version = version;
+    c.lang = nullptr;
+    c.mu = 0;
+    const Learned::Language *lang = m_learned && m_params.learnedWeight > 0
+                                    ? m_learned->language(m_dicts[i]->language()) : nullptr;
+    if (!lang || lang->total <= 0) {
+        c.reach.clear();
+        c.reachLetters.clear();
+        c.reachVersion = c.reachNewWords = UINT64_MAX;
+        return c;
+    }
+    c.lang = lang;
+    const double n = lang->total;
+    c.mu = m_params.learnedWeight * n / (n + m_params.learnedK);
+    // The search also tries the learned new words, and the dictionary words
+    // the user makes much likelier (among the most used). Rebuilt when the
+    // new words change, or every 256 words typed.
+    constexpr uint64_t ReachEvery = 256;
+    if (c.reachNewWords == m_learned->newWordsVersion() && c.reachVersion != UINT64_MAX
+            && version - c.reachVersion < ReachEvery)
+        return c;
+    c.reachNewWords = m_learned->newWordsVersion();
+    c.reachVersion = version;
+    c.reach.clear();
+    c.reachLetters.clear();
+    const Dictionary &d = *m_dicts[i];
+    std::vector<std::pair<double, const std::u32string *>> used;
+    for (const auto &e : lang->words) {
+        const Learned::Word &w = e.second;
+        if (w.pending)
+            continue;
+        if (w.isNew)
+            c.reach.push_back({w.spelling, e.first, true, 0, 0});
+        else if (m_params.learnedReach > 0)
+            used.emplace_back(w.count, &e.first);
+    }
+    const size_t top = std::min(used.size(), m_params.learnedReach);
+    std::partial_sort(used.begin(), used.begin() + static_cast<long>(top), used.end(),
+                      [](const std::pair<double, const std::u32string *> &a,
+                         const std::pair<double, const std::u32string *> &b) { return a.first > b.first; });
+    for (size_t k = 0; k < top; ++k) {
+        std::u32string stored;
+        const uint32_t node = d.find(*used[k].second, &stored);
+        if (!node)
+            continue;
+        const uint32_t attrs = d.attributes(node);
+        if (attrs & format::AttrMisspelling)
+            continue;
+        const uint8_t freq = d.node(node).freq;
+        const double dictUni = std::exp(d.logProb(freq));
+        if (learnedUni(c, *used[k].second, dictUni) >= m_params.learnedReachRatio * dictUni)
+            c.reach.push_back({stored, *used[k].second, false, freq, attrs});
+    }
+    for (const LearnedCache::Reach &r : c.reach)
+        c.reachLetters.push_back(m_correctors[i]->letters(r.word));
+    return c;
 }
 
 char32_t Engine::resolveTap(const std::u32string &word, char32_t lifted, char32_t initial) const

@@ -55,11 +55,18 @@ class PredictionEngine : public QAbstractListModel
     Q_PROPERTY(QString autocorrection READ autocorrection NOTIFY predictionsChanged)
     // Whether the debug file exists (read once at start): log details.
     Q_PROPERTY(bool debug READ debug CONSTANT)
+    // Learning: "on" (word counts, new words, word
+    // pairs learned and used), "privacy" (only the undo memory: nothing
+    // typed shows up in the bar elsewhere) or "off" (nothing learned or
+    // used, the undo memory included). What was learned is kept until
+    // cleared.
+    Q_PROPERTY(QString learning READ learning WRITE setLearning NOTIFY learningChanged)
 
 public:
     enum Roles { TextRole = Qt::UserRole + 1 };
 
     explicit PredictionEngine(QObject *parent = nullptr);
+    ~PredictionEngine() override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -85,6 +92,8 @@ public:
     void setTuning(const QString &tuning);
     QString slipsConfig() const { return m_slipsConfig; }
     void setSlipsConfig(const QString &config);
+    QString learning() const { return m_learning; }
+    void setLearning(const QString &mode);
 
     // The field's text before the cursor changed (or a new word begins):
     // updates the language weights and, while no word is being typed, the
@@ -121,6 +130,13 @@ public:
     // With the debug file only: a word typed letter by letter was committed
     // (counted in slips.log in batches, and when the settings change).
     Q_INVOKABLE void countWord();
+    // With the debug file only: a suggestion was used, `how` "picked" (from
+    // the bar while typing), "next" (from the bar before a letter) or
+    // "fixed" (autocorrected at Space or a sign). Counted on the words line
+    // of slips.log with how many came from learning: a learned new word
+    // picked or fixed to, a next word the user typed after the same word
+    // before (numbers only).
+    Q_INVOKABLE void countUse(const QString &how, const QString &word);
     // Whether `character` (its first code point) is a letter. Jolla's
     // KeyboardSupport.isLetter is missing before Sailfish OS 5.2.
     Q_INVOKABLE bool isLetter(const QString &character) const;
@@ -130,6 +146,23 @@ public:
     // Brings the suggestions and `autocorrection` up to date with preedit
     // now (they follow it on the next pass of the event loop otherwise).
     Q_INVOKABLE void flush();
+
+    // Learning. `text` was committed after `textBefore` (a word with its
+    // space or sign, a sign, a picked word): its words are learned once
+    // kept, i.e. at the next commit or the end of the text, unless undone
+    // first.
+    Q_INVOKABLE void committed(const QString &textBefore, const QString &text);
+    // The autocorrection to `corrected` was undone: the word kept is `typed`.
+    Q_INVOKABLE void replaceKept(const QString &corrected, const QString &typed);
+    // The last word committed is being typed again (Backspace into it, or
+    // typing on at its end): not learned as it was.
+    Q_INVOKABLE void dropKept();
+    // The text ended (the keyboard closed, the field was emptied): a new
+    // word counts once per text. Saves what was learned.
+    Q_INVOKABLE void endText();
+    // The settings page changed learning.db (a word forgotten, all
+    // cleared): read it again, dropping what wasn't saved.
+    Q_INVOKABLE void reloadLearned();
 
 signals:
     void preeditChanged();
@@ -141,6 +174,7 @@ signals:
     void rememberedLanguageChanged();
     void tuningChanged();
     void slipsConfigChanged();
+    void learningChanged();
     void predictionsChanged();
 
 private:
@@ -151,6 +185,8 @@ private:
     QString slipsHeader() const;
     void appendSlips(QStringList lines);
     QString fixLanguage(const QString &typed) const;
+    void learnKept();
+    void saveLearned();
 
     parrotfish::Engine m_engine;
     QString m_dataDir;
@@ -183,4 +219,23 @@ private:
     QString m_slipsConfig;
     QString m_slipsHeader;   // the last header written to slips.log
     int m_slipsWords = 0;    // words typed since the last count in slips.log
+    // Since the last words line: suggestions used, and of them from learning.
+    struct Uses { int picks = 0, picksLearned = 0, next = 0, nextLearned = 0, fixes = 0, fixesLearned = 0; } m_uses;
+    QString wordsLine(int words);
+
+    QString m_learning = QStringLiteral("on");
+    parrotfish::Learned m_learned;
+    // The last word committed, learned once kept: the text before it, the
+    // word, the text's language then.
+    struct Kept {
+        bool valid = false;
+        std::u32string before, word;
+        std::string language;
+    } m_kept;
+    int m_keptSinceSave = 0;
+    // The last searches' results (Backspace back to a prefix shows its
+    // suggestions without searching again): by preedit, keys, context and
+    // learned data. Cleared when the engine changes.
+    QHash<QString, parrotfish::Result> m_results;
+    QString resultKey() const;
 };

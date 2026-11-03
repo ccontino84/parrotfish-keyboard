@@ -13,6 +13,7 @@
 #include <cmath>
 #include <limits>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace parrotfish {
 
@@ -113,6 +114,22 @@ void Engine::typedWordStatus(Searched &out) const
         else if (out.caseFix.empty())
             out.caseFix = applyCase(stored, out.taps);
     }
+    // A learned new word is a word of the language it was learned in.
+    for (size_t i = 0; i < m_dicts.size() && m_learned; ++i) {
+        const LearnedCache &lc = learnedCache(i);
+        const Learned::Word *lw = lc.lang ? lc.lang->word(typedLower) : nullptr;
+        if (!lw || !lw->isNew)
+            continue;
+        out.wordInSomeLanguage = true;
+        if (w[i] < m_params.validThreshold)
+            continue;
+        out.typedIsWord = true;
+        const bool otherCase = lw->spelling != out.typed && applyCase(lw->spelling, out.taps) != out.typed;
+        if (!otherCase)
+            out.validAsTyped = true;
+        else if (out.caseFix.empty())
+            out.caseFix = applyCase(lw->spelling, out.taps);
+    }
 }
 
 // P(next | prev) of a stored next word.
@@ -144,6 +161,7 @@ void Engine::searchLanguages(Searched &out, bool capital) const
         order[i] = i;
     std::stable_sort(order.begin(), order.end(), [&](size_t a, size_t b) { return w[a] > w[b]; });
     const bool prune = m_params.searchMargin > 0;
+    const bool lowerFirst = !out.taps.empty() && !out.taps[0].upper;
     double bestCost = std::numeric_limits<double>::infinity();
     for (size_t i : order) {
         if (w[i] <= m_params.searchMinWeight)
@@ -151,8 +169,8 @@ void Engine::searchLanguages(Searched &out, bool capital) const
         std::vector<Candidate> cands = m_correctors[i]->search(
             out.taps, std::log(w[i]), prune ? bestCost + m_params.searchMargin
                                             : std::numeric_limits<double>::infinity());
-        if (useContext)
-            addContext(i, out, cands);
+        if (useContext || learnedCache(i).lang)
+            addContext(i, out, cands, useContext);
 
         for (Candidate &c : cands) {
             // A listed misspelling typed with a capital after a word is not
@@ -160,6 +178,8 @@ void Engine::searchLanguages(Searched &out, bool capital) const
             // bonus for its target.
             const double capitalExtra = capitalCost(i, c.word, capital);
             c.cost += capitalExtra;
+            if (lowerFirst && c.changes > 0 && !c.word.empty() && utf8::isUpper(c.word[0]))
+                c.cost += m_dicts[i]->capitalisedNouns() ? m_params.nameLowerCostNouns : m_params.nameLowerCost;
             if (capitalExtra > 0 && c.viaTarget && c.changes == 0 && (c.attrs & format::AttrMisspelling))
                 c.cost += m_params.corrector.exactMisspellingBonus;
             bestCost = std::min(bestCost, c.cost);
@@ -174,56 +194,67 @@ const Engine::ContextNext &Engine::contextNext(size_t i) const
     if (m_contextNext.size() != m_dicts.size())
         m_contextNext.assign(m_dicts.size(), ContextNext());
     ContextNext &c = m_contextNext[i];
-    if (c.valid && c.sentenceStart == m_context.sentenceStart && c.prev == m_context.prev)
+    const uint64_t version = m_learned ? m_learned->version() : 0;
+    if (c.valid && c.sentenceStart == m_context.sentenceStart && c.prev == m_context.prev
+            && c.learnedVersion == version)
         return c;
     c = ContextNext();
     c.valid = true;
+    c.learnedVersion = version;
     c.sentenceStart = m_context.sentenceStart;
     c.prev = m_context.prev;
-    const Dictionary &d = *m_dicts[i];
-    std::vector<std::pair<std::u32string, uint8_t>> next;
-    if (m_context.sentenceStart) {
-        next = d.nextWords(format::PairStart);
-    } else if (!m_context.prev.empty()) {
-        const uint32_t node = d.find(m_context.prev);
-        if (node && !(d.attributes(node) & format::AttrMisspelling))
-            next = d.nextWords(node);
-    }
+    std::vector<std::pair<std::u32string, double>> next = nextWords(i, m_context.sentenceStart, m_context.prev, false);
     // One lookup per candidate, however many next words are stored.
     c.byKey.reserve(next.size());
     c.words.reserve(next.size());
     for (auto &n : next) {
-        c.byKey.emplace(lower(n.first), pairFreqProb(n.second));
+        c.byKey.emplace(lower(n.first), n.second);
         c.words.push_back(std::move(n.first));
     }
     return c;
 }
 
-void Engine::addContext(size_t i, const Searched &out, std::vector<Candidate> &cands) const
+void Engine::addContext(size_t i, const Searched &out, std::vector<Candidate> &cands, bool useContext) const
 {
-    // The previous word: P(word) = λ P(word | prev) + (1 - λ) P(word).
+    // The previous word: P(word) = λ P(word | prev) + (1 - λ) P(word), with
+    // the user's use of the word blended into P(word) (learnedUni) and of
+    // the pair into P(word | prev) (nextWords).
     const Dictionary &d = *m_dicts[i];
     const std::vector<double> &w = out.weights;
-    const ContextNext &cn = contextNext(i);
-    auto pairProb = [&](const std::u32string &word) {
-        const auto it = cn.byKey.find(lower(word));
+    const LearnedCache &lc = learnedCache(i);
+    static const ContextNext none;
+    const ContextNext &cn = useContext ? contextNext(i) : none;
+    auto pairProb = [&](const std::u32string &key) {
+        const auto it = cn.byKey.find(key);
         return it == cn.byKey.end() ? 0.0 : it->second;
     };
-    auto rescore = [&](Candidate &c) {
+    auto mixed = [&](const std::u32string &key, double dictUni) {
+        const double uni = learnedUni(lc, key, dictUni);
+        return useContext ? withContext(pairProb(key), uni) : uni;
+    };
+    auto rescore = [&](Candidate &c, const std::u32string &key) {
         const double uni = std::exp(d.logProb(c.freq));
-        const double mixed = withContext(pairProb(c.word), uni);
-        const double delta = m_params.corrector.lmWeight * (std::log(mixed) - std::log(uni));
+        const double delta = m_params.corrector.lmWeight * (std::log(mixed(key, uni)) - std::log(uni));
         c.cost -= delta;
         c.wordCost -= delta;
     };
-    for (Candidate &c : cands)
-        rescore(c);
+    std::unordered_set<std::u32string> keys;   // the candidates', lowercase
+    for (Candidate &c : cands) {
+        std::u32string key = lower(c.word);
+        rescore(c, key);
+        keys.insert(std::move(key));
+    }
+    auto have = [&](const std::u32string &key) { return keys.count(key) > 0; };
     // A word the search didn't reach (it ranks by P(word)).
     auto reach = [&](const std::u32string &word) {
         const std::u32string key = lower(word);
-        if (std::any_of(cands.begin(), cands.end(),
-                        [&](const Candidate &c) { return lower(c.word) == key; }))
+        if (have(key))
             return;
+        if (lc.lang) {
+            const Learned::Word *lw = lc.lang->word(key);
+            if (lw && lw->isNew)
+                return;   // a learned word: below
+        }
         int edits = 0, changes = 0;
         const double tapCost = m_correctors[i]->matchCost(out.taps, word, &edits, &changes);
         if (!std::isfinite(tapCost))
@@ -238,18 +269,58 @@ void Engine::addContext(size_t i, const Searched &out, std::vector<Candidate> &c
         c.tapCost = tapCost;
         c.wordCost = -(m_params.corrector.lmWeight * d.logProb(c.freq) + std::log(w[i]));
         c.cost = tapCost + c.wordCost;
-        rescore(c);
+        rescore(c, key);
         cands.push_back(c);
+        keys.insert(key);
     };
-    for (size_t k = 0; k < cn.words.size() && k < m_params.pairReach; ++k)
-        reach(cn.words[k]);   // likely next words
-    // Strong weighs the typed word against its fixes: it must be there.
-    if (m_params.strength == Strength::Strong && out.typedIsWord) {
-        std::u32string stored;
-        const uint32_t node = d.find(out.typed, &stored);
-        if (node && !(d.attributes(node) & format::AttrMisspelling))
-            reach(stored);
+    if (useContext) {
+        for (size_t k = 0; k < cn.words.size() && k < m_params.pairReach; ++k)
+            reach(cn.words[k]);   // likely next words
+        // Strong weighs the typed word against its fixes: it must be there.
+        if (m_params.strength == Strength::Strong && out.typedIsWord) {
+            std::u32string stored;
+            const uint32_t node = d.find(out.typed, &stored);
+            if (node && !(d.attributes(node) & format::AttrMisspelling))
+                reach(stored);
+        }
     }
+    // The learned words: new ones, and dictionary words the user makes
+    // much likelier (they may be past the corrector's best few).
+    if (lc.reach.empty())
+        return;
+    const std::vector<Corrector::WordMatch> matches = m_correctors[i]->matchLetters(out.taps, lc.reachLetters);
+    std::vector<Candidate> learnedCands;
+    for (size_t k = 0; k < lc.reach.size(); ++k) {
+        const Corrector::WordMatch &m = matches[k];
+        const LearnedCache::Reach &r = lc.reach[k];
+        if (!std::isfinite(m.tapCost) || have(r.key))
+            continue;
+        Candidate c;
+        c.word = r.word;
+        c.freq = r.freq;
+        c.attrs = r.attrs;
+        c.edits = m.edits;
+        c.changes = m.changes;
+        c.extraLetters = m.extraLetters;
+        c.tapCost = m.tapCost;
+        if (r.isNew) {
+            c.wordCost = -(m_params.corrector.lmWeight * std::log(mixed(r.key, 0.0)) + std::log(w[i]));
+            c.cost = c.tapCost + c.wordCost;
+        } else {
+            c.wordCost = -(m_params.corrector.lmWeight * d.logProb(c.freq) + std::log(w[i]));
+            c.cost = c.tapCost + c.wordCost;
+            rescore(c, r.key);
+        }
+        if (std::isfinite(c.cost))
+            learnedCands.push_back(std::move(c));
+    }
+    // As many as the corrector gives, the best (after one letter, every
+    // learned word starting with it is a completion).
+    const size_t keep = std::min(learnedCands.size(), m_params.corrector.maxResults);
+    std::partial_sort(learnedCands.begin(), learnedCands.begin() + static_cast<long>(keep), learnedCands.end(),
+                      [](const Candidate &a, const Candidate &b) { return a.cost < b.cost; });
+    for (size_t k = 0; k < keep; ++k)
+        cands.push_back(std::move(learnedCands[k]));
 }
 
 void Engine::searchSplits(Searched &out, bool capital) const

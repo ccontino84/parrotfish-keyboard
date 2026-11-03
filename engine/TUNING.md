@@ -122,6 +122,15 @@ the hard block up to alpha68 (infinity): 2-3 more typos fixed in 100
 of another language changed in mixed texts (tools/eval/mix-sentences.py;
 at 8: 0.4 % of single foreign words, un -> in).
 
+## A name typed in lower case
+
+`nameLowerCost` 0 (off; 2026-11-03): a fix that changes letters into a
+capitalised word typed with a lowercase first letter (ertore: errore,
+not Ettore). informal development halves, it and en, learning off and on,
+costs 2, 3 and 5 against 0: typos fixed -0.2 to +0.1 points, fixed wrong
+the same, error rate after correction -0.03 to +0.04: within noise, so
+left off.
+
 ## Strong
 
 `strongMargin` 5 (about 150 times; sentence-bench -R, plan step 6).
@@ -151,3 +160,30 @@ between taps).
   pass about 30 ms.
 - Planned with learning: the results for the last few prefixes are kept,
   so Backspace shows them without searching again.
+
+## Learning
+
+`learnedWeight` 0.25, `learnedK` 2000, `learnedPairWeight` 0.5,
+`learnedPairK` 10, `learnedReach` 0 (2026-11-03). Bench learning mode
+(`-Q`): informal text of one language as one user's (many people's posts:
+a community's style more than one person's), the first 500 posts typed
+and learned, the next 500 measured while learning goes on; 20 unknown
+words of the language's list recurring (`-o`, `-u 0.02`) as the user's
+names; a quarter of the engine's mistakes kept unnoticed (`-x 0.25`).
+Test halves, against learning off: typos fixed +2.4 to +3.6 points, fixed
+wrong +0.1 to +0.5, error rate after correction -0.5 to -0.9 points,
+next-word keystrokes saved +1.5 to +2.5 (en it de fr es nl pt_BR); sign
+test on the words whose outcome changed: better in every language (en
+206 better, 59 worse; de 122, 61). Learned typos: 1 in 160 learned words
+(de "ser"). Fixed wrong goes up with any weights (0.1 to 0.5, pair
+weight 0 to 0.75, `learnedK` 5000: within noise of each other): the
+user's own frequent words compete (it: Ettore, often in the learned
+text, now keeps ertore from errore). Without the dictionary words the
+user makes likelier in the search (`learnedReach` 0): keystrokes saved
+-0.3 points (500 words; 100: no gain). Speed (`pf-time`, en it de, 2,000
+English sentences learned, PC): per letter 209 -> 273 µs with
+`learnedReach` 500, 218 µs with 0; next words 78 -> 116 µs. Hence 0: the
+learned new words are still searched. Phone (alpha99, `pf-time -p 300`,
+the same texts): per letter 3.8 -> 4.0 ms mean, 17.6 -> 18.9 ms at most;
+first letter 1.6 -> 2.6 ms (the next words of the new previous word);
+next words 1.3 -> 1.8 ms.

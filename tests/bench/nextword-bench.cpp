@@ -6,6 +6,7 @@
 //   nextword-bench -l data/layouts/phone-qwerty.layout -t tests/data/tatoeba-en.txt
 //                  -d build/data/en.pfd [-d OTHER.pfd]... [-n 2000] [-m LANG]
 //                  [-P name=value]... [-v] [-Y SETTINGS]... [-k START] [-Z | -J]
+//                  [-Q [-q name=value]... [-H LINES]] [-V LINES]
 //
 // Each line is a new text (lines starting with # are skipped), with all
 // dictionaries loaded and Normal strength, as sentence-bench. -m LANG starts
@@ -26,6 +27,11 @@
 //
 // -v prints each word missed by the next-word top 3, with the suggestions
 // and the letters typed before it was picked. The last line sums up.
+//
+// -Q learns as one user (Engine::learn, as the plugin): each word is kept
+// once typed; -H LINES lines make one text (1), -q sets LearnParams. -V
+// LINES: the first LINES lines are only typed (and learned), not counted,
+// with or without -Q (the same words measured either way).
 //
 // -Y name=value[,...] (repeatable) replays the decision with other
 // settings (Engine::decide on each search; isDecisionParam() only): the
@@ -148,6 +154,9 @@ int main(int argc, char **argv)
     int maxLines = 2000, skipLines = 0;
     bool verbose = false, printCounts = false;
     std::vector<std::string> variantSpecs;
+    bool learn = false;
+    int textLines = 1, warmLines = 0;
+    LearnParams learnParams;
     EngineParams params;
     params.corrector.completions = true;   // as on the phone
     params.strength = Strength::Normal;    // the phone's default
@@ -161,6 +170,15 @@ int main(int argc, char **argv)
         else if (a == "-v") verbose = true;
         else if (a == "-Y" && i + 1 < argc) variantSpecs.push_back(argv[++i]);
         else if (a == "-k" && i + 1 < argc) skipLines = std::stoi(argv[++i]);
+        else if (a == "-Q") learn = true;
+        else if (a == "-H" && i + 1 < argc) textLines = std::max(1, std::stoi(argv[++i]));
+        else if (a == "-V" && i + 1 < argc) warmLines = std::stoi(argv[++i]);
+        else if (a == "-q" && i + 1 < argc) {
+            if (!setParam(learnParams, argv[++i])) {
+                std::fprintf(stderr, "unknown learning parameter %s\n", argv[i]);
+                return 2;
+            }
+        }
         else if (a == "-Z") printCounts = true;
         else if (a == "-J") return joinCounts();
         else if (a == "-P" && i + 1 < argc) {
@@ -217,6 +235,9 @@ int main(int argc, char **argv)
         prior[k] *= 3.0;   // as PredictionEngine::setContext
     }
     engine.setLayout(keys);
+    Learned learned(learnParams);
+    if (learn)
+        engine.setLearned(&learned);
 
     Stats groups[GroupCount];
     int lines = 0, unknown = 0, picked = 0, pickedNext = 0;
@@ -229,6 +250,9 @@ int main(int argc, char **argv)
         ++lines;
         if (lines <= skipLines)
             continue;   // -k: another shard's
+        if (learn && lines > 1 && (lines - 1) % textLines == 0)
+            learned.endText();
+        const bool measure = lines > warmLines;
         // The line with the apostrophes words() uses, so that each word is
         // found in it and the context keeps the punctuation (a new sentence).
         std::u32string text = utf8::decode(line);
@@ -251,6 +275,11 @@ int main(int argc, char **argv)
             if (!context.empty() && (context.back() == U'\'' || context.back() == U'-'))
                 context += U' ';   // not inside a word
             engine.startText(context, prior);
+            if (!measure) {
+                if (learn)
+                    engine.learn(learned, context, target);
+                continue;
+            }
 
             Stats &g = groups[wi == 0 ? First : Rest];
             ++g.words;
@@ -308,6 +337,8 @@ int main(int argc, char **argv)
                             utf8::encode(target).c_str(), top3(next).c_str(), typed, target.size(),
                             known ? "" : " (unknown)");
             }
+            if (learn)
+                engine.learn(learned, context, target);
         }
     }
 
@@ -323,6 +354,17 @@ int main(int argc, char **argv)
                     pct(groups[k].top1, groups[k].words), pct(groups[k].top3, groups[k].words));
     std::printf("%-10s %6d %6.1f%% %6.1f%%\n", "all", all.words, pct(all.top1, all.words),
                 pct(all.top3, all.words));
+    if (learn) {
+        size_t newWords = 0, pending = 0, pairs = 0, used = 0;
+        for (const std::string &code : learned.languages()) {
+            const Learned::Language *l = learned.language(code);
+            pairs += l->pairs;
+            for (const auto &w : l->words)
+                (w.second.pending ? pending : w.second.isNew ? newWords : used) += 1;
+        }
+        std::printf("learned: %zu words counted, %zu new words (%zu pending), %zu pairs\n", used, newWords,
+                    pending, pairs);
+    }
     std::printf("unknown words %.1f%%; picked %.1f%% of words (%.1f%% before the first letter);"
                 " taps %ld of %ld\n", pct(unknown, all.words), pct(picked, all.words),
                 pct(pickedNext, all.words), taps, letters);

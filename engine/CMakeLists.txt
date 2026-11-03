@@ -11,6 +11,7 @@ add_library(parrotfish-engine STATIC
     src/params.cpp
     src/languagetracker.cpp
     src/keymodel.cpp
+    src/learned.cpp
     src/utf8.cpp
 )
 target_include_directories(parrotfish-engine PUBLIC include)
@@ -19,7 +20,9 @@ set_target_properties(parrotfish-engine PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_executable(pf-query tools/pf-query.cpp)
 target_link_libraries(pf-query PRIVATE parrotfish-engine)
+add_executable(pf-time tools/pf-time.cpp)
+target_link_libraries(pf-time PRIVATE parrotfish-engine)
 
 if(PARROTFISH_DEVTOOLS)
-    install(TARGETS pf-query DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/parrotfish-keyboard)
+    install(TARGETS pf-query pf-time DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/parrotfish-keyboard)
 endif()

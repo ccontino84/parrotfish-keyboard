@@ -149,6 +149,8 @@ Item {
 
         function init() {
             MInputMethodQuick.insertsCommits = false
+            MInputMethodQuick.showsPreedit = false
+            MInputMethodQuick._baseCursor = -1
             MInputMethodQuick.surroundingText = ""
             MInputMethodQuick.cursorPosition = 0
             MInputMethodQuick.surroundingTextValid = false
@@ -232,6 +234,139 @@ Item {
             compare(pickThen("bien", "?"), ["? ", false])
             Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
                              "/apps/parrotfish-keyboard/autocorrect": "normal" }
+        }
+
+        function learningMode(mode) {
+            Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
+                             "/apps/parrotfish-keyboard/autocorrect": "normal",
+                             "/apps/parrotfish-keyboard/learning": mode }
+        }
+
+        // The words a model shows (a PredictionEngine of its own).
+        function words(engine) {
+            var out = []
+            for (var i = 0; i < engine.rowCount(); ++i)
+                out.push(engine.data(engine.index(i, 0), 257))   // TextRole
+            return out
+        }
+
+        // Learning: a new word kept in three
+        // texts is learned, suggested, and still there after a restart;
+        // Privacy doesn't use it; Off ignores the undo memory too.
+        function test_learning() {
+            learningMode("on")
+            for (var k = 0; k < 3; ++k) {
+                context("Yesterday I met ")   // a new text each time (the keyboard reopens)
+                compare(type("zorbel "), "zorbel ")
+            }
+            context("Today I met ")
+            type("zorb")
+            verify(bar().split(" ").indexOf("zorbel") >= 0, "learned, suggested: " + bar())
+            backspace(); backspace(); backspace(); backspace()
+            handler.active = false   // saved
+
+            // A new engine, as after a restart.
+            var fresh = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; PredictionEngine { languages: "en" }', root)
+            var keys = [], items = []
+            handler._scan(keyboard.layout, keyboard.layout, keys, items)
+            fresh.setKeys(keys)
+            fresh.setContext("Today I met ")
+            fresh.preedit = "zorb"
+            fresh.flush()
+            verify(words(fresh).indexOf("zorbel") >= 0, "kept between sessions: " + words(fresh))
+            fresh.learning = "privacy"
+            fresh.flush()
+            verify(words(fresh).indexOf("zorbel") < 0, "privacy: not used: " + words(fresh))
+            fresh.destroy()
+
+            learningMode("privacy")
+            context("Today I met ")
+            type("zorb")
+            verify(bar().split(" ").indexOf("zorbel") < 0, "privacy: " + bar())
+            backspace(); backspace(); backspace(); backspace()
+
+            // Off: the undo memory isn't used either.
+            learningMode("on")
+            context("I think ")
+            handler.engine.rejectCorrection("tgat")
+            handler.engine.rejectCorrection("tgat")
+            type("tgat")
+            compare(handler.engine.autocorrection, "", "on: two undos stop it")
+            learningMode("off")
+            handler.engine.flush()
+            compare(handler.engine.autocorrection, "that", "off: corrected again")
+            backspace(); backspace(); backspace(); backspace()
+            learningMode("on")
+        }
+
+        // The settings page (another process: here another object) lists the
+        // learned words and forgets one; the keyboard reloads when told.
+        function test_learningSettings() {
+            learningMode("on")
+            for (var k = 0; k < 3; ++k) {
+                context("Yesterday I met ")
+                compare(type("quorbix "), "quorbix ")
+            }
+            handler.active = false   // saved
+            var listed = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; LearnedWords {}', root)
+            verify(words(listed).indexOf("quorbix") >= 0, "listed: " + words(listed))
+            listed.forget("quorbix")
+            verify(words(listed).indexOf("quorbix") < 0)
+            Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
+                             "/apps/parrotfish-keyboard/autocorrect": "normal",
+                             "/apps/parrotfish-keyboard/learning": "on",
+                             "/apps/parrotfish-keyboard/learning-changed": Date.now() }
+            context("Today I met ")
+            type("quorb")
+            verify(bar().split(" ").indexOf("quorbix") < 0, "forgotten: " + bar())
+            backspace(); backspace(); backspace(); backspace(); backspace()
+            listed.clearAll()
+            compare(listed.count, 0)
+            listed.reload()
+            compare(listed.count, 0)
+            listed.destroy()
+        }
+
+        // slips.log counts the suggestions used, and of them the learned ones,
+        // on its words line; the header names the learning mode.
+        function test_learningSlips() {
+            learningMode("on")
+            context("I think ")
+            compare(type("tgis "), "this ")   // fixed
+            type("wor")
+            handler.select(bar().split(" ")[0], 0)   // picked
+            learningMode("privacy")   // new settings: the words line is written
+            context("I think ")
+            compare(type("tgat "), "that ")
+            var lines = slips("words")
+            verify(lines.length > 0, "a words line")
+            var last = lines[lines.length - 1]
+            verify(/^words \d+ picks \d+\/\d+ next \d+\/\d+ fixes \d+\/\d+$/.test(last), last)
+            verify(/picks [1-9]/.test(last) && /fixes [1-9]/.test(last), last)
+            var headers = slips("#")
+            verify(/ learning=privacy$/.test(headers[headers.length - 1]), headers[headers.length - 1])
+            learningMode("on")
+        }
+
+        // An autocorrection undone right after Space: the word kept is the
+        // one typed (learned as typed, not as the correction).
+        function test_learningUndo() {
+            learningMode("on")
+            for (var k = 0; k < 3; ++k) {
+                context("See you ")
+                if (k === 2) {   // two undos: the undo memory leaves it
+                    compare(type("tomorow "), "tomorow ")
+                    continue
+                }
+                compare(type("tomorow "), "tomorrow ")
+                field("See you tomorrow ")
+                backspace()   // undo: tomorow again
+                compare(MInputMethodQuick.committedText.slice(-8), "tomorow ")
+            }
+            context("See you ")
+            type("tomor")
+            verify(bar().split(" ").indexOf("tomorow") >= 0, "learned as typed: " + bar())
+            backspace(); backspace(); backspace(); backspace(); backspace()
         }
 
         // The field's text before the cursor, as the app reports it.
@@ -516,16 +651,41 @@ Item {
             compare(bar(), next, "the next words after the, not after tge")
         }
 
-        // maliit adds a commit to its copy of the field before the app
-        // reports it: the word is in the text once (alpha98).
-        function test_contextAfterCommit() {
-            MInputMethodQuick.insertsCommits = true
+        // After a commit the text before the cursor is the text the app will
+        // report, however the field behaves (alpha98, alpha100): maliit's
+        // copy updated at once (native apps) or not, the word being typed
+        // shown in the field (the Android app tested) or not. A period
+        // right after a word comes before any report.
+        function test_contextAfterCommit_data() {
+            return [
+                { tag: "native", inserts: true, preedit: false },
+                { tag: "android", inserts: false, preedit: true },
+                { tag: "both", inserts: true, preedit: true },
+                { tag: "neither", inserts: false, preedit: false }
+            ]
+        }
+
+        function test_contextAfterCommit(data) {
+            MInputMethodQuick.insertsCommits = data.inserts
+            MInputMethodQuick.showsPreedit = data.preedit
             context("I think this is ")
+            // The app reports its text (as after a commit; the stub only
+            // changes the field when it inserts commits).
+            function report(text) {
+                MInputMethodQuick.surroundingText = text
+                MInputMethodQuick.cursorPosition = text.length
+            }
             compare(type("tge "), "the ")
-            compare(MInputMethodQuick.surroundingText, "I think this is the ")
             compare(handler._loggedContext, "I think this is the ")
-            compare(type("hpuse. "), "house. ")
+            report("I think this is the ")
+            compare(handler._loggedContext, "I think this is the ", "the report is what was assumed")
+            compare(type("hpuse. "), "house. ")   // house, then . and space before any report
             compare(handler._loggedContext, "I think this is the house. ")
+            report("I think this is the house. ")
+            compare(handler._loggedContext, "I think this is the house. ")
+            compare(type("Ut "), "It ")
+            compare(handler._loggedContext, "I think this is the house. It ")
+            MInputMethodQuick.showsPreedit = false
             MInputMethodQuick.insertsCommits = false
         }
     }

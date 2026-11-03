@@ -18,7 +18,7 @@ namespace {
 
 const int MaxSuggestions = 10;
 // Undos of the same autocorrection that stop it (plan §6).
-const int UndosToStop = 2;
+const int UndosToStop = LearningStore::UndosToStop;
 // slips.log counts the words typed in batches of this many.
 const int SlipsWordBatch = 50;
 
@@ -52,12 +52,137 @@ PredictionEngine::PredictionEngine(QObject *parent)
             : QStringLiteral(PARROTFISH_DATA_DIR);
     // Timing logs (never the typed text) while this file exists.
     m_debug = QFile::exists(QDir::homePath() + QStringLiteral("/.local/share/parrotfish-keyboard/debug"));
-    m_store.reset(new LearningStore(QDir::homePath()
-                                    + QStringLiteral("/.local/share/parrotfish-keyboard/learning.db")));
+    m_store.reset(new LearningStore(LearningStore::defaultPath()));
     m_undos = m_store->undos();
+    QElapsedTimer timer;
+    timer.start();
+    m_store->loadLearned(m_learned);
+    m_engine.setLearned(&m_learned);   // "on" until the handler says otherwise
+    if (m_debug) {
+        size_t words = 0, pairs = 0;
+        for (const std::string &code : m_learned.languages()) {
+            words += m_learned.language(code)->words.size();
+            pairs += m_learned.language(code)->pairs;
+        }
+        qInfo("parrotfish: learned data loaded in %.1f ms: %zu words, %zu pairs",
+              timer.nsecsElapsed() / 1e6, words, pairs);
+    }
 
     loadLanguages();
     loadFallbackLayout();
+}
+
+PredictionEngine::~PredictionEngine()
+{
+    learnKept();
+    saveLearned();
+}
+
+void PredictionEngine::setLearning(const QString &mode)
+{
+    flush();
+    const QString value = mode == QLatin1String("privacy") || mode == QLatin1String("off") ? mode
+                                                                                         : QStringLiteral("on");
+    if (value == m_learning)
+        return;
+    if (m_learning == QLatin1String("on"))
+        learnKept();   // kept while learning was on
+    m_learning = value;
+    m_kept.valid = false;
+    m_engine.setLearned(value == QLatin1String("on") ? &m_learned : nullptr);
+    m_results.clear();
+    saveLearned();
+    emit learningChanged();
+    m_contextValid = false;   // the same text, other data
+    setContext(m_context);
+    if (!m_preedit.isEmpty())
+        update();
+}
+
+void PredictionEngine::committed(const QString &textBefore, const QString &text)
+{
+    flush();
+    if (m_learning != QLatin1String("on"))
+        return;
+    learnKept();   // the word before is kept: the user went on
+    std::u32string before = toU32(textBefore);
+    const std::vector<std::u32string> ws = parrotfish::words(toU32(text));
+    const std::string language = leadingLanguage().toStdString();
+    for (size_t i = 0; i < ws.size(); ++i) {
+        m_kept = {true, before, ws[i], language};
+        if (i + 1 < ws.size()) {   // more than one word: all but the last are kept
+            learnKept();
+            before += ws[i] + U' ';
+        }
+    }
+}
+
+void PredictionEngine::replaceKept(const QString &corrected, const QString &typed)
+{
+    if (m_kept.valid && QString(fromU32(m_kept.word)).toLower() == corrected.toLower())
+        m_kept.word = toU32(typed);
+}
+
+void PredictionEngine::dropKept()
+{
+    m_kept.valid = false;
+}
+
+void PredictionEngine::endText()
+{
+    flush();
+    if (m_learning == QLatin1String("on")) {
+        learnKept();
+        m_learned.endText();
+    }
+    saveLearned();
+}
+
+void PredictionEngine::reloadLearned()
+{
+    flush();
+    m_kept.valid = false;
+    m_learned = parrotfish::Learned(m_learned.params());
+    m_store->loadLearned(m_learned);
+    m_undos = m_store->undos();
+    m_keptSinceSave = 0;
+    m_results.clear();
+    m_engine.setLearned(m_learning == QLatin1String("on") ? &m_learned : nullptr);
+    m_contextValid = false;
+    setContext(m_context);
+    if (!m_preedit.isEmpty())
+        update();
+    log(QStringLiteral("learned data reloaded"));
+}
+
+void PredictionEngine::learnKept()
+{
+    if (!m_kept.valid)
+        return;
+    m_kept.valid = false;
+    m_engine.learn(m_learned, m_kept.before, m_kept.word, m_kept.language);
+    if (++m_keptSinceSave >= 50)
+        saveLearned();
+}
+
+void PredictionEngine::saveLearned()
+{
+    m_keptSinceSave = 0;
+    const parrotfish::Learned::Changes changes = m_learned.takeChanges();
+    if (changes.empty())
+        return;
+    QElapsedTimer timer;
+    timer.start();
+    m_store->saveLearned(m_learned, changes);
+    if (m_debug)
+        qInfo("parrotfish: learned data saved in %.1f ms: %zu words, %zu pairs, %zu languages whole",
+              timer.nsecsElapsed() / 1e6, changes.words.size(), changes.pairs.size(), changes.rewrite.size());
+}
+
+QString PredictionEngine::resultKey() const
+{
+    return m_preedit + QChar(0x1f) + m_preeditKeys.join(QChar(0x1e)) + QChar(0x1f)
+            + QString::number(m_learning == QLatin1String("on") ? m_learned.version() : 0);
 }
 
 int PredictionEngine::rowCount(const QModelIndex &parent) const
@@ -145,6 +270,7 @@ void PredictionEngine::loadLanguages()
         codes << (QFile::exists(dict(name)) ? name : lang);
     }
     m_engine.clearLanguages();
+    m_results.clear();
     for (const QString &code : codes) {
         if (!QFile::exists(dict(code)))
             continue;
@@ -213,6 +339,7 @@ void PredictionEngine::setContext(const QString &textBefore)
     const QString lead = leadingLanguage();
     const double conf = confidence();
     m_engine.startText(toU32(textBefore), prior);
+    m_results.clear();
     if (m_debug)
         qInfo("parrotfish: context, %d characters, %.1f ms", static_cast<int>(textBefore.size()),
               timer.nsecsElapsed() / 1e6);
@@ -255,6 +382,7 @@ int PredictionEngine::setKeys(const QJSValue &keys)
     }
     m_keys = out;
     m_engine.setLayout(parrotfish::KeyModel(out));
+    m_results.clear();
     m_layoutKeys = true;
     update();
     return static_cast<int>(out.size());
@@ -301,6 +429,7 @@ void PredictionEngine::applyParams()
             qWarning("parrotfish: ignoring tuning \"%s\"", qPrintable(part));
     }
     m_engine.setParams(params);
+    m_results.clear();
     m_layoutKeys = false;          // the handler passes the keys again
     loadFallbackLayout();
     m_contextValid = false;
@@ -341,6 +470,8 @@ QString PredictionEngine::fixLanguage(const QString &typed) const
 void PredictionEngine::rejectCorrection(const QString &typed)
 {
     flush();
+    if (m_learning == QLatin1String("off"))
+        return;   // nothing learned
     const QString language = fixLanguage(typed), lower = typed.toLower();
     // A valid word fixed by Strong is left alone after one undo.
     int &count = m_undos[qMakePair(language, lower)];
@@ -447,7 +578,47 @@ void PredictionEngine::countWord()
         appendSlips(QStringList());   // the words so far belong to the old settings
     if (++m_slipsWords >= SlipsWordBatch) {
         m_slipsWords = 0;
-        appendSlips(QStringList() << QStringLiteral("words %1").arg(SlipsWordBatch));
+        appendSlips(QStringList() << wordsLine(SlipsWordBatch));
+    }
+}
+
+QString PredictionEngine::wordsLine(int words)
+{
+    // words N picks A/B next C/D fixes E/F: suggestions used, of them from
+    // learning (countUse).
+    const Uses u = m_uses;
+    m_uses = Uses();
+    return QStringLiteral("words %1 picks %2/%3 next %4/%5 fixes %6/%7")
+            .arg(words).arg(u.picks).arg(u.picksLearned).arg(u.next).arg(u.nextLearned).arg(u.fixes)
+            .arg(u.fixesLearned);
+}
+
+void PredictionEngine::countUse(const QString &how, const QString &word)
+{
+    if (!m_debug || word.isEmpty())
+        return;
+    const bool learning = m_learning == QLatin1String("on");
+    if (how == QLatin1String("next")) {
+        ++m_uses.next;
+        const parrotfish::Learned::Language *l = learning ? m_learned.language(leadingLanguage().toStdString())
+                                                          : nullptr;
+        if (l) {
+            const std::u32string prev = toU32(fromU32(parrotfish::Engine::previousWord(toU32(m_context))).toLower());
+            const auto it = l->next.find(prev);
+            if (it != l->next.end() && it->second.count(toU32(word.toLower())))
+                ++m_uses.nextLearned;
+        }
+        return;
+    }
+    const bool learned = learning && m_learned.isLearnedNew(toU32(word));
+    if (how == QLatin1String("picked")) {
+        ++m_uses.picks;
+        if (learned)
+            ++m_uses.picksLearned;
+    } else if (how == QLatin1String("fixed")) {
+        ++m_uses.fixes;
+        if (learned)
+            ++m_uses.fixesLearned;
     }
 }
 
@@ -475,9 +646,9 @@ QString PredictionEngine::slipsHeader() const
     }
     QString tuning = m_tuning.simplified();
     tuning.replace(QLatin1Char(' '), QLatin1Char(','));
-    return QStringLiteral("# %1 %2 %3 %4 pitch=%5%6")
+    return QStringLiteral("# %1 %2 %3 %4 pitch=%5 learning=%6%7")
             .arg(QDate::currentDate().toString(Qt::ISODate), QStringLiteral(PARROTFISH_VERSION),
-                 m_slipsConfig.isEmpty() ? QStringLiteral("?") : m_slipsConfig, m_strength, pitch,
+                 m_slipsConfig.isEmpty() ? QStringLiteral("?") : m_slipsConfig, m_strength, pitch, m_learning,
                  tuning.isEmpty() ? QString() : QStringLiteral(" tuning=") + tuning);
 }
 
@@ -487,7 +658,9 @@ void PredictionEngine::appendSlips(QStringList lines)
     if (header != m_slipsHeader) {
         lines.prepend(header);
         if (m_slipsWords > 0 && !m_slipsHeader.isEmpty())
-            lines.prepend(QStringLiteral("words %1").arg(m_slipsWords));
+            lines.prepend(wordsLine(m_slipsWords));
+        else
+            m_uses = Uses();
         m_slipsWords = 0;
         m_slipsHeader = header;
     }
@@ -530,6 +703,7 @@ void PredictionEngine::loadFallbackLayout()
         return;
     }
     m_engine.setLayout(parrotfish::KeyModel::parse(f.readAll().toStdString()));
+    m_results.clear();
 }
 
 void PredictionEngine::update()
@@ -560,14 +734,25 @@ void PredictionEngine::update()
                 }
             }
         }
-        const parrotfish::Result r = m_engine.process(taps);
+        // The same input as a moment ago (Backspace back to a prefix): its
+        // result, without searching again.
+        const QString key = resultKey();
+        const auto cached = m_results.constFind(key);
+        const bool reused = cached != m_results.constEnd();
+        const parrotfish::Result r = reused ? *cached : m_engine.process(taps);
+        if (!reused) {
+            if (m_results.size() >= 32)
+                m_results.clear();
+            m_results.insert(key, r);
+        }
         for (const parrotfish::Suggestion &s : r.suggestions) {
             if (items.size() >= MaxSuggestions)
                 break;
             items.append(fromU32(s.word));
         }
         const QString language = leadingLanguage(), lower = m_preedit.toLower();
-        if (r.autocorrect == 0 && m_undos.value(qMakePair(language, lower)) < UndosToStop) {
+        const int undos = m_learning == QLatin1String("off") ? 0 : m_undos.value(qMakePair(language, lower));
+        if (r.autocorrect == 0 && undos < UndosToStop) {
             autocorrection = items.value(0);
             if (m_fixLanguages.size() > 64)
                 m_fixLanguages.clear();
@@ -579,8 +764,8 @@ void PredictionEngine::update()
             }
         }
         if (m_debug)
-            qInfo("parrotfish: %d letters, %.1f ms, %d suggestions%s, lead %s %.2f",
-                  m_preedit.size(), timer.nsecsElapsed() / 1e6, items.size(),
+            qInfo("parrotfish: %d letters, %.1f ms%s, %d suggestions%s, lead %s %.2f",
+                  m_preedit.size(), timer.nsecsElapsed() / 1e6, reused ? " (again)" : "", items.size(),
                   autocorrection.isEmpty() ? "" : ", autocorrect",
                   qPrintable(leadingLanguage()), m_engine.tracker().confidence());
     }

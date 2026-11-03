@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LicenseRef-TBD
 
+#include "learnedwords.h"
 #include "predictionengine.h"
 
 #include <QQmlExtensionPlugin>
@@ -16,6 +17,7 @@ public:
     {
         Q_ASSERT(QLatin1String(uri) == QLatin1String("Parrotfish.Keyboard"));
         qmlRegisterType<PredictionEngine>(uri, 1, 0, "PredictionEngine");
+        qmlRegisterType<LearnedWords>(uri, 1, 0, "LearnedWords");
     }
 };
 

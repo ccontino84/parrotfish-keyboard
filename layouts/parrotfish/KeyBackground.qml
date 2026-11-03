@@ -19,8 +19,9 @@
 // set (the layout's numberFill and numberBorder; "same": the letters';
 // fill "band": none per key, the layout draws one band behind the row).
 // functionLook (the sticky key) sets a key apart from the letters, whatever
-// their look: flat and a little stronger, as Jolla's spacebar (0.07; ?123
-// and Enter are 0.17), no border.
+// their look: flat, no border, as Jolla's function keys (Shift, Backspace,
+// ?123, Enter: 0.17); with the layout's stickyLook "spacebar", fainter, as
+// Jolla's spacebar (0.07).
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 
@@ -78,7 +79,7 @@ Rectangle {
                 result[pair[0]] = value
         }
         if (functionLook)
-            result.fill = 0.07
+            result.fill = layout && layout.stickyLook === "spacebar" ? 0.07 : 0.17
         if (fill === "none")
             result.fill = 0
         if (fill !== "shaded")

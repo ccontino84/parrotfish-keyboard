@@ -299,6 +299,27 @@ Item {
             learningMode("on")
         }
 
+        // A field that asks not to be learned from (the settings' preview,
+        // __inputMethodExtensions): nothing typed there is learned, what was
+        // learned is still suggested.
+        function test_learnPaused() {
+            learningMode("on")
+            MInputMethodQuick.extensions = { "parrotfishNoLearning": true }
+            verify(handler.engine.learnPaused, "paused")
+            for (var k = 0; k < 3; ++k) {
+                context("Yesterday I saw ")
+                compare(type("quabble "), "quabble ")
+            }
+            handler.active = false
+            handler.active = true
+            MInputMethodQuick.extensions = {}
+            verify(!handler.engine.learnPaused, "resumed")
+            context("Today I saw ")
+            type("quab")
+            verify(bar().split(" ").indexOf("quabble") < 0, "not learned: " + bar())
+            backspace(); backspace(); backspace(); backspace()
+        }
+
         // The settings page (another process: here another object) lists the
         // learned words and forgets one; the keyboard reloads when told.
         function test_learningSettings() {

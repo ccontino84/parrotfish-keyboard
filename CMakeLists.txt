@@ -43,8 +43,10 @@ if(PARROTFISH_PLUGIN)
             DESTINATION ${PARROTFISH_LAYOUT_DIR})
     install(DIRECTORY layouts/parrotfish DESTINATION ${PARROTFISH_LAYOUT_DIR})
     # the .conf files name this path for Settings > Text input
-    install(FILES settings/ParrotfishSettings.qml settings/ParrotfishLanguages.qml settings/ParrotfishLearned.qml
-                  settings/languages.js
+    install(FILES settings/ParrotfishSettings.qml settings/ParrotfishTyping.qml settings/ParrotfishLayout.qml
+                  settings/ParrotfishLook.qml settings/ParrotfishDiagnostics.qml settings/ParrotfishLanguages.qml
+                  settings/ParrotfishLearned.qml settings/SettingCombo.qml settings/SettingSwitch.qml
+                  settings/SettingSlider.qml settings/KeyboardPreview.qml settings/languages.js
             DESTINATION ${PARROTFISH_DATA_DIR}/settings)
 endif()
 

@@ -84,6 +84,9 @@ struct EngineParams {
     // away (a neighbouring key or two letters swapped) if that word is at
     // least strongMargin nats likelier, previous word and taps included.
     double strongMargin = 5.0;
+    // ... and only within one language: both words within this many nats of
+    // their likeliest typing language (frequencies only) in one language.
+    double strongHomeMargin = 3.0;
     // A word of a typing language that seems unlikely in the text (weight
     // below validThreshold: Italian "ti" in English text) is replaced only
     // if the fix is this many nats likelier than the word read as a word of
@@ -121,13 +124,6 @@ struct EngineParams {
     double learnedK = 2000;
     double learnedPairWeight = 0.5;
     double learnedPairK = 10;
-    // The search also tries the learned new words and, of the user's
-    // learnedReach most used words, those the user makes at least
-    // learnedReachRatio times likelier than the dictionary (they may be
-    // past the corrector's best few). 0: 500 gave +0.2 points of
-    // keystrokes saved for +27% time per letter (TUNING.md).
-    size_t learnedReach = 0;
-    double learnedReachRatio = 2.0;
     // A word that is mostly a slip (foe: for) is fixed by Strong only when
     // the fix is among the previous word's this many likeliest next words.
     size_t pairSupportRank = 12;
@@ -166,16 +162,6 @@ struct EngineParams {
     // capitalised too, capitalLowerCostNouns.
     double capitalLowerCost = 5.0;
     double capitalLowerCostNouns = 2.0;
-    // The other way round: a fix that changes letters into a word stored
-    // with a capital (a name: Ettore), typed with a lowercase first letter
-    // (ertore: errore), costs nameLowerCost nats more; nameLowerCostNouns in
-    // the languages that capitalise their nouns (huas: Haus). A name typed
-    // in lower case without a slip stays a capitalisation fix.
-    double nameLowerCost = 0.0;
-    double nameLowerCostNouns = 0.0;
-    // Tap distances up and down: 0 = in key widths, 1 = in key heights
-    // (KeyModel heightShare). Also sets which keys are neighbours.
-    double keyHeightShare = 0.0;
     // Languages are searched from the most likely down; a later one only
     // for words costing less than the best word so far plus this margin
     // (nats; e^-margin is how much less likely such a word is). 0: every
@@ -221,6 +207,7 @@ enum class Reason : uint8_t {
     TooShort,          // fewer letters than normalMinLength / gentleMinLength
     BelowGentle,       // Gentle: confidence below gentleConfidence
     GentleChanges,     // Gentle: more edits or changes than it makes
+    StrongLanguages,   // Strong: no typing language has both the valid word and the fix
 };
 const char *reasonName(Reason reason);
 
@@ -373,20 +360,17 @@ private:
     const ContextNext &contextNext(size_t dict) const;
     mutable std::vector<ContextNext> m_contextNext;   // per dictionary; cleared by rebuild()
     // Per dictionary: its language's learned data, if any (with words
-    // counted), μ, and the learned words the search also tries (learnedReach).
+    // counted), μ, and the learned new words the search also tries.
     struct LearnedCache {
         uint64_t version = UINT64_MAX;
         // The reach list is rebuilt when the learned new words change or
-        // every learnedReachEvery changes (the most used words move slowly).
+        // every 256 changes (learnedCache).
         uint64_t reachVersion = UINT64_MAX, reachNewWords = UINT64_MAX;
         const Learned::Language *lang = nullptr;
         double mu = 0;
         struct Reach {
-            std::u32string word;   // a new word as learned, a dictionary word as stored
+            std::u32string word;   // the new word as learned
             std::u32string key;
-            bool isNew = false;
-            uint8_t freq = 0;
-            uint32_t attrs = 0;
         };
         std::vector<Reach> reach;
         std::vector<std::vector<int>> reachLetters;   // reach[k].word for Corrector::matchLetters
@@ -444,7 +428,7 @@ private:
     std::vector<std::unique_ptr<Dictionary>> m_dicts;
     std::vector<Key> m_layout;   // as passed to setLayout
     float m_layoutSigma = 0.5f;
-    KeyModel m_keys;             // m_layout with keyHeightShare
+    KeyModel m_keys;             // m_layout
     std::vector<std::unique_ptr<Corrector>> m_correctors;
     LanguageTracker m_tracker;
 };

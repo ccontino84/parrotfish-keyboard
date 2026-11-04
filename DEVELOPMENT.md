@@ -13,7 +13,7 @@ SPDX-License-Identifier: LicenseRef-TBD
 | `engine/tools/pf-query.cpp` | try the corrector by hand |
 | `plugin/` | QML module `Parrotfish.Keyboard` (Qt 5.6): the engine as the list model Jolla's `PreeditHandler` expects |
 | `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
-| `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press; QWERTY ÅÖÄ: Jolla's fi keys), picked by `/apps/parrotfish-keyboard/layout`; optional key backgrounds in `parrotfish/` |
+| `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press; QWERTY (ÅÖÄ): Jolla's fi keys), picked by `/apps/parrotfish-keyboard/layout`; optional key backgrounds in `parrotfish/` |
 | `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`, list in `languages.js`) |
 | `rpm/` | RPM spec |
 | `tools/pf` | the developer front door (below): tests, lint, benchmark suite, comparisons, RPM |
@@ -65,7 +65,7 @@ uncertain taps and names mixed in; codes with a digit; words of another
 language in mixed texts; next words and keystrokes saved; real misspellings
 from your own lists. Each language is typed with a typical set of
 dictionaries loaded (en, it, de together; fr, es, en; the others with en)
-on QWERTY, or QWERTY ÅÖÄ for sv, da, nb, fi. `pf table [LABEL]` shows a
+on QWERTY, or QWERTY (ÅÖÄ) for sv, da, nb, fi. `pf table [LABEL]` shows a
 run's main numbers, one line per language; `pf compare` marks the cases
 one of the runs lacks or failed. Each run stores its wall and CPU time
 (per case too); the cases run longest first.
@@ -233,11 +233,13 @@ How it runs: `ParrotfishHandler.qml` is Jolla's `PreeditHandler` with our
 the letter keys of the current layout (centres and sizes) and the text
 before the cursor; then each change of the word being typed updates the
 suggestions. Autocorrect strength is the dconf key
-`/apps/parrotfish-keyboard/autocorrect` (`normal`, the default; `gentle`,
-`off`; `strong`, experimental: `normal`, and after a previous word a valid
-word one slip away from a far likelier one is fixed too, `strongMargin`,
-plan §6); hidden swiping to another layout can be switched off:
-`/apps/parrotfish-keyboard/swipe` (`normal`, the default; `off` = a full keyboard width). An empty field leans
+`/apps/parrotfish-keyboard/autocorrect` (`strong`, the default: `normal`,
+and after a previous word a valid word one slip away from a far likelier
+word of the same language is fixed too, `strongMargin`, plan §6; `normal`,
+`gentle`, `off`); swiping to another layout can be switched off on our layouts:
+`/apps/parrotfish-keyboard/swipe` (`normal`, the default; `off` = a drag of
+a full keyboard width); a long press on the spacebar opens Jolla's menu of
+layouts either way. An empty field leans
 towards the language the last text was in:
 `/apps/parrotfish-keyboard/last-language` (written by the handler).
 `/apps/parrotfish-keyboard/languages` holds the typing languages, codes
@@ -252,33 +254,41 @@ the dividers between suggestions. `/apps/parrotfish-keyboard/layout`
 Jolla's Finnish and Swedish layouts) picks the keys. Unset, it follows the
 system locale (`preferred()` in `layouts/parrotfish/arrangements.js`, the
 same as `layoutFor()` in `settings/languages.js`): de and fr_CH QWERTZ, fr
-AZERTY (fr_CA QWERTY), fi and sv QWERTY ÅÖÄ, otherwise QWERTY; the settings
+AZERTY (fr_CA QWERTY), fi and sv QWERTY (ÅÖÄ), otherwise QWERTY; the settings
 show that choice until another is picked. The look of the
 keys of our layouts (`layouts/parrotfish/`):
-`/apps/parrotfish-keyboard/key-fill` (`none` = the default, `flat`,
-`shaded`) and `/apps/parrotfish-keyboard/key-border` (`none` = the default,
-`line`, `raised` = a rim lit from above, drawn by a shader), in any
-combination; both `none` is Jolla's look. `/apps/parrotfish-keyboard/key-height`
-(`100` = the default, `90`, `80`) shortens every row of our layout in
-portrait, in percent of Jolla's height (`layouts/parrotfish.qml` replaces
-`keyHeight` as Jolla's `updateSizes()` sets it). `/apps/parrotfish-keyboard/number-row`
-(`false` = the default, `true`) adds a row of digits above the letters
-(`withNumberRow()` in `layouts/parrotfish/arrangements.js`): the digit row of
-the first symbol page becomes that row; the first symbol page is then the
-second page's first two rows over the first page's other two, and the second
-page holds rare signs (fractions, quotes, maths, ©).
+`/apps/parrotfish-keyboard/key-fill` (`flat` = the default, `shaded`,
+`none`) and `/apps/parrotfish-keyboard/key-border` (`line` = the default;
+`raised`, a rim lit from above drawn by a shader; `none`), in any
+combination; both `none` is Jolla's look. Letter keys stay fainter than
+the spacebar. `/apps/parrotfish-keyboard/key-gap`: the space around each
+key background, across and down, in percent of the row height (0-10, `5` =
+the default; also for Jolla's backgrounds of `?123`, the spacebar and
+Enter). `/apps/parrotfish-keyboard/key-height` (portrait, 80-100, `85` =
+the default) and `key-height-landscape` (`100` = the default) shorten every
+row of our layout, in percent of Jolla's height (`layouts/parrotfish.qml`
+replaces `keyHeight` as Jolla's `updateSizes()` sets it).
+`/apps/parrotfish-keyboard/number-row` (`true` = the default, `false`) adds
+a row of digits above the letters (`withNumberRow()` in
+`layouts/parrotfish/arrangements.js`): the digit row of the first symbol
+page becomes that row; the first symbol page is then the second page's
+first two rows over the first page's other two, and the second page holds
+rare signs (fractions, quotes, maths, ©).
 `/apps/parrotfish-keyboard/number-row-height`: its height in percent of the
-other rows (`100` = the default; the settings switch "Shorter number row"
-writes `75`; any value from 40 works). The apostrophe key's
-long press offers `"` and `’`. Letter keys stay fainter than the
-spacebar. Hidden strengths: `/apps/parrotfish-keyboard/key-tuning`, e.g.
-`"'fill=0.03 shade=0.05 border=0.1 gap=0.05'"` (`gap`: the space around
-each key background, across and down, as a share of the row height; also
-for Jolla's backgrounds of `?123`, the spacebar and Enter). All of these are in the settings
-section (`settings/`). Hidden tuning is `/apps/parrotfish-keyboard/tuning`,
-a string of `name=value` pairs for any engine parameter (`dconf write
-/apps/parrotfish-keyboard/tuning "'gentleConfidence=0.4 pairWeight=0.6'"`).
-With `~/.local/share/parrotfish-keyboard/debug` present, the plugin logs
+other rows (`75` = the default, "Smaller", with smaller digits; `100`;
+any value from 40 works). `/apps/parrotfish-keyboard/sticky` (`true` = the
+default, `false` = Jolla's rows: `withoutSticky()`) and `sticky-side`
+(`right`, `left`): the sticky key, which keeps the sign last picked from its
+long press (`sticky-key`). `/apps/parrotfish-keyboard/long-press-hint`
+(`dot` = the default, `off`): a dot on keys with a long-press menu. The
+settings section (`settings/ParrotfishSettings.qml`) opens three pages,
+Typing, Layout, Look & feel; Layout and Look & feel open the keyboard,
+with a field to try it in that it doesn't learn from
+(`settings/KeyboardPreview.qml`: its `__inputMethodExtensions` carry
+`parrotfishNoLearning`, which the handler passes to the plugin's
+`learnPaused`). A double tap on the section header opens the diagnostics:
+version, system, settings and learning counts (no words), to copy into a
+bug report. With `~/.local/share/parrotfish-keyboard/debug` present, the plugin logs
 timings (never the typed text) to the journal, and appends to
 `~/.local/share/parrotfish-keyboard/slips.log` the kind of slip behind every
 autocorrection kept or undone, every correction picked from the bar and
@@ -297,9 +307,8 @@ only, never words; it is the real tap data for the key model (which slips
 are common on the phone). A header line names the settings the lines below
 come from, written again whenever they change, each day and after a
 restart: `# 2026-10-29 0.1.0~alpha51 QWERTY portrait height=90 normal
-pitch=1.67 tuning=keyHeightShare=0.2` (date, version, arrangement,
-orientation, key height %, strength, rows apart in key widths as measured,
-hidden tuning if any). `words 50` lines count the words typed letter by
+pitch=1.67 learning=on` (date, version, arrangement, orientation, key
+height %, strength, rows apart in key widths as measured, learning). `words 50` lines count the words typed letter by
 letter under that header (in batches of 50, and the rest when the settings
 change; up to 49 are lost at a restart), so slips can be compared per word.
 

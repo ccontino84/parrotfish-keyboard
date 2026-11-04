@@ -5,11 +5,10 @@
 // The bottom row of the Parrotfish layouts. Based on SpacebarRow.qml of
 // jolla-keyboard 0.10.4 (Jolla Ltd., BSD-3-Clause, see
 // LICENSES/BSD-3-Clause.txt); changes: comma and period have a KeyBackground
-// (the spacebar keeps Jolla's own, set apart from the letter keys); a long press on the comma
-// offers : and ; as the period offers ! and ? (not where it types / or @),
-// with the typing languages' signs added (the layout's punctuation: ¡ ¿,
-// —);
-// the backgrounds of ?123, the spacebar and Enter take the layout's gap;
+// (the spacebar keeps Jolla's own, set apart from the letter keys); a long
+// press on the comma offers : and ; as the period offers ! and ? (not where
+// it types / or @), with the typing languages' signs added (the layout's
+// punctuation: ¡ ¿, —); the backgrounds of ?123, the spacebar and Enter take the layout's gap;
 // comma and period have a LongPressHint.
 import QtQuick 2.0
 import Sailfish.Silica 1.0

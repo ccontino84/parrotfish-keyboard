@@ -31,6 +31,7 @@ const char *reasonName(Reason reason)
     case Reason::TooShort: return "too-short";
     case Reason::BelowGentle: return "below-gentle";
     case Reason::GentleChanges: return "gentle-changes";
+    case Reason::StrongLanguages: return "strong-languages";
     }
     return "?";
 }
@@ -65,6 +66,7 @@ const Param Params[] = {
     {"nearWrongCost",              true,  [](EngineParams &p, double v) { p.nearWrongCost = v; }},
     {"normalMinLength",            true,  [](EngineParams &p, double v) { p.normalMinLength = static_cast<size_t>(v); }},
     {"strongMargin",               true,  [](EngineParams &p, double v) { p.strongMargin = v; }},
+    {"strongHomeMargin",           true,  [](EngineParams &p, double v) { p.strongHomeMargin = v; }},
     {"strongMinLength",            true,  [](EngineParams &p, double v) { p.strongMinLength = static_cast<size_t>(v); }},
     {"otherLanguageMargin",        true,  [](EngineParams &p, double v) { p.otherLanguageMargin = v; }},
     {"unknownBase",                true,  [](EngineParams &p, double v) { p.unknownBase = v; }},
@@ -88,14 +90,9 @@ const Param Params[] = {
     {"learnedK",                   false, [](EngineParams &p, double v) { p.learnedK = v; }},
     {"learnedPairWeight",          false, [](EngineParams &p, double v) { p.learnedPairWeight = v; }},
     {"learnedPairK",               false, [](EngineParams &p, double v) { p.learnedPairK = v; }},
-    {"learnedReach",               false, [](EngineParams &p, double v) { p.learnedReach = static_cast<size_t>(v); }},
-    {"learnedReachRatio",          false, [](EngineParams &p, double v) { p.learnedReachRatio = v; }},
     {"pairSupportRank",            true,  [](EngineParams &p, double v) { p.pairSupportRank = static_cast<size_t>(v); }},
     {"capitalLowerCost",           false, [](EngineParams &p, double v) { p.capitalLowerCost = v; }},
-    {"nameLowerCost",              false, [](EngineParams &p, double v) { p.nameLowerCost = v; }},
-    {"nameLowerCostNouns",         false, [](EngineParams &p, double v) { p.nameLowerCostNouns = v; }},
     {"capitalLowerCostNouns",      false, [](EngineParams &p, double v) { p.capitalLowerCostNouns = v; }},
-    {"keyHeightShare",             false, [](EngineParams &p, double v) { p.keyHeightShare = v; }},
     {"searchMargin",               false, [](EngineParams &p, double v) { p.searchMargin = v; }},
     {"searchMinWeight",            false, [](EngineParams &p, double v) { p.searchMinWeight = v; }},
     {"completions",                false, [](EngineParams &p, double v) { p.corrector.completions = v != 0; }},

@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LicenseRef-TBD
-# The QWERTY ÅÖÄ arrangement (Jolla's fi.qml, same rows as de.qml) with the
+# The QWERTY (ÅÖÄ) arrangement (Jolla's fi.qml, same rows as de.qml) with the
 # row distance of phone-qwerty.layout (not logged on a phone: an
 # approximation, as phone-qwertz.layout).
 pitch 1.67

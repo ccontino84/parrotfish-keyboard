@@ -20,7 +20,7 @@ struct Key {
 // coordinates): the probability falls off with the distance between key
 // centres as a 2-D Gaussian. Distances across are in key widths; distances
 // up and down in a mix of the key's width and height: heightShare 0 = key
-// widths too, 1 = key heights.
+// widths too (the engine's), 1 = key heights (the benches' typo noise).
 class KeyModel
 {
 public:

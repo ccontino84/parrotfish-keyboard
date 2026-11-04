@@ -74,7 +74,7 @@ void Engine::rebuild()
     m_contextNext.clear();
     m_learnedCache.clear();
     m_correctors.clear();
-    m_keys = KeyModel(m_layout, m_layoutSigma, static_cast<float>(m_params.keyHeightShare));
+    m_keys = KeyModel(m_layout, m_layoutSigma);
     m_base.clear();
     for (const auto &d : m_dicts)
         for (uint32_t i = 0; i < d->alphabetSize(); ++i)
@@ -348,9 +348,9 @@ const Engine::LearnedCache &Engine::learnedCache(size_t i) const
     c.lang = lang;
     const double n = lang->total;
     c.mu = m_params.learnedWeight * n / (n + m_params.learnedK);
-    // The search also tries the learned new words, and the dictionary words
-    // the user makes much likelier (among the most used). Rebuilt when the
-    // new words change, or every 256 words typed.
+    // The search also tries the learned new words (they may be past the
+    // corrector's best few). Rebuilt when the new words change, or every 256
+    // words typed (a spelling can change).
     constexpr uint64_t ReachEvery = 256;
     if (c.reachNewWords == m_learned->newWordsVersion() && c.reachVersion != UINT64_MAX
             && version - c.reachVersion < ReachEvery)
@@ -359,34 +359,9 @@ const Engine::LearnedCache &Engine::learnedCache(size_t i) const
     c.reachVersion = version;
     c.reach.clear();
     c.reachLetters.clear();
-    const Dictionary &d = *m_dicts[i];
-    std::vector<std::pair<double, const std::u32string *>> used;
-    for (const auto &e : lang->words) {
-        const Learned::Word &w = e.second;
-        if (w.pending)
-            continue;
-        if (w.isNew)
-            c.reach.push_back({w.spelling, e.first, true, 0, 0});
-        else if (m_params.learnedReach > 0)
-            used.emplace_back(w.count, &e.first);
-    }
-    const size_t top = std::min(used.size(), m_params.learnedReach);
-    std::partial_sort(used.begin(), used.begin() + static_cast<long>(top), used.end(),
-                      [](const std::pair<double, const std::u32string *> &a,
-                         const std::pair<double, const std::u32string *> &b) { return a.first > b.first; });
-    for (size_t k = 0; k < top; ++k) {
-        std::u32string stored;
-        const uint32_t node = d.find(*used[k].second, &stored);
-        if (!node)
-            continue;
-        const uint32_t attrs = d.attributes(node);
-        if (attrs & format::AttrMisspelling)
-            continue;
-        const uint8_t freq = d.node(node).freq;
-        const double dictUni = std::exp(d.logProb(freq));
-        if (learnedUni(c, *used[k].second, dictUni) >= m_params.learnedReachRatio * dictUni)
-            c.reach.push_back({stored, *used[k].second, false, freq, attrs});
-    }
+    for (const auto &e : lang->words)
+        if (e.second.isNew && !e.second.pending)
+            c.reach.push_back({e.second.spelling, e.first});
     for (const LearnedCache::Reach &r : c.reach)
         c.reachLetters.push_back(m_correctors[i]->letters(r.word));
     return c;

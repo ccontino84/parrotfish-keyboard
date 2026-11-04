@@ -85,6 +85,10 @@ public:
     void forgetWord(const QString &word);
     // Forgets everything learned, the undo memory included.
     void clearAll();
+    // For the diagnostics (settings page): per language, counts only, no
+    // words: "en: typed 1234, words 567 (new 8, pending 9), pairs 1011,
+    // undos 12".
+    QStringList summary() const;
 
 private:
     bool exec(const char *sql);

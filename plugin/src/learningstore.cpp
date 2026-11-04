@@ -420,3 +420,37 @@ void LearningStore::clearAll()
         exec("ROLLBACK");
     exec("PRAGMA incremental_vacuum");
 }
+
+QStringList LearningStore::summary() const
+{
+    if (!m_db)
+        return {QStringLiteral("no learning.db")};
+    struct Counts {
+        qint64 typed = 0, words = 0, isNew = 0, pending = 0, pairs = 0, undos = 0;
+    };
+    QMap<QString, Counts> byLang;
+    // (sql, the field each row's second column goes to)
+    const auto query = [&](const char *sql, qint64 Counts::*field) {
+        sqlite3_stmt *st = nullptr;
+        if (sqlite3_prepare_v2(m_db, sql, -1, &st, nullptr) == SQLITE_OK)
+            while (sqlite3_step(st) == SQLITE_ROW)
+                byLang[QString::fromUtf8(reinterpret_cast<const char *>(sqlite3_column_text(st, 0)))].*field
+                        = sqlite3_column_int64(st, 1);
+        sqlite3_finalize(st);
+    };
+    query("SELECT lang, CAST(typed AS INTEGER) FROM langs", &Counts::typed);
+    query("SELECT lang, COUNT(*) FROM words WHERE pending = 0 GROUP BY lang", &Counts::words);
+    query("SELECT lang, COUNT(*) FROM words WHERE is_new = 1 AND pending = 0 GROUP BY lang", &Counts::isNew);
+    query("SELECT lang, COUNT(*) FROM words WHERE pending = 1 GROUP BY lang", &Counts::pending);
+    query("SELECT lang, COUNT(*) FROM pairs GROUP BY lang", &Counts::pairs);
+    query("SELECT lang, COUNT(*) FROM undos GROUP BY lang", &Counts::undos);
+    QStringList out;
+    for (auto it = byLang.constBegin(); it != byLang.constEnd(); ++it) {
+        const Counts &c = it.value();
+        out << QStringLiteral("%1: typed %2, words %3 (new %4, pending %5), pairs %6, undos %7")
+                   .arg(it.key()).arg(c.typed).arg(c.words).arg(c.isNew).arg(c.pending).arg(c.pairs).arg(c.undos);
+    }
+    if (out.isEmpty())
+        out << QStringLiteral("nothing learned");
+    return out;
+}

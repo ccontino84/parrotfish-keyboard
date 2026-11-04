@@ -161,7 +161,6 @@ void Engine::searchLanguages(Searched &out, bool capital) const
         order[i] = i;
     std::stable_sort(order.begin(), order.end(), [&](size_t a, size_t b) { return w[a] > w[b]; });
     const bool prune = m_params.searchMargin > 0;
-    const bool lowerFirst = !out.taps.empty() && !out.taps[0].upper;
     double bestCost = std::numeric_limits<double>::infinity();
     for (size_t i : order) {
         if (w[i] <= m_params.searchMinWeight)
@@ -178,8 +177,6 @@ void Engine::searchLanguages(Searched &out, bool capital) const
             // bonus for its target.
             const double capitalExtra = capitalCost(i, c.word, capital);
             c.cost += capitalExtra;
-            if (lowerFirst && c.changes > 0 && !c.word.empty() && utf8::isUpper(c.word[0]))
-                c.cost += m_dicts[i]->capitalisedNouns() ? m_params.nameLowerCostNouns : m_params.nameLowerCost;
             if (capitalExtra > 0 && c.viaTarget && c.changes == 0 && (c.attrs & format::AttrMisspelling))
                 c.cost += m_params.corrector.exactMisspellingBonus;
             bestCost = std::min(bestCost, c.cost);
@@ -297,20 +294,12 @@ void Engine::addContext(size_t i, const Searched &out, std::vector<Candidate> &c
             continue;
         Candidate c;
         c.word = r.word;
-        c.freq = r.freq;
-        c.attrs = r.attrs;
         c.edits = m.edits;
         c.changes = m.changes;
         c.extraLetters = m.extraLetters;
         c.tapCost = m.tapCost;
-        if (r.isNew) {
-            c.wordCost = -(m_params.corrector.lmWeight * std::log(mixed(r.key, 0.0)) + std::log(w[i]));
-            c.cost = c.tapCost + c.wordCost;
-        } else {
-            c.wordCost = -(m_params.corrector.lmWeight * d.logProb(c.freq) + std::log(w[i]));
-            c.cost = c.tapCost + c.wordCost;
-            rescore(c, r.key);
-        }
+        c.wordCost = -(m_params.corrector.lmWeight * std::log(mixed(r.key, 0.0)) + std::log(w[i]));
+        c.cost = c.tapCost + c.wordCost;
         if (std::isfinite(c.cost))
             learnedCands.push_back(std::move(c));
     }

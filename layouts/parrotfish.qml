@@ -4,10 +4,11 @@
 // The Parrotfish layout: one keyboard for any Latin-script typing language;
 // the engine picks the language, this file only gives the keys. Its letter
 // keys come from parrotfish/arrangements.js, picked by dconf
-// /apps/parrotfish-keyboard/layout (qwerty, qwertz, azerty, nordic). The rows are rebuilt
-// when it changes. The keys can have subtle backgrounds (parrotfish/, dconf
-// /apps/parrotfish-keyboard/key-fill, key-border). In portrait the rows can be
-// shorter (/apps/parrotfish-keyboard/key-height: 100, 90, 80 percent).
+// /apps/parrotfish-keyboard/layout (qwerty, qwertz, azerty, nordic). The rows
+// are rebuilt when it changes. The keys can have subtle backgrounds
+// (parrotfish/, dconf /apps/parrotfish-keyboard/key-fill, key-border). The
+// rows can be shorter than Jolla's (/apps/parrotfish-keyboard/key-height in
+// portrait, key-height-landscape: 80-100 percent).
 // The letter keys' long-press menus show the typing languages' accented
 // letters, the others behind › (parrotfish/LongPressMenu.qml).
 import QtQuick 2.6
@@ -22,34 +23,28 @@ KeyboardLayout {
 
     // A row of digits above the letters (/apps/parrotfish-keyboard/number-row),
     // /apps/parrotfish-keyboard/number-row-height percent as tall as the
-    // other rows (the settings write 100 or 75; default 100).
+    // other rows (the settings write 100 or 75; default 75: "Smaller", with
+    // smaller digits).
     readonly property bool numberRowOn: numberRowConfig.value === true || numberRowConfig.value === "true"
     readonly property int numberRowPercent: {
         var p = parseInt(numberRowHeightConfig.value)
-        return p >= 40 && p <= 100 ? p : 100
+        return p >= 40 && p <= 100 ? p : 75
     }
+    // The sticky key (/apps/parrotfish-keyboard/sticky: true, the default;
+    // false: Jolla's rows, arrangements.js).
+    readonly property bool stickyOn: stickyOnConfig.value !== false && stickyOnConfig.value !== "false"
     readonly property var arrangement: Arrangements.get(arrangementConfig.value, numberRowOn,
-                                                        stickySideConfig.value)
+                                                        stickySideConfig.value, stickyOn)
     // Shown on the spacebar until the engine knows the language.
     readonly property string arrangementName: arrangement.name
 
     // Key backgrounds (parrotfish/KeyBackground.qml): fill and border are
-    // set separately; keyTuning overrides their strengths.
+    // set separately; the number row's keys look like the others.
     property string keyFill: keyFillConfig.value
     property string keyBorder: keyBorderConfig.value
-    property string keyTuning: keyTuningConfig.value
-    // The sticky key's look (hidden /apps/parrotfish-keyboard/sticky-look):
-    // "function" (the default, alpha100: as Shift, Backspace, ?123 and
-    // Enter, 0.17) or "spacebar" (Jolla's spacebar, 0.07).
-    property string stickyLook: stickyLookConfig.value
-    // The number row's own look (/apps/parrotfish-keyboard/number-row-fill:
-    // same, none, flat, shaded, band; number-row-border: same, none, line,
-    // raised; number-row-digits: normal, quiet). "same": the letters'.
-    property string numberFill: numberFillConfig.value
-    property string numberBorder: numberBorderConfig.value
-    property string numberDigits: numberDigitsConfig.value
-    // The mark on keys with a long-press menu (parrotfish/LongPressHint.qml).
-    property string longPressHint: longPressHintConfig.value
+    // The mark on keys with a long-press menu (parrotfish/LongPressHint.qml):
+    // "dot" ("line", an older choice, shows the dot too) or "off".
+    readonly property bool longPressHint: longPressHintConfig.value !== "off"
     // The comma's and the period's long-press menus, by typing language.
     readonly property var punctuation: Arrangements.punctuation(languagesConfig.value, Qt.locale().name)
     // The accented letters the letter keys' menus show first (the others
@@ -64,24 +59,23 @@ KeyboardLayout {
         return v.length === 1 && Arrangements.stickySigns.indexOf(v) >= 0 ? v : "'"
     }
 
-    // Portrait row height in percent of Jolla's.
-    readonly property int keyHeightPercent: {
-        var p = parseInt(keyHeightConfig.value)
-        return p >= 50 && p <= 100 ? p : 100
-    }
+    // The row height in percent of Jolla's, in the current orientation.
+    readonly property int keyHeightPercent: _percent(portraitMode ? keyHeightConfig.value
+                                                                  : keyHeightLandscapeConfig.value,
+                                                     portraitMode ? 85 : 100)
 
     // The space around each key background, the same across and down: a
     // share of the row height (/apps/parrotfish-keyboard/key-gap percent,
-    // else key-tuning "gap=0.05"), so that shorter rows keep most of their
-    // background. Jolla's is fixed (paddingMedium down, paddingSmall across):
-    // at 80% rows it took a third of a row.
+    // default 5), so that shorter rows keep most of their background.
+    // Jolla's is fixed (paddingMedium down, paddingSmall across): at 80%
+    // rows it took a third of a row.
     readonly property real _gapShare: {
         var p = parseFloat(keyGapConfig.value)
-        return p >= 0 && p <= 20 ? p / 100 : _tuned("gap", 0.05)
+        return p >= 0 && p <= 20 ? p / 100 : 0.05
     }
     readonly property int keyGap: Math.max(1, Math.round(keyHeight * _gapShare))
 
-    // A sticky key in the bottom letter row (QWERTZ, QWERTY ÅÖÄ): Shift and
+    // A sticky key in the bottom letter row (QWERTZ, QWERTY (ÅÖÄ)): Shift and
     // Backspace take Jolla's narrow width, as on its layouts with more keys
     // there (tr.qml, uk.qml), so that the letters keep their width.
     readonly property bool _narrowEnds: {
@@ -120,19 +114,13 @@ KeyboardLayout {
     ConfigurationValue {
         id: keyFillConfig
         key: "/apps/parrotfish-keyboard/key-fill"   // none, flat, shaded
-        defaultValue: "none"
+        defaultValue: "flat"
     }
 
     ConfigurationValue {
         id: keyBorderConfig
         key: "/apps/parrotfish-keyboard/key-border"   // none, line, raised
-        defaultValue: "none"
-    }
-
-    ConfigurationValue {
-        id: keyTuningConfig
-        key: "/apps/parrotfish-keyboard/key-tuning"   // hidden: "fill=0.03 shade=0.05 border=0.1 gap=0.05 hint=0.4 hintsize=3.5 dwell=400"
-        defaultValue: ""
+        defaultValue: "line"
     }
 
     ConfigurationValue {
@@ -148,9 +136,9 @@ KeyboardLayout {
     }
 
     ConfigurationValue {
-        id: stickyLookConfig
-        key: "/apps/parrotfish-keyboard/sticky-look"   // hidden: function, spacebar
-        defaultValue: "function"
+        id: stickyOnConfig
+        key: "/apps/parrotfish-keyboard/sticky"   // true, false
+        defaultValue: true
     }
 
     ConfigurationValue {
@@ -161,50 +149,38 @@ KeyboardLayout {
 
     ConfigurationValue {
         id: keyGapConfig
-        key: "/apps/parrotfish-keyboard/key-gap"   // percent of the row height: 2, 3, 5, 7, 10
+        key: "/apps/parrotfish-keyboard/key-gap"   // percent of the row height, 0-10 (default 5)
         defaultValue: ""
     }
 
     ConfigurationValue {
         id: longPressHintConfig
-        key: "/apps/parrotfish-keyboard/long-press-hint"   // dot, line, off
+        key: "/apps/parrotfish-keyboard/long-press-hint"   // dot, off
         defaultValue: "dot"
     }
 
     ConfigurationValue {
         id: keyHeightConfig
-        key: "/apps/parrotfish-keyboard/key-height"   // 100, 90, 80
-        defaultValue: "100"
+        key: "/apps/parrotfish-keyboard/key-height"   // portrait: 80-100 (default 85)
+        defaultValue: ""
+    }
+
+    ConfigurationValue {
+        id: keyHeightLandscapeConfig
+        key: "/apps/parrotfish-keyboard/key-height-landscape"   // 80-100 (default 100)
+        defaultValue: ""
     }
 
     ConfigurationValue {
         id: numberRowConfig
-        key: "/apps/parrotfish-keyboard/number-row"   // false, true
-        defaultValue: false
-    }
-
-    ConfigurationValue {
-        id: numberFillConfig
-        key: "/apps/parrotfish-keyboard/number-row-fill"   // same, none, flat, shaded, band
-        defaultValue: "same"
-    }
-
-    ConfigurationValue {
-        id: numberBorderConfig
-        key: "/apps/parrotfish-keyboard/number-row-border"   // same, none, line, raised
-        defaultValue: "same"
-    }
-
-    ConfigurationValue {
-        id: numberDigitsConfig
-        key: "/apps/parrotfish-keyboard/number-row-digits"   // normal, quiet
-        defaultValue: "normal"
+        key: "/apps/parrotfish-keyboard/number-row"   // true, false
+        defaultValue: true
     }
 
     ConfigurationValue {
         id: numberRowHeightConfig
         key: "/apps/parrotfish-keyboard/number-row-height"   // 100, 75 (any 40-100)
-        defaultValue: "100"
+        defaultValue: "75"
     }
 
     // The number row: not one of Jolla's rows (their sizing doesn't fit a
@@ -216,24 +192,6 @@ KeyboardLayout {
         height: visible ? Math.round(parrotfishLayout.keyHeight * parrotfishLayout.numberRowPercent / 100) : 0
         onWidthChanged: parrotfishLayout._placeNumbers()
         onHeightChanged: parrotfishLayout._placeNumbers()
-
-        // numberFill "band": one band behind the digits (two when the rows
-        // are split), inset by the gap as the key backgrounds.
-        Repeater {
-            model: parrotfishLayout.numberFill === "band" ? (parrotfishLayout.avoidanceWidth > 0 ? 2 : 1) : 0
-            Rectangle {
-                readonly property real _half: (numberRow.width - parrotfishLayout.avoidanceWidth) / 2
-                x: (index === 0 ? 0 : _half + parrotfishLayout.avoidanceWidth) + parrotfishLayout.keyGap
-                y: parrotfishLayout.keyGap
-                width: (parrotfishLayout.avoidanceWidth > 0 ? _half : numberRow.width) - 2 * parrotfishLayout.keyGap
-                height: numberRow.height - 2 * parrotfishLayout.keyGap
-                z: -1
-                radius: geometry.keyRadius
-                color: Theme.rgba(parrotfishLayout._numberKeys.length > 0
-                                  ? parrotfishLayout._numberKeys[0].palette.primaryColor : "white",
-                                  parrotfishLayout._tuned("band", 0.06))
-            }
-        }
     }
 
     // The letter rows are filled by _build(), in order, so that the keys'
@@ -252,7 +210,6 @@ KeyboardLayout {
     LongPressMenu {
         keyboardItem: typeof keyboard !== "undefined" ? keyboard : null
         layout: parrotfishLayout
-        dwell: parrotfishLayout._tuned("dwell", 400)
         onPicked: if (Arrangements.stickySigns.indexOf(sign) >= 0) stickyConfig.value = sign
     }
 
@@ -362,22 +319,16 @@ KeyboardLayout {
         }
     }
 
-    // A value from keyTuning ("name=value ..."), or `fallback`.
-    function _tuned(name, fallback) {
-        var pairs = keyTuning.split(/\s+/)
-        for (var i = 0; i < pairs.length; ++i) {
-            var pair = pairs[i].split("=")
-            var value = parseFloat(pair[1])
-            if (pair.length === 2 && pair[0] === name && !isNaN(value))
-                return value
-        }
-        return fallback
+    // A row height setting: 80-100 percent (older values from 50 kept),
+    // else `fallback`.
+    function _percent(value, fallback) {
+        var p = parseInt(value)
+        return p >= 50 && p <= 100 ? p : fallback
     }
 
     function _scaleKeyHeight() {
-        if (!portraitMode)
-            return
-        var scaled = Math.round(geometry.keyHeightPortrait * keyHeightPercent / 100)
+        var jolla = portraitMode ? geometry.keyHeightPortrait : geometry.keyHeightLandscape
+        var scaled = Math.round(jolla * keyHeightPercent / 100)
         if (keyHeight !== scaled)
             keyHeight = scaled
     }

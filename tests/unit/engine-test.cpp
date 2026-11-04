@@ -357,6 +357,12 @@ void testStrong()
     // A single letter is never replaced (t → it was).
     CHECK_EQ(space(Strength::Normal, "I think ", "t"), "t");
     CHECK_EQ(space(Strength::Strong, "I think ", "p"), "p");
+
+    // Only within one language: an Italian word in English text is not a
+    // slip for an English word (bene: been), though each dictionary lists
+    // the other's word, rarely.
+    CHECK_EQ(space(Strength::Strong, "When do you leave ", "bene"), "bene");
+    CHECK_EQ(space(Strength::Strong, "Have you added ", "bene"), "bene");
 }
 
 void testDigits()

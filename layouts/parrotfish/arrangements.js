@@ -10,11 +10,11 @@
 // s shifted, y and y2 the two symbol pages, a and A accents (A shifted;
 // not "as": Qt 5.6 reads that as a keyword in QML files), fit = shrink
 // the caption to the key's width, sticky = the sticky key (stickySigns:
-// it types the sign last picked from its long press; QWERTZ and QWERTY ÅÖÄ
+// it types the sign last picked from its long press; QWERTZ and QWERTY (ÅÖÄ)
 // get one in the bottom letter row, placeSticky).
 //
 // The keys come from en.qml (QWERTY), de.qml (QWERTZ), fr.qml (AZERTY) and
-// fi.qml (QWERTY ÅÖÄ: sv.qml has the same letters) of jolla-keyboard
+// fi.qml (QWERTY (ÅÖÄ): sv.qml has the same letters) of jolla-keyboard
 // 0.10.4 (Jolla Ltd., BSD-3-Clause, notice below).
 // QWERTY changes: a
 // full-width apostrophe key ends the middle row (no half-key indent, as on
@@ -26,7 +26,7 @@
 // spacebar) and is the sticky key; ç is on C's long press, and typed as c
 // the engine puts it back. As the sticky key may type something else, the
 // symbol pages have ' and " where en.qml has them: ' on B, " on C's second
-// page (fr.qml's ÷ there is dropped). QWERTY ÅÖÄ: fi.qml's keys.
+// page (fr.qml's ÷ there is dropped). QWERTY (ÅÖÄ): fi.qml's keys.
 // All: more accents for the typing languages, from Jolla's da/fr/pt/ro
 // layouts (A: æ ă, O: õ œ, S: ș, T: ț).
 
@@ -61,7 +61,8 @@
 
 
 var arrangements = {
-    "qwerty": { "name": "QWERTY", "rows": [
+    // Without the sticky key (withoutSticky): these signs, as on en.qml.
+    "qwerty": { "name": "QWERTY", "noSticky": {"k": ["!", "¡"], "l": ["?", "¿"], "m": [":", "~"]}, "rows": [
         { "split": 5, "keys": [
             {"c": "q", "s": "Q", "y": "1", "y2": "€"},
             {"c": "w", "s": "W", "y": "2", "y2": "£"},
@@ -133,7 +134,8 @@ var arrangements = {
             {"c": "m", "s": "M", "y": ":", "y2": "×"}
         ] }
     ] },
-    "azerty": { "name": "AZERTY", "rows": [
+    // Without the sticky key: a plain apostrophe key (withoutSticky).
+    "azerty": { "name": "AZERTY", "stickyStays": true, "rows": [
         { "split": 5, "keys": [
             {"c": "a", "s": "A", "y": "1", "y2": "€", "a": "aâàæäáãåă", "A": "AÂÀÆÄÁÃÅĂ"},
             {"c": "z", "s": "Z", "y": "2", "y2": "£"},
@@ -168,7 +170,7 @@ var arrangements = {
             {"c": "'", "s": "'", "y": ":", "y2": "‰", "sticky": true}
         ] }
     ] },
-    "nordic": { "name": "QWERTY ÅÖÄ", "stickyInLastRow": true, "rows": [
+    "nordic": { "name": "QWERTY (ÅÖÄ)", "stickyInLastRow": true, "rows": [
         { "split": 5, "keys": [
             {"c": "q", "s": "Q", "y": "1", "y2": "€"},
             {"c": "w", "s": "W", "y": "2", "y2": "£"},
@@ -215,7 +217,7 @@ var stickySigns = "'\"-_@#/"
 // The sticky key on the right or the left of its row (agreed 2026-10-31:
 // in the same row, so that no key gets smaller; "right" is the default,
 // "left" suits left hands or keeps it away from Backspace). QWERTY has it
-// at the end of the middle row, AZERTY after N. QWERTZ and QWERTY ÅÖÄ have
+// at the end of the middle row, AZERTY after N. QWERTZ and QWERTY (ÅÖÄ) have
 // no apostrophe key: theirs goes in the bottom letter row, whose end keys
 // are wider than the letters and leave room; it has no symbol-view sign of
 // its own there, so it types its sign in the symbol view too. On the left,
@@ -261,12 +263,42 @@ function placeSticky(a, side) {
     return {"name": a.name, "rows": rows}
 }
 
+// `a` without the sticky key (/apps/parrotfish-keyboard/sticky false,
+// agreed 2026-11-04): Jolla's rows back. QWERTZ and QWERTY (ÅÖÄ) only get
+// it from placeSticky; QWERTY drops it from the middle row, whose signs
+// become en.qml's (noSticky: caption → [y, y2]); AZERTY keeps a plain '
+// key (stickyStays: French needs it, and fr.qml has one too).
+function withoutSticky(a) {
+    var rows = []
+    for (var r = 0; r < a.rows.length; ++r) {
+        var keys = []
+        for (var i = 0; i < a.rows[r].keys.length; ++i) {
+            var k = a.rows[r].keys[i]
+            if (k.sticky && !a.stickyStays)
+                continue
+            var copy = {}
+            for (var p in k)
+                if (p !== "sticky")
+                    copy[p] = k[p]
+            var signs = a.noSticky ? a.noSticky[k.c] : null
+            if (signs) {
+                copy.y = signs[0]
+                copy.y2 = signs[1]
+            }
+            keys.push(copy)
+        }
+        rows.push({"split": a.rows[r].split, "keys": keys})
+    }
+    return {"name": a.name, "rows": rows}
+}
+
 // The arrangement called `name`, or QWERTY. With `numberRow`, it gets a
 // "numbers" row above the letters (withNumberRow). `stickySide` ("right",
-// "left") places the sticky key (placeSticky).
-function get(name, numberRow, stickySide) {
+// "left") places the sticky key (placeSticky); `stickyOn` false: none
+// (withoutSticky).
+function get(name, numberRow, stickySide, stickyOn) {
     var a = arrangements[name] || arrangements["qwerty"]
-    a = placeSticky(a, stickySide)
+    a = stickyOn === false ? withoutSticky(a) : placeSticky(a, stickySide)
     return numberRow ? withNumberRow(a) : a
 }
 

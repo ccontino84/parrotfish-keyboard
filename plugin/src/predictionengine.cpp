@@ -182,11 +182,25 @@ void PredictionEngine::reloadLearned()
     log(QStringLiteral("learned data reloaded"));
 }
 
+void PredictionEngine::setLearnPaused(bool paused)
+{
+    if (paused == m_learnPaused)
+        return;
+    flush();
+    learnKept();   // a word kept before the pause
+    m_learnPaused = paused;
+    if (m_debug)
+        qInfo("parrotfish: learning %s", paused ? "paused" : "resumed");
+    emit learnPausedChanged();
+}
+
 void PredictionEngine::learnKept()
 {
     if (!m_kept.valid)
         return;
     m_kept.valid = false;
+    if (m_learnPaused)
+        return;
     m_engine.learn(m_learned, m_kept.before, m_kept.word, m_kept.language);
     if (++m_keptSinceSave >= 50)
         saveLearned();
@@ -434,16 +448,6 @@ void PredictionEngine::setStrength(const QString &strength)
     applyParams();
 }
 
-void PredictionEngine::setTuning(const QString &tuning)
-{
-    flush();
-    if (tuning == m_tuning)
-        return;
-    m_tuning = tuning;
-    emit tuningChanged();
-    applyParams();
-}
-
 void PredictionEngine::applyParams()
 {
     parrotfish::EngineParams params = mvpParams();
@@ -451,19 +455,6 @@ void PredictionEngine::applyParams()
                     : m_strength == QLatin1String("gentle") ? parrotfish::Strength::Gentle
                     : m_strength == QLatin1String("strong") ? parrotfish::Strength::Strong
                                                             : parrotfish::Strength::Normal;
-    const QStringList parts = m_tuning.split(QLatin1Char(' '));
-    for (const QString &part : parts) {
-        if (part.isEmpty())
-            continue;
-        bool ok = false;
-        try {
-            ok = parrotfish::setParam(params, part.toStdString());
-        } catch (const std::exception &) {
-            ok = false;   // not a number
-        }
-        if (!ok)
-            qWarning("parrotfish: ignoring tuning \"%s\"", qPrintable(part));
-    }
     m_engine.setParams(params);
     m_results.clear();
     m_layoutKeys = false;          // the handler passes the keys again
@@ -506,7 +497,7 @@ QString PredictionEngine::fixLanguage(const QString &typed) const
 void PredictionEngine::rejectCorrection(const QString &typed)
 {
     flush();
-    if (m_learning == QLatin1String("off"))
+    if (m_learning == QLatin1String("off") || m_learnPaused)
         return;   // nothing learned
     const QString language = fixLanguage(typed), lower = typed.toLower();
     // A valid word fixed by Strong is left alone after one undo.
@@ -521,6 +512,8 @@ void PredictionEngine::rejectCorrection(const QString &typed)
 void PredictionEngine::acceptCorrection(const QString &typed)
 {
     flush();
+    if (m_learnPaused)
+        return;
     const QString language = fixLanguage(typed), lower = typed.toLower();
     if (!m_undos.remove(qMakePair(language, lower)))
         return;
@@ -680,12 +673,9 @@ QString PredictionEngine::slipsHeader() const
         if (widths[widths.size() / 2] > 0)
             pitch = QString::number(row / widths[widths.size() / 2], 'f', 2);
     }
-    QString tuning = m_tuning.simplified();
-    tuning.replace(QLatin1Char(' '), QLatin1Char(','));
-    return QStringLiteral("# %1 %2 %3 %4 pitch=%5 learning=%6%7")
+    return QStringLiteral("# %1 %2 %3 %4 pitch=%5 learning=%6")
             .arg(QDate::currentDate().toString(Qt::ISODate), QStringLiteral(PARROTFISH_VERSION),
-                 m_slipsConfig.isEmpty() ? QStringLiteral("?") : m_slipsConfig, m_strength, pitch, m_learning,
-                 tuning.isEmpty() ? QString() : QStringLiteral(" tuning=") + tuning);
+                 m_slipsConfig.isEmpty() ? QStringLiteral("?") : m_slipsConfig, m_strength, pitch, m_learning);
 }
 
 void PredictionEngine::appendSlips(QStringList lines)

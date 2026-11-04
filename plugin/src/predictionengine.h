@@ -45,9 +45,6 @@ class PredictionEngine : public QAbstractListModel
     Q_PROPERTY(double confidence READ confidence NOTIFY leadingLanguageChanged)
     // Autocorrect strength: "off", "gentle", "normal" or "strong".
     Q_PROPERTY(QString strength READ strength WRITE setStrength NOTIFY strengthChanged)
-    // Hidden tuning (plan §5): "name=value name=value", any EngineParams
-    // field (see the engine headers); unknown names are ignored.
-    Q_PROPERTY(QString tuning READ tuning WRITE setTuning NOTIFY tuningChanged)
     // For the slips.log header: the layout's settings, e.g. "QWERTY portrait
     // height=90" (no spaces inside a setting).
     Q_PROPERTY(QString slipsConfig READ slipsConfig WRITE setSlipsConfig NOTIFY slipsConfigChanged)
@@ -62,6 +59,10 @@ class PredictionEngine : public QAbstractListModel
     // used, the undo memory included). What was learned is kept until
     // cleared.
     Q_PROPERTY(QString learning READ learning WRITE setLearning NOTIFY learningChanged)
+    // While true, nothing is learned or stored (words, pairs, undos); what
+    // was learned is still used. For a field that asks for it (the
+    // settings' preview field).
+    Q_PROPERTY(bool learnPaused READ learnPaused WRITE setLearnPaused NOTIFY learnPausedChanged)
 
 public:
     enum Roles { TextRole = Qt::UserRole + 1 };
@@ -89,12 +90,12 @@ public:
     void setStrength(const QString &strength);
     QString autocorrection() const { return m_autocorrection; }
     bool debug() const { return m_debug; }
-    QString tuning() const { return m_tuning; }
-    void setTuning(const QString &tuning);
     QString slipsConfig() const { return m_slipsConfig; }
     void setSlipsConfig(const QString &config);
     QString learning() const { return m_learning; }
     void setLearning(const QString &mode);
+    bool learnPaused() const { return m_learnPaused; }
+    void setLearnPaused(bool paused);
 
     // The field's text before the cursor changed (or a new word begins):
     // updates the language weights and, while no word is being typed, the
@@ -178,9 +179,9 @@ signals:
     void leadingLanguageChanged();
     void strengthChanged();
     void rememberedLanguageChanged();
-    void tuningChanged();
     void slipsConfigChanged();
     void learningChanged();
+    void learnPausedChanged();
     void predictionsChanged();
 
 private:
@@ -209,7 +210,6 @@ private:
     QStringList m_items;
     QString m_strength = QStringLiteral("normal");
     QString m_autocorrection;
-    QString m_tuning;
     // (language, lowercase typed word) → undos in a row
     QHash<LearningStore::UndoKey, int> m_undos;
     std::unique_ptr<LearningStore> m_store;   // keeps m_undos between sessions (reads)
@@ -232,6 +232,7 @@ private:
     QString wordsLine(int words);
 
     QString m_learning = QStringLiteral("on");
+    bool m_learnPaused = false;
     parrotfish::Learned m_learned;
     // The last word committed, learned once kept: the text before it, the
     // word, the text's language then.

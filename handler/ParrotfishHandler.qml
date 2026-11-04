@@ -31,8 +31,9 @@
 // - the typing languages come from dconf /apps/parrotfish-keyboard/languages
 //   (settings/ParrotfishLanguages.qml);
 // - the spacebar shows the typing language;
-// - swiping to another layout can be switched off
-//   (dconf /apps/parrotfish-keyboard/swipe: normal, off);
+// - swiping to another layout can be switched off (dconf
+//   /apps/parrotfish-keyboard/swipe: normal, off); a long press on the
+//   spacebar still opens Jolla's menu of layouts;
 // - an empty field leans towards the language the last text was in
 //   (dconf /apps/parrotfish-keyboard/last-language);
 // - thin dividers between the suggestions (dconf
@@ -147,8 +148,9 @@ InputHandler {
         language: inputHandler.language
         languages: languagesConfig.value
         strength: strengthConfig.value
-        tuning: tuningConfig.value
         learning: learningConfig.value
+        // A field can ask not to be learned from (the settings' preview).
+        learnPaused: !!MInputMethodQuick.extensions.parrotfishNoLearning
         slipsConfig: {
             var layout = keyboard.layout
             if (!layout || layout.keyHeightPercent === undefined)
@@ -160,7 +162,6 @@ InputHandler {
         }
         onLeadingLanguageChanged: inputHandler._updateSpacebar()
         // New parameters reset the engine: pass the keys again.
-        onTuningChanged: inputHandler._probeLayout = null
         onStrengthChanged: inputHandler._probeLayout = null
     }
 
@@ -179,7 +180,7 @@ InputHandler {
 
     ConfigurationValue {
         id: swipeConfig
-        key: "/apps/parrotfish-keyboard/swipe"   // normal, off
+        key: "/apps/parrotfish-keyboard/swipe"   // normal, off (anything else: normal)
         defaultValue: "normal"
         onValueChanged: inputHandler._applySwipe()
     }
@@ -194,12 +195,6 @@ InputHandler {
         id: dividersConfig
         key: "/apps/parrotfish-keyboard/dividers"   // true, false
         defaultValue: true
-    }
-
-    ConfigurationValue {
-        id: tuningConfig
-        key: "/apps/parrotfish-keyboard/tuning"   // hidden: "name=value name=value"
-        defaultValue: ""
     }
 
     // Bumped by the settings page after it changed learning.db.
@@ -226,7 +221,7 @@ InputHandler {
     ConfigurationValue {
         id: strengthConfig
         key: "/apps/parrotfish-keyboard/autocorrect"   // off, gentle, normal, strong
-        defaultValue: "normal"
+        defaultValue: "strong"
     }
 
     onSelect: {

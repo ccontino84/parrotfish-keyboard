@@ -10,18 +10,11 @@
 // - border "none", "line" (one colour), or "raised" (a rim lit from above:
 //   light top edge, dark bottom edge, as on a raised button).
 // Both "none" is Jolla's look. Letter keys stay fainter than the spacebar
-// (Jolla's 0.07), so that it stands out. The layout's keyTuning
-// ("fill=0.03 shade=0.05 border=0.1 gap=0.05", hidden dconf
-// /apps/parrotfish-keyboard/key-tuning) overrides the default strengths:
-// alphas of the ambience's primary colour (for "raised", of its white and
-// black edges).
-// numberRow: a key of the number row, with the row's own look when it is
-// set (the layout's numberFill and numberBorder; "same": the letters';
-// fill "band": none per key, the layout draws one band behind the row).
-// functionLook (the sticky key) sets a key apart from the letters, whatever
-// their look: flat, no border, as Jolla's function keys (Shift, Backspace,
-// ?123, Enter: 0.17); with the layout's stickyLook "spacebar", fainter, as
-// Jolla's spacebar (0.07).
+// (Jolla's 0.07), so that it stands out: alphas of the ambience's primary
+// colour, fill 0.04, shade 0.05, border 0.12 (for "raised", 0.2 of its
+// white and black edges). functionLook (the sticky key) sets a key apart
+// from the letters, whatever their look: flat, no border, as Jolla's
+// function keys (Shift, Backspace, ?123, Enter: 0.17).
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 
@@ -31,16 +24,11 @@ Rectangle {
     readonly property Item key: parent
     readonly property Item layout: key && key.parent ? key.parent.parent : null
     property bool functionLook: false
-    property bool numberRow: false
-    readonly property string fillStyle: functionLook ? "flat"
-                                                     : _look("keyFill", "numberFill", ["none", "flat", "shaded"], "none")
-    readonly property string borderStyle: functionLook ? "none"
-                                                       : _look("keyBorder", "numberBorder", ["none", "line", "raised"], "none")
+    readonly property string fillStyle: functionLook ? "flat" : _setting("keyFill", ["none", "flat", "shaded"], "none")
+    readonly property string borderStyle: functionLook ? "none" : _setting("keyBorder", ["none", "line", "raised"], "none")
     readonly property bool styled: fillStyle !== "none" || borderStyle !== "none"
     readonly property bool raised: borderStyle === "raised"
-    readonly property var strengths: _strengths(fillStyle, borderStyle,
-                                                layout && typeof layout.keyTuning === "string"
-                                                ? layout.keyTuning : "")
+    readonly property var strengths: _strengths(fillStyle, borderStyle)
     readonly property int borderWidth: Math.max(1, Math.round(Theme.pixelRatio))
     // Lighter at the top: with light text (dark ambience) more alpha is lighter.
     readonly property real _shadeSign: key.palette.colorScheme === Theme.LightOnDark ? 1 : -1
@@ -56,30 +44,10 @@ Rectangle {
         return values.indexOf(value) >= 0 ? value : fallback
     }
 
-    // The number row's value of `numberName` for its keys, if it is one of
-    // `values` ("band": no fill), else the letters' `name`.
-    function _look(name, numberName, values, fallback) {
-        if (numberRow && layout) {
-            var value = layout[numberName]
-            if (value === "band")
-                return "none"
-            if (values.indexOf(value) >= 0)
-                return value
-        }
-        return _setting(name, values, fallback)
-    }
-
-    function _strengths(fill, border, tuning) {
+    function _strengths(fill, border) {
         var result = { "fill": 0.04, "shade": 0.05, "border": border === "raised" ? 0.2 : 0.12 }
-        var pairs = tuning.split(/\s+/)
-        for (var i = 0; i < pairs.length; ++i) {
-            var pair = pairs[i].split("=")
-            var value = parseFloat(pair[1])
-            if (pair.length === 2 && result.hasOwnProperty(pair[0]) && !isNaN(value))
-                result[pair[0]] = value
-        }
         if (functionLook)
-            result.fill = layout && layout.stickyLook === "spacebar" ? 0.07 : 0.17
+            result.fill = 0.17
         if (fill === "none")
             result.fill = 0
         if (fill !== "shaded")

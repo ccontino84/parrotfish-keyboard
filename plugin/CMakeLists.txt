@@ -10,6 +10,7 @@ pkg_check_modules(SQLITE3 REQUIRED IMPORTED_TARGET sqlite3)
 set(CMAKE_AUTOMOC ON)
 
 add_library(parrotfishkeyboard MODULE
+    src/keyboardinfo.cpp
     src/learnedwords.cpp
     src/learningstore.cpp
     src/plugin.cpp

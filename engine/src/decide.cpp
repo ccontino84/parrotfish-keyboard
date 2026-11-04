@@ -331,6 +331,31 @@ bool Engine::fixValidWord(Decision &d) const
             || in.taps.size() < p.strongMinLength || letters(d.best.word) == letters(r.typed)
             || !(neighbourSwap(r.typed, d.best.word) || swapped(r.typed, d.best.word)))
         return apply;
+    // A slip within one language: both words must be at home in one typing
+    // language, within strongHomeMargin nats of their likeliest language.
+    // A word of another language in the text is not a slip (Italian con in
+    // German text: von; bene in English text: been); the dictionaries also
+    // hold other languages' words, rarer, so being listed is not enough.
+    const auto logProbs = [&](const std::u32string &word) {
+        std::vector<double> lp(m_dicts.size(), -INFINITY);
+        for (size_t i = 0; i < m_dicts.size(); ++i) {
+            const uint32_t node = m_dicts[i]->find(word);
+            if (node && !(m_dicts[i]->attributes(node) & format::AttrMisspelling) && in.weights[i] > 0)
+                lp[i] = m_dicts[i]->logProb(m_dicts[i]->node(node).freq);
+        }
+        return lp;
+    };
+    const std::vector<double> typedLp = logProbs(r.typed), bestLp = logProbs(d.best.word);
+    const double typedTop = *std::max_element(typedLp.begin(), typedLp.end());
+    const double bestTop = *std::max_element(bestLp.begin(), bestLp.end());
+    bool sameLanguage = false;
+    for (size_t i = 0; i < m_dicts.size() && !sameLanguage; ++i)
+        sameLanguage = std::isfinite(typedLp[i]) && std::isfinite(bestLp[i])
+                && typedLp[i] >= typedTop - p.strongHomeMargin && bestLp[i] >= bestTop - p.strongHomeMargin;
+    if (!sameLanguage) {
+        r.reason = Reason::StrongLanguages;
+        return apply;
+    }
     double typedProb = 0;
     for (const Merged &m : d.merged)
         if (m.key == d.typedLower)

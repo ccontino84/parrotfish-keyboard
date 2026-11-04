@@ -147,7 +147,7 @@ def language_group(lang, first=False):
 
 
 def layout_of(lang):
-    """The keyboard the suite types `lang` on: QWERTY ÅÖÄ for the Nordic
+    """The keyboard the suite types `lang` on: QWERTY (ÅÖÄ) for the Nordic
     languages, else QWERTY (also for de and fr, as up to alpha88)."""
     return "data/layouts/phone-nordic.layout" if lang in ("sv", "da", "nb", "fi") else PHONE_LAYOUT
 

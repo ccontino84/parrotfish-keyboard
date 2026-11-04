@@ -129,11 +129,26 @@ capitalised word typed with a lowercase first letter (ertore: errore,
 not Ettore). informal development halves, it and en, learning off and on,
 costs 2, 3 and 5 against 0: typos fixed -0.2 to +0.1 points, fixed wrong
 the same, error rate after correction -0.03 to +0.04: within noise, so
-left off.
+left off; the code was removed (2026-11-04).
 
 ## Strong
 
 `strongMargin` 5 (about 150 times; sentence-bench -R, plan step 6).
+
+13 languages (2026-11-04, sentence-bench -R -r 0.1, Tatoeba and sentence
+texts): real-word typos fixed 15-42 % (Normal 0), correct words changed
++0.00 to +0.05 points; suite at Strong against Normal: error rate after
+correction lower in all 13 (-0.14 to -0.65 points). Mixed-language text
+changed +0.02 to +0.24 points: a word of the other language turned into
+one of the text's (con → von, bene → been, he → je, go → og), since each
+dictionary also lists the other languages' words, rarely.
+`strongHomeMargin` 3: both words within 3 nats of their likeliest typing
+language, in one language: those changes go (de-it 6 words → 2, un → in
+left: Italian has both), single-language results the same (1.5 and 6
+give the same). What's left in mixed text is single-language (yell → tell,
+ached → aches, bære → være). Tried and dropped: leaving words typed with
+a capital alone (saves Rima → Roma, loses German nouns and names typed
+with a slip: Nett → Bett, Nary → Mary, 13 against 2).
 
 ## Speed
 
@@ -183,7 +198,9 @@ user makes likelier in the search (`learnedReach` 0): keystrokes saved
 -0.3 points (500 words; 100: no gain). Speed (`pf-time`, en it de, 2,000
 English sentences learned, PC): per letter 209 -> 273 µs with
 `learnedReach` 500, 218 µs with 0; next words 78 -> 116 µs. Hence 0: the
-learned new words are still searched. Phone (alpha99, `pf-time -p 300`,
+learned new words are still searched (`learnedReach` removed 2026-11-04;
+`keyHeightShare`, tap distances up and down in key heights, too: 0 since
+slips.log showed vertical slips are rare). Phone (alpha99, `pf-time -p 300`,
 the same texts): per letter 3.8 -> 4.0 ms mean, 17.6 -> 18.9 ms at most;
 first letter 1.6 -> 2.6 ms (the next words of the new previous word);
 next words 1.3 -> 1.8 ms.

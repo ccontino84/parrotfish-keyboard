@@ -323,13 +323,14 @@ function punctuation(languages, localeName) {
 // The accented letters of each typing language, which its long-press menus
 // show: those in about 0.05% of the words of everyday text or more, and
 // Spanish ü (pingüino). The other letters of a key are one step away,
-// behind `more` (AccentPanel.qml).
+// behind `more` (LongPressMenu.qml).
 var languageLetters = {
     "da": "åæøé", "de": "äöüß", "en": "", "es": "áéíóúñü", "fi": "äö",
     "fr": "éàèêçôîùâûœëï", "it": "àèéìòù", "nb": "åøæé", "nl": "éëï",
     "pt_BR": "ãáéçóíêúõôàâ", "pt_PT": "ãáéçóíêúõôàâ", "ro": "ășîțâ", "sv": "äåöé"
 }
-var more = "\u22ef"   // ⋯
+var more = "\u22ef"   // ⋯, drawn as ›
+var back = "\u22ee"   // ⋮, drawn as ‹ (with a key's other letters)
 
 // The letters of the typing languages `codes`.
 function letters(codes) {

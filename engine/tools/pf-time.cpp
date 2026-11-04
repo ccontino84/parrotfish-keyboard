@@ -4,13 +4,14 @@
 // Time the engine as the keyboard runs it (all typing languages,
 // completions on, Normal), on the phone or the PC:
 //   pf-time -l LAYOUT -d DICT [-d DICT]... -t TEXT [-n LINES] [-p PAUSE_MS]
-//           [-L LEARN_TEXT [-N LINES]] [-P name=value]...
+//           [-L LEARN_TEXT [-N LINES] [-q name=value]...] [-P name=value]...
 // Each word of TEXT (one text a line) is typed letter by letter, taps on
 // the keys; every letter's search is timed (Engine::process), and the next
 // words before each word (Engine::predict). -p waits PAUSE_MS before each
 // letter, as between taps (the CPU clock drops). -L first learns LEARN_TEXT
 // as one user (Engine::learn, one text a line, at most -N lines), as the
-// keyboard will with learning on. -P sets an engine parameter. Prints the
+// keyboard will with learning on; -q sets LearnParams (fadeEvery=1e12:
+// no fading, the data up to the caps). -P sets an engine parameter. Prints the
 // times by word length.
 
 #include "parrotfish/engine.h"
@@ -65,6 +66,7 @@ int main(int argc, char **argv)
 {
     std::string layoutPath, textPath, learnPath;
     std::vector<std::string> dictPaths, settings;
+    LearnParams learnParams;
     int maxLines = 50, learnLines = 2000, pauseMs = 0;
     for (int i = 1; i < argc; ++i) {
         const std::string a = argv[i];
@@ -76,6 +78,12 @@ int main(int argc, char **argv)
         else if (a == "-L" && i + 1 < argc) learnPath = argv[++i];
         else if (a == "-N" && i + 1 < argc) learnLines = std::stoi(argv[++i]);
         else if (a == "-P" && i + 1 < argc) settings.push_back(argv[++i]);
+        else if (a == "-q" && i + 1 < argc) {
+            if (!setParam(learnParams, argv[++i])) {
+                std::fprintf(stderr, "unknown learning parameter %s\n", argv[i]);
+                return 2;
+            }
+        }
     }
     std::ifstream lf(layoutPath);
     std::stringstream ls;
@@ -102,7 +110,7 @@ int main(int argc, char **argv)
     }
     engine.setLayout(keys);
 
-    Learned learned;
+    Learned learned(learnParams);
     if (!learnPath.empty()) {
         const auto t0 = std::chrono::steady_clock::now();
         size_t n = 0;
@@ -117,6 +125,7 @@ int main(int argc, char **argv)
                 context += w + U' ';
             }
             learned.endText();
+            learned.maintain();
         }
         engine.setLearned(&learned);
         const double ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();

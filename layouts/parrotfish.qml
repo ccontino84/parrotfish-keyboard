@@ -9,7 +9,7 @@
 // /apps/parrotfish-keyboard/key-fill, key-border). In portrait the rows can be
 // shorter (/apps/parrotfish-keyboard/key-height: 100, 90, 80 percent).
 // The letter keys' long-press menus show the typing languages' accented
-// letters, the others behind ⋯ (parrotfish/AccentPanel.qml).
+// letters, the others behind › (parrotfish/LongPressMenu.qml).
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0
@@ -131,7 +131,7 @@ KeyboardLayout {
 
     ConfigurationValue {
         id: keyTuningConfig
-        key: "/apps/parrotfish-keyboard/key-tuning"   // hidden: "fill=0.03 shade=0.05 border=0.1 gap=0.05 hint=0.4 hintsize=3.5"
+        key: "/apps/parrotfish-keyboard/key-tuning"   // hidden: "fill=0.03 shade=0.05 border=0.1 gap=0.05 hint=0.4 hintsize=3.5 dwell=400"
         defaultValue: ""
     }
 
@@ -249,13 +249,10 @@ KeyboardLayout {
 
     BottomRow {}
 
-    AccentPanel {
+    LongPressMenu {
         keyboardItem: typeof keyboard !== "undefined" ? keyboard : null
         layout: parrotfishLayout
-    }
-
-    StickyWatcher {
-        keyboardItem: typeof keyboard !== "undefined" ? keyboard : null
+        dwell: parrotfishLayout._tuned("dwell", 400)
         onPicked: if (Arrangements.stickySigns.indexOf(sign) >= 0) stickyConfig.value = sign
     }
 

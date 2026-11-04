@@ -257,7 +257,9 @@ InputHandler {
             commit(preedit)
         }
         if (!active)
-            predictionEngine.endText()   // the keyboard closed: a text ends
+            predictionEngine.endText(true)   // the keyboard closed: a text ends, fading is done if due
+        else
+            predictionEngine.opened()        // fading still due if the keyboard didn't close cleanly
         _correction = null
         _reopened = null
         _recentCorrections = []

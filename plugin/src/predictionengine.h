@@ -4,6 +4,7 @@
 #pragma once
 
 #include "learningstore.h"
+#include "storewriter.h"
 #include "parrotfish/engine.h"
 
 #include <QAbstractListModel>
@@ -158,8 +159,13 @@ public:
     // typing on at its end): not learned as it was.
     Q_INVOKABLE void dropKept();
     // The text ended (the keyboard closed, the field was emptied): a new
-    // word counts once per text. Saves what was learned.
-    Q_INVOKABLE void endText();
+    // word counts once per text. Saves what was learned. `closed`: the
+    // keyboard closed, the time for the fading and trimming that are due
+    // (Learned::maintain), not while the user types.
+    Q_INVOKABLE void endText(bool closed = false);
+    // The keyboard opened: the fading and trimming still due if it didn't
+    // close cleanly last time (else nothing is due).
+    Q_INVOKABLE void opened();
     // The settings page changed learning.db (a word forgotten, all
     // cleared): read it again, dropping what wasn't saved.
     Q_INVOKABLE void reloadLearned();
@@ -187,6 +193,7 @@ private:
     QString fixLanguage(const QString &typed) const;
     void learnKept();
     void saveLearned();
+    void maintainLearned();
 
     parrotfish::Engine m_engine;
     QString m_dataDir;
@@ -205,7 +212,8 @@ private:
     QString m_tuning;
     // (language, lowercase typed word) → undos in a row
     QHash<LearningStore::UndoKey, int> m_undos;
-    std::unique_ptr<LearningStore> m_store;   // keeps m_undos between sessions
+    std::unique_ptr<LearningStore> m_store;   // keeps m_undos between sessions (reads)
+    std::unique_ptr<StoreWriter> m_writer;    // all writes, on a thread of their own
     // Recent autocorrections: lowercase typed word → the text's leading
     // language when it was corrected (undos are kept per language).
     QHash<QString, QString> m_fixLanguages;

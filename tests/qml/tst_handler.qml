@@ -307,9 +307,10 @@ Item {
                 context("Yesterday I met ")
                 compare(type("quorbix "), "quorbix ")
             }
-            handler.active = false   // saved
+            handler.active = false   // saved (by the keyboard's writer thread)
             var listed = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; LearnedWords {}', root)
-            verify(words(listed).indexOf("quorbix") >= 0, "listed: " + words(listed))
+            tryVerify(function() { listed.reload(); return words(listed).indexOf("quorbix") >= 0 }, 3000,
+                      "listed: " + words(listed))
             listed.forget("quorbix")
             verify(words(listed).indexOf("quorbix") < 0)
             Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",

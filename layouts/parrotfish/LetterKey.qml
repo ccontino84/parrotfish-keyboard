@@ -6,7 +6,7 @@
 // A LongPressHint marks the keys with a long-press menu. The sticky key
 // (sticky: true; parrotfish.qml sets its sign) looks like a function key,
 // in the letter view only. moreAccents (moreAccentsShifted): the letters
-// behind ⋯ in its long-press menu (AccentPanel.qml). numberRow: a key of
+// behind › in its long-press menu (LongPressMenu.qml). numberRow: a key of
 // the number row, with the row's look (KeyBackground) and, if the layout's
 // numberDigits is "quiet", a smaller and fainter digit.
 import QtQuick 2.0

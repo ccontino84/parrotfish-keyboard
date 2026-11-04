@@ -250,8 +250,10 @@ int main(int argc, char **argv)
         ++lines;
         if (lines <= skipLines)
             continue;   // -k: another shard's
-        if (learn && lines > 1 && (lines - 1) % textLines == 0)
+        if (learn && lines > 1 && (lines - 1) % textLines == 0) {
             learned.endText();
+            learned.maintain();   // as the plugin when the keyboard closes
+        }
         const bool measure = lines > warmLines;
         // The line with the apostrophes words() uses, so that each word is
         // found in it and the context keeps the punctuation (a new sentence).

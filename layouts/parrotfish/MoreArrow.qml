@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-TBD
 //
 // The cell of a long-press menu that switches to a key's other letters
-// (› at the menu's end) and back (‹ first in AccentPanel). Drawn as two
+// (›) and back (‹) when the finger rests on it (LongPressMenu). Drawn as two
 // strokes in the highlight colour, as Sailfish draws its controls, so that
 // it doesn't read as a character to type (the letters are text in the
 // primary colour). Brighter while the finger is on it (active).

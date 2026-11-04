@@ -929,8 +929,26 @@ void testLearnedRules()
     fading.add("en", u("rare"), true, u(""), false);
     for (int k = 0; k < 30; ++k)
         fading.add("en", u("the"), true, u(""), false);
+    CHECK(fading.language("en")->word(u("rare")) != nullptr);   // scheduled only
+    CHECK(fading.maintenanceDue());
+    fading.takeChanges();
+    fading.maintain();   // three fadings due (typed 31)
+    CHECK(!fading.maintenanceDue());
     CHECK(fading.language("en")->word(u("rare")) == nullptr);   // 1 → 0.5 → 0.25: gone
     CHECK(fading.language("en")->word(u("the")) != nullptr);
+    CHECK(fading.takeChanges().rewrite.count("en") == 1);
+    CHECK(fading.language("en")->nextFade == 40);
+
+    // Trimmed over the cap: the least used, then the one kept longest ago.
+    LearnParams t;
+    t.maxWords = 2;
+    Learned trimmed(t);
+    for (const char *w : {"bbb", "aaa", "ccc", "ccc"})
+        trimmed.add("en", u(w), true, u(""), false);
+    trimmed.maintain();   // 3 words: over 2 + 10%
+    CHECK(trimmed.language("en")->words.size() == 2);
+    CHECK(trimmed.language("en")->words.count(u("bbb")) == 0);   // as often as aaa, kept before it
+    CHECK(trimmed.language("en")->words.count(u("aaa")) == 1);
 
     // Changes for storage, and loading them back.
     Learned a;

@@ -9,7 +9,7 @@
 //                  [-S slips.log [-M] | -U] [-N PCT] [-X] [-o OOV.txt [-u RATE]] [-L]
 //                  [-T [-K]] [-W pairs.tsv [-w RATE] [-c N] [-A]] [-E] [-C DUMP [-G]] [-Y SETTINGS]...
 //                  [-k START] [-Z | -J] [-O OUTCOMES]
-//                  [-Q [-q name=value]... [-H LINES] [-x RATE]] [-V LINES]
+//                  [-Q [-q name=value]... [-H LINES] [-x RATE] [-I N]] [-V LINES]
 //
 // Words of real sentences are typed one by one with the earlier words as
 // context, as on the phone (all dictionaries loaded, equal starting weights,
@@ -80,7 +80,13 @@
 // LearnParams. -V LINES: the first LINES lines are typed without typos and
 // learned, not counted (with or without -Q: the same words measured). The
 // learned words that aren't words of the texts (or the -o list) are typos
-// learned: "learned typos".
+// learned: "learned typos". -I N (with -Q) prints a line every N words
+// learned: the text, the words learned so far and per language the data
+// (words: in use, new, pending; pairs; total; learned typos), and a line
+// for each fading or trim (the rows of its language before and after, the
+// time of that Learned::maintain(), run at each text's end); the changes
+// are taken every 50 words learned, as the plugin saves them (rows of the
+// largest save that isn't a rewrite).
 //
 // -Y name=value[,name=value...] (repeatable) replays the decision with
 // other settings on each word's search (Engine::search once, then
@@ -114,6 +120,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <tuple>
 #include <random>
 #include <set>
 #include <sstream>
@@ -291,6 +298,7 @@ int main(int argc, char **argv)
     int skipTexts = 0;
     bool learn = false;
     int textLines = 1, warmTexts = 0;
+    long checkpointEvery = 0;
     double typoKeepRate = 0.25;
     LearnParams learnParams;
     EngineParams params;
@@ -334,6 +342,7 @@ int main(int argc, char **argv)
         else if (a == "-H" && i + 1 < argc) textLines = std::max(1, std::stoi(argv[++i]));
         else if (a == "-V" && i + 1 < argc) warmTexts = std::stoi(argv[++i]);
         else if (a == "-x" && i + 1 < argc) typoKeepRate = std::stod(argv[++i]);
+        else if (a == "-I" && i + 1 < argc) checkpointEvery = std::stol(argv[++i]);
         else if (a == "-q" && i + 1 < argc) {
             if (!setParam(learnParams, argv[++i])) {
                 std::fprintf(stderr, "unknown learning parameter %s\n", argv[i]);
@@ -614,17 +623,80 @@ int main(int argc, char **argv)
             textWords.insert(lower(w));
     for (const std::u32string &w : unknown)
         textWords.insert(lower(w));
+    // -I: the learned data over time.
+    long keptWords = 0, fades = 0, trims = 0;
+    size_t maxSaveRows = 0;
+    size_t currentText = 0;
+    auto rowsOf = [](const Learned::Language *l) { return l ? l->words.size() + l->pairs : 0; };
+    auto checkpoint = [&]() {
+        std::printf("checkpoint: text %zu, kept %ld, fades %ld, trims %ld, largest save %zu rows\n", currentText,
+                    keptWords, fades, trims, maxSaveRows);
+        for (const std::string &code : learned.languages()) {
+            const Learned::Language *l = learned.language(code);
+            size_t used = 0, isNew = 0, pending = 0, typosLearned = 0;
+            for (const auto &w : l->words) {
+                (w.second.pending ? pending : w.second.isNew ? isNew : used) += 1;
+                if (!w.second.pending && w.second.isNew && !textWords.count(w.first))
+                    ++typosLearned;
+            }
+            std::printf("checkpoint %s: typed %.0f, words %zu (%zu used, %zu new, %zu pending), pairs %zu, "
+                        "total %.0f, learned typos %zu\n", code.c_str(), l->typed, l->words.size(), used, isNew,
+                        pending, l->pairs, l->total, typosLearned);
+        }
+        std::fflush(stdout);
+    };
     // Keeps `word` (one word or more) after `context`, as the plugin would.
+    // Learned::maintain(), with -I a line for each fading or trim: the rows
+    // of its language before and after, the time it took.
+    auto maintain = [&]() {
+        if (checkpointEvery <= 0 || !learned.maintenanceDue()) {
+            learned.maintain();
+            return;
+        }
+        std::map<std::string, std::tuple<double, size_t, size_t>> was;
+        for (const std::string &code : learned.languages()) {
+            const Learned::Language *l = learned.language(code);
+            was[code] = std::make_tuple(l->nextFade, l->words.size(), l->pairs);
+        }
+        const auto t0 = std::chrono::steady_clock::now();
+        learned.maintain();
+        const double us = std::chrono::duration<double, std::micro>(std::chrono::steady_clock::now() - t0).count();
+        for (const auto &e : was) {
+            const Learned::Language *l = learned.language(e.first);
+            const bool faded = l->nextFade != std::get<0>(e.second);
+            if (!faded && l->words.size() >= std::get<1>(e.second) && l->pairs >= std::get<2>(e.second))
+                continue;
+            ++(faded ? fades : trims);
+            std::printf("event: %s %s at typed %.0f, rows %zu -> %zu (words %zu, pairs %zu), %.0f µs\n",
+                        faded ? "fade" : "trim", e.first.c_str(), l->typed,
+                        std::get<1>(e.second) + std::get<2>(e.second), rowsOf(l), l->words.size(), l->pairs, us);
+        }
+    };
     auto keep = [&](const std::u32string &ctx, const std::u32string &word) {
         std::u32string before = ctx;
         for (const std::u32string &w : words(word)) {
+            if (checkpointEvery <= 0) {
+                engine.learn(learned, before, w);
+                before += w + U' ';
+                continue;
+            }
             engine.learn(learned, before, w);
             before += w + U' ';
+            if (++keptWords % 50 == 0) {
+                const Learned::Changes c = learned.takeChanges();
+                if (c.rewrite.empty())
+                    maxSaveRows = std::max(maxSaveRows, c.words.size() + c.pairs.size());
+            }
+            if (keptWords % checkpointEvery == 0)
+                checkpoint();
         }
     };
     for (size_t ti = 0; ti < texts.size(); ++ti) {
-        if (learn && ti > 0 && ti % static_cast<size_t>(textLines) == 0)
+        currentText = ti;
+        if (learn && ti > 0 && ti % static_cast<size_t>(textLines) == 0) {
             learned.endText();
+            maintain();   // as the plugin when the keyboard closes
+        }
         if (static_cast<int>(ti) < warmTexts) {   // -V: typed and learned, not counted
             std::u32string context;
             for (size_t wi = 0; wi < texts[ti].size(); ++wi) {

@@ -187,3 +187,13 @@ learned new words are still searched. Phone (alpha99, `pf-time -p 300`,
 the same texts): per letter 3.8 -> 4.0 ms mean, 17.6 -> 18.9 ms at most;
 first letter 1.6 -> 2.6 ms (the next words of the new previous word);
 next words 1.3 -> 1.8 ms.
+
+Over a long use (2026-11-04, `sentence-bench -Q -I`, Tatoeba streams, 1M
+words en/it, 0.5M de/fr, `-x 0.25`): the learned data level off after
+about 100k words (5-8k words, 20-25k pairs, the caps never reached);
+every stretch better than learning off (en +4 points fixed, it +5-6);
+learned typos at 0-11 at any time. Without fading: worse after 500k words
+and 4x the learned typos; `fadeEvery` 5000 or 20000, `dropBelow` 1,
+`newWordWindow` 10000: worse or even. Defaults kept. Fading rewrites a
+whole language in the store (22-35k rows): `Learned::maintain()`, run by
+the plugin when the keyboard closes, on its writer thread.

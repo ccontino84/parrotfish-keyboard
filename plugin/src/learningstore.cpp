@@ -37,7 +37,9 @@ LearningStore::LearningStore(const QString &path)
         m_db = nullptr;
         return;
     }
-    sqlite3_busy_timeout(m_db, 200);
+    // A write waits for another's: the keyboard's writer storing a language
+    // whole after fading (a second or so on a phone), the settings page.
+    sqlite3_busy_timeout(m_db, 5000);
     // auto_vacuum only takes effect before the first table is created: freed
     // pages are given back by prune().
     if (!exec("PRAGMA auto_vacuum = INCREMENTAL")
@@ -62,7 +64,10 @@ LearningStore::LearningStore(const QString &path)
                      " pending INTEGER NOT NULL,"
                      " texts INTEGER NOT NULL,"
                      " first_seen REAL NOT NULL,"
+                     " last_used REAL NOT NULL DEFAULT 0,"
                      " PRIMARY KEY (lang, key))")
+            // Version 4: when each word was last kept (trimming).
+            || (userVersion() == 3 && !exec("ALTER TABLE words ADD COLUMN last_used REAL NOT NULL DEFAULT 0"))
             || !exec("CREATE TABLE IF NOT EXISTS pairs ("
                      " lang TEXT NOT NULL,"
                      " prev TEXT NOT NULL,"
@@ -73,7 +78,7 @@ LearningStore::LearningStore(const QString &path)
                      " lang TEXT PRIMARY KEY,"
                      " typed REAL NOT NULL,"
                      " next_fade REAL NOT NULL)")
-            || !exec("PRAGMA user_version = 3")) {
+            || !exec("PRAGMA user_version = 4")) {
         sqlite3_close(m_db);
         m_db = nullptr;
         return;
@@ -210,8 +215,8 @@ void LearningStore::loadLearned(parrotfish::Learned &learned) const
                                     sqlite3_column_double(st, 1), sqlite3_column_double(st, 2));
     sqlite3_finalize(st);
     st = nullptr;
-    if (sqlite3_prepare_v2(m_db, "SELECT lang, key, spelling, count, is_new, pending, texts, first_seen FROM words",
-                           -1, &st, nullptr) == SQLITE_OK) {
+    if (sqlite3_prepare_v2(m_db, "SELECT lang, key, spelling, count, is_new, pending, texts, first_seen, last_used"
+                                 " FROM words", -1, &st, nullptr) == SQLITE_OK) {
         while (sqlite3_step(st) == SQLITE_ROW) {
             parrotfish::Learned::Word w;
             w.spelling = u32(st, 2);
@@ -220,6 +225,7 @@ void LearningStore::loadLearned(parrotfish::Learned &learned) const
             w.pending = sqlite3_column_int(st, 5) != 0;
             w.texts = sqlite3_column_int(st, 6);
             w.firstSeen = sqlite3_column_double(st, 7);
+            w.lastUsed = sqlite3_column_double(st, 8);
             learned.restoreWord(reinterpret_cast<const char *>(sqlite3_column_text(st, 0)), u32(st, 1), w);
         }
     }
@@ -233,83 +239,38 @@ void LearningStore::loadLearned(parrotfish::Learned &learned) const
     learned.finishRestore();
 }
 
-void LearningStore::saveLearned(const parrotfish::Learned &learned, const parrotfish::Learned::Changes &changes)
+LearningStore::LearnedRows LearningStore::rows(const parrotfish::Learned &learned,
+                                               const parrotfish::Learned::Changes &changes)
 {
-    if (!m_db || changes.empty())
-        return;
     using Learned = parrotfish::Learned;
-    if (!exec("BEGIN"))
-        return;
-    if (changes.cleared) {
-        exec("DELETE FROM words");
-        exec("DELETE FROM pairs");
-        exec("DELETE FROM langs");
-    }
-    Statement putWord(m_db, "INSERT OR REPLACE INTO words (lang, key, spelling, count, is_new, pending, texts,"
-                            " first_seen) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)");
-    Statement delWord(m_db, "DELETE FROM words WHERE lang = ?1 AND key = ?2");
-    Statement putPair(m_db, "INSERT OR REPLACE INTO pairs (lang, prev, word, count) VALUES (?1, ?2, ?3, ?4)");
-    Statement delPair(m_db, "DELETE FROM pairs WHERE lang = ?1 AND prev = ?2 AND word = ?3");
-    Statement putLang(m_db, "INSERT OR REPLACE INTO langs (lang, typed, next_fade) VALUES (?1, ?2, ?3)");
-    Statement delLangWords(m_db, "DELETE FROM words WHERE lang = ?1");
-    Statement delLangPairs(m_db, "DELETE FROM pairs WHERE lang = ?1");
-    if (!putWord || !delWord || !putPair || !delPair || !putLang || !delLangWords || !delLangPairs) {
-        exec("ROLLBACK");
-        return;
-    }
-    auto storeWord = [&](const QByteArray &lang, const std::u32string &key, const Learned::Word &w) {
-        putWord.text(1, lang);
-        putWord.text(2, utf8(key));
-        putWord.text(3, utf8(w.spelling));
-        putWord.real(4, w.count);
-        putWord.integer(5, w.isNew);
-        putWord.integer(6, w.pending);
-        putWord.integer(7, w.texts);
-        putWord.real(8, w.firstSeen);
-        putWord.run();
-    };
-    auto storePair = [&](const QByteArray &lang, const std::u32string &prev, const std::u32string &word, double c) {
-        putPair.text(1, lang);
-        putPair.text(2, utf8(prev));
-        putPair.text(3, utf8(word));
-        putPair.real(4, c);
-        putPair.run();
-    };
+    LearnedRows out;
+    out.cleared = changes.cleared;
     // Languages stored whole (faded or trimmed: every count changed).
     for (const std::string &code : changes.rewrite) {
-        const QByteArray lang = QByteArray::fromStdString(code);
-        delLangWords.text(1, lang);
-        delLangWords.run();
-        delLangPairs.text(1, lang);
-        delLangPairs.run();
+        out.rewrite.push_back(code);
         const Learned::Language *l = learned.language(code);
         if (!l)
             continue;
         for (const auto &w : l->words)
-            storeWord(lang, w.first, w.second);
+            out.words.push_back({code, w.first, w.second, false});
         for (const auto &p : l->next)
             for (const auto &n : p.second)
-                storePair(lang, p.first, n.first, n.second);
+                out.pairs.push_back({code, p.first, n.first, n.second});
     }
     for (const auto &key : changes.words) {
         if (changes.rewrite.count(key.first))
             continue;
-        const QByteArray lang = QByteArray::fromStdString(key.first);
         const Learned::Language *l = learned.language(key.first);
         const auto it = l ? l->words.find(key.second) : decltype(l->words.end())();
-        if (l && it != l->words.end()) {
-            storeWord(lang, key.second, it->second);
-        } else {
-            delWord.text(1, lang);
-            delWord.text(2, utf8(key.second));
-            delWord.run();
-        }
+        if (l && it != l->words.end())
+            out.words.push_back({key.first, key.second, it->second, false});
+        else
+            out.words.push_back({key.first, key.second, Learned::Word(), true});
     }
     for (const auto &key : changes.pairs) {
         const std::string &code = std::get<0>(key);
         if (changes.rewrite.count(code))
             continue;
-        const QByteArray lang = QByteArray::fromStdString(code);
         const Learned::Language *l = learned.language(code);
         double count = 0;
         if (l) {
@@ -320,24 +281,78 @@ void LearningStore::saveLearned(const parrotfish::Learned &learned, const parrot
                     count = n->second;
             }
         }
-        if (count > 0) {
-            storePair(lang, std::get<1>(key), std::get<2>(key), count);
-        } else {
-            delPair.text(1, lang);
-            delPair.text(2, utf8(std::get<1>(key)));
-            delPair.text(3, utf8(std::get<2>(key)));
-            delPair.run();
-        }
+        out.pairs.push_back({code, std::get<1>(key), std::get<2>(key), count});
     }
     std::set<std::string> languages = changes.languages;
     languages.insert(changes.rewrite.begin(), changes.rewrite.end());
-    for (const std::string &code : languages) {
-        const Learned::Language *l = learned.language(code);
-        if (!l)
+    for (const std::string &code : languages)
+        if (const Learned::Language *l = learned.language(code))
+            out.langs.push_back({code, l->typed, l->nextFade});
+    return out;
+}
+
+void LearningStore::saveLearned(const LearnedRows &rows)
+{
+    if (!m_db || rows.empty())
+        return;
+    if (!exec("BEGIN"))
+        return;
+    if (rows.cleared) {
+        exec("DELETE FROM words");
+        exec("DELETE FROM pairs");
+        exec("DELETE FROM langs");
+    }
+    Statement putWord(m_db, "INSERT OR REPLACE INTO words (lang, key, spelling, count, is_new, pending, texts,"
+                            " first_seen, last_used) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)");
+    Statement delWord(m_db, "DELETE FROM words WHERE lang = ?1 AND key = ?2");
+    Statement putPair(m_db, "INSERT OR REPLACE INTO pairs (lang, prev, word, count) VALUES (?1, ?2, ?3, ?4)");
+    Statement delPair(m_db, "DELETE FROM pairs WHERE lang = ?1 AND prev = ?2 AND word = ?3");
+    Statement putLang(m_db, "INSERT OR REPLACE INTO langs (lang, typed, next_fade) VALUES (?1, ?2, ?3)");
+    Statement delLangWords(m_db, "DELETE FROM words WHERE lang = ?1");
+    Statement delLangPairs(m_db, "DELETE FROM pairs WHERE lang = ?1");
+    if (!putWord || !delWord || !putPair || !delPair || !putLang || !delLangWords || !delLangPairs) {
+        exec("ROLLBACK");
+        return;
+    }
+    for (const std::string &code : rows.rewrite) {
+        const QByteArray lang = QByteArray::fromStdString(code);
+        delLangWords.text(1, lang);
+        delLangWords.run();
+        delLangPairs.text(1, lang);
+        delLangPairs.run();
+    }
+    for (const LearnedRows::Word &r : rows.words) {
+        const QByteArray lang = QByteArray::fromStdString(r.lang);
+        if (r.erase) {
+            delWord.text(1, lang);
+            delWord.text(2, utf8(r.key));
+            delWord.run();
             continue;
-        putLang.text(1, QByteArray::fromStdString(code));
-        putLang.real(2, l->typed);
-        putLang.real(3, l->nextFade);
+        }
+        putWord.text(1, lang);
+        putWord.text(2, utf8(r.key));
+        putWord.text(3, utf8(r.word.spelling));
+        putWord.real(4, r.word.count);
+        putWord.integer(5, r.word.isNew);
+        putWord.integer(6, r.word.pending);
+        putWord.integer(7, r.word.texts);
+        putWord.real(8, r.word.firstSeen);
+        putWord.real(9, r.word.lastUsed);
+        putWord.run();
+    }
+    for (const LearnedRows::Pair &r : rows.pairs) {
+        Statement &st = r.count > 0 ? putPair : delPair;
+        st.text(1, QByteArray::fromStdString(r.lang));
+        st.text(2, utf8(r.prev));
+        st.text(3, utf8(r.word));
+        if (r.count > 0)
+            st.real(4, r.count);
+        st.run();
+    }
+    for (const LearnedRows::Lang &r : rows.langs) {
+        putLang.text(1, QByteArray::fromStdString(r.lang));
+        putLang.real(2, r.typed);
+        putLang.real(3, r.nextFade);
         putLang.run();
     }
     if (!exec("COMMIT"))

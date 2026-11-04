@@ -8,6 +8,9 @@
 #include <QString>
 #include <QStringList>
 
+#include <string>
+#include <vector>
+
 #include "parrotfish/learned.h"
 
 struct sqlite3;
@@ -44,8 +47,34 @@ public:
 
     // The learned data (Learned's own caps keep it bounded).
     void loadLearned(parrotfish::Learned &learned) const;
-    // Stores what changed (Learned::takeChanges), in one transaction.
-    void saveLearned(const parrotfish::Learned &learned, const parrotfish::Learned::Changes &changes);
+    // What changed (Learned::takeChanges), copied out of the Learned: made
+    // on the keyboard's thread, stored on the writer's (StoreWriter).
+    struct LearnedRows {
+        bool cleared = false;                // everything was forgotten first
+        std::vector<std::string> rewrite;    // languages whose rows go before theirs are stored
+        struct Word {
+            std::string lang;
+            std::u32string key;
+            parrotfish::Learned::Word word;
+            bool erase;
+        };
+        struct Pair {
+            std::string lang;
+            std::u32string prev, word;
+            double count;   // 0: erased
+        };
+        struct Lang {
+            std::string lang;
+            double typed, nextFade;
+        };
+        std::vector<Word> words;
+        std::vector<Pair> pairs;
+        std::vector<Lang> langs;
+        bool empty() const { return !cleared && rewrite.empty() && words.empty() && pairs.empty() && langs.empty(); }
+    };
+    static LearnedRows rows(const parrotfish::Learned &learned, const parrotfish::Learned::Changes &changes);
+    // Stores them, in one transaction.
+    void saveLearned(const LearnedRows &rows);
 
     // For the settings page (another process; the keyboard reloads after a
     // change): the words learned as new and those whose correction was

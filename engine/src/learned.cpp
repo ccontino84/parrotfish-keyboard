@@ -101,6 +101,7 @@ void Learned::add(const std::string &language, const std::u32string &word, bool 
             w.spelling = word;
         w.count += 1;
         l.total += 1;
+        w.lastUsed = l.typed;
     } else {
         if (w.count == 0 && !w.pending) {   // first kept
             w.isNew = true;
@@ -124,6 +125,7 @@ void Learned::add(const std::string &language, const std::u32string &word, bool 
                 w.spelling[0] = utf8::toLower(w.spelling[0]);
         }
         w.count += 1;
+        w.lastUsed = l.typed;
         if (w.pending) {
             if (w.lastText != m_text) {
                 w.texts += 1;
@@ -152,15 +154,35 @@ void Learned::add(const std::string &language, const std::u32string &word, bool 
         l.nextTotal[prevKey] += 1;
     }
 
-    if (l.typed >= l.nextFade) {
-        m_changes.rewrite.insert(language);
-        fadeAll(l);
-        l.nextFade += m_params.fadeEvery;
-    }
-    if (l.words.size() > m_params.maxWords + m_params.maxWords / 10
-            || l.pairs > m_params.maxPairs + m_params.maxPairs / 10) {
-        m_changes.rewrite.insert(language);
-        trim(l);
+}
+
+bool Learned::overCaps(const Language &l) const
+{
+    return l.words.size() > m_params.maxWords + m_params.maxWords / 10
+            || l.pairs > m_params.maxPairs + m_params.maxPairs / 10;
+}
+
+bool Learned::maintenanceDue() const
+{
+    for (const auto &entry : m_languages)
+        if (entry.second.typed >= entry.second.nextFade || overCaps(entry.second))
+            return true;
+    return false;
+}
+
+void Learned::maintain()
+{
+    for (auto &entry : m_languages) {
+        Language &l = entry.second;
+        if (l.typed < l.nextFade && !overCaps(l))
+            continue;
+        for (; l.typed >= l.nextFade; l.nextFade += m_params.fadeEvery)
+            fadeAll(l);
+        if (overCaps(l))
+            trim(l);
+        ++m_version;
+        m_changes.rewrite.insert(entry.first);
+        m_changes.languages.insert(entry.first);
     }
 }
 
@@ -212,13 +234,15 @@ void Learned::trim(Language &l)
 {
     if (l.words.size() > m_params.maxWords) {
         ++m_newWordsVersion;
-        std::vector<std::pair<double, std::u32string>> byCount;
+        // The least used first; of those used as often, the one kept
+        // longest ago.
+        std::vector<std::tuple<double, double, std::u32string>> byCount;
         byCount.reserve(l.words.size());
         for (const auto &w : l.words)
-            byCount.emplace_back(w.second.count, w.first);
+            byCount.emplace_back(w.second.count, w.second.lastUsed, w.first);
         std::sort(byCount.begin(), byCount.end());
         for (size_t i = 0; i + m_params.maxWords < byCount.size(); ++i)
-            l.words.erase(byCount[i].second);
+            l.words.erase(std::get<2>(byCount[i]));
         l.total = 0;
         for (const auto &w : l.words)
             if (!w.second.pending)

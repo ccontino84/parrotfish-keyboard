@@ -9,6 +9,7 @@
 #include <QDir>
 #include <QLocale>
 #include <algorithm>
+#include <memory>
 #include <cmath>
 #include <QElapsedTimer>
 #include <QFile>
@@ -67,6 +68,7 @@ PredictionEngine::PredictionEngine(QObject *parent)
         qInfo("parrotfish: learned data loaded in %.1f ms: %zu words, %zu pairs",
               timer.nsecsElapsed() / 1e6, words, pairs);
     }
+    m_writer.reset(new StoreWriter(LearningStore::defaultPath()));
 
     loadLanguages();
     loadFallbackLayout();
@@ -128,20 +130,45 @@ void PredictionEngine::dropKept()
     m_kept.valid = false;
 }
 
-void PredictionEngine::endText()
+void PredictionEngine::endText(bool closed)
 {
     flush();
     if (m_learning == QLatin1String("on")) {
         learnKept();
         m_learned.endText();
     }
+    if (closed)
+        maintainLearned();
     saveLearned();
+}
+
+void PredictionEngine::opened()
+{
+    if (!m_learned.maintenanceDue())
+        return;
+    flush();
+    maintainLearned();
+    saveLearned();
+}
+
+void PredictionEngine::maintainLearned()
+{
+    if (!m_learned.maintenanceDue())
+        return;
+    QElapsedTimer timer;
+    timer.start();
+    m_learned.maintain();
+    m_results.clear();
+    m_contextValid = false;
+    if (m_debug)
+        qInfo("parrotfish: learned data faded or trimmed in %.1f ms", timer.nsecsElapsed() / 1e6);
 }
 
 void PredictionEngine::reloadLearned()
 {
     flush();
     m_kept.valid = false;
+    m_writer->wait();   // ours first: the file as the settings page left it
     m_learned = parrotfish::Learned(m_learned.params());
     m_store->loadLearned(m_learned);
     m_undos = m_store->undos();
@@ -173,10 +200,19 @@ void PredictionEngine::saveLearned()
         return;
     QElapsedTimer timer;
     timer.start();
-    m_store->saveLearned(m_learned, changes);
-    if (m_debug)
-        qInfo("parrotfish: learned data saved in %.1f ms: %zu words, %zu pairs, %zu languages whole",
-              timer.nsecsElapsed() / 1e6, changes.words.size(), changes.pairs.size(), changes.rewrite.size());
+    // Copied here (the Learned changes as the user types), stored there.
+    auto rows = std::make_shared<LearningStore::LearnedRows>(LearningStore::rows(m_learned, changes));
+    const double copied = timer.nsecsElapsed() / 1e6;
+    const bool debug = m_debug;
+    m_writer->post([rows, copied, debug](LearningStore &store) {
+        QElapsedTimer t;
+        t.start();
+        store.saveLearned(*rows);
+        if (debug)
+            qInfo("parrotfish: learned data saved in %.1f ms (copied in %.1f ms): %zu words, %zu pairs,"
+                  " %zu languages whole", t.nsecsElapsed() / 1e6, copied, rows->words.size(), rows->pairs.size(),
+                  rows->rewrite.size());
+    });
 }
 
 QString PredictionEngine::resultKey() const
@@ -477,7 +513,7 @@ void PredictionEngine::rejectCorrection(const QString &typed)
     int &count = m_undos[qMakePair(language, lower)];
     count = m_strongFixes.contains(lower) ? UndosToStop : count + 1;
     const int undos = count;
-    m_store->setUndos(language, lower, undos);
+    m_writer->post([language, lower, undos](LearningStore &store) { store.setUndos(language, lower, undos); });
     if (m_debug)
         qInfo("parrotfish: autocorrection undone (%d of %d) in %s", undos, UndosToStop, qPrintable(language));
 }
@@ -488,7 +524,7 @@ void PredictionEngine::acceptCorrection(const QString &typed)
     const QString language = fixLanguage(typed), lower = typed.toLower();
     if (!m_undos.remove(qMakePair(language, lower)))
         return;
-    m_store->setUndos(language, lower, 0);
+    m_writer->post([language, lower](LearningStore &store) { store.setUndos(language, lower, 0); });
     if (m_debug)
         qInfo("parrotfish: undos of an autocorrection forgotten in %s", qPrintable(language));
 }

@@ -20,12 +20,14 @@ struct LearnParams {
     int newWordTexts = 3;
     double newWordWindow = 5000;
     // Every fadeEvery words typed in a language, its counts are multiplied
-    // by fade; words and pairs below dropBelow are forgotten.
+    // by fade; words and pairs below dropBelow are forgotten. Scheduled when
+    // the words are typed, done by maintain().
     double fadeEvery = 10000;
     double fade = 0.8;
     double dropBelow = 0.5;
     // At most this many words (learned or not yet) and word pairs per
-    // language; the least used go first.
+    // language; the least used go first (of words used as often, the one
+    // kept longest ago). Trimmed by maintain() once 10% over.
     size_t maxWords = 20000;
     size_t maxPairs = 50000;
 };
@@ -48,10 +50,11 @@ public:
         int texts = 0;             // texts it was kept in (until learned)
         double firstSeen = 0;      // Language::typed when first kept (until learned)
         uint64_t lastText = 0;     // the text it was last kept in (this session)
+        double lastUsed = 0;       // Language::typed when last kept
     };
     struct Language {
         double typed = 0;        // words kept in this language: the clock for fading and the window
-        double nextFade = 0;     // typed at the next fading
+        double nextFade = 0;     // typed at the next fading (due from then on: maintain())
         double total = 0;        // counts of the words in use (not pending)
         std::unordered_map<std::u32string, Word> words;
         // previous word ("": a sentence start) → next word → count, and the
@@ -78,6 +81,11 @@ public:
     // learned only between real words (known or learned).
     void add(const std::string &language, const std::u32string &word, bool known,
              const std::u32string &prev, bool prevKnown);
+    // Fading and trimming, scheduled by add(): each changes every count of a
+    // language, which is then stored whole (Changes::rewrite). The plugin
+    // calls maintain() when the keyboard closes, not while the user types.
+    bool maintenanceDue() const;
+    void maintain();
 
     const Language *language(const std::string &code) const;
     std::vector<std::string> languages() const;
@@ -115,6 +123,7 @@ public:
 
 private:
     Language &lang(const std::string &code);
+    bool overCaps(const Language &l) const;
     void fadeAll(Language &l);
     void trim(Language &l);
     void dropPair(Language &l, const std::u32string &prev, const std::u32string &key);

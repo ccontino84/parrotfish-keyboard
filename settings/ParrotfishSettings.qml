@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // Parrotfish's section in Settings → Text input: the version and two
 // rows, each opening a page (Typing, Look & feel) and showing its main

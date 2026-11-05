@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Jolla Ltd.
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: BSD-3-Clause AND LicenseRef-TBD
+// SPDX-License-Identifier: BSD-3-Clause AND LGPL-2.1-or-later
 
 // Parrotfish prediction handler for jolla-keyboard.
 //

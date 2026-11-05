@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // A subtle rounded background for a key of the Parrotfish layouts, in the
 // ambience's colours. Put it inside a key (in a KeyboardRow of a layout).

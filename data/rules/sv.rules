@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # No spelling rules for this language yet.
 
 # find-accent-misspellings.py: å, ä, ö, æ, ø are letters of their own, so
 # a plain spelling is often another word (har/här, made/måde).
 no-misspellings
 
-# Compounds (plan 6g): closed compounds of dictionary words are likely words
+# Compounds: closed compounds of dictionary words are likely words
 # (tweedehandsauto, kaputtgemacht) rather than two words with a space missing,
 # unless the two words are likelier (heefteen: heeft een): `unknown` makes them
 # a missing word made of known parts (compoundBonus), not words by themselves.

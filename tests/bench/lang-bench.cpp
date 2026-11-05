@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 
-// Language tracking on mixed texts (milestone 1, plan §5).
+// Language tracking on mixed texts.
 //
 //   lang-bench -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd
 //              -t tests/data [-n 300] [-s SEED] [-P name=value]...

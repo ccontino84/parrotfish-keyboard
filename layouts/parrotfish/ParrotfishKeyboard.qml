@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // A Parrotfish layout: one keyboard for any Latin-script typing language;
 // the engine picks the language, this only gives the keys. Each of

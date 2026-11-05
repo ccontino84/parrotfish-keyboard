@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // Our additions to Jolla's long-press menu (the Popper), which shows while
 // the finger is held and types the cell under it when the finger lifts:

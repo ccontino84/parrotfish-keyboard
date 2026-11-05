@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 """The language list the keyboard installs (languages.json), from each
 language's data/rules/LANG.language: one place per language for what the
 plugin's Languages singleton tells the layout and the settings.

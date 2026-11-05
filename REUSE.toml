@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 version = 1
 
 [[annotations]]
@@ -25,4 +25,10 @@ SPDX-License-Identifier = "LicenseRef-CC-BY-2.0-FR"
 [[annotations]]
 path = "tests/qml/stubs/**"
 SPDX-FileCopyrightText = "2026 ccontino84"
-SPDX-License-Identifier = "LicenseRef-TBD"
+SPDX-License-Identifier = "LGPL-2.1-or-later"
+
+# No comments in these files (qmldir: Qt 5.6 on the phone; issue forms: GitHub).
+[[annotations]]
+path = ["plugin/qmldir", ".github/ISSUE_TEMPLATE/*.yml"]
+SPDX-FileCopyrightText = "2026 ccontino84"
+SPDX-License-Identifier = "LGPL-2.1-or-later"

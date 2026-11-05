@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 """Draw the test sentences of tests/data at random.
 
 Usage: sample-sentences.py OUT.txt FILE... [--min-words N] [--max-words M]

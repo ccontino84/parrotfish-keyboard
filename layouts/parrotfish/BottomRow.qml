@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Jolla Ltd.
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: BSD-3-Clause AND LicenseRef-TBD
+// SPDX-License-Identifier: BSD-3-Clause AND LGPL-2.1-or-later
 //
 // The bottom row of the Parrotfish layouts. Based on SpacebarRow.qml of
 // jolla-keyboard 0.10.4 (Jolla Ltd., BSD-3-Clause, see

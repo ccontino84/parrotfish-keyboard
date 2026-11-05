@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // A small mark on a key whose long press opens a menu in the current view:
 // as Jolla's Popper, a key with accents, but in the symbol view only a key

@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // A ComboBox for one dconf key under /apps/parrotfish-keyboard/: `values`
 // are written, `texts` shown, `descriptions` (optional) under the chosen

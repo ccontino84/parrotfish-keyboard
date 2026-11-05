@@ -1,6 +1,6 @@
 #!/bin/sh
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 #
 # Regenerates data/rules/<lang>.{respellings,misspellings,supplement,forms,boost}, the starting
 # next-word data data/pairs/<lang>.tsv.gz and the test lists

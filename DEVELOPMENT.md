@@ -1,6 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2026 ccontino84
-SPDX-License-Identifier: LicenseRef-TBD
+SPDX-License-Identifier: LGPL-2.1-or-later
 -->
 
 # Parrotfish development
@@ -224,9 +224,10 @@ sfdk build                 # RPM in RPMS/
 ```
 
 Local builds carry a pre-release suffix in the spec's `Version`
-(`0.1.0~alpha1`); only CI release builds have the plain version.
-`PARROTFISH_DEVTOOLS=ON` (test builds) also installs `pf-query`,
-`typo-bench` and `lang-bench` in `/usr/libexec/parrotfish-keyboard/`.
+(`0.1.0~alpha1`); only CI release builds have the plain version. A version
+with a `~` also gets `PARROTFISH_DEVTOOLS=ON` (the spec decides): `pf-query`
+and the benchmarks in `/usr/libexec/parrotfish-keyboard/`, with their test
+sentences. Release builds leave them out.
 
 How it runs: `ParrotfishHandler.qml` is Jolla's `PreeditHandler` with our
 `PredictionEngine` as its `engine`. When a word starts, the handler passes
@@ -235,7 +236,7 @@ before the cursor; then each change of the word being typed updates the
 suggestions. Autocorrect strength is the dconf key
 `/apps/parrotfish-keyboard/autocorrect` (`strong`, the default: `normal`,
 and after a previous word a valid word one slip away from a far likelier
-word of the same language is fixed too, `strongMargin`, plan §6; `normal`,
+word of the same language is fixed too, `strongMargin`; `normal`,
 `gentle`, `off`); swiping to another layout can be switched off on our layouts:
 `/apps/parrotfish-keyboard/swipe` (`normal`, the default; `off` = a drag of
 a full keyboard width); a long press on the spacebar opens Jolla's menu of
@@ -329,6 +330,48 @@ before `systemctl --user restart maliit-server`), forgets everything.
 Plugin test on the PC: install to a staging dir (`DESTDIR=… cmake --install
 build`) and load it in `qmlscene-qt5` with `QML2_IMPORT_PATH` and
 `PARROTFISH_DATA_DIR` pointing there.
+
+## Continuous integration and releases
+
+`.github/workflows/checks.yml` runs on every push and pull request:
+`tools/qt56-scan.sh`, `reuse lint`, then the build and `ctest` in an
+Ubuntu 24.04 container (Qt 5.15; the QML tests draw in software, no
+OpenGL). It keeps the dictionaries it built as the artifact
+`dictionaries`.
+
+Making a release:
+
+1. On the release branch (`dev/<major.minor>`): one commit per feature, each
+   with its `CHANGELOG.md` bullet under `## <version> (unreleased)`. Then a
+   release commit: `Version:` in `rpm/parrotfish-keyboard.spec` with no `~`
+   suffix, and the entry's heading dated, `## <version> (date)`. Push the
+   branch.
+2. On GitHub: **Actions > Release > Run workflow**, from the release branch.
+   `.github/workflows/release.yml` checks that the version has no `~`, that
+   `v<Version>` doesn't exist, that `CHANGELOG.md` has its entry and that
+   `main` can fast-forward to the commit. It runs the checks, then builds
+   the RPM for aarch64 and armv7hl against the Sailfish OS 5.1.0.11 SDK
+   targets with the checks' dictionaries in `prebuilt/`. Finally it creates
+   the release `v<Version>` for that commit, with both RPMs attached. The
+   release text is the changelog entry (`ci/release-notes.sh <version>`)
+   followed by GitHub's generated notes. By default the release is a draft.
+3. If it fails: fix it on the branch, delete the draft if there is one,
+   push and run it again. `main` hasn't changed.
+4. If it works: fast-forward `main` (`git push origin dev/<major.minor>:main`),
+   try the draft's RPMs on a phone, then publish the draft. Publishing
+   creates the tag `v<Version>` on that commit.
+
+The RPM builds use the community Sailfish SDK images
+([coderus/sailfishos-platform-sdk](https://hub.docker.com/r/coderus/sailfishos-platform-sdk))
+through `ci/build-rpm.sh`, which also runs locally with Docker:
+
+```sh
+ci/build-rpm.sh aarch64      # or armv7hl; RPM in out/ (the image is about 3 GB)
+```
+
+With dictionaries in `prebuilt/` (copy `build/data/*.pfd` and
+`build/data/inputs.sha256` there), the RPM's build copies them instead of
+building them under emulation.
 
 ## Dictionary data
 

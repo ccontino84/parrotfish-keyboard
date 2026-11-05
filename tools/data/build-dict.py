@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 """Build a Parrotfish dictionary (.pfd) from an AOSP LatinIME wordlist.
 
 Usage: build-dict.py LANG WORDLIST.combined.gz RULES_DIR OUT.pfd [--pairs PAIRS.tsv.gz]

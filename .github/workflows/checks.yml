@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+#
+# On every push and pull request, and as the first step of a release
+# (release.yml): the Qt 5.6 lint, the REUSE check, then the build and the
+# tests on the PC (Ubuntu's Qt 5.15, the QML tests with Sailfish OS's
+# modules replaced by stand-ins). The dictionaries built here are kept as
+# the artifact "dictionaries" for the release's RPM builds.
+name: Checks
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Qt 5.6 traps
+        run: tools/qt56-scan.sh
+      - name: REUSE
+        run: pipx run reuse lint
+
+  test:
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install Qt 5 and the build tools
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            cmake ninja-build g++ pkg-config python3 \
+            qtbase5-dev qtdeclarative5-dev qtdeclarative5-dev-tools \
+            qml-module-qttest qml-module-qtquick2 \
+            libsqlite3-dev libdconf-dev
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          ninja -C build
+      - name: Test
+        run: cd build && ctest --output-on-failure
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dictionaries
+          path: |
+            build/data/*.pfd
+            build/data/inputs.sha256
+          if-no-files-found: error
+          retention-days: 7

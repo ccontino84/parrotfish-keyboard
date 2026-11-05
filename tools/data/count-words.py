@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 """Count word tokens in sentence files.
 
 Usage: count-words.py OUT.tsv FILE... [--exclude TEST_FILE]...

@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // A TextSwitch for one boolean dconf key under /apps/parrotfish-keyboard/
 // (true/false, also as strings); unset: `defaultValue`.

@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 
 // Typo generator shared by the benchmarks. The noise is deliberately
 // simpler than the engine's model, so the tests don't just measure the model

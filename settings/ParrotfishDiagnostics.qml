@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // What a bug report needs, to copy (KeyboardInfo::diagnostics(): no word
 // the user typed). Opened by a double tap on Parrotfish's section header

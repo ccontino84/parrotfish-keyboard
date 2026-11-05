@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # Recurring example names and words of the Tatoeba corpus. They are far more
 # frequent there than in real text, so the generators (find-supplement.py,
 # find-boosts.py, count-pairs.py) leave them out.

@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # Parrotfish's AZERTY keys, by the same phone geometry as phone-qwerty.layout
 # (not logged on a phone): units are key widths, rows 1.67 key widths
 # tall; ' takes the place of fr.qml's ç after n.

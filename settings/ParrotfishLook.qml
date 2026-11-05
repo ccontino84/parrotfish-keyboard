@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // Look & feel: the keys' look and sizes, the number row, the sticky key,
 // swiping (our layouts are switched on in Jolla's Keyboards page, as any

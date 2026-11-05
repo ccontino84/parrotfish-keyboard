@@ -1,6 +1,6 @@
 #!/bin/bash
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 #
 # The phone runs Qt 5.6, a PC usually Qt 5.15: lint and the PC tests accept
 # code that Qt 5.6 rejects. Flags the known traps in the repo's QML and JS:

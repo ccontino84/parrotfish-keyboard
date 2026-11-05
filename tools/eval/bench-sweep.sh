@@ -1,6 +1,6 @@
 #!/bin/sh
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 #
 # Runs sentence-bench once per value of an engine parameter and prints its
 # summary lines side by side: the trade-off between typos fixed, wrong fixes,

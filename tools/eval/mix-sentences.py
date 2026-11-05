@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 """Mixed-language test texts for sentence-bench, from two sentence files.
 
 Usage: mix-sentences.py KIND A.txt B.txt [-n 300] [-s SEED] > OUT.txt

@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 
 add_executable(typo-bench bench/typo-bench.cpp)
 target_link_libraries(typo-bench PRIVATE parrotfish-engine)

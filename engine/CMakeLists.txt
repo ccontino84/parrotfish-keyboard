@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 
 # The engine has no Qt dependency, so it builds and tests on any host.
 add_library(parrotfish-engine STATIC

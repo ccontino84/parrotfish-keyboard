@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # Approximation of Jolla's de.qml letter rows (11 keys in the top rows; see en.layout).
 0      0.909 qwertzuiopü
 0      0.909 asdfghjklöä

@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 
 # QML module Parrotfish.Keyboard, loaded by the handler inside maliit-server.
 # Qt 5.6 on Sailfish OS: keep to its API.

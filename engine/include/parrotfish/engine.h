@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 
 #pragma once
 
@@ -15,8 +15,8 @@
 
 namespace parrotfish {
 
-// Strong: Normal, and valid words may be fixed from the previous word
-// (plan §6; until that exists, the same as Normal).
+// Strong: Normal, and a valid word may be fixed into a far likelier one
+// after a previous word (EngineParams::strongMargin).
 enum class Strength { Off, Gentle, Normal, Strong };
 
 // The measurements behind the values: engine/TUNING.md.
@@ -69,7 +69,7 @@ struct EngineParams {
     // Normal (and Strong) leave shorter input alone: a single letter is not
     // replaced (t → it, p → to were; the benches don't type such words).
     size_t normalMinLength = 2;
-    // Gentle leaves shorter input alone (plan §6: short words are Normal only).
+    // Gentle leaves shorter input alone (short words are Normal only).
     size_t gentleMinLength = 3;
     // Gentle changes at most this many letters: one in words of up to
     // gentleShortLength letters, two in longer ones.
@@ -94,7 +94,7 @@ struct EngineParams {
     // Italian word weighs more once Italian is being typed). Infinity: never
     // replaced.
     double otherLanguageMargin = 12.0;
-    // Two words typed as one (plan §6 fix 6): a string that is no word of a
+    // Two words typed as one: a string that is no word of a
     // typing language may be two words of one language, each typed as it
     // is, with the space left out (thisis: missingSpaceCost nats) or typed
     // as a key above the spacebar (thisbis: spaceKeyCost), scored like any

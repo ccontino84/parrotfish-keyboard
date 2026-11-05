@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # Hand-written: words of the wordlist that are almost always a misspelling
 # of `target` (here contractions typed without the apostrophe), corrected
 # like the ones in LANG.misspellings. Not for words that are common in

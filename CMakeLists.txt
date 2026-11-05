@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 
 cmake_minimum_required(VERSION 3.16)
 project(parrotfish-keyboard VERSION 0.1.0 LANGUAGES CXX)

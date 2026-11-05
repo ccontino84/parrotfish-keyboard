@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // The cell of a long-press menu that switches to a key's other letters
 // (›) and back (‹) when the finger rests on it (LongPressMenu). Drawn as two

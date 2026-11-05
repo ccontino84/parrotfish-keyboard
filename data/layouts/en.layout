@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # Approximation of Jolla's en.qml letter rows for PC tests: <offset> <key width> <keys>.
 # Units are key widths of a 10-key row; rows are one unit apart. The handler
 # reads the real geometry from the layout on the phone.

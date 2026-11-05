@@ -1,13 +1,16 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 
 Name:       parrotfish-keyboard
 Version:    0.1.0~alpha117
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
-License:    LicenseRef-TBD AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
+License:    LGPL-2.1-or-later AND BSD-3-Clause AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
 URL:        https://github.com/ccontino84/parrotfish-keyboard
 Source0:    %{name}-%{version}.tar.bz2
+# Test versions (with a ~ suffix, as 0.1.0~alpha117) also install the
+# developer tools: pf-query and the benchmarks.
+%global devtools %(echo '%{version}' | grep -q '~' && echo ON || echo OFF)
 BuildRequires:  cmake
 BuildRequires:  python3-base
 BuildRequires:  pkgconfig(Qt5Core)
@@ -18,11 +21,12 @@ Requires:   jolla-keyboard
 Requires:   qt5-qtdeclarative
 
 %description
-A keyboard layout for the Sailfish OS keyboard (QWERTY or QWERTZ) with
-word suggestions and autocorrect in English, Italian and German at once:
-the typing language follows the text. Plugs into the stock keyboard as a
-layout plus a prediction handler; no system files are modified, and
-Jolla's own layouts are left as they are.
+Word suggestions, autocorrect with undo, learning and next-word prediction
+for the Sailfish OS keyboard, in several languages at once: the typing
+language follows the text. Adds four layouts (QWERTY, QWERTZ, AZERTY,
+QWERTY with å ö ä) to the stock keyboard, with a prediction handler and a
+settings section in Text input; no system files are modified, and Jolla's
+own layouts are left as they are.
 
 %prep
 %autosetup -n %{name}-%{version}
@@ -33,7 +37,7 @@ cmake -S . -B build-rpm \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_INSTALL_LIBDIR=%{_lib} \
     -DPARROTFISH_QML_DIR=%{_libdir}/qt5/qml \
-    -DPARROTFISH_DEVTOOLS=ON \
+    -DPARROTFISH_DEVTOOLS=%{devtools} \
     -DPARROTFISH_VERSION=%{version}
 cmake --build build-rpm -- %{?_smp_mflags}
 
@@ -61,4 +65,6 @@ fi
 %{_datadir}/maliit/plugins/com/jolla/layouts/layouts_parrotfish.conf
 %{_datadir}/maliit/plugins/com/jolla/layouts/parrotfish
 %{_datadir}/%{name}
+%if "%{devtools}" == "ON"
 %{_libexecdir}/%{name}
+%endif

@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # No spelling rules for this language yet.
 
 # find-accent-misspellings.py: ä and ö are letters of their own, so a plain

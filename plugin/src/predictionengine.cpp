@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include "predictionengine.h"
 #include "languages.h"
@@ -19,7 +19,7 @@
 namespace {
 
 const int MaxSuggestions = 10;
-// Undos of the same autocorrection that stop it (plan §6).
+// Undos of the same autocorrection that stop it.
 const int UndosToStop = LearningStore::UndosToStop;
 // slips.log counts the words typed in batches of this many.
 const int SlipsWordBatch = 50;
@@ -354,7 +354,7 @@ double PredictionEngine::confidence() const
 void PredictionEngine::setContext(const QString &textBefore)
 {
     flush();
-    // Starting leans (plan §5): the language the last text was in (×3) and
+    // Starting leans: the language the last text was in (×3) and
     // the layout's language (×2). The text already in the field soon
     // outweighs both; one distinctive word of another language switches.
     std::vector<double> prior(m_engine.languageCount(), 1.0);

@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // A field to try the keyboard in, at the top of a settings page (`page`):
 // the keyboard follows the dconf keys at once, so the page shows it while

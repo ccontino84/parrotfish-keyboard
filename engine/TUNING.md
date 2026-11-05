@@ -1,6 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2026 ccontino84
-SPDX-License-Identifier: LicenseRef-TBD
+SPDX-License-Identifier: LGPL-2.1-or-later
 -->
 
 # How the engine's settings were chosen
@@ -8,8 +8,8 @@ SPDX-License-Identifier: LicenseRef-TBD
 `EngineParams` (engine/include/parrotfish/engine.h) says what each setting
 does; this file keeps the measurements behind the values, newest first
 within each setting. Benches: `tools/pf suite` (13 languages since
-alpha90), `sentence-bench`, and informal development text for local
-evaluation (not in the repo). "Fixed", "wrong": typos fixed and fixed into
+alpha90), `sentence-bench`, and informal development text (public social-media
+posts, kept locally for evaluation, not in the repo). "Fixed", "wrong": typos fixed and fixed into
 a wrong word, in % of typos; "names changed": unknown real words changed.
 
 ## The decision (alpha92)
@@ -17,7 +17,7 @@ a wrong word, in % of typos; "names changed": unknown real words changed.
 `changeCost` 7 (3-4 letters 20, 2 letters 6), `wrongCost` 5,
 `nearWrongCost` 1.5, Gentle `gentleConfidence` 0.95 with its limits.
 Chosen with replay sweeps (`pf suite --replay`), a sign test on the words
-whose outcome changed, and informal text. Against alpha91 (13 languages,
+whose outcome changed, and the informal text. Against alpha91 (13 languages,
 real runs): Normal and Strong typos fixed +3.1 points (no language worse),
 fixed wrong -0.12, WER -0.61, real misspellings fixed +1.7; Gentle fixed
 +4.6, fixed wrong the same, WER -0.9, misspellings +2.5; informal text
@@ -42,13 +42,13 @@ alpha85 Gentle had its own unknownBase (6, against 8) and 0.5.
 ## The unknown-word reading
 
 `compoundNearBonus` 3 (2026-11-03): with `compoundBonus` 8 also near a
-word, misspelt compounds stayed (Bildungsystem, beziehungweise, informal-text
-German misspellings fixed 46.7 -> 45.5 % from alpha91 to alpha92). Suite,
+word, misspelt compounds stayed (Bildungsystem, beziehungweise; German
+misspellings in the informal text fixed 46.7 -> 45.5 % from alpha91 to alpha92). Suite,
 against 8 (the same at Normal and Strong): 4: 8 more fixed, nothing
 worse; 3: 23 more fixed, sogenanten -> sogenannten counted wrong (a valid
 spelling), Danish overvågningskameraet changed; 2: 33 more fixed, 3
 worse; 0: 48 more fixed, 21 unknown words changed (inflections:
-klasseværelset -> klasseværelser). Gentle: 3 and 4 fix 3-4 more. informal
+klasseværelset -> klasseværelser). Gentle: 3 and 4 fix 3-4 more. Informal
 text at 3: German misspellings fixed 45.5 -> 46.1 %, other languages the
 same; the compounds left (Bildungsystem 0.68, vergleichweise 0.86) are
 the decision's `changeCost`.
@@ -126,14 +126,14 @@ at 8: 0.4 % of single foreign words, un -> in).
 
 `nameLowerCost` 0 (off; 2026-11-03): a fix that changes letters into a
 capitalised word typed with a lowercase first letter (ertore: errore,
-not Ettore). informal development halves, it and en, learning off and on,
+not Ettore). Informal development halves, it and en, learning off and on,
 costs 2, 3 and 5 against 0: typos fixed -0.2 to +0.1 points, fixed wrong
 the same, error rate after correction -0.03 to +0.04: within noise, so
 left off; the code was removed (2026-11-04).
 
 ## Strong
 
-`strongMargin` 5 (about 150 times; sentence-bench -R, plan step 6).
+`strongMargin` 5 (about 150 times; sentence-bench -R).
 
 13 languages (2026-11-04, sentence-bench -R -r 0.1, Tatoeba and sentence
 texts): real-word typos fixed 15-42 % (Normal 0), correct words changed
@@ -202,8 +202,8 @@ test on the words whose outcome changed: better in every language (en
 206 better, 59 worse; de 122, 61). Learned typos: 1 in 160 learned words
 (de "ser"). Fixed wrong goes up with any weights (0.1 to 0.5, pair
 weight 0 to 0.75, `learnedK` 5000: within noise of each other): the
-user's own frequent words compete (it: Ettore, often in the learned
-text, now keeps ertore from errore). Without the dictionary words the
+user's own frequent words compete (it: a name frequent in the learned
+text now keeps ertore from errore). Without the dictionary words the
 user makes likelier in the search (`learnedReach` 0): keystrokes saved
 -0.3 points (500 words; 100: no gain). Speed (`pf-time`, en it de, 2,000
 English sentences learned, PC): per letter 209 -> 273 µs with

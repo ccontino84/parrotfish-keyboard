@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Dictionaries: <lang>:<AOSP wordlist name>
 set(PARROTFISH_LANGUAGES en:en_US it:it de:de es:es fr:fr pt_BR:pt_BR pt_PT:pt_PT nl:nl sv:sv da:da nb:nb ro:ro fi:fi)

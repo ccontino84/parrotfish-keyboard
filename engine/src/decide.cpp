@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // Engine::decide: from the candidates of Engine::search (search.cpp) to the
 // suggestion bar and the autocorrection. In order:

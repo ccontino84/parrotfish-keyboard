@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 
 #pragma once
 
@@ -67,7 +67,7 @@ public:
     bool isWordForm(const std::u32string &word) const;
     // Letters that are a compound of dictionary words where the rules say
     // compounds are not words by themselves (`compound ... unknown`): a
-    // word missing from the dictionary, made of known parts (plan 6g).
+    // word missing from the dictionary, made of known parts.
     bool isCompound(const std::u32string &word) const;
     bool hasWordForms() const { return !m_suffixes.empty() || m_compoundMin > 0; }
     // The language capitalises its nouns (`capitalised-nouns`: German).

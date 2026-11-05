@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # Words that stay valid (find-respellings.py, find-accent-misspellings.py).
 # Austrian standard spelling (long o): Geschoß, as the list's Geschoss.
 Geschoß

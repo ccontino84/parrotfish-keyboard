@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // Jolla's CharacterKey with a KeyBackground. With a background, the key has
 // no separator line and is highlighted through its background when pressed.

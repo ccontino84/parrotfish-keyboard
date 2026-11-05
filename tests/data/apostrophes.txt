@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
-# SPDX-License-Identifier: LicenseRef-TBD
+# SPDX-License-Identifier: LGPL-2.1-or-later
 # Final apostrophes, written for the project: the check of
 # bench::typedWords() (tests/CMakeLists.txt, sentence-bench -E). po' and
 # girls' are dictionary words and keep their apostrophe; the closing quote,

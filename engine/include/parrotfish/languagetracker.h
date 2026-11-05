@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 
 #pragma once
 
@@ -10,7 +10,7 @@
 
 namespace parrotfish {
 
-// Hidden tuning parameters (plan §5). Defaults come from the mixed-language
+// Hidden tuning parameters. Defaults come from the mixed-language
 // benchmark (tests/bench/lang-bench.cpp).
 struct LanguageParams {
     // Probability that the language changes between two words. Together with

@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 
 // Unit tests for the engine. Run with ctest; needs the built dictionaries.
 //   engine-test DICT_DIR LAYOUT_DIR

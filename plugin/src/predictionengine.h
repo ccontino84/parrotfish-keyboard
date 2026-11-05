@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
-// SPDX-License-Identifier: LicenseRef-TBD
+// SPDX-License-Identifier: LGPL-2.1-or-later
 
 #pragma once
 
@@ -37,7 +37,7 @@ class PredictionEngine : public QAbstractListModel
     // The layout's language code (EN, IT, DE): a weak hint for the start.
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
     // The language the last text was in (en, it, de; empty: none), used as the
-    // starting lean for an empty field (plan §5, starting point 2).
+    // starting lean for an empty field.
     Q_PROPERTY(QString rememberedLanguage READ rememberedLanguage WRITE setRememberedLanguage
                NOTIFY rememberedLanguageChanged)
     // The language the text seems to be in (en, it, de), and how sure.

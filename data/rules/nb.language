@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LicenseRef-TBD
+name Norsk bokmål
+experimental
+menu-letters åøæé
+system-languages no nn

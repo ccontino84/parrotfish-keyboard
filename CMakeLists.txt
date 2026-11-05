@@ -39,14 +39,15 @@ if(PARROTFISH_PLUGIN)
             DESTINATION ${PARROTFISH_HANDLER_DIR})
     # One package for all versions: each loads the copy in its own directory.
     install(FILES handler/ParrotfishHandler.qml DESTINATION ${PARROTFISH_OLD_HANDLER_DIR})
-    install(FILES layouts/parrotfish.qml layouts/layouts_parrotfish.conf
+    install(FILES layouts/parrotfish.qml layouts/parrotfish_qwertz.qml layouts/parrotfish_azerty.qml
+                  layouts/parrotfish_nordic.qml layouts/layouts_parrotfish.conf
             DESTINATION ${PARROTFISH_LAYOUT_DIR})
     install(DIRECTORY layouts/parrotfish DESTINATION ${PARROTFISH_LAYOUT_DIR})
     # the .conf files name this path for Settings > Text input
-    install(FILES settings/ParrotfishSettings.qml settings/ParrotfishTyping.qml settings/ParrotfishLayout.qml
-                  settings/ParrotfishLook.qml settings/ParrotfishDiagnostics.qml settings/ParrotfishLanguages.qml
+    install(FILES settings/ParrotfishSettings.qml settings/ParrotfishTyping.qml settings/ParrotfishLook.qml
+                  settings/ParrotfishDiagnostics.qml settings/ParrotfishLanguages.qml
                   settings/ParrotfishLearned.qml settings/SettingCombo.qml settings/SettingSwitch.qml
-                  settings/SettingSlider.qml settings/KeyboardPreview.qml settings/languages.js
+                  settings/SettingSlider.qml settings/KeyboardPreview.qml
             DESTINATION ${PARROTFISH_DATA_DIR}/settings)
 endif()
 

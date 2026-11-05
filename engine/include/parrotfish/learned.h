@@ -17,7 +17,7 @@ struct LearnParams {
     // A word missing from the dictionaries is learned once it is kept in
     // this many different texts, within newWordWindow words typed in its
     // language; else it is dropped.
-    int newWordTexts = 3;
+    int newWordTexts = 2;
     double newWordWindow = 5000;
     // Every fadeEvery words typed in a language, its counts are multiplied
     // by fade; words and pairs below dropBelow are forgotten. Scheduled when

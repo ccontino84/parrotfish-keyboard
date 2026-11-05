@@ -250,7 +250,7 @@ Item {
             return out
         }
 
-        // Learning: a new word kept in three
+        // Learning: a new word kept in two
         // texts is learned, suggested, and still there after a restart;
         // Privacy doesn't use it; Off ignores the undo memory too.
         function test_learning() {

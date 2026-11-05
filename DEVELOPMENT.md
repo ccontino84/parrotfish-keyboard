@@ -14,7 +14,7 @@ SPDX-License-Identifier: LicenseRef-TBD
 | `plugin/` | QML module `Parrotfish.Keyboard` (Qt 5.6): the engine as the list model Jolla's `PreeditHandler` expects |
 | `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
 | `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press; QWERTY (ÅÖÄ): Jolla's fi keys), picked by `/apps/parrotfish-keyboard/layout`; optional key backgrounds in `parrotfish/` |
-| `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`, list in `languages.js`) |
+| `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`; the list comes from the plugin's `Languages`) |
 | `rpm/` | RPM spec |
 | `tools/pf` | the developer front door (below): tests, lint, benchmark suite, comparisons, RPM |
 | `tools/data/` | Python tools that build and maintain the dictionary data |
@@ -249,13 +249,14 @@ in the settings. Every enabled language is searched on each keystroke, the
 likeliest first, the others only for words that can still compete
 (`searchMargin`) (settings page: `settings/ParrotfishLanguages.qml`).
 `/apps/parrotfish-keyboard/dividers` (`true`, the default; `false`) switches
-the dividers between suggestions. `/apps/parrotfish-keyboard/layout`
-(`qwerty`, `qwertz`, `azerty`, `nordic` = QWERTY with å ö ä keys as on
-Jolla's Finnish and Swedish layouts) picks the keys. Unset, it follows the
-system locale (`preferred()` in `layouts/parrotfish/arrangements.js`, the
-same as `layoutFor()` in `settings/languages.js`): de and fr_CH QWERTZ, fr
-AZERTY (fr_CA QWERTY), fi and sv QWERTY (ÅÖÄ), otherwise QWERTY; the settings
-show that choice until another is picked. The look of the
+the dividers between suggestions. The keys: one layout in Jolla's list per
+arrangement (`layouts/layouts_parrotfish.conf`: Auto (QWERTY), Auto
+(QWERTZ), Auto (AZERTY), Auto (QWERTY ÅÖÄ), the last as Jolla's Finnish and
+Swedish layouts), each `layouts/parrotfish/ParrotfishKeyboard.qml` with its
+`arrangementKey` (`layouts/parrotfish*.qml`); any typing language on each.
+Jolla's keyboard switches between the enabled ones (spacebar long press,
+swipe); they are switched on in Jolla's own Keyboards page, as any other
+(the diagnostics show Jolla's enabled and active layouts). The look of the
 keys of our layouts (`layouts/parrotfish/`):
 `/apps/parrotfish-keyboard/key-fill` (`flat` = the default, `shaded`,
 `none`) and `/apps/parrotfish-keyboard/key-border` (`line` = the default;
@@ -281,14 +282,18 @@ default, `false` = Jolla's rows: `withoutSticky()`) and `sticky-side`
 (`right`, `left`): the sticky key, which keeps the sign last picked from its
 long press (`sticky-key`). `/apps/parrotfish-keyboard/long-press-hint`
 (`dot` = the default, `off`): a dot on keys with a long-press menu. The
-settings section (`settings/ParrotfishSettings.qml`) opens three pages,
-Typing, Layout, Look & feel; Layout and Look & feel open the keyboard,
-with a field to try it in that it doesn't learn from
+settings section (`settings/ParrotfishSettings.qml`) opens two pages,
+Typing and Look & feel; Look & feel opens the keyboard, with a field to try it in that it doesn't learn from
 (`settings/KeyboardPreview.qml`: its `__inputMethodExtensions` carry
 `parrotfishNoLearning`, which the handler passes to the plugin's
-`learnPaused`). A double tap on the section header opens the diagnostics:
-version, system, settings and learning counts (no words), to copy into a
-bug report. With `~/.local/share/parrotfish-keyboard/debug` present, the plugin logs
+`learnPaused`). Below the two rows, Reset unsets every key under
+`/apps/parrotfish-keyboard/`, as on a new installation (after a remorse
+timer; nothing learned is touched, nor the debug file), and
+Report a bug opens a new issue in the browser (the form in
+`.github/ISSUE_TEMPLATE/bug_report.yml`) with the diagnostics filled in. A
+double tap on the section header shows the diagnostics to copy: version,
+system, settings and learning counts, no words (`KeyboardInfo` in the
+plugin, which also lists the settings' keys and resets them). With `~/.local/share/parrotfish-keyboard/debug` present, the plugin logs
 timings (never the typed text) to the journal, and appends to
 `~/.local/share/parrotfish-keyboard/slips.log` the kind of slip behind every
 autocorrection kept or undone, every correction picked from the bar and
@@ -362,11 +367,17 @@ git diff data/rules                            # review before committing
 ```
 
 Languages: `en` (AOSP en_US), `it`, `de`, `es`, `fr`, `pt_BR`, `pt_PT`,
-`nl`, `sv`, `da`, `nb`, `ro`, `fi` (`data/CMakeLists.txt`; the settings list is
-`settings/languages.js`). Both Portuguese lists use the same corpora (`pt`).
-Adding one: its AOSP list in `data/aosp/`, a `.rules` file, the test
-sentences (`tests/data/README.md`), an entry in both places named
-above and in `ALL`, `cvdir` and `tatoeba` of `tools/data/regenerate-lists.sh`,
+`nl`, `sv`, `da`, `nb`, `ro`, `fi` (`data/CMakeLists.txt`). Both Portuguese
+lists use the same corpora (`pt`). What the keyboard and the settings know
+of each language (its name, Experimental, the accented letters of the
+long-press menus, its punctuation signs, the usual layout and the system
+languages it stands for) is in `data/rules/LANG.language`
+(`tools/data/language-list.py` documents the lines), installed as one
+`languages.json` and read by the plugin's `Languages` (a QML singleton for
+the layout and the settings). Adding one: its AOSP list in `data/aosp/`, a
+`.rules` and a `.language` file, the test sentences
+(`tests/data/README.md`), an entry in `data/CMakeLists.txt` and in `ALL`,
+`cvdir` and `tatoeba` of `tools/data/regenerate-lists.sh`,
 then regenerate and review the lists. The lists of sv, da and nb come
 from little corpus text (Common Voice has 0.1–1 MB for them), so their
 next-word data is thin. Finnish has many forms per word, and the AOSP

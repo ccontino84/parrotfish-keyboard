@@ -7,13 +7,13 @@
 // apply at once.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Parrotfish.Keyboard 1.0
 import Nemo.Configuration 1.0
-import "languages.js" as Languages
 
 Page {
     id: page
 
-    readonly property var codes: Languages.selected(languagesConfig.value, Qt.locale().name)
+    readonly property var codes: Languages.selected(languagesConfig.value)
 
     ConfigurationValue {
         id: languagesConfig

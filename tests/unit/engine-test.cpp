@@ -883,13 +883,10 @@ void testLearnedRules()
     CHECK(!learnableNewWord(u("mp3")));
     CHECK(!learnableNewWord(u("x")));
 
-    // Learned after 3 different texts, not 3 uses in one.
+    // Learned after 2 different texts, not 3 uses in one.
     Learned l;
     for (int k = 0; k < 3; ++k)
         l.add("en", u("Mitton"), false, u("met"), true);
-    CHECK(l.language("en")->word(u("mitton")) == nullptr);
-    l.endText();
-    l.add("en", u("Mitton"), false, u("met"), true);
     CHECK(l.language("en")->word(u("mitton")) == nullptr);
     l.endText();
     l.add("en", u("Mitton"), false, u("met"), true);
@@ -907,21 +904,18 @@ void testLearnedRules()
     CHECK(l.language("en")->next.count(u("mitton")) == 0);
     CHECK(l.language("en")->next.count(u("met")) == 0);
 
-    // Too slow: the third text comes after the window, the count starts over.
+    // Too slow: the second text comes after the window, the count starts
+    // over.
     LearnParams p;
     p.newWordWindow = 100;
     Learned slow(p);
-    slow.add("en", u("zorbel"), false, u(""), false);
+    slow.add("en", u("zorbel"), false, u("a"), true);
     slow.endText();
-    slow.add("en", u("zorbel"), false, u(""), false);
     for (int k = 0; k < 120; ++k)
         slow.add("en", u("the"), true, u(""), false);
-    slow.endText();
-    slow.add("en", u("zorbel"), false, u(""), false);
+    slow.add("en", u("zorbel"), false, u("a"), true);
     CHECK(slow.language("en")->word(u("zorbel")) == nullptr);
     // A sentence start's capital is not the word's.
-    slow.endText();
-    slow.add("en", u("zorbel"), false, u("a"), true);
     slow.endText();
     slow.add("en", u("Zorbel"), false, u(""), false);
     w = slow.language("en")->word(u("zorbel"));
@@ -993,8 +987,8 @@ void testLearnedEngine()
     s.engine.setLearned(&l);
     s.engine.startText(u("I met "));
     const std::string before = s.space("zorbel");
-    // The user keeps typing it, in three texts.
-    for (int k = 0; k < 3; ++k) {
+    // The user keeps typing it, in two texts.
+    for (int k = 0; k < 2; ++k) {
         CHECK(!s.engine.isKnown(u("zorbel")));
         l.add("en", u("I"), true, u(""), false);
         l.add("en", u("met"), true, u("I"), true);

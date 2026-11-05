@@ -83,7 +83,24 @@ foreach(entry ${PARROTFISH_LANGUAGES})
         VERBATIM)
     list(APPEND dicts ${out})
 endforeach()
-add_custom_target(dictionaries ALL DEPENDS ${dicts})
+# The language list (tools/data/language-list.py, from rules/LANG.language).
+set(langs)
+set(language_files)
+foreach(entry ${PARROTFISH_LANGUAGES})
+    string(REPLACE ":" ";" parts ${entry})
+    list(GET parts 0 lang)
+    list(APPEND langs ${lang})
+    list(APPEND language_files ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.language)
+endforeach()
+set(language_list ${CMAKE_CURRENT_BINARY_DIR}/languages.json)
+add_custom_command(
+    OUTPUT ${language_list}
+    COMMAND ${Python3_EXECUTABLE} -I ${PROJECT_SOURCE_DIR}/tools/data/language-list.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/rules ${language_list} ${langs}
+    DEPENDS ${PROJECT_SOURCE_DIR}/tools/data/language-list.py ${language_files}
+    COMMENT "Writing the language list"
+    VERBATIM)
+add_custom_target(dictionaries ALL DEPENDS ${dicts} ${language_list})
 
-install(FILES ${dicts} DESTINATION ${PARROTFISH_DATA_DIR})
+install(FILES ${dicts} ${language_list} DESTINATION ${PARROTFISH_DATA_DIR})
 install(DIRECTORY layouts/ DESTINATION ${PARROTFISH_DATA_DIR}/layouts FILES_MATCHING PATTERN "*.layout")

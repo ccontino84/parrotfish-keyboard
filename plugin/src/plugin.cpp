@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-TBD
 
 #include "keyboardinfo.h"
+#include "languages.h"
 #include "learnedwords.h"
 #include "predictionengine.h"
 
@@ -20,6 +21,9 @@ public:
         qmlRegisterType<PredictionEngine>(uri, 1, 0, "PredictionEngine");
         qmlRegisterType<LearnedWords>(uri, 1, 0, "LearnedWords");
         qmlRegisterType<KeyboardInfo>(uri, 1, 0, "KeyboardInfo");
+        qmlRegisterSingletonType<Languages>(uri, 1, 0, "Languages", [](QQmlEngine *, QJSEngine *) -> QObject * {
+            return new Languages;
+        });
     }
 };
 

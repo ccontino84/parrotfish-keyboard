@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-TBD
 
 #include "predictionengine.h"
+#include "languages.h"
 
 #include "parrotfish/utf8.h"
 
@@ -307,18 +308,8 @@ void PredictionEngine::loadLanguages()
     };
     QStringList codes = m_languages.split(QLatin1Char(' '));
     codes.removeAll(QString());
-    if (codes.isEmpty()) {
-        // The system language only (pt_BR, or its language: it_IT -> it);
-        // others are added in the settings. English if there is no
-        // dictionary for it (below).
-        const QString name = QLocale::system().name();
-        QString lang = name.section(QLatin1Char('_'), 0, 0);
-        if (lang == QLatin1String("no") || lang == QLatin1String("nn"))
-            lang = QStringLiteral("nb");
-        else if (lang == QLatin1String("pt"))
-            lang = QStringLiteral("pt_PT");   // pt_AO, pt_MZ...: the Portugal spelling
-        codes << (QFile::exists(dict(name)) ? name : lang);
-    }
+    if (codes.isEmpty())
+        codes = Languages::instance().defaultLanguages();   // the system language's, else English
     m_engine.clearLanguages();
     m_results.clear();
     for (const QString &code : codes) {
@@ -328,11 +319,12 @@ void PredictionEngine::loadLanguages()
         if (!m_engine.addLanguage(dict(code).toStdString(), &error))
             qWarning("parrotfish: %s", error.c_str());
     }
-    if (m_engine.languageCount() == 0) {
-        std::string error;
-        if (!m_engine.addLanguage(dict(QStringLiteral("en")).toStdString(), &error))
-            qWarning("parrotfish: %s", error.c_str());
-    }
+    if (m_engine.languageCount() == 0)   // none of the codes installed
+        for (const QString &code : Languages::instance().defaultLanguages()) {
+            std::string error;
+            if (!m_engine.addLanguage(dict(code).toStdString(), &error))
+                qWarning("parrotfish: %s", error.c_str());
+        }
     if (m_debug)
         qInfo("parrotfish: %d typing languages", static_cast<int>(m_engine.languageCount()));
 }

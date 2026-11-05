@@ -7,17 +7,19 @@ find_package(Qt5 REQUIRED COMPONENTS Core Qml)
 find_package(PkgConfig REQUIRED)
 find_package(Threads REQUIRED)
 pkg_check_modules(SQLITE3 REQUIRED IMPORTED_TARGET sqlite3)
+pkg_check_modules(DCONF REQUIRED IMPORTED_TARGET dconf)
 set(CMAKE_AUTOMOC ON)
 
 add_library(parrotfishkeyboard MODULE
     src/keyboardinfo.cpp
+    src/languages.cpp
     src/learnedwords.cpp
     src/learningstore.cpp
     src/plugin.cpp
     src/predictionengine.cpp
     src/storewriter.cpp
 )
-target_link_libraries(parrotfishkeyboard PRIVATE parrotfish-engine Qt5::Core Qt5::Qml PkgConfig::SQLITE3 Threads::Threads)
+target_link_libraries(parrotfishkeyboard PRIVATE parrotfish-engine Qt5::Core Qt5::Qml PkgConfig::SQLITE3 PkgConfig::DCONF Threads::Threads)
 target_compile_definitions(parrotfishkeyboard PRIVATE
     PARROTFISH_DATA_DIR="${PARROTFISH_DATA_DIR}"
     PARROTFISH_VERSION="${PARROTFISH_VERSION}"

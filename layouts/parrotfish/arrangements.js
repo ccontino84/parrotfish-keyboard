@@ -339,42 +339,9 @@ function withNumberRow(a) {
     return {"name": a.name, "numbers": numbers, "rows": rows}
 }
 
-// The long-press menus of the comma and the period: Jolla's (: , ; and
-// ! . ?) plus the signs of the typing languages: ¡ ¿ with Spanish,
-// the em dash — with English or Spanish. Kept short: the hyphen is on the
-// sticky key, an ellipsis is typed as three periods, quotes are on the
-// second symbol page. `languages` is the dconf value of
-// /apps/parrotfish-keyboard/languages, `localeName` the system locale.
-function punctuation(languages, localeName) {
-    var codes = typingLanguages(languages, localeName)
-    var es = codes.indexOf("es") >= 0
-    var dash = es || codes.indexOf("en") >= 0
-    return {"comma": ":,;" + (dash ? "—" : ""), "period": es ? "¡!.?¿" : "!.?"}
-}
-
-// The accented letters of each typing language, which its long-press menus
-// show: those in about 0.05% of the words of everyday text or more, and
-// Spanish ü (pingüino). The other letters of a key are one step away,
-// behind `more` (LongPressMenu.qml).
-var languageLetters = {
-    "da": "åæøé", "de": "äöüß", "en": "", "es": "áéíóúñü", "fi": "äö",
-    "fr": "éàèêçôîùâûœëï", "it": "àèéìòù", "nb": "åøæé", "nl": "éëï",
-    "pt_BR": "ãáéçóíêúõôàâ", "pt_PT": "ãáéçóíêúõôàâ", "ro": "ășîțâ", "sv": "äåöé"
-}
+// The arrows of the long-press menus (LongPressMenu.qml).
 var more = "\u22ef"   // ⋯, drawn as ›
 var back = "\u22ee"   // ⋮, drawn as ‹ (with a key's other letters)
-
-// The letters of the typing languages `codes`.
-function letters(codes) {
-    var out = ""
-    for (var i = 0; i < codes.length; ++i) {
-        var l = languageLetters[codes[i]] || ""
-        for (var j = 0; j < l.length; ++j)
-            if (out.indexOf(l.charAt(j)) < 0)
-                out += l.charAt(j)
-    }
-    return out
-}
 
 // A key's long-press menus, unshifted and shifted (accents `a`, `A` of an
 // arrangement), for the typing languages' `letters`: {a, A, more,
@@ -397,44 +364,4 @@ function accentMenus(a, A, letters) {
     if (s.rest === "")
         return {"a": a, "A": A, "more": "", "moreShifted": ""}
     return {"a": s.keep + more, "A": S.keep + more, "more": s.rest, "moreShifted": S.rest}
-}
-
-// The typing languages: the codes in `value` (separated by spaces), or the
-// system language if none, else English. Same as selected() in
-// settings/languages.js, with its codes.
-var languageCodes = ["da", "de", "en", "es", "fr", "it", "nl", "nb", "pt_BR", "pt_PT", "ro", "fi", "sv"]
-function typingLanguages(value, localeName) {
-    var parts = String(value || "").split(" ")
-    var codes = []
-    for (var i = 0; i < parts.length; ++i)
-        if (languageCodes.indexOf(parts[i]) >= 0)
-            codes.push(parts[i])
-    if (codes.length > 0)
-        return codes
-    var name = String(localeName)
-    var lang = name.split("_")[0]
-    if (lang === "no" || lang === "nn")
-        lang = "nb"
-    else if (lang === "pt")
-        lang = "pt_PT"
-    var first = languageCodes.indexOf(name) >= 0 ? name : lang
-    return [languageCodes.indexOf(first) >= 0 ? first : "en"]
-}
-
-// The arrangement used until one is chosen in the settings: the usual one
-// for the system locale (Qt.locale().name, e.g. "fi_FI"), as on Jolla's
-// layouts and physical keyboards there. Same as layoutFor() in
-// settings/languages.js.
-function preferred(localeName) {
-    var name = String(localeName)
-    var lang = name.split("_")[0]
-    if (name === "fr_CA")
-        return "qwerty"
-    if (lang === "de" || name === "fr_CH")
-        return "qwertz"
-    if (lang === "fr")
-        return "azerty"
-    if (lang === "fi" || lang === "sv")
-        return "nordic"
-    return "qwerty"
 }

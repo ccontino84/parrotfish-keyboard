@@ -885,9 +885,10 @@ def cmd_rpm(args, cfg):
             if name.endswith(".pfd") or name == "inputs.sha256":
                 shutil.copy(os.path.join(data, name), prebuilt)
     # sfdk forgets the target between commands: set it in the same shell.
+    # no-fix-version: the spec's Version, not one made from the latest git tag.
     try:
         with open(log, "w") as f:
-            code = run(["sh", "-c", f"sfdk config target={target} && sfdk build"], stdout=f,
+            code = run(["sh", "-c", f"sfdk config target={target} && sfdk -c no-fix-version build"], stdout=f,
                        stderr=subprocess.STDOUT).returncode
     finally:
         shutil.rmtree(prebuilt, ignore_errors=True)

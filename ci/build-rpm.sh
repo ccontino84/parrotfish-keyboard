@@ -28,7 +28,8 @@ docker run --rm -v "$PWD":/share:ro -v "$PWD/out":/out "$image" /bin/bash -euxc 
     cp -r /share/. .
     # Leftovers of local builds in the source tree
     rm -rf RPMS out .sfdk documentation.list build build-*
-    mb2 -t "SailfishOS-$0-$1" build
+    # -X: the spec's Version, not one made from the latest git tag
+    mb2 -X -t "SailfishOS-$0-$1" build
     cp RPMS/*.rpm /out/
 ' "$release" "$arch"
 

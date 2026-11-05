@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QHash>
+#include <QList>
 #include <QPair>
 #include <QString>
 #include <QStringList>
@@ -78,13 +79,22 @@ public:
 
     // For the settings page (another process; the keyboard reloads after a
     // change): the words learned as new and those whose correction was
-    // undone at least `undosToStop` times, one per lowercase word (a new
-    // word's spelling first), sorted.
-    QStringList listedWords(int undosToStop) const;
-    // Forgets a word in every language: its count, its pairs, its undos.
-    void forgetWord(const QString &word);
+    // undone at least `undosToStop` times, one per language and lowercase
+    // word (a new word's spelling first), unsorted.
+    struct ListedWord {
+        QString language, word;
+    };
+    QList<ListedWord> listedWords(int undosToStop) const;
+    // Forgets a word in `language` (empty: in every language): its count,
+    // its pairs, its undos.
+    void forgetWord(const QString &word, const QString &language = QString());
+    // Forgets everything learned in one language, its undos included.
+    void clearLanguage(const QString &language);
     // Forgets everything learned, the undo memory included.
     void clearAll();
+    // The languages something is learned in (words, pairs, undos or words
+    // typed), as codes.
+    QStringList languagesWithData() const;
     // For the diagnostics (settings page): per language, counts only, no
     // words: "en: typed 1234, words 567 (new 8, pending 9), pairs 1011,
     // undos 12".

@@ -359,52 +359,79 @@ void LearningStore::saveLearned(const LearnedRows &rows)
         exec("ROLLBACK");
 }
 
-QStringList LearningStore::listedWords(int undosToStop) const
+QList<LearningStore::ListedWord> LearningStore::listedWords(int undosToStop) const
 {
-    QMap<QString, QString> byKey;   // lowercase → spelling (sorted by QMap)
+    // (language, lowercase) → spelling, a new word's first
+    QMap<QPair<QString, QString>, QString> byKey;
     if (!m_db)
         return {};
+    auto column = [](sqlite3_stmt *st, int i) {
+        return QString::fromUtf8(reinterpret_cast<const char *>(sqlite3_column_text(st, i)));
+    };
     sqlite3_stmt *st = nullptr;
-    if (sqlite3_prepare_v2(m_db, "SELECT key, spelling FROM words WHERE is_new = 1 AND pending = 0", -1, &st,
-                           nullptr) == SQLITE_OK)
+    if (sqlite3_prepare_v2(m_db, "SELECT lang, key, spelling FROM words WHERE is_new = 1 AND pending = 0", -1,
+                           &st, nullptr) == SQLITE_OK)
         while (sqlite3_step(st) == SQLITE_ROW)
-            byKey.insert(QString::fromUtf8(reinterpret_cast<const char *>(sqlite3_column_text(st, 0))),
-                         QString::fromUtf8(reinterpret_cast<const char *>(sqlite3_column_text(st, 1))));
+            byKey.insert(qMakePair(column(st, 0), column(st, 1)), column(st, 2));
     sqlite3_finalize(st);
     st = nullptr;
-    if (sqlite3_prepare_v2(m_db, "SELECT typed FROM undos WHERE count >= ?1", -1, &st, nullptr) == SQLITE_OK) {
+    if (sqlite3_prepare_v2(m_db, "SELECT lang, typed FROM undos WHERE count >= ?1", -1, &st, nullptr)
+            == SQLITE_OK) {
         sqlite3_bind_int(st, 1, undosToStop);
         while (sqlite3_step(st) == SQLITE_ROW) {
-            const QString typed = QString::fromUtf8(reinterpret_cast<const char *>(sqlite3_column_text(st, 0)));
-            if (!byKey.contains(typed))
-                byKey.insert(typed, typed);
+            const QPair<QString, QString> key(column(st, 0), column(st, 1));
+            if (!byKey.contains(key))
+                byKey.insert(key, key.second);
         }
     }
     sqlite3_finalize(st);
-    QStringList out = byKey.values();
-    std::sort(out.begin(), out.end(), [](const QString &a, const QString &b) {
-        return QString::localeAwareCompare(a.toLower(), b.toLower()) < 0;
-    });
+    QList<ListedWord> out;
+    for (auto it = byKey.constBegin(); it != byKey.constEnd(); ++it)
+        out.append({it.key().first, it.value()});
     return out;
 }
 
-void LearningStore::forgetWord(const QString &word)
+void LearningStore::forgetWord(const QString &word, const QString &language)
 {
     if (!m_db)
         return;
     const QByteArray key = word.toLower().toUtf8();
+    const QByteArray lang = language.toUtf8();
     if (!exec("BEGIN"))
         return;
-    for (const char *sql : {"DELETE FROM words WHERE key = ?1", "DELETE FROM pairs WHERE prev = ?1 OR word = ?1",
-                            "DELETE FROM undos WHERE typed = ?1"}) {
+    // ?2 = '' matches every language
+    for (const char *sql : {"DELETE FROM words WHERE key = ?1 AND (?2 = '' OR lang = ?2)",
+                            "DELETE FROM pairs WHERE (prev = ?1 OR word = ?1) AND (?2 = '' OR lang = ?2)",
+                            "DELETE FROM undos WHERE typed = ?1 AND (?2 = '' OR lang = ?2)"}) {
         Statement st(m_db, sql);
         if (!st)
             continue;
         st.text(1, key);
+        st.text(2, lang);
         st.run();
     }
     if (!exec("COMMIT"))
         exec("ROLLBACK");
+}
+
+void LearningStore::clearLanguage(const QString &language)
+{
+    if (!m_db || language.isEmpty())
+        return;
+    const QByteArray lang = language.toUtf8();
+    if (!exec("BEGIN"))
+        return;
+    for (const char *sql : {"DELETE FROM words WHERE lang = ?1", "DELETE FROM pairs WHERE lang = ?1",
+                            "DELETE FROM langs WHERE lang = ?1", "DELETE FROM undos WHERE lang = ?1"}) {
+        Statement st(m_db, sql);
+        if (!st)
+            continue;
+        st.text(1, lang);
+        st.run();
+    }
+    if (!exec("COMMIT"))
+        exec("ROLLBACK");
+    exec("PRAGMA incremental_vacuum");
 }
 
 void LearningStore::clearAll()
@@ -419,6 +446,22 @@ void LearningStore::clearAll()
     if (!exec("COMMIT"))
         exec("ROLLBACK");
     exec("PRAGMA incremental_vacuum");
+}
+
+QStringList LearningStore::languagesWithData() const
+{
+    QStringList out;
+    if (!m_db)
+        return out;
+    sqlite3_stmt *st = nullptr;
+    if (sqlite3_prepare_v2(m_db,
+                           "SELECT lang FROM words UNION SELECT lang FROM pairs UNION SELECT lang FROM undos"
+                           " UNION SELECT lang FROM langs WHERE typed > 0",
+                           -1, &st, nullptr) == SQLITE_OK)
+        while (sqlite3_step(st) == SQLITE_ROW)
+            out << QString::fromUtf8(reinterpret_cast<const char *>(sqlite3_column_text(st, 0)));
+    sqlite3_finalize(st);
+    return out;
 }
 
 QStringList LearningStore::summary() const

@@ -178,15 +178,14 @@ between taps).
 
 ## Learning
 
-`newWordTexts` 2 (user, 2026-11-05: 3 was too slow on the phone). Long
-run against 3 (a long simulated run, en 610k and it 600k words kept,
+`newWordTexts` 3 (user, 2026-11-05). 2 was tried for a day because 3
+felt slow, then dropped: it learned too many words on the phone. Long run
+of 2 against 3 (a long simulated run, en 610k and it 600k words kept,
 typos left by a typist who never fixes one by hand, so the cost is
-overstated): 2-8x the new words learned, learned typos en 21-35 against
+overstated): 2 learned 2-8x the new words, learned typos en 21-35 against
 2-8, it 10-16 against 0-3; error rate after correction +0.04 to +0.16
 points, worse by sign test from 50k words on (en 500k-600k: 34 better,
-113 worse). Accepted: two separate texts within 5,000 words, typos
-autocorrect or the user fixes never count, fading drops what isn't reused
-(about 70k words), and Learned words removes any.
+113 worse).
 
 `learnedWeight` 0.25, `learnedK` 2000, `learnedPairWeight` 0.5,
 `learnedPairK` 10, `learnedReach` 0 (2026-11-03). Bench learning mode

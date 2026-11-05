@@ -21,7 +21,7 @@ with undo, next-word prediction and learning, in several languages at once.
 - **Suggestions and next words.** The bar shows the correction first. After
   a word, it suggests the next one.
 - **Learning on the phone.** Learns the words you use, the words you type
-  after them, and new words once you have typed them in two different texts.
+  after them, and new words once you have typed them in three different texts.
   You can see and forget learned words, or turn learning off.
 - **Four arrangements:** QWERTY, QWERTZ, AZERTY and QWERTY with å ö ä. Any
   language can be typed on any of them. Accents are on long press.

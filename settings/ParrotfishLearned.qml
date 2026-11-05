@@ -3,8 +3,10 @@
 //
 // The learned words, opened from Parrotfish's section in Settings → Text
 // input (ParrotfishSettings.qml): the words learned as new and those whose
-// correction was undone, one row each. Forget one (long press), or clear
-// everything learned (pull-down menu), each with Sailfish's remorse timer.
+// correction was undone, one row each, under the name of their language.
+// Forget one in its language (long press); clear everything learned in one
+// language (pull-down menu, then the language) or in all, each with
+// Sailfish's remorse timer.
 // The keyboard is closed while Settings is open: this page edits
 // learning.db itself and bumps a dconf key for the keyboard to reload.
 import QtQuick 2.0
@@ -30,6 +32,55 @@ Page {
         id: clearRemorse
     }
 
+    // The languages with learned data (also those without listed words).
+    Component {
+        id: languagePage
+
+        Page {
+            id: chooser
+
+            property var languages: page.learned.languages()
+
+            SilicaListView {
+                anchors.fill: parent
+                model: chooser.languages
+
+                header: PageHeader {
+                    title: qsTr("Clear one language")
+                }
+
+                ViewPlaceholder {
+                    enabled: chooser.languages.length === 0
+                    text: qsTr("Nothing learned yet")
+                }
+
+                delegate: BackgroundItem {
+                    id: languageItem
+
+                    Label {
+                        x: Theme.horizontalPageMargin
+                        width: parent.width - 2 * x
+                        anchors.verticalCenter: parent.verticalCenter
+                        truncationMode: TruncationMode.Fade
+                        text: modelData.name
+                        color: languageItem.highlighted ? Theme.highlightColor : Theme.primaryColor
+                    }
+
+                    onClicked: {
+                        var code = modelData.code
+                        pageStack.pop()
+                        clearRemorse.execute(qsTr("Clearing %1").arg(modelData.name), function() {
+                            page.learned.clearLanguage(code)
+                            page.tellKeyboard()
+                        })
+                    }
+                }
+
+                VerticalScrollDecorator {}
+            }
+        }
+    }
+
     SilicaListView {
         id: list
 
@@ -41,6 +92,10 @@ Page {
         }
 
         PullDownMenu {
+            MenuItem {
+                text: qsTr("Clear one language…")
+                onClicked: pageStack.push(languagePage)
+            }
             MenuItem {
                 text: qsTr("Clear all learned data")
                 onClicked: clearRemorse.execute(qsTr("Clearing learned data"), function() {
@@ -56,13 +111,19 @@ Page {
             hintText: qsTr("Words you keep typing appear here")
         }
 
+        section.property: "languageName"
+        section.delegate: SectionHeader {
+            text: section
+        }
+
         delegate: ListItem {
             id: item
 
             function forget() {
                 var word = model.word
+                var language = model.language
                 remorseDelete(function() {
-                    page.learned.forget(word)
+                    page.learned.forget(word, language)
                     page.tellKeyboard()
                 })
             }

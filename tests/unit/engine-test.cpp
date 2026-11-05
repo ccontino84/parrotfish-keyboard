@@ -883,10 +883,13 @@ void testLearnedRules()
     CHECK(!learnableNewWord(u("mp3")));
     CHECK(!learnableNewWord(u("x")));
 
-    // Learned after 2 different texts, not 3 uses in one.
+    // Learned after 3 different texts, not 3 uses in one.
     Learned l;
     for (int k = 0; k < 3; ++k)
         l.add("en", u("Mitton"), false, u("met"), true);
+    CHECK(l.language("en")->word(u("mitton")) == nullptr);
+    l.endText();
+    l.add("en", u("Mitton"), false, u("met"), true);
     CHECK(l.language("en")->word(u("mitton")) == nullptr);
     l.endText();
     l.add("en", u("Mitton"), false, u("met"), true);
@@ -908,6 +911,7 @@ void testLearnedRules()
     // over.
     LearnParams p;
     p.newWordWindow = 100;
+    p.newWordTexts = 2;
     Learned slow(p);
     slow.add("en", u("zorbel"), false, u("a"), true);
     slow.endText();
@@ -987,8 +991,8 @@ void testLearnedEngine()
     s.engine.setLearned(&l);
     s.engine.startText(u("I met "));
     const std::string before = s.space("zorbel");
-    // The user keeps typing it, in two texts.
-    for (int k = 0; k < 2; ++k) {
+    // The user keeps typing it, in three texts.
+    for (int k = 0; k < 3; ++k) {
         CHECK(!s.engine.isKnown(u("zorbel")));
         l.add("en", u("I"), true, u(""), false);
         l.add("en", u("met"), true, u("I"), true);

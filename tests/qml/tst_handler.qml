@@ -250,7 +250,7 @@ Item {
             return out
         }
 
-        // Learning: a new word kept in two
+        // Learning: a new word kept in three
         // texts is learned, suggested, and still there after a restart;
         // Privacy doesn't use it; Off ignores the undo memory too.
         function test_learning() {
@@ -332,7 +332,16 @@ Item {
             var listed = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; LearnedWords {}', root)
             tryVerify(function() { listed.reload(); return words(listed).indexOf("quorbix") >= 0 }, 3000,
                       "listed: " + words(listed))
-            listed.forget("quorbix")
+            // listed under its language; another language's clearing leaves it
+            var row = words(listed).indexOf("quorbix")
+            compare(listed.data(listed.index(row, 0), 258), "en")          // language
+            compare(listed.data(listed.index(row, 0), 259), "English")     // languageName
+            compare(listed.languages().map(function(l) { return l.code }).join(" "), "en")
+            listed.clearLanguage("it")
+            verify(words(listed).indexOf("quorbix") >= 0, "kept: " + words(listed))
+            listed.forget("quorbix", "it")
+            verify(words(listed).indexOf("quorbix") >= 0, "kept in en: " + words(listed))
+            listed.forget("quorbix", "en")
             verify(words(listed).indexOf("quorbix") < 0)
             Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
                              "/apps/parrotfish-keyboard/autocorrect": "normal",
@@ -342,6 +351,9 @@ Item {
             type("quorb")
             verify(bar().split(" ").indexOf("quorbix") < 0, "forgotten: " + bar())
             backspace(); backspace(); backspace(); backspace(); backspace()
+            verify(listed.languages().length > 0, "en still has counts")
+            listed.clearLanguage("en")
+            compare(listed.languages().length, 0)
             listed.clearAll()
             compare(listed.count, 0)
             listed.reload()

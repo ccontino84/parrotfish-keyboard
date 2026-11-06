@@ -5,46 +5,55 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Parrotfish Keyboard
 
-Better typing for the Sailfish OS keyboard: word suggestions, autocorrect
-with undo, next-word prediction and learning, in several languages at once.
+Better typing for the Sailfish OS keyboard, in several languages at once.
 
-- **Several languages at once.** Choose the languages you type in. The
-  keyboard follows the one you are writing, word by word, so a message can
-  mix them with no switching.
-- **Autocorrect you can undo.** A correction is applied on Space or
-  punctuation. Backspace straight after it brings back what you typed, and a
-  correction you keep undoing stops. Four strengths:
-  - **Strong**: also fixes real words typed by mistake.
-  - **Normal**: fixes words not in the dictionaries.
-  - **Gentle**: fixes only obvious slips.
-  - **Off**.
-- **Suggestions and next words.** The bar shows the correction first. After
-  a word, it suggests the next one.
-- **Learning on the phone.** Learns the words you use, the words you type
-  after them, and new words once you have typed them in three different texts.
-  You can see and forget learned words, or turn learning off.
-- **Four arrangements:** QWERTY, QWERTZ, AZERTY and QWERTY with å ö ä. Any
-  language can be typed on any of them. Accents are on long press.
-- **Look & feel:** key fill and border, key height, space between keys, a
-  number row, a sticky key for the last sign picked from a long press, and a
-  dot on keys with more characters. A preview shows the changes as you make
-  them.
+**Why Parrotfish?** Writing in more than one language on Sailfish means
+switching keyboards again and again, often in the middle of a sentence.
+Parrotfish follows the language you are writing instead. And it stays just
+a keyboard: fully open source, it changes nothing in the system, never goes
+online, and leaves out everything that isn't about typing.
+
+What it adds to Jolla's keyboard:
+
+- **Your languages, word by word.** Pick them in the settings: suggestions,
+  corrections and learning follow the language of each word, so one message
+  can mix them.
+- **Suggestions, autocorrect and learning.** Corrections (even of two words
+  typed without a space) and next words, improved by what you type, learned
+  only on the phone. One Backspace undoes a correction, and one you keep
+  undoing stops. Four strengths, from Strong (also fixes real words typed by
+  mistake) to Off.
+- **Four arrangements:** QWERTY, QWERTZ, AZERTY and QWERTY with å ö ä, for
+  any language. A dot marks the keys with more characters; a long press
+  shows your languages' accents first, and the sticky key keeps the last
+  sign you picked.
+- **Customizable, and at home on Sailfish:** it looks like Jolla's keyboard,
+  and key fill, border, height, spacing, number row and hints can be
+  changed, with a live preview.
 
 Languages: Dutch, English, French, German, Italian, Portuguese (Brazil and
 Portugal), Spanish. Experimental: Danish, Finnish, Norwegian Bokmål,
-Romanian, Swedish. There is too little public text to build and test these
-as well as the others; feedback from native speakers is welcome.
+Romanian, Swedish, in a separate package. There is too little public text
+to build and test these as well as the others; feedback from native speakers
+is welcome. The settings are translated into all of them.
 
 **Status:** in development, not released yet.
 
 ## Install
 
-1. Download the RPM for your device from the
-   [latest release](https://github.com/ccontino84/parrotfish-keyboard/releases/latest):
-   `aarch64` for most current devices, `armv7hl` for 32-bit installations.
+1. From the
+   [latest release](https://github.com/ccontino84/parrotfish-keyboard/releases/latest),
+   download:
+   - `parrotfish-keyboard-<version>` for your device: `aarch64` for most
+     current devices, `armv7hl` for 32-bit installations;
+   - `parrotfish-latin-languages-<version>.noarch`: Dutch, English, French,
+     German, Italian, Portuguese, Spanish;
+   - for Danish, Finnish, Norwegian, Romanian or Swedish, also
+     `parrotfish-latin-languages-experimental-<version>.noarch`.
 2. In **Settings > Untrusted software**, turn on *Allow untrusted software*.
-3. Open the downloaded file (from the browser's downloads or the Files app)
-   and install it. The keyboard restarts by itself.
+3. Open the downloaded files (from the browser's downloads or the Files app)
+   and install them, `parrotfish-keyboard` first. The keyboard restarts by
+   itself. Without a language package it types without suggestions.
 4. In **Settings > Text input > Keyboards**, turn on the Parrotfish layout
    for your arrangement, for example *Auto (QWERTY)*. The *Auto* layouts are
    at the top of the list. Switch to it as to any other keyboard: long-press
@@ -52,13 +61,15 @@ as well as the others; feedback from native speakers is welcome.
 5. Its settings are under **Settings > Text input**, in the Parrotfish
    section. Start with *Typing languages*.
 
-**Upgrading** works the same way: install the new RPM over the old one.
+**Upgrading** works the same way: install the new RPMs over the old ones,
+`parrotfish-keyboard` first. The language packages only need updating when
+the release notes say so.
 Your settings and learned words are kept.
 
 With Developer mode, the same from a terminal:
 
 ```sh
-devel-su pkcon install-local parrotfish-keyboard-*.rpm
+devel-su pkcon install-local parrotfish-*.rpm
 ```
 
 ## Uninstall
@@ -66,7 +77,8 @@ devel-su pkcon install-local parrotfish-keyboard-*.rpm
 From a terminal (Developer mode):
 
 ```sh
-devel-su pkcon remove parrotfish-keyboard
+devel-su pkcon remove parrotfish-latin-languages-experimental   # if installed
+devel-su pkcon remove parrotfish-latin-languages parrotfish-keyboard
 ```
 
 Settings stay in dconf and learned words in your home directory. To remove
@@ -85,8 +97,11 @@ rm -r ~/.local/share/parrotfish-keyboard
 - **No system file is changed.** Parrotfish adds its own layouts, handler
   and settings to the stock keyboard. Jolla's own layouts are left as they
   are.
-- **Bug reports:** *Report a bug* in the settings opens a GitHub issue. It
-  fills in diagnostics: the versions, the keyboards and settings in use, and
+- **No root, no extra permissions.** It installs like any app and runs
+  entirely as your user, inside Jolla's keyboard: no system services, no
+  programs that run as root, no added permission rules.
+- **Bug reports:** double-tap the version in Parrotfish's settings, then
+  *Report a bug*. It opens a GitHub issue and fills in diagnostics: the versions, the keyboards and settings in use, and
   counts of learned data. They contain no words you typed. You see the
   report before sending it.
 

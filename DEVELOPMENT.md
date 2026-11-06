@@ -15,7 +15,9 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 | `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
 | `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press; QWERTY (ÅÖÄ): Jolla's fi keys), picked by `/apps/parrotfish-keyboard/layout`; optional key backgrounds in `parrotfish/` |
 | `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`; the list comes from the plugin's `Languages`) |
-| `rpm/` | RPM spec |
+| `cli/` | `parrotfish`, a command that shows what the keyboard is learning (reads `learning.db`) |
+| `translations/` | the settings' translations, `parrotfish-keyboard-<lang>.ts` (qsTr; the context is the QML file's name, a second argument tells gendered words apart: `qsTr("Off", "learning")`); new texts: `lupdate settings -ts translations/*.ts`, then translate them (Qt Linguist or by hand). Built with the SDK's Qt 5 `lrelease` (none on the PC: skipped), installed in `/usr/share/translations`, loaded by the plugin |
+| `rpm/` | RPM spec; `split-languages.py` puts the experimental languages' dictionaries in their own package |
 | `tools/pf` | the developer front door (below): tests, lint, benchmark suite, comparisons, RPM |
 | `tools/data/` | Python tools that build and maintain the dictionary data |
 | `tools/eval/` | benchmark helpers: parameter sweeps, mixed-language texts |
@@ -229,14 +231,36 @@ with a `~` also gets `PARROTFISH_DEVTOOLS=ON` (the spec decides): `pf-query`
 and the benchmarks in `/usr/libexec/parrotfish-keyboard/`, with their test
 sentences. Release builds leave them out.
 
+Three packages: `parrotfish-keyboard` (no dictionaries), and two noarch
+language packages, `parrotfish-latin-languages` and
+`parrotfish-latin-languages-experimental` (the languages marked
+experimental in `data/rules/*.language`); the spec's file lists come from
+`languages.json` (`rpm/split-languages.py`). A language package requires
+`parrotfish-keyboard` and `parrotfish-dictionary-format = N`, which the
+keyboard provides (the spec's `dictformat`, checked against the engine's
+`FormatVersion` by ctest `spec`): a keyboard update needs new language
+packages only when the format changes. The keyboard doesn't require a
+language package (one file at a time, from the Files app, neither could be
+installed first); without one it types without suggestions and the settings
+show "No languages installed". The plugin offers only the languages whose
+dictionary is installed; a typing language without one is skipped.
+
+`parrotfish candidates` lists the new words not learned yet (texts so far,
+uses, words left before the count starts over), `parrotfish learned` the
+learned new words (count, and the fadings and words of typing
+until one is forgotten if not used again; `--all` adds the dictionary words
+whose use was learned); `-l LANGUAGE` for one language. It reads
+`learning.db` read-only, with the engine's default `LearnParams`; the
+keyboard saves when it closes.
+
 How it runs: `ParrotfishHandler.qml` is Jolla's `PreeditHandler` with our
 `PredictionEngine` as its `engine`. When a word starts, the handler passes
 the letter keys of the current layout (centres and sizes) and the text
 before the cursor; then each change of the word being typed updates the
 suggestions. Autocorrect strength is the dconf key
-`/apps/parrotfish-keyboard/autocorrect` (`strong`, the default: `normal`,
-and after a previous word a valid word one slip away from a far likelier
-word of the same language is fixed too, `strongMargin`; `normal`,
+`/apps/parrotfish-keyboard/autocorrect` (`strong`: `normal`, and after a
+previous word a valid word one slip away from a far likelier word of the
+same language is fixed too, `strongMargin`; `normal`, the default;
 `gentle`, `off`); swiping to another layout can be switched off on our layouts:
 `/apps/parrotfish-keyboard/swipe` (`normal`, the default; `off` = a drag of
 a full keyboard width); a long press on the spacebar opens Jolla's menu of
@@ -249,8 +273,7 @@ language only (English if there is no dictionary for it); others are added
 in the settings. Every enabled language is searched on each keystroke, the
 likeliest first, the others only for words that can still compete
 (`searchMargin`) (settings page: `settings/ParrotfishLanguages.qml`).
-`/apps/parrotfish-keyboard/dividers` (`true`, the default; `false`) switches
-the dividers between suggestions. The keys: one layout in Jolla's list per
+The keys: one layout in Jolla's list per
 arrangement (`layouts/layouts_parrotfish.conf`: Auto (QWERTY), Auto
 (QWERTZ), Auto (AZERTY), Auto (QWERTY ÅÖÄ), the last as Jolla's Finnish and
 Swedish layouts), each `layouts/parrotfish/ParrotfishKeyboard.qml` with its
@@ -259,10 +282,10 @@ Jolla's keyboard switches between the enabled ones (spacebar long press,
 swipe); they are switched on in Jolla's own Keyboards page, as any other
 (the diagnostics show Jolla's enabled and active layouts). The look of the
 keys of our layouts (`layouts/parrotfish/`):
-`/apps/parrotfish-keyboard/key-fill` (`flat` = the default, `shaded`,
-`none`) and `/apps/parrotfish-keyboard/key-border` (`line` = the default;
-`raised`, a rim lit from above drawn by a shader; `none`), in any
-combination; both `none` is Jolla's look. Letter keys stay fainter than
+`/apps/parrotfish-keyboard/key-fill` (`none` = the default, `flat`,
+`shaded`) and `/apps/parrotfish-keyboard/key-border` (`none` = the default;
+`line`; `raised`, a rim lit from above drawn by a shader), in any
+combination; both `none`, the default, is Jolla's look. Letter keys stay fainter than
 the spacebar. `/apps/parrotfish-keyboard/key-gap`: the space around each
 key background, across and down, in percent of the row height (0-10, `5` =
 the default; also for Jolla's backgrounds of `?123`, the spacebar and
@@ -289,11 +312,11 @@ Typing and Look & feel; Look & feel opens the keyboard, with a field to try it i
 `parrotfishNoLearning`, which the handler passes to the plugin's
 `learnPaused`). Below the two rows, Reset unsets every key under
 `/apps/parrotfish-keyboard/`, as on a new installation (after a remorse
-timer; nothing learned is touched, nor the debug file), and
-Report a bug opens a new issue in the browser (the form in
-`.github/ISSUE_TEMPLATE/bug_report.yml`) with the diagnostics filled in. A
-double tap on the section header shows the diagnostics to copy: version,
-system, settings and learning counts, no words (`KeyboardInfo` in the
+timer; nothing learned is touched, nor the debug file). A double tap on
+the version opens the diagnostics: version, system, settings and learning
+counts, no words, to copy, or sent by Report a bug, which opens a new issue
+in the browser (the form in `.github/ISSUE_TEMPLATE/bug_report.yml`) with
+them filled in (`KeyboardInfo` in the
 plugin, which also lists the settings' keys and resets them). With `~/.local/share/parrotfish-keyboard/debug` present, the plugin logs
 timings (never the typed text) to the journal, and appends to
 `~/.local/share/parrotfish-keyboard/slips.log` the kind of slip behind every

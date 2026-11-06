@@ -7,6 +7,10 @@ __pycache__/
 /RPMS/
 /.sfdk/
 /documentation.list
+# the RPM's file lists (rpm/split-languages.py)
+/latin.files
+/latin-experimental.files
+/main-excludes.files
 
 # Dictionaries built on the PC for a local RPM (tools/pf rpm)
 /prebuilt/

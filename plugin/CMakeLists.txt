@@ -23,6 +23,7 @@ target_link_libraries(parrotfishkeyboard PRIVATE parrotfish-engine Qt5::Core Qt5
 target_compile_definitions(parrotfishkeyboard PRIVATE
     PARROTFISH_DATA_DIR="${PARROTFISH_DATA_DIR}"
     PARROTFISH_VERSION="${PARROTFISH_VERSION}"
+    PARROTFISH_TRANSLATIONS_DIR="${CMAKE_INSTALL_FULL_DATADIR}/translations"
     QT_NO_CAST_FROM_ASCII)
 target_compile_options(parrotfishkeyboard PRIVATE -Wall -Wextra)
 

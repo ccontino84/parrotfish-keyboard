@@ -58,15 +58,15 @@ Page {
             SettingCombo {
                 key: "key-fill"
                 label: qsTr("Key fill")
-                values: ["flat", "shaded", "none"]
-                texts: [qsTr("Flat"), qsTr("Shaded"), qsTr("None")]
+                values: ["none", "flat", "shaded"]
+                texts: [qsTr("None", "key fill"), qsTr("Flat"), qsTr("Shaded")]
             }
 
             SettingCombo {
                 key: "key-border"
                 label: qsTr("Key border")
-                values: ["line", "raised", "none"]
-                texts: [qsTr("Line"), qsTr("Raised"), qsTr("None")]
+                values: ["none", "line", "raised"]
+                texts: [qsTr("None", "key border"), qsTr("Line"), qsTr("Raised")]
             }
 
             SettingSlider {
@@ -109,12 +109,6 @@ Page {
                 }
             }
 
-            SettingSwitch {
-                key: "dividers"
-                defaultValue: true
-                text: qsTr("Dividers between suggestions")
-            }
-
 
             // Two keys, one choice: number-row (on, off) and its height.
             ComboBox {
@@ -128,11 +122,11 @@ Page {
                 currentIndex: !on ? 0 : smaller ? 2 : 1
                 menu: ContextMenu {
                     MenuItem {
-                        text: qsTr("Off")
+                        text: qsTr("Off", "number row")
                         onClicked: numberRowConfig.value = false
                     }
                     MenuItem {
-                        text: qsTr("Normal")
+                        text: qsTr("Normal", "number row")
                         onClicked: {
                             numberRowHeightConfig.value = "100"
                             numberRowConfig.value = true
@@ -158,7 +152,7 @@ Page {
                 currentIndex: !on ? 0 : stickySideConfig.value === "left" ? 2 : 1
                 menu: ContextMenu {
                     MenuItem {
-                        text: qsTr("Off")
+                        text: qsTr("Off", "sticky key")
                         onClicked: stickyConfig.value = false
                     }
                     MenuItem {

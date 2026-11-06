@@ -33,6 +33,19 @@ set_tests_properties(bench-final-apostrophes PROPERTIES
                      PASS_REGULAR_EXPRESSION "un \\| po' \\| di.*girls' \\| room.*boys \\| toys.*said \\| hello \\| to.*casa \\| de \\| nonni"
                      FAIL_REGULAR_EXPRESSION "hello'|boys'|de'")
 
+# parrotfish candidates / learned on a small learning.db.
+if(PARROTFISH_PLUGIN)
+    add_test(NAME cli COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/cli/test-cli.py
+                              $<TARGET_FILE:parrotfish-cli>)
+endif()
+
+# The spec's dictformat is the engine's dictionary format (the language
+# packages depend on it).
+add_test(NAME spec COMMAND ${Python3_EXECUTABLE} -c
+         "import re,sys; s=open(sys.argv[1]).read(); h=open(sys.argv[2]).read(); a=re.search(r'%global dictformat (\\d+)', s).group(1); b=re.search(r'FormatVersion = (\\d+)', h).group(1); sys.exit(0 if a==b else f'spec dictformat {a}, engine FormatVersion {b}')"
+         ${PROJECT_SOURCE_DIR}/rpm/parrotfish-keyboard.spec
+         ${PROJECT_SOURCE_DIR}/engine/include/parrotfish/dictformat.h)
+
 # The QML tests (tests/qml): the handler with the plugin, on the PC.
 find_program(QMLTESTRUNNER NAMES qmltestrunner-qt5 qmltestrunner)
 if(PARROTFISH_PLUGIN AND QMLTESTRUNNER)

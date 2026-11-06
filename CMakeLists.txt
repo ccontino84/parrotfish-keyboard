@@ -35,6 +35,8 @@ add_subdirectory(engine)
 add_subdirectory(data)
 if(PARROTFISH_PLUGIN)
     add_subdirectory(plugin)
+    add_subdirectory(cli)
+    add_subdirectory(translations)
     install(FILES handler/ParrotfishHandler.qml handler/parrotfish-keyboard.conf
             DESTINATION ${PARROTFISH_HANDLER_DIR})
     # One package for all versions: each loads the copy in its own directory.

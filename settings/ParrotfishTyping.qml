@@ -35,6 +35,7 @@ Page {
             ValueButton {
                 label: qsTr("Typing languages")
                 value: Languages.names(Languages.selected(languagesConfig.value))
+                       || qsTr("No languages installed")
                 onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishLanguages.qml"))
             }
 
@@ -42,7 +43,9 @@ Page {
                 key: "autocorrect"
                 label: qsTr("Autocorrect")
                 values: ["strong", "normal", "gentle", "off"]
-                texts: [qsTr("Strong"), qsTr("Normal"), qsTr("Gentle"), qsTr("Off")]
+                defaultValue: "normal"
+                // The context of Off, Normal, None: their gender in some languages.
+                texts: [qsTr("Strong"), qsTr("Normal", "autocorrect"), qsTr("Gentle"), qsTr("Off", "autocorrect")]
                 descriptions: [qsTr("Also fixes real words typed by mistake"),
                                qsTr("Fixes words not in the dictionaries"),
                                qsTr("Fixes only obvious slips"),
@@ -53,7 +56,7 @@ Page {
                 key: "learning"
                 label: qsTr("Learning")
                 values: ["on", "privacy", "off"]
-                texts: [qsTr("On"), qsTr("Undos only"), qsTr("Off")]
+                texts: [qsTr("On"), qsTr("Undos only"), qsTr("Off", "learning")]
                 descriptions: [qsTr("Learns your words and what you type after them"),
                                qsTr("Suggests nothing learned; only stops corrections you undo"),
                                qsTr("Learns nothing")]

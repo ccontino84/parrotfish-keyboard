@@ -110,13 +110,13 @@ KeyboardLayout {
     ConfigurationValue {
         id: keyFillConfig
         key: "/apps/parrotfish-keyboard/key-fill"   // none, flat, shaded
-        defaultValue: "flat"
+        defaultValue: "none"
     }
 
     ConfigurationValue {
         id: keyBorderConfig
         key: "/apps/parrotfish-keyboard/key-border"   // none, line, raised
-        defaultValue: "line"
+        defaultValue: "none"
     }
 
     ConfigurationValue {

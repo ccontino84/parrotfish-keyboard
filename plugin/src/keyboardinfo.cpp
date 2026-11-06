@@ -65,7 +65,7 @@ QStringList KeyboardInfo::settingKeys()
             QStringLiteral("sticky"), QStringLiteral("sticky-side"), QStringLiteral("swipe"),
             QStringLiteral("key-height"), QStringLiteral("key-height-landscape"), QStringLiteral("key-gap"),
             QStringLiteral("key-fill"), QStringLiteral("key-border"), QStringLiteral("long-press-hint"),
-            QStringLiteral("dividers"), QStringLiteral("space-before-punctuation")};
+            QStringLiteral("space-before-punctuation")};
 }
 
 QString KeyboardInfo::diagnostics() const

@@ -36,8 +36,7 @@
 //   spacebar still opens Jolla's menu of layouts;
 // - an empty field leans towards the language the last text was in
 //   (dconf /apps/parrotfish-keyboard/last-language);
-// - thin dividers between the suggestions (dconf
-//   /apps/parrotfish-keyboard/dividers: true, false); the suggestion
+// - thin dividers between the suggestions; the suggestion
 //   delegates are those of HorizontalPredictionListView.qml and
 //   VerticalPredictionListView.qml (Jolla Ltd., BSD-3-Clause) plus a divider.
 import QtQuick 2.6
@@ -54,7 +53,6 @@ InputHandler {
     property var engine: predictionEngine
 
     readonly property string language: keyboard.language
-    readonly property bool showDividers: dividersConfig.value !== false && dividersConfig.value !== "false"
     readonly property int dividerWidth: Math.max(1, Math.round(Theme.pixelRatio))
     property string preedit
 
@@ -191,12 +189,6 @@ InputHandler {
         defaultValue: false
     }
 
-    ConfigurationValue {
-        id: dividersConfig
-        key: "/apps/parrotfish-keyboard/dividers"   // true, false
-        defaultValue: true
-    }
-
     // Bumped by the settings page after it changed learning.db.
     ConfigurationValue {
         id: learningChangedConfig
@@ -221,7 +213,7 @@ InputHandler {
     ConfigurationValue {
         id: strengthConfig
         key: "/apps/parrotfish-keyboard/autocorrect"   // off, gentle, normal, strong
-        defaultValue: "strong"
+        defaultValue: "normal"
     }
 
     onSelect: {
@@ -932,7 +924,7 @@ InputHandler {
                     }
 
                     Rectangle {
-                        visible: inputHandler.showDividers && model.index > 0
+                        visible: model.index > 0
                         width: inputHandler.dividerWidth
                         height: Math.round(delegate.height / 2)
                         anchors.verticalCenter: parent.verticalCenter
@@ -1032,7 +1024,7 @@ InputHandler {
                     }
 
                     Rectangle {
-                        visible: inputHandler.showDividers && model.index > 0
+                        visible: model.index > 0
                         width: Math.round(verticalDelegate.width / 2)
                         height: inputHandler.dividerWidth
                         anchors.horizontalCenter: parent.horizontalCenter

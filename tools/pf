@@ -896,13 +896,16 @@ def cmd_rpm(args, cfg):
         if os.path.isdir(os.path.join(REPO, "RPMS")) else []
     if code != 0 or not rpms:
         sys.exit(f"pf rpm: no RPM for {version} (log: {log})")
-    rpm = os.path.join(REPO, "RPMS", rpms[0])
-    print(rpm)
+    # The main package and the experimental languages' one.
+    paths = [os.path.join(REPO, "RPMS", n) for n in sorted(rpms)]
+    for rpm in paths:
+        print(rpm)
     dest = setting(cfg, "paths", "rpm_copy")
     if dest and not args.no_copy:
         if not os.path.isdir(dest):
-            sys.exit(f"pf rpm: {dest} isn't there (not mounted?); the RPM stays in RPMS/")
-        shutil.copy(rpm, dest)
+            sys.exit(f"pf rpm: {dest} isn't there (not mounted?); the RPMs stay in RPMS/")
+        for rpm in paths:
+            shutil.copy(rpm, dest)
         print(f"copied to {dest}")
     return 0
 

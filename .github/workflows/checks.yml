@@ -35,7 +35,7 @@ jobs:
           apt-get update
           apt-get install -y --no-install-recommends \
             cmake ninja-build g++ pkg-config python3 \
-            qtbase5-dev qtdeclarative5-dev qtdeclarative5-dev-tools \
+            qtbase5-dev qtdeclarative5-dev qtdeclarative5-dev-tools qttools5-dev-tools \
             qml-module-qttest qml-module-qtquick2 \
             libsqlite3-dev libdconf-dev
       - name: Build

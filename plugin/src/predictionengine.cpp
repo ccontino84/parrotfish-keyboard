@@ -336,8 +336,6 @@ void PredictionEngine::setLanguage(const QString &language)
         return;
     m_language = language;
     emit languageChanged();
-    if (!m_layoutKeys)
-        loadFallbackLayout();
 }
 
 QString PredictionEngine::leadingLanguage() const
@@ -711,11 +709,8 @@ void PredictionEngine::log(const QString &message) const
 
 void PredictionEngine::loadFallbackLayout()
 {
-    // Approximate rows, used until the handler passes the real keys.
-    QString lang = m_language.toLower();
-    QFile f(m_dataDir + QStringLiteral("/layouts/") + lang + QStringLiteral(".layout"));
-    if (!f.exists())
-        f.setFileName(m_dataDir + QStringLiteral("/layouts/en.layout"));
+    // The phone's QWERTY keys, used until the handler passes the real ones.
+    QFile f(m_dataDir + QStringLiteral("/layouts/phone-qwerty.layout"));
     if (!f.open(QIODevice::ReadOnly)) {
         qWarning("parrotfish: no layout file in %s", qPrintable(m_dataDir));
         return;

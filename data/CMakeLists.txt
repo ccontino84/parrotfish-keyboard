@@ -17,9 +17,11 @@ foreach(entry ${PARROTFISH_LANGUAGES})
     list(GET parts 1 src)
     # Optional, hand-written (not every language has one).
     set(manual)
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.manual-misspellings)
-        set(manual ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.manual-misspellings)
-    endif()
+    foreach(kind manual-misspellings lowercase shorthands)
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.${kind})
+            list(APPEND manual ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.${kind})
+        endif()
+    endforeach()
     set(inputs_${lang}
         ${CMAKE_CURRENT_SOURCE_DIR}/aosp/${src}_wordlist.combined.gz
         ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.rules
@@ -103,4 +105,6 @@ add_custom_command(
 add_custom_target(dictionaries ALL DEPENDS ${dicts} ${language_list})
 
 install(FILES ${dicts} ${language_list} DESTINATION ${PARROTFISH_DATA_DIR})
-install(DIRECTORY layouts/ DESTINATION ${PARROTFISH_DATA_DIR}/layouts FILES_MATCHING PATTERN "*.layout")
+# The plugin's keys until the handler passes the real ones; the other
+# layouts are for the PC tests and benchmarks.
+install(FILES layouts/phone-qwerty.layout DESTINATION ${PARROTFISH_DATA_DIR}/layouts)

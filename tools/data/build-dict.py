@@ -28,6 +28,10 @@ ATTR_MISSPELLING = 1 << 1    # not a word: corrected to `target`
 ATTR_ABBREVIATION = 1 << 2
 ATTR_NONWORD = 1 << 3        # informal (gonna, kinda): valid, ranked as is
 ATTR_SHORTCUT = 1 << 4       # valid word with an extra suggestion `target`
+ATTR_SHORTHAND = 1 << 5      # chat shorthand (with ATTR_OFFENSIVE): kept as typed
+# Frequency of a chat shorthand (LANG.shorthands): a common word, so that
+# it counts for its language when typed.
+SHORTHAND_FREQ = 90
 
 # Word-pair rows (dictformat.h): previous word = start of a sentence / anything.
 PAIR_START = 0
@@ -186,6 +190,39 @@ def mark_misspellings(words, path):
         e["target"] = target
         marked += 1
     return marked
+
+
+def add_lowercase(words, path):
+    """Add the lowercase spelling of the abbreviations in RULES_DIR/
+    LANG.lowercase (hand-written, optional), which the list has only in
+    capitals, one step less frequent. Returns how many."""
+    added = 0
+    for w in read_list(path):
+        e, low = words.get(w), w.lower()
+        if e is None or e["attrs"] & ATTR_MISSPELLING or w == low:
+            sys.exit(f"{path}: {w!r} is not a word in capitals in the wordlist")
+        if low in words:
+            sys.exit(f"{path}: {low!r} is in the wordlist already")
+        words[low] = {"f": max(e["f"] - 1, 1), "attrs": e["attrs"] & ~ATTR_SHORTCUT, "target": None}
+        added += 1
+    return added
+
+
+def add_shorthands(words, path):
+    """Add RULES_DIR/LANG.shorthands (hand-written, optional): chat
+    shorthands (idk, btw), as words that stand when typed but are never
+    suggested (AttrOffensive: never offered unprompted) and kept as typed
+    (AttrShorthand: no case fix, no real-word fix).
+    Returns how many."""
+    added = 0
+    for w in read_list(path):
+        if w != w.lower():
+            sys.exit(f"{path}: {w!r} is not in lower case")
+        if w in words:
+            sys.exit(f"{path}: {w!r} is in the wordlist already")
+        words[w] = {"f": SHORTHAND_FREQ, "attrs": ATTR_OFFENSIVE | ATTR_SHORTHAND, "target": None}
+        added += 1
+    return added
 
 
 def read_rules(path):
@@ -475,6 +512,8 @@ def main():
     marked = mark_misspellings(words, f"{args.rules_dir}/{args.lang}.misspellings")
     marked += mark_misspellings(words, f"{args.rules_dir}/{args.lang}.manual-misspellings")
     raised, lowered = apply_boosts(words, f"{args.rules_dir}/{args.lang}.boost")
+    lowercase = add_lowercase(words, f"{args.rules_dir}/{args.lang}.lowercase")
+    shorthands = add_shorthands(words, f"{args.rules_dir}/{args.lang}.shorthands")
     rules = read_rules(f"{args.rules_dir}/{args.lang}.rules")
 
     root, order = build_trie(words)
@@ -598,7 +637,7 @@ def main():
         fh.write(out)
 
     print(f"{args.lang}: {len(words)} entries ({dropped} below min-freq dropped, {supplemented} supplement, {forms} verb forms, "
-          f"{raised} raised, {lowered} lowered), "
+          f"{raised} raised, {lowered} lowered, {lowercase} lowercase, {shorthands} shorthands), "
           f"{len(order)} nodes, "
           f"{len(alphabet)} chars, {len(attrs)} attrs ({marked} accent misspellings, "
           f"{respelled} old spellings, {respelled_new} current forms added), "

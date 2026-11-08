@@ -139,7 +139,7 @@ struct EngineParams {
     // unknownPerLetter × letters.
     // Letters that look like a word and are one change from one (the
     // likeliest fix) are mostly that word misspelled when they are long
-    // (recieve, goverment, propio), often a name when short (Ugo, Norn): what
+    // (recieve, goverment, wierd), often a name when short (Ian, Norn): what
     // the letter model takes off unknownPerLetter × letters then shrinks by
     // unknownLongLetterCost for each letter past unknownShortLength.
     double unknownBase = 11.5;
@@ -149,7 +149,7 @@ struct EngineParams {
     size_t unknownShortLength = 4;
     double unknownLongLetterCost = 1.5;
     // ... and when it is two changes away, from unknownTwoChangeLength
-    // letters (conoleanno: compleanno, letters that look Italian).
+    // letters (neccesary: necessary, letters that look English).
     size_t unknownTwoChangeLength = 9;
     // A word typed with a capital first letter (not all capitals) after a
     // word, not at a sentence start, is rarely a word the dictionaries store
@@ -239,6 +239,7 @@ struct Searched {
     bool validAsTyped = false;       // not only in another case (jaime: Jaime only)
     bool compound = false;           // a compound of a likely language's words (Dictionary::isCompound)
     bool typedHasShortcut = false, typedHasSlipShortcut = false;
+    bool typedShorthand = false;     // a chat shorthand (AttrShorthand): typed on purpose
     std::u32string caseFix;          // the stored capitalisation, if it differs (haus → Haus)
     std::vector<double> weights;     // the languages' weights
     bool sentenceStart = true;
@@ -403,7 +404,7 @@ private:
     bool fixValidWord(Decision &d) const;
     bool fixGentle(Decision &d) const;
     bool fixExpectedCost(Decision &d) const;
-    // Folded, without apostrophes: the same letters (piu, più; jai, j'ai).
+    // Folded, without apostrophes: the same letters (cafe, café; dont, don't).
     std::u32string letters(const std::u32string &word) const;
     // `word` is `typed` with one letter changed to a neighbouring key.
     bool neighbourSwap(const std::u32string &typed, const std::u32string &word) const;

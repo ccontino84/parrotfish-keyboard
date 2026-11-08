@@ -11,13 +11,16 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 |---|---|
 | `engine/` | the typing engine: plain C++17, no Qt, so it builds and tests on the PC |
 | `engine/tools/pf-query.cpp` | try the corrector by hand |
+| `engine/TUNING.md` | why the engine's settings have their values |
+| `docs/prior-art.md` | the published method behind each engine feature |
 | `plugin/` | QML module `Parrotfish.Keyboard` (Qt 5.6): the engine as the list model Jolla's `PreeditHandler` expects |
 | `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
 | `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press; QWERTY (ÅÖÄ): Jolla's fi keys), picked by `/apps/parrotfish-keyboard/layout`; optional key backgrounds in `parrotfish/` |
 | `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`; the list comes from the plugin's `Languages`) |
 | `cli/` | `parrotfish`, a command that shows what the keyboard is learning (reads `learning.db`) |
 | `translations/` | the settings' translations, `parrotfish-keyboard-<lang>.ts` (qsTr; the context is the QML file's name, a second argument tells gendered words apart: `qsTr("Off", "learning")`); new texts: `lupdate settings -ts translations/*.ts`, then translate them (Qt Linguist or by hand). Built with the SDK's Qt 5 `lrelease` (none on the PC: skipped), installed in `/usr/share/translations`, loaded by the plugin |
-| `rpm/` | RPM spec; `split-languages.py` puts the experimental languages' dictionaries in their own package |
+| `rpm/` | RPM spec (also used by SailfishOS:Chum, below) |
+| `tools/split-languages.py` | the RPM's file lists: each dictionary to its language package |
 | `tools/pf` | the developer front door (below): tests, lint, benchmark suite, comparisons, RPM |
 | `tools/data/` | Python tools that build and maintain the dictionary data |
 | `tools/eval/` | benchmark helpers: parameter sweeps, mixed-language texts |
@@ -25,7 +28,7 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 | `data/aosp/` | AOSP wordlists (Apache-2.0), unchanged |
 | `data/rules/` | per-language rules and reviewed generated lists (below) |
 | `tests/data/` | held-out test sentences per language (`README.md` there) |
-| `data/layouts/` | approximate letter rows of Jolla's en/it/de layouts, for PC tests (square keys); `phone-*.layout`: keys as tall as on the phone (`pitch`; AZERTY and Nordic by the same geometry, not logged) |
+| `data/layouts/` | the keys of Parrotfish's four arrangements as on the phone, for the PC tests and benchmarks (`pitch`: keys taller than wide; QWERTY logged on a phone, the others by the same geometry); the phone gets `phone-qwerty.layout`, for the moment before the handler passes the real keys |
 | `tests/unit/` | unit tests (ctest) |
 | `tests/qml/` | the handler on the PC with the plugin, Sailfish OS's modules replaced by stand-ins (ctest `qml`, needs `qmltestrunner`) |
 | `tests/bench/` | accuracy benchmarks: typos and autocorrect in running text (`sentence-bench`), next words (`nextword-bench`), single words (`typo-bench`), mixed languages (`lang-bench`) |
@@ -53,6 +56,14 @@ tools/pf check                  # before a release: lint, tests, suite, and
                                 # exit 1 if a number got worse than the last run
 tools/pf rpm --version 0.1.0~alpha71   # phone RPM (sfdk), copied if configured
 ```
+
+The suite (Normal, as the phone's default; `--param strength=3` for Strong,
+`strength=1` for Gentle): typos in running text per language (`typos-`),
+typos that make another real word (`realword-`, `sentence-bench -R`: fixed
+only at Strong), codes and other languages' words left alone (`codes-`,
+`mixed-`), real misspellings (`missp-`, lists outside the repo) and next
+words (`nextword-`). The 1.0 baselines: `1.0-baseline`, `-strong`,
+`-gentle`.
 
 `pf rpm` builds the dictionaries on the PC and hands them to the RPM's build
 in `prebuilt/` (git-ignored, removed afterwards) with a fingerprint of their
@@ -113,18 +124,19 @@ thresholds against other candidates, digits, a capital after a word...);
 (f) another word ranks first for other reasons (taps, context). Per case:
 counts, the commonest target words of each cause with an example, the
 changed correct words; then a table of causes per case. Settings of one machine are in
-`~/.config/parrotfish-dev.ini` (`tools/pf config`): where results go
+`parrotfish-dev.ini` next to the checkout, else `~/.config/parrotfish-dev.ini`
+(or `$PF_CONFIG`; `tools/pf config` shows the one in use): where results go
 (outside the repo), where `pf rpm` copies the RPM, the sfdk target, more
 test texts of your own for the next-word cases (`[eval]`,
 `NAME = LANG:PATH`, one message per line), and lists of real misspellings
 for the `missp-NAME` cases (`[misspellings]`, `NAME = LANG:PATH`, below).
 
-Try words: `build/engine/pf-query -l data/layouts/it.layout -d build/data/it.pfd perche citta\'`
+Try words: `build/engine/pf-query -l data/layouts/phone-qwerty.layout -d build/data/en.pfd teh wrk helo`
 
 Benchmarks:
 
 ```sh
-build/tests/typo-bench -l data/layouts/de.layout -d build/data/de.pfd [-d build/data/en.pfd] \
+build/tests/typo-bench -l data/layouts/phone-qwertz.layout -d build/data/de.pfd [-d build/data/en.pfd] \
     [-o tests/data/unknown-de.txt] [-n 1000] [-P gentleConfidence=0.7]
 build/tests/lang-bench -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd [-P switchProb=0.01]
 ```
@@ -132,8 +144,8 @@ build/tests/lang-bench -d build/data/en.pfd -d build/data/it.pfd -d build/data/d
 Running text, as on the phone (all languages, previous words as context):
 
 ```sh
-build/tests/sentence-bench -l data/layouts/en.layout -t tests/data/tatoeba-it.txt \
-    -d build/data/it.pfd -d build/data/en.pfd -d build/data/de.pfd [-P strength=2]
+build/tests/sentence-bench -l data/layouts/phone-qwerty.layout -t tests/data/tatoeba-en.txt \
+    -d build/data/en.pfd -d build/data/it.pfd -d build/data/de.pfd [-P strength=2]
 ```
 
 Words keep a final apostrophe only where the word with it is in a loaded
@@ -232,10 +244,11 @@ and the benchmarks in `/usr/libexec/parrotfish-keyboard/`, with their test
 sentences. Release builds leave them out.
 
 Three packages: `parrotfish-keyboard` (no dictionaries), and two noarch
-language packages, `parrotfish-latin-languages` and
-`parrotfish-latin-languages-experimental` (the languages marked
+language packages named by script (Latin: every language so far; later
+`-cyrillic` and the like), `parrotfish-languages-latin` and
+`parrotfish-languages-latin-experimental` (the languages marked
 experimental in `data/rules/*.language`); the spec's file lists come from
-`languages.json` (`rpm/split-languages.py`). A language package requires
+`languages.json` (`tools/split-languages.py`). A language package requires
 `parrotfish-keyboard` and `parrotfish-dictionary-format = N`, which the
 keyboard provides (the spec's `dictformat`, checked against the engine's
 `FormatVersion` by ctest `spec`): a keyboard update needs new language
@@ -373,9 +386,12 @@ Making a release:
    `.github/workflows/release.yml` checks that the version has no `~`, that
    `v<Version>` doesn't exist, that `CHANGELOG.md` has its entry and that
    `main` can fast-forward to the commit. It runs the checks, then builds
-   the RPM for aarch64 and armv7hl against the Sailfish OS 5.1.0.11 SDK
+   the RPMs for aarch64 and armv7hl against the Sailfish OS 5.1.0.11 SDK
    targets with the checks' dictionaries in `prebuilt/`. Finally it creates
-   the release `v<Version>` for that commit, with both RPMs attached. The
+   the release `v<Version>` for that commit, with the two
+   `parrotfish-keyboard` RPMs and the two noarch language packages attached
+   (the aarch64 build's copies; every package is checked with `rpm -K`
+   before it is attached). The
    release text is the changelog entry (`ci/release-notes.sh <version>`)
    followed by GitHub's generated notes. By default the release is a draft.
 3. If it fails: fix it on the branch, delete the draft if there is one,
@@ -396,7 +412,55 @@ With dictionaries in `prebuilt/` (copy `build/data/*.pfd` and
 `build/data/inputs.sha256` there), the RPM's build copies them instead of
 building them under emulation.
 
+## Packaging for SailfishOS:Chum
+
+Anyone with an account on the Sailfish OS build service can package
+Parrotfish for [SailfishOS:Chum](https://github.com/sailfishos-chum/main);
+the spec is ready for it. The package's `_service` points `tar_git` at this
+repository, pinned to a release tag (`v<Version>`) or its commit:
+
+```xml
+<services><service name="tar_git">
+  <param name="url">https://github.com/ccontino84/parrotfish-keyboard.git</param>
+  <param name="branch">main</param>
+  <param name="revision">v1.0.0</param>
+</service></services>
+```
+
+- `tar_git` takes the version from the tag (dropping the `v`) and leaves
+  `rpm/` out of the sources: nothing in the build reads `rpm/`
+  (`tools/split-languages.py` is outside it for that reason). The test
+  builds' developer tools stay out, as the version has no `~`.
+- The dictionaries are built from `data/` during the build (no `prebuilt/`),
+  so it takes longer than the RPMs from GitHub; nothing is downloaded.
+- One spec, three packages. Each `%description` ends with Chum's metadata,
+  so the keyboard and both language packages show up in the Chum app;
+  a language package installs the keyboard, which needs no language
+  package (as above).
+- Tested on Sailfish OS 5.1 and 5.2 (aarch64; armv7hl builds, untested).
+  Older targets can be disabled in the package's meta.
+- After each release, the package maintainer moves `revision` to the new
+  tag.
+
 ## Dictionary data
+
+Sources (THIRD-PARTY.md has their licences):
+
+| Source | Taken from | Version |
+|---|---|---|
+| AOSP LatinIME wordlists (en_US, it, de; es, fr, pt_BR, pt_PT, nl, sv, da, nb, ro; fi) | `android.googlesource.com/platform/packages/inputmethods/LatinIME`, `dictionaries/` | commit `127336e9f29d69607eab55982324b210279ae8c5` (fetched 2026-10-08, the second group 2026-10-26, fi 2026-10-28; list versions 44–54, from 2014) |
+| Common Voice sentences | `github.com/common-voice/common-voice`, `server/data/<lang>/` | en, it, de: commit `a28a4cbf9188dafac0cb266f90bc9938f8418564` (2026-10-08); es, fr, pt, nl, sv-SE, da, nb-NO, ro, fi: commit `4c9c6a9c9b0561e029f1d65448edaf62947e12ec` (2026-10-26, fi 2026-10-28) |
+| Tatoeba sentences | `downloads.tatoeba.org/exports/per_language/<lang>/` | eng, ita, deu: 2026-10-08; spa, fra, por, nld, swe, dan, nob, ron: 2026-10-26; fin: 2026-10-28 |
+| Jolla keyboard | Sailfish OS 5.2.0.17 RPMs `jolla-keyboard` (`PreeditHandler.qml`) and `jolla-keyboard-layout-western` | 0.10.4 |
+
+The counts come from `tools/data/count-words.py` and `count-pairs.py`; the
+derived lists from `find-boosts.py`, `find-supplement.py` and
+`find-respellings.py`. The test sentences (`tests/data/`, up to 2000 per
+language, random) are left out of all counts. Jolla's layouts, as adapted:
+QWERTY gets a full-width apostrophe key at the end of the middle row and `"`
+on B in the symbol view; QWERTZ unchanged; AZERTY the apostrophe in place of
+ç after N, ç on C's long press; QWERTY (ÅÖÄ) is fi.qml unchanged; all get æ
+ă on A, õ œ on O, ș on S, ț on T.
 
 `tools/data/build-dict.py` turns an AOSP wordlist into a memory-mapped `.pfd`
 file (format: `engine/include/parrotfish/dictformat.h`). Besides the words,
@@ -412,10 +476,12 @@ goverment), not a new word. It reads, from
 | File | Content | Made by |
 |---|---|---|
 | `<lang>.rules` | spelling rules (`ae ä`, `e' è final`, `ş ș`); settings for the generators: `paradigm`/`paradigm-plain` (real verb forms that are not accent misspellings), `only-marks`, `no-misspellings`, `capitalised-nouns`, `min-freq` (drop the padding of a list; ro), `one-source` (a supplement word needs only N sightings in both corpora together; fi); word forms the list lacks, for the engine (`Dictionary::isWordForm`; fi): `suffix ENDING... [after=LETTERS] [drop=LETTERS]` (endings on a word: kännykkä → kännykkänsä; `drop`: talon → taloni) and `compound MIN PARTS` (up to PARTS words of at least MIN letters, and hyphenated parts). Such forms stand when typed (never autocorrected, and count for their language) but are never suggested | hand |
+| `<lang>.lowercase` | abbreviations the list has only in capitals that are often typed in lower case (`OK`, `SMS`): the lowercase spelling is added as a word too, so typed that way it stands (optional) | hand |
+| `<lang>.shorthands` | chat shorthands the list lacks in lower case (`idk`, `btw`): added as words that stand when typed but are never suggested (optional) | hand |
 | `<lang>.keep` | plain spellings that are words of their own, never marked as misspellings (pt `forca`, ro `frumoasa`) | hand |
 | `<lang>.misspellings` | accent-less spellings that are not words (`perche` → `perché`) | `tools/data/find-accent-misspellings.py`, reviewed |
 | `<lang>.supplement` | common words missing from the AOSP list (`uomo`, `überhaupt`) | `tools/data/find-supplement.py`, reviewed |
-| `<lang>.boost` | everyday frequencies: raised for words common in Tatoeba (`penso`, `I'm`), lowered for written-text function words (`in`, `of`); rank mapping, see the script | `tools/data/find-boosts.py`, reviewed |
+| `<lang>.boost` | everyday frequencies: raised for words common in Tatoeba (`I'm`, `guess`), lowered for written-text function words (`in`, `of`); rank mapping, see the script | `tools/data/find-boosts.py`, reviewed |
 | `<lang>.paradigms`, `<lang>.paradigm-skip` | regular verb endings, irregular verbs to leave alone | hand |
 | `<lang>.forms` | missing forms of regular verbs (`riuscivi`) | `tools/data/complete-paradigms.py`, review a sample |
 | `supplement.stop` | Tatoeba example names and over-used words, kept out of all generated data | hand |

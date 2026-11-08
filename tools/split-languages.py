@@ -3,12 +3,13 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 #
 # The RPM's file lists: every dictionary goes to a language package,
-# parrotfish-latin-languages or, for the languages marked experimental in
-# languages.json, parrotfish-latin-languages-experimental; the keyboard's
+# parrotfish-languages-latin or, for the languages marked experimental in
+# languages.json, parrotfish-languages-latin-experimental; the keyboard's
 # package keeps none. (Every language is in the Latin script so far.)
 #   split-languages.py INSTALLED_DATA_DIR DATA_DIR
 # writes latin.files, latin-experimental.files and main-excludes.files in
-# the current directory.
+# the current directory. It lives outside rpm/ because SailfishOS:Chum's
+# build service leaves rpm/ out of the sources (DEVELOPMENT.md).
 import json
 import sys
 
@@ -25,5 +26,5 @@ with open("latin-experimental.files", "w") as f:
     f.writelines(f"{path}/{c}.pfd\n" for c in experimental)
 with open("main-excludes.files", "w") as f:
     f.writelines(f"%exclude {path}/{c}.pfd\n" for c in latin + experimental)
-print("parrotfish-latin-languages:", " ".join(latin))
-print("parrotfish-latin-languages-experimental:", " ".join(experimental))
+print("parrotfish-languages-latin:", " ".join(latin))
+print("parrotfish-languages-latin-experimental:", " ".join(experimental))

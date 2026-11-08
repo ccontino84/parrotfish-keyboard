@@ -35,7 +35,7 @@ std::vector<double> LanguageTracker::logLikelihoods(const std::u32string &word) 
     for (size_t i = 0; i < m_dicts.size(); ++i) {
         const Dictionary &d = *m_dicts[i];
         const uint32_t node = d.find(word);
-        // A misspelling (perche) still says which language it belongs to; its
+        // A misspelling (teh) still says which language it belongs to; its
         // node carries the frequency of the word it stands for.
         // A form made by the language's rules (kännykkänsä) is a rare word.
         const int freq = node ? std::max<int>(d.node(node).freq, m_params.unknownFreq)

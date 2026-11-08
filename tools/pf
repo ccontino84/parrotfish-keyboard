@@ -27,7 +27,8 @@
   tools/pf config                the settings in use
 
 Settings that belong to one machine live outside the repo, in
-~/.config/parrotfish-dev.ini (or $PF_CONFIG):
+parrotfish-dev.ini next to the checkout, or ~/.config/parrotfish-dev.ini
+(or $PF_CONFIG):
 
   [paths]
   results = ~/.local/share/parrotfish-dev/results
@@ -72,7 +73,11 @@ DIRECTION = {
 
 
 def config():
-    path = os.path.expanduser(os.environ.get("PF_CONFIG", "~/.config/parrotfish-dev.ini"))
+    # $PF_CONFIG, else parrotfish-dev.ini next to the checkout (a folder that
+    # keeps everything of the project together), else ~/.config's.
+    beside = os.path.join(os.path.dirname(REPO), "parrotfish-dev.ini")
+    path = os.path.expanduser(os.environ.get("PF_CONFIG")
+                              or (beside if os.path.exists(beside) else "~/.config/parrotfish-dev.ini"))
     cfg = configparser.ConfigParser()
     cfg.read(path)
     return path, cfg
@@ -171,6 +176,11 @@ def suite_cases(build_dir, cfg, tmp):
         if os.path.exists(oov):
             args += ["-o", oov]
         cases.append((f"typos-{lang}", args, None))
+    # Typos that make another real word (from -> form): fixed only by Strong,
+    # after the previous word; at Normal and Gentle they stay (fixed 0).
+    for lang in LANGUAGES:
+        cases.append((f"realword-{lang}", [sentence, "-l", layout_of(lang), "-t", text_of("tatoeba", lang)] +
+                      d(language_group(lang, first=True)) + ["-m", lang, "-R", "-r", "0.1"], None))
     # Codes with a digit (mp3, ps4): left alone.
     cases.append(("codes-en", [sentence, "-l", PHONE_LAYOUT, "-t", "tests/data/tatoeba-en.txt"] +
                   d(["en", "it", "de"]) + ["-m", "en", "-N", "75", "-o", "tests/data/alnum.txt", "-u", "0.1"],

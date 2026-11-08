@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# Hand-written: abbreviations the wordlist has only in capitals that are
+# often typed in lower case (ok for OK). build-dict.py adds the lowercase
+# spelling as a word too, one step less frequent so that suggestions keep
+# the capitals: typed in lower case, it stands. Not for abbreviations whose
+# lowercase spelling is a likely slip for a common word (amd for and).
+OK
+SMS
+TV
+PC
+GSM
+HIV
+UFO
+CV
+DJ
+MKB
+BBP

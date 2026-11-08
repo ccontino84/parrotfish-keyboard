@@ -3,8 +3,8 @@
 
 // Correction and autocorrect accuracy on generated typos (milestone 1).
 //
-//   typo-bench -l data/layouts/it.layout -d build/data/it.pfd [-d OTHER.pfd]...
-//              [-o tests/data/unknown-it.txt] [-n 1000] [-s SEED] [-u] [-D] [-P name=value]... [-v]
+//   typo-bench -l data/layouts/phone-qwerty.layout -d build/data/en.pfd [-d OTHER.pfd]...
+//              [-o tests/data/unknown-en.txt] [-n 1000] [-s SEED] [-u] [-D] [-P name=value]... [-v]
 //
 // The first dictionary is the language typed. Further dictionaries are
 // loaded as extra typing languages; the text is taken to be clearly in the

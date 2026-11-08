@@ -155,7 +155,7 @@ void Engine::unknownReading(Decision &d) const
     const bool useLetters = p.unknownLetterWeight > 0 && !spelling && !d.in.wordInSomeLanguage;
     // Long letters one change from a word are mostly that word
     // misspelled (recieve, goverment), short ones are often new words
-    // (Ugo, Norn): when the likeliest fix is one word one change away,
+    // (Ian, Norn): when the likeliest fix is one word one change away,
     // what the letter model takes off the cost per letter shrinks with
     // each letter past unknownShortLength.
     const Merged *likeliest = d.likeliest();
@@ -321,13 +321,16 @@ bool Engine::fixValidWord(Decision &d) const
 {
     // Only a capitalisation fix (haus → Haus) replaces a valid word, and
     // with Strong a much likelier word one slip away (after a word), but
-    // not a word that also stands for another (id: I'd, ill: I'll).
+    // not a word that also stands for another (id: I'd, ill: I'll) or a
+    // chat shorthand: typed on purpose, also in the case it was typed in
+    // (idk, not IDK).
     Result &r = d.r;
     const EngineParams &p = d.p;
     const Searched &in = d.in;
-    bool apply = !d.caseFix.empty() && d.best.word == d.caseFix;
+    bool apply = !d.caseFix.empty() && d.best.word == d.caseFix && !in.typedShorthand;
     r.reason = apply ? Reason::CaseFix : Reason::TypedIsWord;
-    if (apply || p.strength != Strength::Strong || in.typedHasShortcut || in.prev.empty() || in.sentenceStart
+    if (apply || p.strength != Strength::Strong || in.typedHasShortcut || in.typedShorthand || in.prev.empty()
+            || in.sentenceStart
             || in.taps.size() < p.strongMinLength || letters(d.best.word) == letters(r.typed)
             || !(neighbourSwap(r.typed, d.best.word) || swapped(r.typed, d.best.word)))
         return apply;
@@ -409,7 +412,7 @@ bool Engine::fixExpectedCost(Decision &d) const
     // Normal and Strong: the expected loss of the fix against that of
     // leaving the letters (EngineParams::changeCost). Short words have more
     // neighbours and are more often names; a fix that only adds accents or
-    // apostrophes (piu: più, jai: j'ai) is neither, whatever its length.
+    // apostrophes (cafe: café, dont: don't) is neither, whatever its length.
     Result &r = d.r;
     const EngineParams &p = d.p;
     const size_t n = d.in.taps.size();

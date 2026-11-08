@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 Name:       parrotfish-keyboard
-Version:    0.1.0~alpha123
+Version:    1.0.0
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LGPL-2.1-or-later AND BSD-3-Clause AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
@@ -31,6 +31,11 @@ Requires:   qt5-qtdeclarative
 # keyboard types without suggestions, and the settings say so.
 Provides:   parrotfish-dictionary-format = %{dictformat}
 
+# Each %description ends with the metadata for SailfishOS:Chum's app
+# (https://github.com/sailfishos-chum/main/blob/main/Metadata.md): it must
+# stay the description's last paragraph, with no empty or comment lines in
+# it. Other builds leave it out (_chum is defined only on Chum's build
+# service).
 %description
 Word suggestions, autocorrect with undo, learning and next-word prediction
 for the Sailfish OS keyboard, in several languages at once: the typing
@@ -39,31 +44,78 @@ QWERTY with å ö ä) to the stock keyboard, with a prediction handler and a
 settings section in Text input; no system files are modified, and Jolla's
 own layouts are left as they are.
 
-%package -n parrotfish-latin-languages
+The dictionaries come in language packages: install
+parrotfish-languages-latin, parrotfish-languages-latin-experimental or
+both. Each one installs the keyboard too.
+
+%if 0%{?_chum}
+Title: Parrotfish Keyboard
+Type: inputmethod
+DeveloperName: ccontino84
+Categories:
+ - Utility
+Custom:
+  Repo: https://github.com/ccontino84/parrotfish-keyboard
+Links:
+  Homepage: https://github.com/ccontino84/parrotfish-keyboard
+  Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
+%endif
+
+%package -n parrotfish-languages-latin
 Summary:    Languages for Parrotfish Keyboard: Dutch, English, French, German, Italian, Portuguese, Spanish
 BuildArch:  noarch
 Requires:   %{name}
 Requires:   parrotfish-dictionary-format = %{dictformat}
 Provides:   parrotfish-dictionaries
+# Its name in the test builds (0.1.0~alpha123 to the 1.0.0 drafts).
+Obsoletes:  parrotfish-latin-languages < 1.0.1
 
-%description -n parrotfish-latin-languages
-Dictionaries and word-pair data for Parrotfish Keyboard: Dutch, English,
-French, German, Italian, Portuguese (Brazil and Portugal) and Spanish.
+%description -n parrotfish-languages-latin
+Dictionaries and word-pair data for Parrotfish Keyboard, for languages
+written in the Latin script: Dutch, English, French, German, Italian,
+Portuguese (Brazil and Portugal) and Spanish. Installs Parrotfish Keyboard
+too.
 
-%package -n parrotfish-latin-languages-experimental
+%if 0%{?_chum}
+Title: Parrotfish Latin
+Type: addon
+DeveloperName: ccontino84
+Categories:
+ - Utility
+Custom:
+  Repo: https://github.com/ccontino84/parrotfish-keyboard
+Links:
+  Homepage: https://github.com/ccontino84/parrotfish-keyboard
+  Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
+%endif
+
+%package -n parrotfish-languages-latin-experimental
 Summary:    Experimental languages for Parrotfish Keyboard: Danish, Finnish, Norwegian, Romanian, Swedish
 BuildArch:  noarch
 Requires:   %{name}
 Requires:   parrotfish-dictionary-format = %{dictformat}
 Provides:   parrotfish-dictionaries
-# Its name until 0.1.0~alpha122.
+# Its names in the test builds.
 Obsoletes:  parrotfish-keyboard-experimental-languages < 0.1.0~alpha123
-Provides:   parrotfish-keyboard-experimental-languages = %{version}-%{release}
+Obsoletes:  parrotfish-latin-languages-experimental < 1.0.1
 
-%description -n parrotfish-latin-languages-experimental
-Dictionaries for the languages Parrotfish Keyboard supports less well, for
-lack of public text to build and test them: Danish, Finnish, Norwegian
-Bokmål, Romanian and Swedish.
+%description -n parrotfish-languages-latin-experimental
+Dictionaries for the Latin-script languages Parrotfish Keyboard supports
+less well, for lack of public text to build and test them: Danish, Finnish,
+Norwegian Bokmål, Romanian and Swedish. Installs Parrotfish Keyboard too.
+
+%if 0%{?_chum}
+Title: Parrotfish Latin (exp.)
+Type: addon
+DeveloperName: ccontino84
+Categories:
+ - Utility
+Custom:
+  Repo: https://github.com/ccontino84/parrotfish-keyboard
+Links:
+  Homepage: https://github.com/ccontino84/parrotfish-keyboard
+  Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
+%endif
 
 %prep
 %autosetup -n %{name}-%{version}
@@ -81,7 +133,7 @@ cmake --build build-rpm -- %{?_smp_mflags}
 %install
 DESTDIR=%{buildroot} cmake --install build-rpm
 # The dictionaries go to the language packages.
-python3 -I rpm/split-languages.py %{buildroot}%{_datadir}/%{name} %{_datadir}/%{name}
+python3 -I tools/split-languages.py %{buildroot}%{_datadir}/%{name} %{_datadir}/%{name}
 
 # Restart the keyboard (a systemd user service) so that it loads the new
 # files: systemctl-user (Sailfish's systemd package) runs systemctl --user for
@@ -94,18 +146,18 @@ if [ $1 -eq 0 ]; then
     systemctl-user try-restart maliit-server.service || :
 fi
 
-%posttrans -n parrotfish-latin-languages
+%posttrans -n parrotfish-languages-latin
 systemctl-user try-restart maliit-server.service || :
 
-%postun -n parrotfish-latin-languages
+%postun -n parrotfish-languages-latin
 if [ $1 -eq 0 ]; then
     systemctl-user try-restart maliit-server.service || :
 fi
 
-%posttrans -n parrotfish-latin-languages-experimental
+%posttrans -n parrotfish-languages-latin-experimental
 systemctl-user try-restart maliit-server.service || :
 
-%postun -n parrotfish-latin-languages-experimental
+%postun -n parrotfish-languages-latin-experimental
 if [ $1 -eq 0 ]; then
     systemctl-user try-restart maliit-server.service || :
 fi
@@ -126,8 +178,8 @@ fi
 %{_libexecdir}/%{name}
 %endif
 
-%files -n parrotfish-latin-languages -f latin.files
+%files -n parrotfish-languages-latin -f latin.files
 %license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE
 
-%files -n parrotfish-latin-languages-experimental -f latin-experimental.files
+%files -n parrotfish-languages-latin-experimental -f latin-experimental.files
 %license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE

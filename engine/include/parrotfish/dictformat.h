@@ -72,6 +72,7 @@ enum AttrFlag : uint32_t {
     AttrAbbreviation = 1u << 2,
     AttrNonword = 1u << 3,      // informal (gonna): valid
     AttrShortcut = 1u << 4,     // valid, with an extra suggestion `target`
+    AttrShorthand = 1u << 5,    // a chat shorthand (with AttrOffensive): typed on purpose, kept as typed
 };
 
 // Sorted by node.

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 // Try the corrector by hand:
-//   pf-query -l data/layouts/en.layout -d build/data/en.pfd teh wrk helo
+//   pf-query -l data/layouts/phone-qwerty.layout -d build/data/en.pfd teh wrk helo
 // Words come from the arguments, or one per line from stdin.
 
 #include "parrotfish/corrector.h"

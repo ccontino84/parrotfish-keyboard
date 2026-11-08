@@ -37,7 +37,8 @@ Romanian, Swedish, in a separate package. There is too little public text
 to build and test these as well as the others; feedback from native speakers
 is welcome. The settings are translated into all of them.
 
-**Status:** in development, not released yet.
+**Status:** 1.0, the first release. Tested on Sailfish OS 5.1 and 5.2
+(aarch64); the 32-bit build (armv7hl) is untested, reports are welcome.
 
 ## Install
 
@@ -46,10 +47,10 @@ is welcome. The settings are translated into all of them.
    download:
    - `parrotfish-keyboard-<version>` for your device: `aarch64` for most
      current devices, `armv7hl` for 32-bit installations;
-   - `parrotfish-latin-languages-<version>.noarch`: Dutch, English, French,
+   - `parrotfish-languages-latin-<version>.noarch`: Dutch, English, French,
      German, Italian, Portuguese, Spanish;
    - for Danish, Finnish, Norwegian, Romanian or Swedish, also
-     `parrotfish-latin-languages-experimental-<version>.noarch`.
+     `parrotfish-languages-latin-experimental-<version>.noarch`.
 2. In **Settings > Untrusted software**, turn on *Allow untrusted software*.
 3. Open the downloaded files (from the browser's downloads or the Files app)
    and install them, `parrotfish-keyboard` first. The keyboard restarts by
@@ -77,8 +78,8 @@ devel-su pkcon install-local parrotfish-*.rpm
 From a terminal (Developer mode):
 
 ```sh
-devel-su pkcon remove parrotfish-latin-languages-experimental   # if installed
-devel-su pkcon remove parrotfish-latin-languages parrotfish-keyboard
+devel-su pkcon remove parrotfish-languages-latin-experimental   # if installed
+devel-su pkcon remove parrotfish-languages-latin parrotfish-keyboard
 ```
 
 Settings stay in dconf and learned words in your home directory. To remove
@@ -108,6 +109,7 @@ rm -r ~/.local/share/parrotfish-keyboard
 ## Development
 
 Building, testing, and how it works inside: [DEVELOPMENT.md](DEVELOPMENT.md).
+The published methods behind each engine feature: [docs/prior-art.md](docs/prior-art.md).
 Third-party data and its licences: [THIRD-PARTY.md](THIRD-PARTY.md).
 
 This project is developed with AI assistance.
@@ -116,7 +118,8 @@ This project is developed with AI assistance.
 
 GNU Lesser General Public License, version 2.1 or (at your option) any later
 version (LGPL-2.1-or-later), see [LICENSE](LICENSE). Parts adapted from
-Jolla's keyboard are also under BSD-3-Clause, and the dictionary data keeps
-its own licences (Apache-2.0, CC0, CC BY 2.0 FR): see
-[THIRD-PARTY.md](THIRD-PARTY.md).
+Jolla's keyboard are also under BSD-3-Clause. The dictionaries are built
+from the Android Open Source Project's wordlists (Apache-2.0) and from
+sentences of Mozilla Common Voice (CC0) and Tatoeba (tatoeba.org, CC BY 2.0
+FR): see [THIRD-PARTY.md](THIRD-PARTY.md).
 Copyright (c) 2026 [ccontino84](https://github.com/ccontino84).

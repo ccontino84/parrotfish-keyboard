@@ -86,7 +86,18 @@ void Engine::typedWordStatus(Searched &out) const
     // followers only, so without that, frequency alone would decide.
     for (size_t i = 0; i < m_dicts.size(); ++i) {
         std::u32string stored;
-        const uint32_t node = m_dicts[i]->find(out.typed, &stored);
+        uint32_t node = m_dicts[i]->find(out.typed, &stored);
+        // No exact-case match: the lowercase spelling, if the typed
+        // capitals make it the typed word (Ok at a sentence start is ok
+        // with its capital, not OK in another case).
+        if (node && stored != out.typed && stored != typedLower) {
+            const uint32_t lowerNode = m_dicts[i]->findExact(typedLower);
+            if (lowerNode && !(m_dicts[i]->attributes(lowerNode) & format::AttrMisspelling)
+                && applyCase(typedLower, out.taps) == out.typed) {
+                node = lowerNode;
+                stored = typedLower;
+            }
+        }
         if (!node && w[i] >= m_params.validThreshold && m_dicts[i]->isCompound(typedLower))
             out.compound = true;
         if (node ? (m_dicts[i]->attributes(node) & format::AttrMisspelling)
@@ -97,6 +108,8 @@ void Engine::typedWordStatus(Searched &out) const
             continue;
         out.typedIsWord = true;
         std::u32string target;
+        if (node && (m_dicts[i]->attributes(node) & format::AttrShorthand))
+            out.typedShorthand = true;
         if (node && (m_dicts[i]->attributes(node, &target) & format::AttrShortcut)) {
             std::u32string a = lower(target), b = typedLower;
             a.erase(std::remove(a.begin(), a.end(), U'\''), a.end());

@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LGPL-2.1-or-later
-# de.layout's keys with the row distance of phone-qwerty.layout (not logged
+# Jolla's de.qml keys with the row distance of phone-qwerty.layout (not logged
 # on a phone: an approximation).
 pitch 1.67
 0      0.909 qwertzuiopü

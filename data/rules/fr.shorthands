@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# Hand-written: chat shorthands the wordlist lacks in lower case (idk, btw).
+# build-dict.py adds them as words that stand when typed but are never
+# suggested. Not for shorthands that are a likely slip for a common word.
+bjr
+slt
+stp
+svp
+mdr
+ptdr
+tkt
+jsp
+bcp
+dsl
+mtn
+jpp
+rdv
+cc
+pcq

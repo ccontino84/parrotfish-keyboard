@@ -47,9 +47,10 @@ void checkEq(const std::string &a, const std::string &b, const char *what, const
 std::u32string u(const std::string &s) { return utf8::decode(s); }
 std::string s8(const std::u32string &s) { return utf8::encode(s); }
 
+// The phone's geometry of the language's arrangement (QWERTZ for German).
 KeyModel layout(const std::string &lang)
 {
-    std::ifstream in(layoutDir + "/" + lang + ".layout");
+    std::ifstream in(layoutDir + (lang == "de" ? "/phone-qwertz.layout" : "/phone-qwerty.layout"));
     std::stringstream ss;
     ss << in.rdbuf();
     return KeyModel::parse(ss.str());
@@ -127,7 +128,8 @@ void testDictionary()
 
 void testKeyModel()
 {
-    const KeyModel k = layout("en");
+    // Square keys, the middle row half a key in.
+    const KeyModel k = KeyModel::parse("0 1 qwertyuiop\n0.5 1 asdfghjkl\n1.5 1 zxcvbnm\n");
     CHECK(k.keys().size() == 26);
     for (size_t intended = 0; intended < k.keys().size(); ++intended) {
         double sum = 0;
@@ -325,8 +327,9 @@ void testFirstWord()
     CHECK_EQ(space("", Strength::Gentle, "", "Tje"), "Tje");
     CHECK_EQ(space("en", Strength::Normal, "", "Ciap", "it"), "Ciap");
 
-    // Gentle: two letters, one of them a neighbouring key (uj → un).
-    CHECK_EQ(space("it", Strength::Gentle, "Ho visto ", "uj", "it"), "un");
+    // Gentle: two letters, one of them the next key in the row (ub → un;
+    // a slip up or down a row is rarer on the phone's tall keys).
+    CHECK_EQ(space("it", Strength::Gentle, "Ho visto ", "ub", "it"), "un");
 }
 
 void testStrong()
@@ -399,7 +402,7 @@ void testDigits()
     // The digit is a letter typed on the number row, not an extra tap: tes5
     // is test (or rest), not yes.
     const Result r = process("I think this is the ", "tes5");
-    CHECK(!r.suggestions.empty() && s8(r.suggestions[0].word) == "test");
+    CHECK(!r.suggestions.empty() && (s8(r.suggestions[0].word) == "test" || s8(r.suggestions[0].word) == "rest"));
     CHECK(std::none_of(r.suggestions.begin(), r.suggestions.end(),
                        [](const Suggestion &s) { return s8(s.word) == "yes"; }));
     // Only a letter in the digit's place: names and codes stay, and a
@@ -737,6 +740,33 @@ void testUnknownWords()
     CHECK(r.autocorrect >= 0 && r.suggestions[r.autocorrect].word == u("compleanno"));
 }
 
+void testShorthands()
+{
+    // Chat shorthands (LANG.shorthands) stand when typed, at Strong too,
+    // and are never suggested: bn (bene) is not non, nn (non) not NN.
+    for (Strength strength : {Strength::Normal, Strength::Strong}) {
+        EngineParams p;
+        p.strength = strength;
+        p.corrector.completions = true;
+        Engine e(p);
+        for (const char *l : {"it", "en", "de"})
+            e.addLanguage(dictDir + "/" + l + ".pfd");
+        e.setLayout(layout("it"));
+        std::vector<double> prior(3, 1.0);
+        prior[e.languageIndex("it")] *= 3.0;
+        for (const char *before : {"Ciao ", "Va bene, ", "Non so "})
+            for (const char *typed : {"bn", "nn", "cmq"}) {
+                e.startText(u(before), prior);
+                const Result r = e.process(tapsFor(u(typed)));
+                CHECK(r.autocorrect < 0);
+            }
+        e.startText(u("Ciao "), prior);
+        const Result r = e.process(tapsFor(u("b")));
+        CHECK(std::none_of(r.suggestions.begin(), r.suggestions.end(),
+                           [](const Suggestion &s) { return s8(s.word) == "bn"; }));
+    }
+}
+
 void testCapitalNames()
 {
     // A capital after a word: a name, left alone (cant, wont and whats are
@@ -799,6 +829,16 @@ void testCapitalNames()
     e.setLayout(layout("it"));
     e.startText(u("Tutto "), it);
     r = e.process(tapsFor(u("ok")));
+    CHECK(r.autocorrect < 0);
+    // With a capital at the start of a text, still the word typed: Sms is
+    // sms (en.lowercase) with its capital, not SMS in another
+    // case, so And does not replace it.
+    Engine two(p);
+    for (const char *l : {"en", "it"})
+        two.addLanguage(dictDir + "/" + l + ".pfd");
+    two.setLayout(layout("en"));
+    two.startText(u(""), {3.0, 1.0});
+    r = two.process(tapsFor(u("Sms")));
     CHECK(r.autocorrect < 0);
 }
 
@@ -1061,6 +1101,7 @@ int main(int argc, char **argv)
     testContractions();
     testSplits();
     testUnknownWords();
+    testShorthands();
     testCapitalNames();
     testStrengths();
     testSlipShortcuts();

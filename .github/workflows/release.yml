@@ -79,6 +79,11 @@ jobs:
           name: dictionaries
           path: prebuilt
       - run: ci/build-rpm.sh ${{ matrix.arch }} "$SFOS_RELEASE"
+      # Both builds make the same noarch language packages: only aarch64's
+      # go to the release (two copies downloaded into one folder at once
+      # overwrite each other: the 1.0.0 rehearsal got a truncated one).
+      - if: matrix.arch != 'aarch64'
+        run: rm -f out/*.noarch.rpm
       - uses: actions/upload-artifact@v7
         with:
           name: rpm-${{ matrix.arch }}
@@ -95,6 +100,13 @@ jobs:
           pattern: rpm-*
           path: rpms
           merge-multiple: true
+      # Every package whole (header and payload digests) before it's
+      # attached.
+      - name: Check the packages
+        run: |
+          sudo apt-get install -y --no-install-recommends rpm > /dev/null
+          ls -l rpms
+          rpm -K --nosignature rpms/*.rpm
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}

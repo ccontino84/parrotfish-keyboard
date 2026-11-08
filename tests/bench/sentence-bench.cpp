@@ -3,8 +3,8 @@
 
 // Correction and autocorrect in running text (milestone 1/MVP).
 //
-//   sentence-bench -l data/layouts/it.layout -t tests/data/tatoeba-it.txt
-//                  -d build/data/it.pfd [-d OTHER.pfd]... [-n 2000] [-r 0.3]
+//   sentence-bench -l data/layouts/phone-qwerty.layout -t tests/data/tatoeba-en.txt
+//                  -d build/data/en.pfd [-d OTHER.pfd]... [-n 2000] [-r 0.3]
 //                  [-s SEED] [-m LANG] [-B] [-F] [-D] [-R] [-P name=value]... [-v]
 //                  [-S slips.log [-M] | -U] [-N PCT] [-X] [-o OOV.txt [-u RATE]] [-L]
 //                  [-T [-K]] [-W pairs.tsv [-w RATE] [-c N] [-A]] [-E] [-C DUMP [-G]] [-Y SETTINGS]...

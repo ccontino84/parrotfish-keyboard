@@ -214,6 +214,27 @@ Item {
             return [text, MInputMethodQuick.sentKeys.indexOf(Qt.Key_Backspace) >= 0]
         }
 
+        // A pick ends a word as Space does: the same text, Shift back to
+        // automatic, the word counted (slips.log's words line), also for a
+        // next word picked with nothing typed.
+        function test_pickAsSpace() {
+            context("I think it is ")
+            keyboard.shiftState = ShiftState.NoShift
+            MInputMethodQuick.committedText = ""
+            type("goo")
+            handler.select("good", 0)
+            compare(MInputMethodQuick.committedText, "good ")
+            compare(keyboard.shiftState, ShiftState.AutoShift, "typed word picked")
+            keyboard.shiftState = ShiftState.NoShift
+            var before = slips("words").length
+            for (var i = 0; i < 60; ++i) {
+                handler.select(bar().split(" ")[0], 0)
+                compare(keyboard.shiftState, ShiftState.AutoShift, "next word picked")
+                keyboard.shiftState = ShiftState.NoShift
+            }
+            verify(slips("words").length > before, "next words picked are counted")
+        }
+
         function test_spaceBeforePunctuation() {
             var key = "/apps/parrotfish-keyboard/space-before-punctuation"
             context("I think it is ")

@@ -339,6 +339,16 @@ InputHandler {
         commit(replacement)
         _autoSpaced = replacement
         _autoSpacedBefore = before
+        // As Space: a next word (nothing was typed, so the preedit's commit
+        // path didn't run) counts as a committed word too, and Shift goes
+        // back to automatic (Jolla does that too, but only when the app
+        // reports the cursor).
+        if (typed === "") {
+            _rememberLanguage()
+            predictionEngine.countWord()
+        }
+        if (keyboard.shiftState !== ShiftState.LockedShift)
+            keyboard.shiftState = ShiftState.AutoShift
     }
 
     function handleKeyClick() {

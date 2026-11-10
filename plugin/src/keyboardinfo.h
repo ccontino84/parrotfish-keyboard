@@ -12,7 +12,7 @@
 class KeyboardInfo : public QObject
 {
     Q_OBJECT
-    // The package version ("0.1.0~alpha109"; "dev" in a build of its own).
+    // The package version ("1.1.0", "1.1.0~alpha1"; "dev" in a build of its own).
     Q_PROPERTY(QString version READ version CONSTANT)
 
 public:

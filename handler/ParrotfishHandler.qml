@@ -807,8 +807,8 @@ InputHandler {
     }
 
     // Checks the keys at every new word: a geometry read once and kept could
-    // be stale (alpha28: wrong corrections until a settings change made the
-    // handler read the keys again). Reading them all costs 2-3 ms on the
+    // be stale (wrong corrections until a settings change made the handler
+    // read the keys again). Reading them all costs 2-3 ms on the
     // phone, so only two keys are checked; all are read again if either moved
     // or is gone (rebuilt keys). The engine is rebuilt only when keys change.
     function _updateLayout() {

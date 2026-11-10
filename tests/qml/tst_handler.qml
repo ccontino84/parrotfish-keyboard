@@ -678,7 +678,7 @@ Item {
             compare(type("tge "), "the ")
         }
 
-        // The same text is read once (alpha96), but the bar still shows the
+        // The same text is read once, but the bar still shows the
         // next words whenever no word is being typed.
         function test_nextWordsKept() {
             context("I think this is the ")
@@ -697,7 +697,7 @@ Item {
         }
 
         // After an autocorrection the next words follow the corrected word
-        // (alpha97; until the app reports its text, the handler assumes it).
+        // (until the app reports its text, the handler assumes it).
         function test_nextWordsAfterCorrection() {
             context("I think this is the ")
             var next = bar()
@@ -707,7 +707,7 @@ Item {
         }
 
         // After a commit the text before the cursor is the text the app will
-        // report, however the field behaves (alpha98, alpha100): maliit's
+        // report, however the field behaves: maliit's
         // copy updated at once (native apps) or not, the word being typed
         // shown in the field (the Android app tested) or not. A period
         // right after a word comes before any report.

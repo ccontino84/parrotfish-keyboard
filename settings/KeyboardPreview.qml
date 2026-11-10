@@ -4,8 +4,8 @@
 // A field to try the keyboard in, at the top of a settings page (`page`):
 // the keyboard follows the dconf keys at once, so the page shows it while
 // it is open: the field takes the focus when the page opens (a keyboard
-// without a focused field doesn't open: Qt.inputMethod.show() alone did
-// nothing on the phone, alpha110).
+// without a focused field doesn't open: Qt.inputMethod.show() alone does
+// nothing on the phone).
 // The keyboard doesn't learn from it: its __inputMethodExtensions, which
 // Maliit passes on from the focused item, carry parrotfishNoLearning (the
 // handler pauses learning). A plain TextInput, not a TextField: the focused

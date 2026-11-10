@@ -27,9 +27,9 @@
 // first dictionary one adjacent key or one swap away (from → form), for
 // Strong (-P strength=3); words with no such neighbour stay clean.
 //
-// Closer to real typing (2026-10-31): a wrong key goes mostly sideways
+// Closer to real typing: a wrong key goes mostly sideways
 // (typos.h); -S reads the directions from a slips.log (one person's hands:
-// -M mirrors them), -U picks any adjacent key as before. -N PCT adds a
+// -M mirrors them), -U picks any adjacent key. -N PCT adds a
 // number row PCT% as tall as a letter row above the letters (the engine
 // gets its keys as on the phone). -X adds typos of two words or the number
 // row: the space left out (thisis), the space typed as a key above the
@@ -42,7 +42,7 @@
 // neighbour, one of them the meant letter (either way round). The word
 // shows the lift key, or the touch-down key if the word so far fits it
 // better (Engine::resolveTap, as the handler). -K also gives the engine the
-// tap's other key, from alpha70 on; without it only the letter shown.
+// tap's other key, as the handler does; without it only the letter shown.
 //
 // -W adds real misspellings (recieve, propio, Vorraussetzung) from a list:
 // misspelling TAB correct [TAB source [TAB flags]] per line, # for comments.

@@ -65,7 +65,7 @@ KeyboardLayout {
     property string keyFill: keyFillConfig.value
     property string keyBorder: keyBorderConfig.value
     // The mark on keys with a long-press menu (parrotfish/LongPressHint.qml):
-    // "dot" ("line", an older choice, shows the dot too) or "off".
+    // "dot" or "off".
     readonly property bool longPressHint: longPressHintConfig.value !== "off"
     // The comma's and the period's long-press menus, by typing language.
     readonly property var punctuation: Languages.punctuation(Languages.selected(languagesConfig.value))

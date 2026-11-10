@@ -49,13 +49,13 @@ tools/pf lint                   # QML/JS that Qt 5.6 rejects
 tools/pf test                   # build, unit and QML tests
 tools/pf suite                  # the standard benchmark suite, stored with its commit
 tools/pf suite --label try --param otherLanguageMargin=8   # an experiment
-tools/pf compare alpha70 try    # two runs side by side, better/WORSE marked
-tools/pf diff alpha70 try       # the words whose outcome changed
+tools/pf compare before try    # two runs side by side, better/WORSE marked
+tools/pf diff before try       # the words whose outcome changed
 tools/pf sweep changeCost "6 7 8"   # a parameter's values, ranked
 tools/pf failures               # typos left or fixed wrong, sorted by cause
 tools/pf check                  # before a release: lint, tests, suite, and
                                 # exit 1 if a number got worse than the last run
-tools/pf rpm --version 0.1.0~alpha71   # phone RPM (sfdk), copied if configured
+tools/pf rpm --version 1.1.0~alpha1    # phone RPM (sfdk), copied if configured
 ```
 
 The suite (Normal, as the phone's default; `--param strength=3` for Strong,
@@ -179,7 +179,7 @@ does the same for codes with a digit (`mp3`, `ps4`). `-S` takes the slip
 directions from a slips.log (one person's hands; `-M` mirrors them, as for
 the other hand). `-T` adds taps that touched one key and lifted on its neighbour (shown
 as the handler would; `-K` also gives the engine the other key, as the
-phone does since alpha70). `-L` adds the results by typed length (2, 3–4, 5+
+phone does). `-L` adds the results by typed length (2, 3–4, 5+
 letters), as used for the thresholds by length. The last line sums up, with the word error rate before and
 after autocorrect; `bench-sweep.sh` prints it for each value of a parameter.
 
@@ -358,7 +358,7 @@ margin in nats; also `strong undone`), `missing`,
 only, never words; it is the real tap data for the key model (which slips
 are common on the phone). A header line names the settings the lines below
 come from, written again whenever they change, each day and after a
-restart: `# 2026-10-29 0.1.0~alpha51 QWERTY portrait height=90 normal
+restart: `# 2026-11-10 1.1.0 QWERTY portrait height=90 normal
 pitch=1.67 learning=on` (date, version, arrangement, orientation, key
 height %, strength, rows apart in key widths as measured, learning). `words 50` lines count the words typed letter by
 letter under that header (in batches of 50, and the rest when the settings

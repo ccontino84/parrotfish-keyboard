@@ -143,8 +143,7 @@ LANGUAGES = ["en", "it", "de", "fr", "es", "pt_BR", "pt_PT", "nl", "sv", "da", "
 def language_group(lang, first=False):
     """The dictionaries loaded with `lang` in the suite: a typical set of
     typing languages; in the group's order, or `lang` first. The order
-    matters (the typos use the first dictionary's letters): the cases of
-    alpha88 keep theirs."""
+    matters (the typos use the first dictionary's letters)."""
     for group in (["en", "it", "de"], ["fr", "es", "en"], ["hr", "sl", "en"]):
         if lang in group:
             return [lang] + [l for l in group if l != lang] if first else group
@@ -154,7 +153,7 @@ def language_group(lang, first=False):
 def layout_of(lang):
     """The keyboard the suite types `lang` on: QWERTY (ÅÖÄ) for the Nordic
     languages, QWERTZ for cs, sl and hr (their national layouts), else
-    QWERTY (also for de and fr, as up to alpha88)."""
+    QWERTY (also for de and fr)."""
     if lang in ("sv", "da", "nb", "fi"):
         return "data/layouts/phone-nordic.layout"
     if lang in ("cs", "sl", "hr"):
@@ -997,7 +996,7 @@ def main():
     c.add_argument("--all", action="store_true", help="also the numbers that didn't change")
     c.add_argument("--tolerance", type=float, default=0.2)
     r = sub.add_parser("rpm")
-    r.add_argument("--version", help="set the spec's Version first, e.g. 0.1.0~alpha71")
+    r.add_argument("--version", help="set the spec's Version first, e.g. 1.1.0~alpha1")
     r.add_argument("--no-copy", action="store_true")
     r.add_argument("--from-source", action="store_true",
                    help="build the dictionaries in the SDK too (as a release build does)")

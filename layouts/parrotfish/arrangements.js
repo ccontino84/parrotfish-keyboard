@@ -186,13 +186,13 @@ var arrangements = {
 }
 
 // What the sticky key can type, in the order of its long-press menu: a
-// short list of the most used signs (agreed 2026-10-31); the setting
+// short list of the most used signs; the setting
 // /apps/parrotfish-keyboard/sticky-key keeps the one last picked.
 var stickySigns = "'\"-_@#/"
 
-// The sticky key on the right or the left of its row (agreed 2026-10-31:
-// in the same row, so that no key gets smaller; "right" is the default,
-// "left" suits left hands or keeps it away from Backspace). QWERTY has it
+// The sticky key on the right or the left of its row (in the same row, so
+// that no key gets smaller; "right" is the default, "left" suits left
+// hands or keeps it away from Backspace). QWERTY has it
 // at the end of the middle row, AZERTY after N. QWERTZ (and QWERTY with the
 // language keys) have
 // no apostrophe key: theirs goes in the bottom letter row, whose end keys
@@ -231,8 +231,8 @@ function placeSticky(a, side) {
     return {"name": a.name, "rows": rows}
 }
 
-// `a` without the sticky key (/apps/parrotfish-keyboard/sticky false,
-// agreed 2026-11-04): Jolla's rows back. QWERTZ only gets
+// `a` without the sticky key (/apps/parrotfish-keyboard/sticky false):
+// Jolla's rows back. QWERTZ only gets
 // it from placeSticky; QWERTY drops it from the middle row, whose signs
 // become en.qml's (noSticky: caption → [y, y2]); AZERTY keeps a plain '
 // key (stickyStays: French needs it, and fr.qml has one too).
@@ -445,11 +445,11 @@ function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide) 
 
 // The first row of the second symbol page while the number row is on:
 // superscripts and fractions next to the digits, then the most used
-// maths and typographic signs (agreed 2026-10-31); an 11th sign for
+// maths and typographic signs; an 11th sign for
 // 11-key rows.
 var freeRow = "¹ ² ³ ½ ¼ ¾ ± ≈ – … ≠"
 
-// `a` with a number row (revision 2, agreed 2026-10-31): Jolla's digit
+// `a` with a number row: Jolla's digit
 // row of the first symbol page becomes the number row, shown the same in
 // every view. Below it, the first symbol page is the second page's first
 // row (currencies, %, brackets) over the first page's other two rows; the

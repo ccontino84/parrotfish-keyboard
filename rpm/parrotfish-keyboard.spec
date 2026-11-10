@@ -8,7 +8,7 @@ Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LGPL-2.1-or-later AND BSD-3-Clause AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
 URL:        https://github.com/ccontino84/parrotfish-keyboard
 Source0:    %{name}-%{version}.tar.bz2
-# Test versions (with a ~ suffix, as 0.1.0~alpha117) also install the
+# Test versions (with a ~ suffix, as 1.1.0~alpha1) also install the
 # developer tools: pf-query and the benchmarks.
 %global devtools %(echo '%{version}' | grep -q '~' && echo ON || echo OFF)
 # The dictionaries' format (FormatVersion in engine/include/parrotfish/
@@ -70,8 +70,6 @@ BuildArch:  noarch
 Requires:   %{name}
 Requires:   parrotfish-dictionary-format = %{dictformat}
 Provides:   parrotfish-dictionaries
-# Its name in the test builds (0.1.0~alpha123 to the 1.0.0 drafts).
-Obsoletes:  parrotfish-latin-languages < 1.0.1
 
 %description -n parrotfish-languages-latin
 Dictionaries and word-pair data for Parrotfish Keyboard, for languages
@@ -99,9 +97,6 @@ BuildArch:  noarch
 Requires:   %{name}
 Requires:   parrotfish-dictionary-format = %{dictformat}
 Provides:   parrotfish-dictionaries
-# Its names in the test builds.
-Obsoletes:  parrotfish-keyboard-experimental-languages < 0.1.0~alpha123
-Obsoletes:  parrotfish-latin-languages-experimental < 1.0.1
 
 %description -n parrotfish-languages-latin-experimental
 Dictionaries for the Latin-script languages Parrotfish Keyboard supports

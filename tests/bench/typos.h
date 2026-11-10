@@ -9,12 +9,12 @@
 // digits of a number row).
 //
 // A wrong key (Neighbour) goes sideways (same row) or up/down (another
-// row): 10% up/down by default (one user's slips.log of 2026-10-31, 117
-// wrong keys: 9%), and sideways left or right alike. fitDirections() reads
+// row): 10% up/down by default (a slips.log of 117 wrong keys:
+// 9%), and sideways left or right alike. fitDirections() reads
 // both from a slips.log, left and right apart for each half of the keyboard
 // (that user: right half 48 left : 12 right, left half 24 : 22), which
 // belong to one person's hands: setMirrored() swaps them, as for the other
-// hand. setUniform() picks any adjacent key, as before 2026-10-31 (about
+// hand. setUniform() picks any adjacent key (about
 // half of them up/down on the phone's QWERTY).
 //
 // Kinds after RealWord need two words or a number row (sentence-bench -X):
@@ -75,7 +75,7 @@ inline bool isLetter(char32_t c)
 // with inner apostrophes and hyphens; typographic apostrophes become '),
 // and a final apostrophe kept where it is part of the word: the word with it
 // is a word of a loaded dictionary (Italian po', English girls'). Other
-// final apostrophes are left out, as before 2026-11-02: closing quotes
+// final apostrophes are left out: closing quotes
 // ('hello'), elisions and possessives the dictionaries don't have (de',
 // fahr', boys'). On the phone an apostrophe typed after letters goes into
 // the word, so those are typed with it too; the bench doesn't model quote
@@ -150,7 +150,7 @@ public:
             m_base[dict.letter(i).cp] = dict.letter(i).base;
     }
 
-    // Any adjacent key for a wrong key, as before 2026-10-31.
+    // Any adjacent key for a wrong key.
     void setUniform(bool uniform) { m_uniform = uniform; }
     // Left and right swapped, halves too (the other hand).
     void setMirrored(bool mirrored) { m_mirrored = mirrored; }

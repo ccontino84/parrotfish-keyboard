@@ -49,7 +49,7 @@ struct CorrectorParams {
     // fur) are that word written that way, not a slip onto it: its target
     // costs this many nats less. Without it, im became in (the word
     // frequencies come from written text, where I'm is rare).
-    // sentence-bench (2026-11-01), 0 -> 2.5: German accent misspellings
+    // sentence-bench, 0 -> 2.5: German accent misspellings
     // fixed 64.6 -> 70.8 %, French misspellings +0.6 points, nothing fixed
     // wrong more; 3: more fixed wrong. Next-word keystrokes saved -0.1 to
     // -0.2 points (a prefix that is a misspelling, fur..., ranks für).

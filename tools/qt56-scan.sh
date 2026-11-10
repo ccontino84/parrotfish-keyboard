@@ -5,7 +5,7 @@
 # The phone runs Qt 5.6, a PC usually Qt 5.15: lint and the PC tests accept
 # code that Qt 5.6 rejects. Flags the known traps in the repo's QML and JS:
 # keywords after a dot in QML files (Qt 5.6 lexes "as" and "import" as
-# keywords there: k.as broke alpha26) and newer JavaScript (let, const,
+# keywords there: k.as breaks the layout) and newer JavaScript (let, const,
 # arrow functions, template strings, spread).
 # usage: tools/qt56-scan.sh [REPO]   (exit 1 on a hit)
 REPO=${1:-$(dirname "$(cd "$(dirname "$0")" && pwd)")}

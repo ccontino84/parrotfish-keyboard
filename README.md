@@ -40,8 +40,8 @@ separate package. There is too little public text
 to build and test these as well as the others; feedback from native speakers
 is welcome. The settings are translated into all of them.
 
-**Status:** 1.0, the first release. Tested on Sailfish OS 5.1 and 5.2
-(aarch64); the 32-bit build (armv7hl) is untested, reports are welcome.
+**Status:** 1.1. Tested on Sailfish OS 5.2 (aarch64);
+the 32-bit build (armv7hl) is untested, reports are welcome.
 
 ## Install
 

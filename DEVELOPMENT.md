@@ -328,7 +328,7 @@ narrow Shift and Backspace, not the letters. The sticky key always stays
 outermost. `/apps/parrotfish-keyboard/long-press-hint`
 (`dot` = the default, `off`): a dot on keys with a long-press menu. The
 settings section (`settings/ParrotfishSettings.qml`) opens two pages,
-Typing and Look & feel; Look & feel opens the keyboard, with a field to try it in that it doesn't learn from
+Typing and Look & feel; both open the keyboard, with a field to try it in (and a clear button) that it doesn't learn from
 (`settings/KeyboardPreview.qml`: its `__inputMethodExtensions` carry
 `parrotfishNoLearning`, which the handler passes to the plugin's
 `learnPaused`). Below the two rows, Reset unsets every key under

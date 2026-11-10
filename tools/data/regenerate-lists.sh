@@ -18,16 +18,23 @@ shift
 cd "$(dirname "$0")/../.."
 mkdir -p "$C" build/data
 
-ALL="en it de es fr pt_BR pt_PT nl sv da nb ro fi"
+ALL="en it de es fr pt_BR pt_PT nl sv da nb ro fi pl cs sl hr"
 
 # The corpus language of a dictionary: both Portuguese lists share one.
 src() { case $1 in pt_*) echo pt ;; *) echo $1 ;; esac; }
 cvdir() { case $1 in sv) echo sv-SE ;; nb) echo nb-NO ;; *) src $1 ;; esac; }
-aosp() { case $1 in en) echo data/aosp/en_US_wordlist.combined.gz ;; *) echo data/aosp/$1_wordlist.combined.gz ;; esac; }
+# The wordlist of a language (data/CMakeLists.txt): AOSP's, or sl's from Sloleks.
+aosp() {
+    case $1 in
+        en) echo data/aosp/en_US_wordlist.combined.gz ;; sl) echo data/sloleks/sl_wordlist.combined.gz ;;
+        *) echo data/aosp/$1_wordlist.combined.gz ;;
+    esac
+}
 tatoeba() {
     case $(src $1) in
         en) echo eng ;; it) echo ita ;; de) echo deu ;; es) echo spa ;; fr) echo fra ;; pt) echo por ;;
         nl) echo nld ;; sv) echo swe ;; da) echo dan ;; nb) echo nob ;; ro) echo ron ;; fi) echo fin ;;
+        pl) echo pol ;; cs) echo ces ;; sl) echo slv ;; hr) echo hrv ;;
     esac
 }
 # Common Voice files that are not running text: lists of foreign phrases,
@@ -73,7 +80,9 @@ for l in $LANGS; do
     # Common words of the other languages are not added to this one (the
     # other Portuguese list is the same language).
     others=""
-    for m in $ALL; do [ $(src $m) = $s ] || others="$others --other $(aosp $m)"; done
+    for m in $ALL; do
+        [ $(src $m) = $s ] || others="$others --other $(aosp $m) --other-counts $C/$(src $m)-all.tsv"
+    done
     # Old spellings first: the other lists read the dictionary with them.
     python3 -I tools/data/find-respellings.py $l "$(aosp $l)" "$C/$s-all.tsv" data/rules data/rules/$l.respellings
     python3 -I tools/data/find-accent-misspellings.py $l "$(aosp $l)" "$C/$s-all.tsv" data/rules data/rules/$l.misspellings
@@ -87,8 +96,17 @@ for l in $LANGS; do
         tests/data/unknown-$l.txt $([ $l = da ] && echo --no-cv)
 done
 
+# Word pairs counted elsewhere, added to a language's own (count-pairs.py):
+# sl, the Kres corpus n-grams 2.0 (CC BY-SA 4.0, hdl.handle.net/11356/1193:
+# all_1-5-grams_Kres.zip, its 2-gram file, in CORPUS_DIR/kres/).
+morepairs() {
+    case $1 in
+        sl) echo "--bigrams $C/kres/kres_lc_c-no_n-2_t-1_x-1.txt --corpus-weight 300" ;;
+    esac
+}
 for l in $LANGS; do
     python3 -I tools/data/count-pairs.py data/pairs/$l.tsv.gz "$(aosp $l)" data/rules/$l.supplement data/rules \
-        $(cvfiles $l) "$C/$(tatoeba $l)_sentences.tsv.bz2" $(exclude $l) --respellings data/rules/$l.respellings &
+        $(cvfiles $l) "$C/$(tatoeba $l)_sentences.tsv.bz2" $(exclude $l) --respellings data/rules/$l.respellings \
+        $(morepairs $l) &
 done
 wait

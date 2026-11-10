@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LGPL-2.1-or-later
-# Words that stay valid (find-respellings.py, find-accent-misspellings.py).
+# Words that stay valid (find-respellings.py, find-accent-misspellings.py),
+# and are added by find-supplement.py even if another language's text uses
+# them more (Slovenian tja, Czech bude, Polish kuli).
 # Austrian standard spelling (long o): Geschoß, as the list's Geschoss.
 Geschoß
 Dachgeschoß
@@ -13,3 +15,6 @@ Gaßner
 Geßner
 Joß
 Keßler
+Bude
+Kuli
+Tja

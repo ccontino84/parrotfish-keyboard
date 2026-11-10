@@ -18,6 +18,14 @@ the start of a sentence, `<any>` the overall most frequent words (a fallback), a
 `prev<TAB>+<TAB>types` the number of different words that follow it (how
 much the kept next words say: Witten-Bell).
 Names in RULES_DIR/supplement.stop (corpus example names) are left out.
+
+--bigrams FILE adds word pairs counted elsewhere (`w1 w2<TAB>texts<TAB>count`,
+lowercased, as the Kres corpus n-grams of Slovenian; pairs seen in one
+text only are left out), and --corpus-weight W multiplies the counts of
+FILE... first: sl adds Kres's 100 million words to its 40,000 of Common
+Voice and Tatoeba, weighted 300 (chosen on the benchmarks: the chat-like
+corpora keep a tenth of the weight). Words seen only in the bigrams take
+their spelling from the wordlist.
 """
 
 import argparse
@@ -62,15 +70,19 @@ def main():
     ap.add_argument("--min-count", type=int, default=2)
     ap.add_argument("--exclude", action="append", default=[])
     ap.add_argument("--respellings", help="LANG.respellings of find-respellings.py")
+    ap.add_argument("--bigrams", help="pairs counted elsewhere: `w1 w2<TAB>texts<TAB>count`")
+    ap.add_argument("--corpus-weight", type=float, default=1.0)
     args = ap.parse_args()
 
     known = set()
+    listed = {}   # the wordlist's spelling of each word
     with gzip.open(args.wordlist, "rt", encoding="utf-8") as fh:
         for line in fh:
             if line.startswith(" word="):
                 fields = dict(kv.split("=", 1) for kv in line.strip().split(","))
                 if fields.get("not_a_word") != "true" and int(fields["f"]) > 0:
                     known.add(fields["word"].lower())
+                    listed.setdefault(fields["word"].lower(), fields["word"])
     for line in read_list(args.supplement):
         known.add(line.split("\t")[0].lower())
     # Current spellings in, old ones out (find-respellings.py, as build-dict.py).
@@ -90,20 +102,40 @@ def main():
     unigram = collections.Counter()
     cased = collections.Counter()   # spellings not at a sentence start
     pairs = collections.defaultdict(collections.Counter)
+    totals = collections.Counter()   # continuations of each word, all kept or not
+    types = collections.Counter()    # different continuations in the bigrams
+    weight = args.corpus_weight
     for path in args.files:
         for line in lines(path):
+            if line.strip() in excluded:
+                continue
             line = line.replace("’", "'").replace("ʼ", "'")
             for sentence in SENTENCE_END.split(line):
                 prev = "<s>"
                 for t in TOKEN.findall(sentence):
                     w = t.lower()
-                    unigram[w] += 1
+                    unigram[w] += weight
                     if prev != "<s>":
                         cased[t] += 1
-                    pairs[prev][w] += 1
+                    pairs[prev][w] += weight
+                    totals[prev] += weight
                     prev = w
+    if args.bigrams:
+        with open(args.bigrams, encoding="utf-8") as fh:
+            next(fh)   # the header
+            for line in fh:
+                gram, texts, count = line.rstrip("\n").split("\t")
+                if int(texts) < 2:
+                    continue
+                prev, _, w = gram.partition(" ")
+                count = int(count)
+                unigram[prev] += count
+                totals[prev] += count
+                types[prev] += 1
+                if prev in known and w in known:
+                    pairs[prev][w] += count
 
-    spelling = {}
+    spelling = dict(listed) if args.bigrams else {}
     for t, c in cased.items():
         k = t.lower()
         if k not in spelling or c > cased[spelling[k]]:
@@ -112,9 +144,9 @@ def main():
     keep_prev = ["<s>"] + [w for w, _ in unigram.most_common() if w in known][:args.prev]
     with gzip.open(args.out, "wt", encoding="utf-8", compresslevel=9) as fh:
         top = [(w, c) for w, c in unigram.most_common(200) if w in known][:args.next * 2]
-        fh.write(f"<any>\t*\t{sum(unigram.values())}\n")
+        fh.write(f"<any>\t*\t{int(sum(unigram.values()))}\n")
         for w, c in top:
-            fh.write(f"<any>\t{spelling.get(w, w)}\t{c}\n")
+            fh.write(f"<any>\t{spelling.get(w, w)}\t{int(c)}\n")
         for prev in keep_prev:
             nexts = pairs.get(prev)
             if not nexts:
@@ -123,10 +155,10 @@ def main():
                       if w in known and c >= args.min_count][:args.next]
             if not chosen:
                 continue
-            fh.write(f"{prev}\t*\t{sum(nexts.values())}\n")
-            fh.write(f"{prev}\t+\t{len(nexts)}\n")
+            fh.write(f"{prev}\t*\t{int(totals[prev])}\n")
+            fh.write(f"{prev}\t+\t{max(len(nexts), types[prev])}\n")
             for w, c in chosen:
-                fh.write(f"{prev}\t{spelling.get(w, w)}\t{c}\n")
+                fh.write(f"{prev}\t{spelling.get(w, w)}\t{int(c)}\n")
 
 
 if __name__ == "__main__":

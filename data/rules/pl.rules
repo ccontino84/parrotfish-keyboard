@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# Accented letters (ą ć ę ł ń ó ś ź ż) are accents: typed plain, they are
+# restored (chat is often typed without them).
+
+# Word forms the list lacks (dictionary.h: isWordForm): typed, they stand;
+# they are never suggested. The list has the third person; the first and
+# second persons are rarer in its text (Common Voice is mostly European
+# Parliament speeches). Past tense: głosował → głosowałem, głosowałeś;
+# głosowała → głosowałam (the stem głosowa + ł); głosowali, głosowały →
+# głosowaliśmy, głosowałyście. Present: popiera → popieram, popierasz,
+# popieramy, popieracie; potrzebuje → potrzebujesz, potrzebujemy,
+# potrzebujecie, potrzebuję (kupuje → kupuję: the stem kupuj + e).
+suffix em eś after=ł
+suffix łam łaś drop=ł
+suffix śmy ście after=iy
+suffix m sz my cie after=a
+suffix sz my cie after=e
+suffix ę drop=e

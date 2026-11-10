@@ -37,6 +37,12 @@ tools/data/sample-sentences.py tests/data/tatoeba-es.txt ../corpora/spa_sentence
 (Leave out the Common Voice files that `cvfiles` in
 `tools/data/regenerate-lists.sh` skips.)
 
+pl, cs, sl and hr were drawn the same way on 2026-11-10, from Common Voice
+commit `b24381ce7136f2524a1128cb605b49111f79dbea` and the Tatoeba exports
+of 2026-11-09. sl and hr have little text: sentences-sl has 93,
+sentences-hr 41, tatoeba-sl 105 and tatoeba-hr 240, so their benchmarks
+are rough.
+
 Both sets are left out of every word count (`--exclude` in
 `tools/data/regenerate-lists.sh`), so the benchmarks don't test on data the
 dictionaries were built from.

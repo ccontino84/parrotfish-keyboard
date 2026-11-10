@@ -20,7 +20,17 @@ and Tatoeba (CC BY 2.0 FR) sentences. A word is added when:
    so `the` doesn't become Italian, unless it is common in both sources
    (--other-rate per million, geometric mean): Danish and Spanish `vi`,
    Romanian `vom` are missing from their lists, while English `of` in
-   Spanish Wikipedia sentences is rare in Tatoeba;
+   Spanish Wikipedia sentences is rare in Tatoeba. With --other-counts
+   (that language's count-words.py counts, one per --other, in the same
+   order), the other language's text must also use it, at least
+   --other-min times: a list alone also holds loanwords and forms shared
+   by chance that its language's text doesn't use (S-Bahn in the Polish
+   list, Slovenian kontinente, metre), which dropped German and English
+   words when pl, cs, sl and hr came. (Also requiring the other text to
+   use it ten times as often let English words into Finnish, and loanwords
+   and names into German: not done.) Words in RULES_DIR/LANG.keep (real
+   words of this language) are never left out for this reason (German
+   `Tja`, also Slovenian);
 4. for languages without `capitalised-nouns` in LANG.rules, it is not
    mostly capitalised (a name);
 5. it is not in RULES_DIR/supplement.stop (recurring example names of the
@@ -116,6 +126,8 @@ def main():
     ap.add_argument("rules_dir")
     ap.add_argument("out")
     ap.add_argument("--other", action="append", default=[])
+    ap.add_argument("--other-counts", action="append", default=[])
+    ap.add_argument("--other-min", type=int, default=3)
     ap.add_argument("--min-each", type=int, default=3)
     ap.add_argument("--min-total", type=int, default=20)
     ap.add_argument("--other-freq", type=int, default=90)
@@ -154,11 +166,18 @@ def main():
     folded = {}
     for w in words:
         folded.setdefault(fold(w, keep), set()).add(w.lower())
-    others = {}
-    for path in args.other:
+    # The other languages' common words; with --other-counts, how often
+    # their texts use each.
+    if args.other_counts and len(args.other_counts) != len(args.other):
+        sys.exit("find-supplement.py: one --other-counts per --other")
+    others = {}   # word -> [(list f, count in its text or None)]
+    for i, path in enumerate(args.other):
+        used = read_counts(args.other_counts[i]) if args.other_counts else {}
         for w, f in read_wordlist(path).items():
-            others[w.lower()] = max(f, others.get(w.lower(), 0))
+            c = used.get(w.lower(), (0,))[0] if args.other_counts else None
+            others.setdefault(w.lower(), []).append((f, c))
     stop = {w.lower() for w in read_list(f"{args.rules_dir}/supplement.stop")}
+    own = {w.lower() for w in read_list(f"{args.rules_dir}/{args.lang}.keep")}
 
     cv = read_counts(args.cv)
     tat = read_counts(args.tatoeba)
@@ -235,7 +254,10 @@ def main():
         if any(v != w for v in folded.get(fold(w, keep), ())):
             skipped["variant"] += 1
             continue
-        if others.get(w, 0) >= args.other_freq and (rate(w) if both else rate_one(w)) < args.other_rate:
+        here = rate(w) if both else rate_one(w)
+        if w not in own and here < args.other_rate and any(
+                f >= args.other_freq and (c is None or c >= args.other_min)
+                for f, c in others.get(w, ())):
             skipped["other"] += 1
             continue
         if w in stop:

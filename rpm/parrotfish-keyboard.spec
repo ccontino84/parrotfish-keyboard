@@ -62,7 +62,10 @@ Links:
 %endif
 
 %package -n parrotfish-languages-latin
-Summary:    Languages for Parrotfish Keyboard: Dutch, English, French, German, Italian, Portuguese, Spanish
+Summary:    Languages for Parrotfish Keyboard: Czech, Dutch, English, French, German, Italian, Polish, Portuguese, Slovenian, Spanish
+# The Slovenian dictionary comes from the Sloleks lexicon and the Kres
+# n-grams (CC BY-SA 4.0).
+License:    Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR AND CC-BY-SA-4.0
 BuildArch:  noarch
 Requires:   %{name}
 Requires:   parrotfish-dictionary-format = %{dictformat}
@@ -72,9 +75,9 @@ Obsoletes:  parrotfish-latin-languages < 1.0.1
 
 %description -n parrotfish-languages-latin
 Dictionaries and word-pair data for Parrotfish Keyboard, for languages
-written in the Latin script: Dutch, English, French, German, Italian,
-Portuguese (Brazil and Portugal) and Spanish. Installs Parrotfish Keyboard
-too.
+written in the Latin script: Czech, Dutch, English, French, German,
+Italian, Polish, Portuguese (Brazil and Portugal), Slovenian and Spanish.
+Installs Parrotfish Keyboard too.
 
 %if 0%{?_chum}
 Title: Parrotfish Latin
@@ -90,7 +93,8 @@ Links:
 %endif
 
 %package -n parrotfish-languages-latin-experimental
-Summary:    Experimental languages for Parrotfish Keyboard: Danish, Finnish, Norwegian, Romanian, Swedish
+Summary:    Experimental languages for Parrotfish Keyboard: Croatian, Danish, Finnish, Norwegian, Romanian, Swedish
+License:    Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
 BuildArch:  noarch
 Requires:   %{name}
 Requires:   parrotfish-dictionary-format = %{dictformat}
@@ -101,8 +105,9 @@ Obsoletes:  parrotfish-latin-languages-experimental < 1.0.1
 
 %description -n parrotfish-languages-latin-experimental
 Dictionaries for the Latin-script languages Parrotfish Keyboard supports
-less well, for lack of public text to build and test them: Danish, Finnish,
-Norwegian Bokmål, Romanian and Swedish. Installs Parrotfish Keyboard too.
+less well, for lack of public text to build and test them: Croatian,
+Danish, Finnish, Norwegian Bokmål, Romanian and Swedish. Installs
+Parrotfish Keyboard too.
 
 %if 0%{?_chum}
 Title: Parrotfish Latin (exp.)

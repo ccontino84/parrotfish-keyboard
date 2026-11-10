@@ -73,12 +73,13 @@ byte for byte the same either way; the RPM takes about 40 s instead of
 10 minutes. `pf rpm --from-source` builds them in the SDK, as a release build
 (no `prebuilt/`) does.
 
-The suite, for all 13 languages: typos in running text with the number row,
+The suite, for all 17 languages: typos in running text with the number row,
 uncertain taps and names mixed in; codes with a digit; words of another
 language in mixed texts; next words and keystrokes saved; real misspellings
 from your own lists. Each language is typed with a typical set of
 dictionaries loaded (en, it, de together; fr, es, en; the others with en)
-on QWERTY, or QWERTY (ÅÖÄ) for sv, da, nb, fi. `pf table [LABEL]` shows a
+on QWERTY; sv, da, nb and fi on `phone-nordic.layout` (QWERTY with å ö ä
+where their language keys put them), cs, sl and hr on QWERTZ. `pf table [LABEL]` shows a
 run's main numbers, one line per language; `pf compare` marks the cases
 one of the runs lacks or failed. Each run stores its wall and CPU time
 (per case too); the cases run longest first.
@@ -456,9 +457,10 @@ Sources (THIRD-PARTY.md has their licences):
 
 | Source | Taken from | Version |
 |---|---|---|
-| AOSP LatinIME wordlists (en_US, it, de; es, fr, pt_BR, pt_PT, nl, sv, da, nb, ro; fi) | `android.googlesource.com/platform/packages/inputmethods/LatinIME`, `dictionaries/` | commit `127336e9f29d69607eab55982324b210279ae8c5` (fetched 2026-10-08, the second group 2026-10-26, fi 2026-10-28; list versions 44–54, from 2014) |
-| Common Voice sentences | `github.com/common-voice/common-voice`, `server/data/<lang>/` | en, it, de: commit `a28a4cbf9188dafac0cb266f90bc9938f8418564` (2026-10-08); es, fr, pt, nl, sv-SE, da, nb-NO, ro, fi: commit `4c9c6a9c9b0561e029f1d65448edaf62947e12ec` (2026-10-26, fi 2026-10-28) |
-| Tatoeba sentences | `downloads.tatoeba.org/exports/per_language/<lang>/` | eng, ita, deu: 2026-10-08; spa, fra, por, nld, swe, dan, nob, ron: 2026-10-26; fin: 2026-10-28 |
+| AOSP LatinIME wordlists (en_US, it, de; es, fr, pt_BR, pt_PT, nl, sv, da, nb, ro; fi; pl, cs, hr) | `android.googlesource.com/platform/packages/inputmethods/LatinIME`, `dictionaries/` | commit `127336e9f29d69607eab55982324b210279ae8c5` (fetched 2026-10-08, the second group 2026-10-26, fi 2026-10-28, pl, cs and hr 2026-11-10; list versions 44–54, from 2014) |
+| Sloleks Morphological Lexicon of Slovene (the sl wordlist, `data/sloleks/`, CC BY-SA 4.0; `tools/data/sloleks-wordlist.py`; the AOSP sl list has 60k words and missed 7–10% of Slovenian text) | `hdl.handle.net/11356/2080` (CLARIN.SI), `Sloleks.3.1.zip` | 3.1 (2026-02), fetched 2026-11-10 |
+| Common Voice sentences | `github.com/common-voice/common-voice`, `server/data/<lang>/` | en, it, de: commit `a28a4cbf9188dafac0cb266f90bc9938f8418564` (2026-10-08); es, fr, pt, nl, sv-SE, da, nb-NO, ro, fi: commit `4c9c6a9c9b0561e029f1d65448edaf62947e12ec` (2026-10-26, fi 2026-10-28); pl, cs, sl, hr: commit `b24381ce7136f2524a1128cb605b49111f79dbea` (2026-11-09) |
+| Tatoeba sentences | `downloads.tatoeba.org/exports/per_language/<lang>/` | eng, ita, deu: 2026-10-08; spa, fra, por, nld, swe, dan, nob, ron: 2026-10-26; fin: 2026-10-28; pol, ces, slv, hrv: 2026-11-09 |
 | Jolla keyboard | Sailfish OS 5.2.0.17 RPMs `jolla-keyboard` (`PreeditHandler.qml`) and `jolla-keyboard-layout-western` | 0.10.4 |
 
 The counts come from `tools/data/count-words.py` and `count-pairs.py`; the
@@ -469,7 +471,9 @@ QWERTY gets a full-width apostrophe key at the end of the middle row and `"`
 on B in the symbol view; QWERTZ unchanged; AZERTY the apostrophe in place of
 ç after N, ç on C's long press (QWERTY ÅÖÄ, fi.qml, was dropped in 1.1:
 the language keys put å ö ä in its places); all get æ
-ă on A, õ œ on O, ș on S, ț on T.
+ă on A, õ œ on O, ș on S, ț on T, and the letters of Jolla's pl, cs and sl
+layouts (ą on A, ć č on C, ď đ on D, ę ě on E, ł on L, ń ň on N, ř on R,
+ś š on S, ť on T, ů on U, ż ź ž on Z).
 
 `tools/data/build-dict.py` turns an AOSP wordlist into a memory-mapped `.pfd`
 file (format: `engine/include/parrotfish/dictformat.h`). Besides the words,
@@ -484,10 +488,10 @@ goverment), not a new word. It reads, from
 
 | File | Content | Made by |
 |---|---|---|
-| `<lang>.rules` | spelling rules (`ae ä`, `e' è final`, `ş ș`); settings for the generators: `paradigm`/`paradigm-plain` (real verb forms that are not accent misspellings), `only-marks`, `no-misspellings`, `capitalised-nouns`, `min-freq` (drop the padding of a list; ro), `one-source` (a supplement word needs only N sightings in both corpora together; fi); word forms the list lacks, for the engine (`Dictionary::isWordForm`; fi): `suffix ENDING... [after=LETTERS] [drop=LETTERS]` (endings on a word: kännykkä → kännykkänsä; `drop`: talon → taloni) and `compound MIN PARTS` (up to PARTS words of at least MIN letters, and hyphenated parts). Such forms stand when typed (never autocorrected, and count for their language) but are never suggested | hand |
+| `<lang>.rules` | spelling rules (`ae ä`, `e' è final`, `ş ș`); settings for the generators: `paradigm`/`paradigm-plain` (real verb forms that are not accent misspellings), `only-marks`, `no-misspellings`, `capitalised-nouns`, `min-freq` (drop the padding of a list; ro), `one-source` (a supplement word needs only N sightings in both corpora together; fi, sl, hr); word forms the list lacks, for the engine (`Dictionary::isWordForm`; fi): `suffix ENDING... [after=LETTERS] [drop=LETTERS]` (endings on a word: kännykkä → kännykkänsä; `drop`: talon → taloni) and `compound MIN PARTS` (up to PARTS words of at least MIN letters, and hyphenated parts). Such forms stand when typed (never autocorrected, and count for their language) but are never suggested | hand |
 | `<lang>.lowercase` | abbreviations the list has only in capitals that are often typed in lower case (`OK`, `SMS`): the lowercase spelling is added as a word too, so typed that way it stands (optional) | hand |
 | `<lang>.shorthands` | chat shorthands the list lacks in lower case (`idk`, `btw`): added as words that stand when typed but are never suggested (optional) | hand |
-| `<lang>.keep` | plain spellings that are words of their own, never marked as misspellings (pt `forca`, ro `frumoasa`) | hand |
+| `<lang>.keep` | plain spellings that are words of their own, never marked as misspellings (pt `forca`, ro `frumoasa`); also words the supplement keeps even where another language's text uses them more (de `Tja`, en `wad`) | hand |
 | `<lang>.misspellings` | accent-less spellings that are not words (`perche` → `perché`) | `tools/data/find-accent-misspellings.py`, reviewed |
 | `<lang>.supplement` | common words missing from the AOSP list (`uomo`, `überhaupt`) | `tools/data/find-supplement.py`, reviewed |
 | `<lang>.boost` | everyday frequencies: raised for words common in Tatoeba (`I'm`, `guess`), lowered for written-text function words (`in`, `of`); rank mapping, see the script | `tools/data/find-boosts.py`, reviewed |
@@ -508,7 +512,8 @@ git diff data/rules                            # review before committing
 ```
 
 Languages: `en` (AOSP en_US), `it`, `de`, `es`, `fr`, `pt_BR`, `pt_PT`,
-`nl`, `sv`, `da`, `nb`, `ro`, `fi` (`data/CMakeLists.txt`). Both Portuguese
+`nl`, `sv`, `da`, `nb`, `ro`, `fi`, `pl`, `cs`, `sl`, `hr`
+(`data/CMakeLists.txt`). Both Portuguese
 lists use the same corpora (`pt`). What the keyboard and the settings know
 of each language (its name, Experimental, the accented letters of the
 long-press menus, its punctuation signs, the usual layout and the system

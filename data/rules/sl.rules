@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# Accented letters are accents: typed plain, they are restored (chat is
+# often typed without them).
+
+# find-supplement.py: there is little text in this language (Common Voice
+# and Tatoeba together under 0.3 MB), so a word form seen this many times in
+# both together is enough, as for fi.
+one-source 3
+
+# Word forms the list lacks (dictionary.h: isWordForm): typed, they stand;
+# they are never suggested. The list (Sloleks, data/sloleks/) has most
+# forms; these cover the rarer ones below its cut-off: uporablja →
+# uporabljam, uporabljaš, uporabljamo, uporabljate, uporabljava,
+# uporabljata, uporabljajo; najde → najdem, najdeš… Imperatives: sodeluj →
+# sodelujte, sodelujmo.
+suffix m š mo te va ta jo after=aei
+suffix te mo after=j

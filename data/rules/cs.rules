@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# Accented letters (á č ď é ě í ň ó ř š ť ú ů ý ž) are accents: typed
+# plain, they are restored (chat is often typed without them).
+
+# Word forms the list lacks (dictionary.h: isWordForm): typed, they stand;
+# they are never suggested. The list has the third person; the first and
+# second persons are rarer in its text: vítá → vítám, vítáme, vítáte;
+# souhlasí → souhlasím, souhlasíme, souhlasíte; říká → říkáš, pracuje →
+# pracuješ; podporuje → podporuji, podporuju (the stem podporuj + e).
+suffix m me te after=áí
+suffix š after=áíe
+suffix i u after=j drop=e
+# Imperatives: počkej → počkejte, počkejme (dělej, podívej: in the list).
+suffix te me after=j

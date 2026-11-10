@@ -137,7 +137,7 @@ def parse_summary(text, setting=None):
 
 
 # The 13 typing languages, and the texts of each (pt serves pt_BR and pt_PT).
-LANGUAGES = ["en", "it", "de", "fr", "es", "pt_BR", "pt_PT", "nl", "sv", "da", "nb", "fi", "ro"]
+LANGUAGES = ["en", "it", "de", "fr", "es", "pt_BR", "pt_PT", "nl", "sv", "da", "nb", "fi", "ro", "pl", "cs", "sl", "hr"]
 
 
 def language_group(lang, first=False):
@@ -145,7 +145,7 @@ def language_group(lang, first=False):
     typing languages; in the group's order, or `lang` first. The order
     matters (the typos use the first dictionary's letters): the cases of
     alpha88 keep theirs."""
-    for group in (["en", "it", "de"], ["fr", "es", "en"]):
+    for group in (["en", "it", "de"], ["fr", "es", "en"], ["hr", "sl", "en"]):
         if lang in group:
             return [lang] + [l for l in group if l != lang] if first else group
     return [lang, "en"]
@@ -153,8 +153,13 @@ def language_group(lang, first=False):
 
 def layout_of(lang):
     """The keyboard the suite types `lang` on: QWERTY (ÅÖÄ) for the Nordic
-    languages, else QWERTY (also for de and fr, as up to alpha88)."""
-    return "data/layouts/phone-nordic.layout" if lang in ("sv", "da", "nb", "fi") else PHONE_LAYOUT
+    languages, QWERTZ for cs, sl and hr (their national layouts), else
+    QWERTY (also for de and fr, as up to alpha88)."""
+    if lang in ("sv", "da", "nb", "fi"):
+        return "data/layouts/phone-nordic.layout"
+    if lang in ("cs", "sl", "hr"):
+        return "data/layouts/phone-qwertz.layout"
+    return PHONE_LAYOUT
 
 
 def text_of(src, lang):

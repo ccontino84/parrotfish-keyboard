@@ -8,9 +8,20 @@ SPDX-FileCopyrightText = "2008-2014 The Android Open Source Project"
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
+path = "data/sloleks/sl_wordlist.combined.gz"
+SPDX-FileCopyrightText = "Jaka Čibej, Kaja Gantar, Kaja Dobrovoljc, Simon Krek, Peter Holozan, Tomaž Erjavec, Miro Romih, Špela Arhar Holdt, Luka Krsnik, Marko Robnik-Šikonja (Sloleks 3.1); 2026 ccontino84"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+[[annotations]]
 path = "data/pairs/*.tsv.gz"
 SPDX-FileCopyrightText = "Mozilla Common Voice contributors, Tatoeba contributors"
 SPDX-License-Identifier = "LicenseRef-CC-BY-2.0-FR AND CC0-1.0"
+
+[[annotations]]
+path = "data/pairs/sl.tsv.gz"
+# After data/pairs/*.tsv.gz: the last matching annotation applies.
+SPDX-FileCopyrightText = "Kaja Dobrovoljc (Kres corpus n-grams 2.0), Mozilla Common Voice contributors, Tatoeba contributors"
+SPDX-License-Identifier = "CC-BY-SA-4.0 AND LicenseRef-CC-BY-2.0-FR AND CC0-1.0"
 
 [[annotations]]
 path = "tests/data/sentences-*.txt"

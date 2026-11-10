@@ -36,6 +36,7 @@ ye	108	cv 69 tatoeba 165
 twenty-five	107	cv 135 tatoeba 75
 brother-in-law	106	cv 113 tatoeba 76
 coloured	106	cv 235 tatoeba 35
+merchandise	106	cv 182 tatoeba 52
 practised	106	cv 180 tatoeba 50
 recognise	106	cv 87 tatoeba 102
 twenty-four	106	cv 96 tatoeba 91
@@ -50,6 +51,7 @@ long-time	104	cv 194 tatoeba 35
 offence	104	cv 122 tatoeba 49
 practising	104	cv 67 tatoeba 91
 colourful	103	cv 88 tatoeba 65
+kidnapping	103	cv 89 tatoeba 66
 non-native	103	cv 38 tatoeba 135
 non-profit	103	cv 234 tatoeba 24
 same-sex	103	cv 151 tatoeba 35
@@ -89,6 +91,7 @@ self-taught	98	cv 96 tatoeba 25
 sister-in-law	98	cv 45 tatoeba 57
 sub-Saharan	98	cv 39 tatoeba 69
 award-winning	97	cv 176 tatoeba 13
+fir	97	cv 56 tatoeba 41
 open-air	97	cv 87 tatoeba 25
 south-east	97	cv 209 tatoeba 10
 three-dimensional	97	cv 109 tatoeba 19
@@ -160,7 +163,6 @@ one-year	91	cv 124 tatoeba 7
 second-largest	91	cv 88 tatoeba 9
 small-scale	91	cv 67 tatoeba 12
 thirty-one	91	cv 32 tatoeba 27
-tis	91	cv 21 tatoeba 38
 twenty-eight	91	cv 44 tatoeba 19
 world-class	91	cv 40 tatoeba 20
 artefacts	90	cv 72 tatoeba 10
@@ -420,6 +422,7 @@ water-soluble	81	cv 35 tatoeba 5
 week-long	81	cv 30 tatoeba 6
 well-built	81	cv 17 tatoeba 10
 world-wide	81	cv 21 tatoeba 9
+absentia	80	cv 29 tatoeba 5
 back-up	80	cv 50 tatoeba 3
 brolly	80	cv 5 tatoeba 29
 callous	80	cv 7 tatoeba 23
@@ -592,6 +595,7 @@ one-room	77	cv 32 tatoeba 3
 orthopaedic	77	cv 17 tatoeba 6
 plug-in	77	cv 24 tatoeba 4
 polyamorous	77	cv 7 tatoeba 15
+pram	77	cv 10 tatoeba 10
 recognises	77	cv 32 tatoeba 3
 run-down	77	cv 16 tatoeba 6
 self-destruct	77	cv 15 tatoeba 7
@@ -605,11 +609,11 @@ three-month	77	cv 21 tatoeba 5
 trachoma	77	cv 10 tatoeba 10
 twenty-second	77	cv 9 tatoeba 11
 two-year-old	77	cv 19 tatoeba 5
+veg	77	cv 3 tatoeba 32
 well-behaved	77	cv 7 tatoeba 14
 all-female	76	cv 26 tatoeba 3
 anti-inflammatory	76	cv 26 tatoeba 3
 behind-the-scenes	76	cv 22 tatoeba 4
-boba	76	cv 6 tatoeba 14
 bullet-proof	76	cv 5 tatoeba 16
 catalogued	76	cv 26 tatoeba 3
 clean-up	76	cv 17 tatoeba 5

@@ -277,7 +277,6 @@ Oppeln
 Productions
 Frattini
 Labour
-Mose
 überwiegenden
 Barnier
 Calcio
@@ -291,7 +290,6 @@ Trail
 Irish
 Suco
 Dinamo
-Konsonanten
 Matches
 Neolithikum
 Neophyt
@@ -350,7 +348,6 @@ Mans
 Schul
 Doctor
 Elberfeld
-engl
 Frontex
 Katastralgemeinden
 March
@@ -454,7 +451,6 @@ Bishop
 Buri
 Collegium
 Fischereiabkommen
-Musculus
 Portikus
 Wildlife
 überlagert
@@ -507,7 +503,6 @@ Grasshopper
 Highland
 Howe
 Middle
-Nara
 Paz
 Ridge
 Rücküberweisung
@@ -635,7 +630,6 @@ Dupuis
 Eagle
 Earls
 Energiesicherheit
-Federer
 historique
 Jam
 Kane
@@ -767,7 +761,6 @@ Assoziierungsabkommen
 Bjerregaard
 Bowis
 Casting
-Chr
 Erweiterungsprozess
 Fork
 Kommissionsvorschlags
@@ -797,6 +790,7 @@ Cashman
 Command
 Complex
 Darts
+Dima
 Dong
 ern
 Gewände
@@ -1134,7 +1128,6 @@ Lonely
 makroökonomische
 Mennoniten
 nachhause
-Nuuk
 Parsons
 Plate
 Plenartagung
@@ -1242,7 +1235,6 @@ Lin
 Mighty
 Murcia
 Murten
-Nadu
 nee
 Oberlausitzer
 Oostlander
@@ -1547,6 +1539,7 @@ Käferart
 Lighthouse
 lächelten
 Maire
+Marija
 Maßnahmenpaket
 Mitgliedstaats
 mitkonsekratoren
@@ -2014,7 +2007,6 @@ Pfirsichbäumchen
 Philosophical
 Piscataquis
 Pitcher
-Pizarro
 Points
 Provan
 ratet

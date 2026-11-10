@@ -33,9 +33,10 @@ What it adds to Jolla's keyboard:
   and key fill, border, height, spacing, number row and hints can be
   changed, with a live preview.
 
-Languages: Dutch, English, French, German, Italian, Portuguese (Brazil and
-Portugal), Spanish. Experimental: Danish, Finnish, Norwegian Bokmål,
-Romanian, Swedish, in a separate package. There is too little public text
+Languages: Czech, Dutch, English, French, German, Italian, Polish,
+Portuguese (Brazil and Portugal), Slovenian, Spanish. Experimental:
+Croatian, Danish, Finnish, Norwegian Bokmål, Romanian, Swedish, in a
+separate package. There is too little public text
 to build and test these as well as the others; feedback from native speakers
 is welcome. The settings are translated into all of them.
 
@@ -49,9 +50,9 @@ is welcome. The settings are translated into all of them.
    download:
    - `parrotfish-keyboard-<version>` for your device: `aarch64` for most
      current devices, `armv7hl` for 32-bit installations;
-   - `parrotfish-languages-latin-<version>.noarch`: Dutch, English, French,
-     German, Italian, Portuguese, Spanish;
-   - for Danish, Finnish, Norwegian, Romanian or Swedish, also
+   - `parrotfish-languages-latin-<version>.noarch`: Czech, Dutch, English,
+     French, German, Italian, Polish, Portuguese, Slovenian, Spanish;
+   - for Croatian, Danish, Finnish, Norwegian, Romanian or Swedish, also
      `parrotfish-languages-latin-experimental-<version>.noarch`.
 2. In **Settings > Untrusted software**, turn on *Allow untrusted software*.
 3. Open the downloaded files (from the browser's downloads or the Files app)

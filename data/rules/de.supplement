@@ -176,6 +176,8 @@ Wurzeln	113	cv 679 tatoeba 83
 überlassen	113	cv 394 tatoeba 141
 Beweise	112	cv 298 tatoeba 144
 Heim	112	cv 269 tatoeba 152
+Orten	112	cv 794 tatoeba 58
+Runden	112	cv 683 tatoeba 62
 Vergnügen	112	cv 110 tatoeba 378
 Verwandten	112	cv 375 tatoeba 119
 Wüste	112	cv 259 tatoeba 157
@@ -230,6 +232,7 @@ Wende	109	cv 581 tatoeba 46
 überprüft	109	cv 370 tatoeba 70
 übersetzte	109	cv 385 tatoeba 70
 Freiwillige	108	cv 389 tatoeba 54
+Nerven	108	cv 110 tatoeba 208
 Schlimmste	108	cv 97 tatoeba 223
 Strecken	108	cv 738 tatoeba 29
 Strich	108	cv 148 tatoeba 153
@@ -241,6 +244,7 @@ Angestellten	107	cv 223 tatoeba 85
 Griechisch	107	cv 186 tatoeba 94
 Jugendlicher	107	cv 457 tatoeba 42
 Platten	107	cv 396 tatoeba 49
+Rasen	107	cv 122 tatoeba 168
 Räumen	107	cv 374 tatoeba 51
 Streben	107	cv 231 tatoeba 87
 Stufen	107	cv 318 tatoeba 58
@@ -269,6 +273,7 @@ Braut	105	cv 123 tatoeba 106
 Erben	105	cv 237 tatoeba 53
 Federn	105	cv 192 tatoeba 69
 Gedenken	105	cv 264 tatoeba 55
+Gehör	105	cv 192 tatoeba 73
 Gewinne	105	cv 172 tatoeba 74
 Reife	105	cv 338 tatoeba 37
 Schienen	105	cv 206 tatoeba 65
@@ -277,6 +282,7 @@ Versagen	105	cv 147 tatoeba 91
 ähnlichen	105	cv 436 tatoeba 29
 überarbeitet	105	cv 346 tatoeba 36
 überqueren	105	cv 100 tatoeba 129
+Alternativen	104	cv 394 tatoeba 30
 Angehörigen	104	cv 364 tatoeba 32
 Antrieb	104	cv 421 tatoeba 25
 Befehle	104	cv 135 tatoeba 78
@@ -287,6 +293,7 @@ Elend	104	cv 93 tatoeba 114
 Gefangene	104	cv 192 tatoeba 58
 Haupt	104	cv 235 tatoeba 48
 Kranke	104	cv 143 tatoeba 75
+Kreisen	104	cv 327 tatoeba 34
 Portugiesisch	104	cv 94 tatoeba 129
 Reihen	104	cv 454 tatoeba 25
 Spitzen	104	cv 375 tatoeba 29
@@ -351,8 +358,10 @@ Nichte	101	cv 137 tatoeba 48
 Niederländisch	101	cv 95 tatoeba 78
 Ober	101	cv 167 tatoeba 41
 Orangen	101	cv 60 tatoeba 109
+Socken	101	cv 32 tatoeba 215
 Strafen	101	cv 172 tatoeba 41
 Strahlen	101	cv 124 tatoeba 60
+Taube	101	cv 102 tatoeba 73
 Tropfen	101	cv 69 tatoeba 105
 Ungarisch	101	cv 56 tatoeba 117
 äußersten	101	cv 365 tatoeba 19
@@ -367,6 +376,7 @@ Kamm	100	cv 131 tatoeba 41
 Ketten	100	cv 168 tatoeba 34
 Leihe	100	cv 89 tatoeba 70
 Letzteres	100	cv 477 tatoeba 12
+Reisende	100	cv 117 tatoeba 50
 Reisenden	100	cv 152 tatoeba 38
 Schlachten	100	cv 179 tatoeba 35
 Schritten	100	cv 152 tatoeba 39
@@ -414,6 +424,7 @@ Predigt	98	cv 83 tatoeba 47
 Schein	98	cv 70 tatoeba 59
 Schneide	98	cv 57 tatoeba 79
 Skifahren	98	cv 65 tatoeba 66
+Stillstand	98	cv 130 tatoeba 32
 Wache	98	cv 68 tatoeba 65
 Wachen	98	cv 91 tatoeba 47
 Willens	98	cv 109 tatoeba 41
@@ -460,6 +471,7 @@ Eingreifen	96	cv 247 tatoeba 13
 Erliegen	96	cv 195 tatoeba 16
 Gläubiger	96	cv 151 tatoeba 21
 Husten	96	cv 31 tatoeba 94
+Klinge	96	cv 115 tatoeba 24
 Spalten	96	cv 205 tatoeba 15
 Verdächtigen	96	cv 56 tatoeba 49
 Werten	96	cv 211 tatoeba 14
@@ -483,7 +495,9 @@ Gunsten	95	cv 147 tatoeba 18
 Inneres	95	cv 109 tatoeba 22
 Intellektuellen	95	cv 109 tatoeba 25
 Kühler	95	cv 64 tatoeba 41
+Magnus	95	cv 169 tatoeba 16
 Nachhinein	95	cv 120 tatoeba 21
+Oliven	95	cv 99 tatoeba 27
 Proben	95	cv 169 tatoeba 16
 Schwäbischen	95	cv 226 tatoeba 11
 Sommers	95	cv 69 tatoeba 36
@@ -503,8 +517,10 @@ Außerirdische	94	cv 31 tatoeba 68
 Beitritt	94	cv 374 tatoeba 6
 Botanischen	94	cv 193 tatoeba 11
 Braten	94	cv 27 tatoeba 76
+Dorn	94	cv 102 tatoeba 22
 Eiserne	94	cv 102 tatoeba 21
 Radfahren	94	cv 45 tatoeba 48
+Ritt	94	cv 65 tatoeba 34
 Rudern	94	cv 78 tatoeba 27
 Schal	94	cv 21 tatoeba 93
 Schauspielern	94	cv 157 tatoeba 13
@@ -533,6 +549,7 @@ Feigen	93	cv 30 tatoeba 58
 Geheimer	93	cv 144 tatoeba 12
 Gelehrter	93	cv 62 tatoeba 31
 Highschool	93	cv 159 tatoeba 12
+Konsonanten	93	cv 64 tatoeba 27
 Liebenden	93	cv 62 tatoeba 31
 Nordischen	93	cv 278 tatoeba 7
 Nordrhein-Westfalen	93	cv 630 tatoeba 3
@@ -587,6 +604,7 @@ Tausenden	92	cv 87 tatoeba 18
 Tja	92	cv 40 tatoeba 38
 Unmögliche	92	cv 28 tatoeba 53
 Vierter	92	cv 349 tatoeba 4
+Vokale	92	cv 68 tatoeba 21
 Vorbehalte	92	cv 198 tatoeba 8
 beglückwünsche	92	cv 248 tatoeba 6
 Äußeres	92	cv 58 tatoeba 26
@@ -605,8 +623,10 @@ Fünfter	91	cv 247 tatoeba 5
 Grillen	91	cv 25 tatoeba 47
 Hexen	91	cv 57 tatoeba 21
 Inder	91	cv 52 tatoeba 23
+Initialen	91	cv 56 tatoeba 23
 Koreanisch	91	cv 22 tatoeba 59
 Lungen	91	cv 48 tatoeba 28
+Mose	91	cv 77 tatoeba 17
 Mühen	91	cv 34 tatoeba 35
 Schleifen	91	cv 111 tatoeba 12
 Schluck	91	cv 19 tatoeba 73
@@ -621,6 +641,7 @@ Verbündete	91	cv 101 tatoeba 12
 Volks	91	cv 137 tatoeba 10
 Vorgaben	91	cv 269 tatoeba 5
 Weib	91	cv 14 tatoeba 91
+engl	91	cv 62 tatoeba 19
 redest	91	cv 8 tatoeba 156
 ärgert	91	cv 12 tatoeba 105
 österreichischer	91	cv 216 tatoeba 6
@@ -632,12 +653,15 @@ redest	91	cv 8 tatoeba 156
 Abriss	90	cv 192 tatoeba 6
 Angriffen	90	cv 159 tatoeba 7
 Ausstieg	90	cv 131 tatoeba 8
+Barock	90	cv 348 tatoeba 3
 Begehren	90	cv 40 tatoeba 25
+Fasten	90	cv 31 tatoeba 37
 Flechten	90	cv 83 tatoeba 12
 Grabe	90	cv 32 tatoeba 35
 Kraut	90	cv 33 tatoeba 32
 Manuskripte	90	cv 127 tatoeba 8
 Mecklenburg-Vorpommern	90	cv 216 tatoeba 5
+Nara	90	cv 32 tatoeba 33
 Norwegisch	90	cv 27 tatoeba 43
 Obdachlosen	90	cv 37 tatoeba 28
 Paaren	90	cv 118 tatoeba 9
@@ -682,6 +706,7 @@ Minderjährige	89	cv 57 tatoeba 17
 Obdachlose	89	cv 58 tatoeba 17
 Persisch	89	cv 46 tatoeba 19
 Rumänisch	89	cv 29 tatoeba 29
+Rügen	89	cv 121 tatoeba 7
 Ungeduld	89	cv 24 tatoeba 41
 Verborgenen	89	cv 62 tatoeba 14
 Verbündeter	89	cv 50 tatoeba 17
@@ -720,8 +745,12 @@ Gläubige	88	cv 68 tatoeba 11
 Hochdeutsch	88	cv 43 tatoeba 19
 Hunderten	88	cv 52 tatoeba 16
 Klänge	88	cv 52 tatoeba 14
+Kontroversen	88	cv 158 tatoeba 5
 Krähe	88	cv 15 tatoeba 54
+Laila	88	cv 13 tatoeba 61
 Leibe	88	cv 23 tatoeba 31
+Magister	88	cv 104 tatoeba 8
+Morden	88	cv 66 tatoeba 11
 S-Bahn	88	cv 161 tatoeba 5
 Scherze	88	cv 11 tatoeba 67
 Schreie	88	cv 24 tatoeba 30
@@ -750,6 +779,7 @@ Besteck	87	cv 21 tatoeba 29
 Betrunkenen	87	cv 21 tatoeba 32
 Booten	87	cv 170 tatoeba 4
 Coronavirus	87	cv 7 tatoeba 89
+Fristen	87	cv 138 tatoeba 5
 Geschworenen	87	cv 35 tatoeba 20
 Hausen	87	cv 97 tatoeba 7
 Intellektueller	87	cv 32 tatoeba 19
@@ -761,6 +791,7 @@ Neugeborenen	87	cv 52 tatoeba 12
 Pumpen	87	cv 99 tatoeba 7
 Scheide	87	cv 28 tatoeba 22
 Schwäbische	87	cv 60 tatoeba 11
+Sinnen	87	cv 22 tatoeba 28
 Slowenisch	87	cv 21 tatoeba 32
 Staunen	87	cv 18 tatoeba 36
 Stillschweigen	87	cv 60 tatoeba 10
@@ -807,12 +838,14 @@ Kühne	86	cv 51 tatoeba 10
 Leck	86	cv 34 tatoeba 16
 Mahl	86	cv 20 tatoeba 27
 Mexiko-Stadt	86	cv 80 tatoeba 7
+Revolutionär	86	cv 51 tatoeba 10
 Röntgen	86	cv 32 tatoeba 18
 U-Bahn-Station	86	cv 54 tatoeba 11
 Verlass	86	cv 8 tatoeba 67
 Verschulden	86	cv 33 tatoeba 16
 Vorgesetzte	86	cv 34 tatoeba 17
 Wacker	86	cv 73 tatoeba 8
+Wu	86	cv 71 tatoeba 8
 appelliere	86	cv 135 tatoeba 4
 ersuche	86	cv 99 tatoeba 6
 hilfst	86	cv 3 tatoeba 178
@@ -861,6 +894,7 @@ Teilzeit	85	cv 31 tatoeba 15
 Trommeln	85	cv 56 tatoeba 8
 Umdenken	85	cv 59 tatoeba 8
 Unterhaus	85	cv 90 tatoeba 5
+Vokal	85	cv 63 tatoeba 8
 beneide	85	cv 8 tatoeba 62
 erwähne	85	cv 37 tatoeba 13
 geschneit	85	cv 5 tatoeba 89
@@ -897,6 +931,7 @@ Kanarischen	84	cv 93 tatoeba 4
 Kurdisch	84	cv 27 tatoeba 14
 Kürbis	84	cv 15 tatoeba 25
 Liebste	84	cv 6 tatoeba 61
+Mt	84	cv 51 tatoeba 8
 Neu-Delhi	84	cv 37 tatoeba 11
 Plattdeutsch	84	cv 26 tatoeba 14
 Schaufeln	84	cv 28 tatoeba 14
@@ -928,6 +963,7 @@ wär's	84	cv 4 tatoeba 106
 übersteigen	84	cv 41 tatoeba 9
 übertreibt	84	cv 9 tatoeba 43
 überträgt	84	cv 73 tatoeba 5
+Anklagen	83	cv 41 tatoeba 8
 Anklicken	83	cv 55 tatoeba 6
 Aussprachen	83	cv 113 tatoeba 3
 Beichte	83	cv 24 tatoeba 15
@@ -945,6 +981,8 @@ Hurra	83	cv 17 tatoeba 18
 Jahrtausende	83	cv 34 tatoeba 10
 Jawohl	83	cv 17 tatoeba 18
 Klopapier	83	cv 12 tatoeba 27
+Kollektiv	83	cv 60 tatoeba 6
+Krimi	83	cv 30 tatoeba 12
 Lehr	83	cv 80 tatoeba 4
 Lichtes	83	cv 28 tatoeba 12
 Limes	83	cv 82 tatoeba 4
@@ -960,6 +998,7 @@ Schleusen	83	cv 80 tatoeba 4
 Shampoo	83	cv 10 tatoeba 35
 Spritzen	83	cv 24 tatoeba 13
 Tapferen	83	cv 16 tatoeba 22
+Turnen	83	cv 89 tatoeba 4
 Vollzeit	83	cv 26 tatoeba 12
 Wanken	83	cv 20 tatoeba 17
 Wirbellose	83	cv 57 tatoeba 6
@@ -989,12 +1028,14 @@ zögere	83	cv 9 tatoeba 36
 übriggeblieben	83	cv 16 tatoeba 22
 üppig	83	cv 43 tatoeba 8
 Apps	82	cv 38 tatoeba 8
+Artemis	82	cv 32 tatoeba 9
 Auffinden	82	cv 45 tatoeba 6
 Barsch	82	cv 20 tatoeba 15
 Baskisch	82	cv 11 tatoeba 25
 Blitze	82	cv 17 tatoeba 17
 Bude	82	cv 13 tatoeba 20
 Ceres	82	cv 30 tatoeba 10
+Domino	82	cv 27 tatoeba 10
 Einband	82	cv 19 tatoeba 16
 Geigen	82	cv 18 tatoeba 15
 Geschwätz	82	cv 8 tatoeba 33
@@ -1007,11 +1048,14 @@ Leiste	82	cv 17 tatoeba 17
 Lernende	82	cv 16 tatoeba 18
 Liechtensteiner	82	cv 28 tatoeba 10
 Luxemburger	82	cv 91 tatoeba 3
+Maxime	82	cv 30 tatoeba 9
 Minderjährigen	82	cv 55 tatoeba 5
 Mindeste	82	cv 47 tatoeba 6
 Missfallen	82	cv 18 tatoeba 16
 Nachfragen	82	cv 33 tatoeba 9
 Nachhauseweg	82	cv 7 tatoeba 38
+Nadu	82	cv 25 tatoeba 11
+Nomen	82	cv 29 tatoeba 10
 Pam	82	cv 31 tatoeba 9
 Pessimist	82	cv 6 tatoeba 46
 Ruh	82	cv 10 tatoeba 27
@@ -1051,6 +1095,7 @@ Gipfeln	81	cv 51 tatoeba 5
 Haiku	81	cv 15 tatoeba 15
 Isländisch	81	cv 12 tatoeba 21
 Kain	81	cv 17 tatoeba 15
+Kapseln	81	cv 64 tatoeba 4
 Karre	81	cv 10 tatoeba 23
 Kram	81	cv 7 tatoeba 33
 Kriegsgefangenen	81	cv 74 tatoeba 3
@@ -1058,19 +1103,23 @@ Ladegerät	81	cv 13 tatoeba 18
 Lawine	81	cv 18 tatoeba 13
 Make-up	81	cv 16 tatoeba 15
 Matten	81	cv 49 tatoeba 5
+Nasser	81	cv 25 tatoeba 10
 Netflix	81	cv 62 tatoeba 4
 Nickerchen	81	cv 3 tatoeba 77
 Ogawa	81	cv 14 tatoeba 18
+Postmoderne	81	cv 37 tatoeba 6
 Quere	81	cv 15 tatoeba 17
 Reisender	81	cv 21 tatoeba 12
 Rutschen	81	cv 21 tatoeba 11
 Schwellen	81	cv 47 tatoeba 5
 Schärfste	81	cv 56 tatoeba 4
 Seliger	81	cv 33 tatoeba 7
+Tagalog	81	cv 25 tatoeba 10
 Theke	81	cv 11 tatoeba 22
 Ungehorsam	81	cv 16 tatoeba 14
 Verschlucken	81	cv 28 tatoeba 9
 Vierteln	81	cv 32 tatoeba 7
+Vokalen	81	cv 24 tatoeba 10
 Vorletzter	81	cv 44 tatoeba 5
 Wow	81	cv 19 tatoeba 12
 Wunderlich	81	cv 45 tatoeba 5
@@ -1111,12 +1160,14 @@ Eingeborenen	80	cv 17 tatoeba 12
 Einkaufsliste	80	cv 15 tatoeba 14
 Energiewende	80	cv 21 tatoeba 10
 Ex-Mann	80	cv 12 tatoeba 18
+Federer	80	cv 51 tatoeba 4
 Fortbestehen	80	cv 48 tatoeba 4
 Fresse	80	cv 9 tatoeba 24
 Geringeres	80	cv 25 tatoeba 8
 Geschirrspüler	80	cv 12 tatoeba 18
 Hieb	80	cv 14 tatoeba 14
 Holländisch	80	cv 15 tatoeba 13
+Hr	80	cv 31 tatoeba 7
 Inka	80	cv 39 tatoeba 5
 Instagram	80	cv 19 tatoeba 11
 Jacken	80	cv 18 tatoeba 11
@@ -1126,6 +1177,8 @@ Kegeln	80	cv 26 tatoeba 8
 Kenji	80	cv 13 tatoeba 15
 Kronos	80	cv 23 tatoeba 9
 Litauisch	80	cv 17 tatoeba 12
+Musculus	80	cv 66 tatoeba 3
+Nuuk	80	cv 31 tatoeba 7
 Pazifische	80	cv 27 tatoeba 7
 Pflügen	80	cv 12 tatoeba 16
 Philosophieren	80	cv 16 tatoeba 13
@@ -1139,6 +1192,7 @@ Schwur	80	cv 11 tatoeba 19
 Shinjuku	80	cv 14 tatoeba 14
 Spätzle	80	cv 8 tatoeba 23
 Takeshi	80	cv 17 tatoeba 11
+Tuba	80	cv 46 tatoeba 4
 Tätowierungen	80	cv 19 tatoeba 11
 Unbewussten	80	cv 24 tatoeba 9
 Unschuldiger	80	cv 14 tatoeba 14
@@ -1176,13 +1230,15 @@ Ausbleiben	79	cv 25 tatoeba 7
 Awaren	79	cv 24 tatoeba 7
 Barmherzigen	79	cv 21 tatoeba 8
 Basteln	79	cv 16 tatoeba 10
+Bikini	79	cv 13 tatoeba 14
 Brexit	79	cv 12 tatoeba 15
 Bub	79	cv 10 tatoeba 17
 Bulgarisch	79	cv 18 tatoeba 9
 Centauri	79	cv 5 tatoeba 32
 Chatten	79	cv 25 tatoeba 7
+Chr	79	cv 4 tatoeba 44
 Country-Musik	79	cv 57 tatoeba 3
-Dima	79	cv 4 tatoeba 43
+Elan	79	cv 28 tatoeba 6
 Eros	79	cv 33 tatoeba 5
 Flugreisen	79	cv 19 tatoeba 9
 Flugs	79	cv 13 tatoeba 13
@@ -1205,6 +1261,7 @@ Luxemburgisch	79	cv 14 tatoeba 12
 Mariechen	79	cv 8 tatoeba 22
 Matsch	79	cv 13 tatoeba 13
 Medusa	79	cv 12 tatoeba 15
+Numerus	79	cv 27 tatoeba 6
 Olymp	79	cv 20 tatoeba 8
 Omas	79	cv 6 tatoeba 29
 Pilgern	79	cv 56 tatoeba 3
@@ -1256,6 +1313,7 @@ Abi	78	cv 18 tatoeba 8
 Albanisch	78	cv 12 tatoeba 12
 Anraten	78	cv 35 tatoeba 4
 Aperitif	78	cv 14 tatoeba 10
+Auster	78	cv 17 tatoeba 8
 Auszubildenden	78	cv 36 tatoeba 4
 Berufstätige	78	cv 29 tatoeba 5
 Brauen	78	cv 19 tatoeba 7
@@ -1266,9 +1324,11 @@ Ey	78	cv 16 tatoeba 9
 Fetzen	78	cv 10 tatoeba 15
 Flotten	78	cv 50 tatoeba 3
 Fährte	78	cv 12 tatoeba 12
+Garn	78	cv 19 tatoeba 7
 Gesandte	78	cv 28 tatoeba 5
 Hinterbliebenen	78	cv 50 tatoeba 3
 Hundertjährigen	78	cv 46 tatoeba 3
+Idealist	78	cv 8 tatoeba 19
 Kaviar	78	cv 7 tatoeba 20
 Klingonisch	78	cv 4 tatoeba 38
 Kolibri	78	cv 11 tatoeba 12
@@ -1280,10 +1340,12 @@ Narita	78	cv 6 tatoeba 25
 Ness	78	cv 19 tatoeba 7
 Patentante	78	cv 14 tatoeba 10
 Pils	78	cv 17 tatoeba 9
+Pizarro	78	cv 19 tatoeba 7
 Polieren	78	cv 20 tatoeba 7
 Preußisch	78	cv 37 tatoeba 4
 Pulli	78	cv 5 tatoeba 27
 Salami	78	cv 9 tatoeba 17
+Salbe	78	cv 10 tatoeba 15
 Saures	78	cv 11 tatoeba 14
 Schirme	78	cv 11 tatoeba 12
 Schnitzen	78	cv 16 tatoeba 9
@@ -1324,6 +1386,7 @@ verabscheue	78	cv 4 tatoeba 36
 überziehen	78	cv 27 tatoeba 5
 überzugehen	78	cv 21 tatoeba 7
 Abklingen	77	cv 19 tatoeba 6
+Ader	77	cv 21 tatoeba 6
 Aomori	77	cv 21 tatoeba 6
 Aufrufe	77	cv 38 tatoeba 3
 Aufschnitt	77	cv 13 tatoeba 9
@@ -1332,6 +1395,7 @@ Befragten	77	cv 25 tatoeba 5
 Chlorophyll	77	cv 16 tatoeba 7
 Dritteln	77	cv 37 tatoeba 3
 Feng	77	cv 32 tatoeba 4
+Flirt	77	cv 9 tatoeba 13
 Furchen	77	cv 24 tatoeba 5
 Genaugenommen	77	cv 11 tatoeba 11
 Herrchen	77	cv 5 tatoeba 23
@@ -1348,6 +1412,7 @@ Nan	77	cv 43 tatoeba 3
 Nichten	77	cv 10 tatoeba 13
 Nordmazedonien	77	cv 41 tatoeba 3
 Pfui	77	cv 8 tatoeba 14
+Renn	77	cv 9 tatoeba 14
 Schlüsseln	77	cv 12 tatoeba 10
 Schneckentempo	77	cv 10 tatoeba 12
 Schnorcheln	77	cv 14 tatoeba 8
@@ -1405,6 +1470,7 @@ Auserwählte	76	cv 12 tatoeba 8
 Auszubildende	76	cv 25 tatoeba 4
 Außenstehenden	76	cv 24 tatoeba 4
 Avocado	76	cv 6 tatoeba 17
+Baltische	76	cv 34 tatoeba 3
 Bosheit	76	cv 3 tatoeba 35
 Couscous	76	cv 10 tatoeba 11
 Delegierte	76	cv 27 tatoeba 4
@@ -1425,17 +1491,21 @@ Janni	76	cv 3 tatoeba 36
 Julianischen	76	cv 35 tatoeba 3
 Kita	76	cv 33 tatoeba 3
 Klatsche	76	cv 7 tatoeba 14
+Konsument	76	cv 34 tatoeba 3
 Kurmandschi	76	cv 18 tatoeba 6
 Kölsch	76	cv 22 tatoeba 5
+Lau	76	cv 21 tatoeba 5
 Mami	76	cv 5 tatoeba 22
 Messern	76	cv 12 tatoeba 9
 Mitwirkenden	76	cv 32 tatoeba 3
 Musk	76	cv 8 tatoeba 13
+Pauken	76	cv 18 tatoeba 6
 Remus	76	cv 25 tatoeba 4
 Rinnen	76	cv 34 tatoeba 3
 Schaben	76	cv 12 tatoeba 8
 Schadenfreude	76	cv 10 tatoeba 10
 Schaff	76	cv 10 tatoeba 10
+Scotch	76	cv 9 tatoeba 12
 Serviette	76	cv 5 tatoeba 20
 Shan	76	cv 35 tatoeba 3
 Skilaufen	76	cv 11 tatoeba 9
@@ -1510,7 +1580,6 @@ Kleingedruckte	75	cv 4 tatoeba 20
 Knicken	75	cv 16 tatoeba 5
 Kuli	75	cv 3 tatoeba 28
 Lern	75	cv 5 tatoeba 16
-Marija	75	cv 28 tatoeba 3
 Miyazaki	75	cv 23 tatoeba 4
 Mutterschaftsurlaub	75	cv 18 tatoeba 5
 Omega	75	cv 29 tatoeba 3
@@ -1524,6 +1593,7 @@ Schwerverletzte	75	cv 17 tatoeba 5
 Seligen	75	cv 20 tatoeba 4
 Sturheit	75	cv 5 tatoeba 17
 Taut	75	cv 14 tatoeba 6
+Trog	75	cv 17 tatoeba 5
 Umfallen	75	cv 5 tatoeba 17
 Ying	75	cv 22 tatoeba 4
 Yuki	75	cv 17 tatoeba 5
@@ -1554,7 +1624,9 @@ Analogon	74	cv 25 tatoeba 3
 Ansprachen	74	cv 25 tatoeba 3
 Armutszeugnis	74	cv 15 tatoeba 5
 Außenstehende	74	cv 24 tatoeba 3
+Bastard	74	cv 15 tatoeba 5
 Besserwisser	74	cv 3 tatoeba 23
+Diagonalen	74	cv 25 tatoeba 3
 Dschinn	74	cv 17 tatoeba 4
 Erhängen	74	cv 17 tatoeba 4
 Fortschreiten	74	cv 19 tatoeba 4
@@ -1563,6 +1635,7 @@ Fünfer	74	cv 5 tatoeba 15
 Harvard-Universität	74	cv 23 tatoeba 3
 Helios	74	cv 25 tatoeba 3
 Jolly	74	cv 15 tatoeba 5
+Kitsch	74	cv 17 tatoeba 4
 Lebewohl	74	cv 4 tatoeba 17
 Macher	74	cv 23 tatoeba 3
 Omelett	74	cv 4 tatoeba 18
@@ -1609,7 +1682,6 @@ Goliath	73	cv 20 tatoeba 3
 Inlineskaten	73	cv 4 tatoeba 16
 Kathmandu	73	cv 22 tatoeba 3
 Niederdeutsch	73	cv 20 tatoeba 3
-Oka	73	cv 19 tatoeba 3
 Patt	73	cv 19 tatoeba 3
 Sachiko	73	cv 3 tatoeba 19
 Scheuer	73	cv 16 tatoeba 4

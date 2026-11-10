@@ -1,8 +1,10 @@
 # SPDX-FileCopyrightText: 2026 ccontino84
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
-# Dictionaries: <lang>:<AOSP wordlist name>
-set(PARROTFISH_LANGUAGES en:en_US it:it de:de es:es fr:fr pt_BR:pt_BR pt_PT:pt_PT nl:nl sv:sv da:da nb:nb ro:ro fi:fi)
+# Dictionaries: <lang>:<wordlist>, the wordlist's name in aosp/ (the AOSP
+# LatinIME lists) or its folder/name (sl: sloleks/sl, from the Sloleks
+# lexicon, CC BY-SA 4.0: tools/data/sloleks-wordlist.py).
+set(PARROTFISH_LANGUAGES en:en_US it:it de:de es:es fr:fr pt_BR:pt_BR pt_PT:pt_PT nl:nl sv:sv da:da nb:nb ro:ro fi:fi pl:pl cs:cs sl:sloleks/sl hr:hr)
 
 # The inputs of each dictionary, and a fingerprint of all of them
 # (inputs.sha256): `tools/pf rpm` puts dictionaries built on the PC in
@@ -15,6 +17,11 @@ foreach(entry ${PARROTFISH_LANGUAGES})
     string(REPLACE ":" ";" parts ${entry})
     list(GET parts 0 lang)
     list(GET parts 1 src)
+    if(src MATCHES "/")
+        set(wordlist_${lang} ${CMAKE_CURRENT_SOURCE_DIR}/${src}_wordlist.combined.gz)
+    else()
+        set(wordlist_${lang} ${CMAKE_CURRENT_SOURCE_DIR}/aosp/${src}_wordlist.combined.gz)
+    endif()
     # Optional, hand-written (not every language has one).
     set(manual)
     foreach(kind manual-misspellings lowercase shorthands)
@@ -23,7 +30,7 @@ foreach(entry ${PARROTFISH_LANGUAGES})
         endif()
     endforeach()
     set(inputs_${lang}
-        ${CMAKE_CURRENT_SOURCE_DIR}/aosp/${src}_wordlist.combined.gz
+        ${wordlist_${lang}}
         ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.rules
         ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.respellings
         ${CMAKE_CURRENT_SOURCE_DIR}/rules/${lang}.misspellings
@@ -77,7 +84,7 @@ foreach(entry ${PARROTFISH_LANGUAGES})
     add_custom_command(
         OUTPUT ${out}
         COMMAND ${Python3_EXECUTABLE} -I ${PROJECT_SOURCE_DIR}/tools/data/build-dict.py
-                ${lang} ${CMAKE_CURRENT_SOURCE_DIR}/aosp/${src}_wordlist.combined.gz
+                ${lang} ${wordlist_${lang}}
                 ${CMAKE_CURRENT_SOURCE_DIR}/rules ${out}
                 --pairs ${CMAKE_CURRENT_SOURCE_DIR}/pairs/${lang}.tsv.gz
         DEPENDS ${PROJECT_SOURCE_DIR}/tools/data/build-dict.py ${inputs_${lang}}

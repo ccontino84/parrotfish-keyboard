@@ -13,6 +13,7 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 | `engine/tools/pf-query.cpp` | try the corrector by hand |
 | `engine/TUNING.md` | why the engine's settings have their values |
 | `docs/prior-art.md` | the published method behind each engine feature |
+| `docs/adding-a-language.md` | a contributor's guide to adding a typing language |
 | `plugin/` | QML module `Parrotfish.Keyboard` (Qt 5.6): the engine as the list model Jolla's `PreeditHandler` expects |
 | `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
 | `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press), picked by `/apps/parrotfish-keyboard/layout`; the language keys (the typing language's `extra-keys`) placed by `placeLanguageKeys` there; optional key backgrounds in `parrotfish/` |
@@ -520,11 +521,8 @@ long-press menus, its punctuation signs, the usual layout and the system
 languages it stands for) is in `data/rules/LANG.language`
 (`tools/data/language-list.py` documents the lines), installed as one
 `languages.json` and read by the plugin's `Languages` (a QML singleton for
-the layout and the settings). Adding one: its AOSP list in `data/aosp/`, a
-`.rules` and a `.language` file, the test sentences
-(`tests/data/README.md`), an entry in `data/CMakeLists.txt` and in `ALL`,
-`cvdir` and `tatoeba` of `tools/data/regenerate-lists.sh`,
-then regenerate and review the lists. The lists of sv, da and nb come
+the layout and the settings). Adding one: [docs/adding-a-language.md](docs/adding-a-language.md).
+The lists of sv, da and nb come
 from little corpus text (Common Voice has 0.1–1 MB for them), so their
 next-word data is thin. Finnish has many forms per word, and the AOSP
 list misses about 10% of the words of Tatoeba text: the supplement (with

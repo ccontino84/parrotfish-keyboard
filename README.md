@@ -113,6 +113,7 @@ rm -r ~/.local/share/parrotfish-keyboard
 
 Building, testing, and how it works inside: [DEVELOPMENT.md](DEVELOPMENT.md).
 The published methods behind each engine feature: [docs/prior-art.md](docs/prior-art.md).
+Adding a typing language: [docs/adding-a-language.md](docs/adding-a-language.md).
 Third-party data and its licences: [THIRD-PARTY.md](THIRD-PARTY.md).
 
 This project is developed with AI assistance.

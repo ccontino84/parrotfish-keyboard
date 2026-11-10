@@ -134,6 +134,9 @@ InputHandler {
     property Item _probeLast: null
     property string _probeFirstAt: ""
     property string _probeLastAt: ""
+    // The layout's keysRevision when the keys were read (our layouts bump it
+    // when keys change letters in place: the language keys).
+    property int _probeRevision: -1
     property Item _spacebar: null
     // The spacebar's text item, switched to styled text so that the language
     // can be shown in italics; null if it can't be found.
@@ -805,7 +808,8 @@ InputHandler {
         var started = Date.now()
         if (layout === _probeLayout && _probeFirstAt !== ""
                 && _geometry(_probeFirst, layout) === _probeFirstAt
-                && _geometry(_probeLast, layout) === _probeLastAt) {
+                && _geometry(_probeLast, layout) === _probeLastAt
+                && (layout.keysRevision === undefined || layout.keysRevision === _probeRevision)) {
             predictionEngine.log("layout unchanged, checked in " + (Date.now() - started) + " ms")
             return
         }
@@ -831,6 +835,7 @@ InputHandler {
             _probeLast = items[items.length - 1]
             _probeFirstAt = _geometry(_probeFirst, layout)
             _probeLastAt = _geometry(_probeLast, layout)
+            _probeRevision = layout.keysRevision !== undefined ? layout.keysRevision : -1
         } else {
             _probeLayout = null
         }

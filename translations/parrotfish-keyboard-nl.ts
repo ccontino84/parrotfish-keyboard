@@ -194,6 +194,19 @@
         <source>Long-press the spacebar to switch too</source>
         <translation>Lang drukken op de spatiebalk wisselt ook</translation>
     </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Taaltoetsen</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Letters met accent die de taal volgen waarin je typt</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Uit</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishSettings</name>

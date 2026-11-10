@@ -24,6 +24,12 @@ Rectangle {
     readonly property Item key: parent
     readonly property Item layout: key && key.parent ? key.parent.parent : null
     property bool functionLook: false
+    // A language key (LetterKey's group): its fill is 0.07 stronger than
+    // the letter keys' (the step from the plain background to Jolla's
+    // spacebar), shown whatever the key fill.
+    property bool groupLook: false
+    readonly property real _groupExtra: groupLook ? 0.07 : 0
+    readonly property bool shown: styled || groupLook
     readonly property string fillStyle: functionLook ? "flat" : _setting("keyFill", ["none", "flat", "shaded"], "none")
     readonly property string borderStyle: functionLook ? "none" : _setting("keyBorder", ["none", "line", "raised"], "none")
     readonly property bool styled: fillStyle !== "none" || borderStyle !== "none"
@@ -32,8 +38,8 @@ Rectangle {
     readonly property int borderWidth: Math.max(1, Math.round(Theme.pixelRatio))
     // Lighter at the top: with light text (dark ambience) more alpha is lighter.
     readonly property real _shadeSign: key.palette.colorScheme === Theme.LightOnDark ? 1 : -1
-    readonly property real _topAlpha: Math.max(0, strengths.fill + _shadeSign * strengths.shade / 2)
-    readonly property real _bottomAlpha: Math.max(0, strengths.fill - _shadeSign * strengths.shade / 2)
+    readonly property real _topAlpha: Math.max(0, strengths.fill + _groupExtra + _shadeSign * strengths.shade / 2)
+    readonly property real _bottomAlpha: Math.max(0, strengths.fill + _groupExtra - _shadeSign * strengths.shade / 2)
     // The rim of "raised" is drawn by a shader; plain border if it fails.
     // Qt 5 can report Error with an empty log for a shader that works.
     readonly property bool _rimShader: raised && !(rim.status === ShaderEffect.Error && rim.log !== "")
@@ -57,7 +63,7 @@ Rectangle {
         return result
     }
 
-    visible: styled
+    visible: shown
     z: -2   // below the label and Jolla's pressed highlight
     // The layout's gap all round (Jolla's spacebar and function keys get the
     // same, BottomRow); Jolla's paddings in other layouts.
@@ -72,7 +78,7 @@ Rectangle {
     }
     radius: geometry.keyRadius
     color: key.pressed ? Theme.rgba(key.palette.highlightBackgroundColor, 0.6)
-                       : Theme.rgba(key.palette.primaryColor, strengths.fill)
+                       : Theme.rgba(key.palette.primaryColor, strengths.fill + _groupExtra)
     gradient: !key.pressed && strengths.shade !== 0 ? shadeGradient : null
     border.width: !key.pressed && !_rimShader && strengths.border > 0 ? borderWidth : 0
     border.color: Theme.rgba(key.palette.primaryColor, strengths.border)

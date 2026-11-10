@@ -15,7 +15,7 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 | `docs/prior-art.md` | the published method behind each engine feature |
 | `plugin/` | QML module `Parrotfish.Keyboard` (Qt 5.6): the engine as the list model Jolla's `PreeditHandler` expects |
 | `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
-| `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press; QWERTY (ÅÖÄ): Jolla's fi keys), picked by `/apps/parrotfish-keyboard/layout`; optional key backgrounds in `parrotfish/` |
+| `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press), picked by `/apps/parrotfish-keyboard/layout`; the language keys (the typing language's `extra-keys`) placed by `placeLanguageKeys` there; optional key backgrounds in `parrotfish/` |
 | `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`; the list comes from the plugin's `Languages`) |
 | `cli/` | `parrotfish`, a command that shows what the keyboard is learning (reads `learning.db`) |
 | `translations/` | the settings' translations, `parrotfish-keyboard-<lang>.ts` (qsTr; the context is the QML file's name, a second argument tells gendered words apart: `qsTr("Off", "learning")`); new texts: `lupdate settings -ts translations/*.ts`, then translate them (Qt Linguist or by hand). Built with the SDK's Qt 5 `lrelease` (none on the PC: skipped), installed in `/usr/share/translations`, loaded by the plugin |
@@ -288,8 +288,7 @@ likeliest first, the others only for words that can still compete
 (`searchMargin`) (settings page: `settings/ParrotfishLanguages.qml`).
 The keys: one layout in Jolla's list per
 arrangement (`layouts/layouts_parrotfish.conf`: Auto (QWERTY), Auto
-(QWERTZ), Auto (AZERTY), Auto (QWERTY ÅÖÄ), the last as Jolla's Finnish and
-Swedish layouts), each `layouts/parrotfish/ParrotfishKeyboard.qml` with its
+(QWERTZ), Auto (AZERTY)), each `layouts/parrotfish/ParrotfishKeyboard.qml` with its
 `arrangementKey` (`layouts/parrotfish*.qml`); any typing language on each.
 Jolla's keyboard switches between the enabled ones (spacebar long press,
 swipe); they are switched on in Jolla's own Keyboards page, as any other
@@ -317,7 +316,16 @@ other rows (`75` = the default, "Smaller", with smaller digits; `100`;
 any value from 40 works). `/apps/parrotfish-keyboard/sticky` (`true` = the
 default, `false` = Jolla's rows: `withoutSticky()`) and `sticky-side`
 (`right`, `left`): the sticky key, which keeps the sign last picked from its
-long press (`sticky-key`). `/apps/parrotfish-keyboard/long-press-hint`
+long press (`sticky-key`). `/apps/parrotfish-keyboard/language-keys`
+(`false` = the default, `true`) and `language-keys-side` (`right`, `left`):
+keys for the typing language's most used accented letters (`extra-keys` in
+`LANG.language`): three at the row ends where Jolla's QWERTZ has ü / ö ä
+(each arrangement's `slots`, `withLanguageKeys()`), at the row starts on the
+left (`placeLanguageKeys()`), plus up to two more at the end of the number
+row and in the sticky key's place when that key is off; they follow the
+language of the last word the keyboard was sure of, show only if an enabled language has them, and
+narrow Shift and Backspace, not the letters. The sticky key always stays
+outermost. `/apps/parrotfish-keyboard/long-press-hint`
 (`dot` = the default, `off`): a dot on keys with a long-press menu. The
 settings section (`settings/ParrotfishSettings.qml`) opens two pages,
 Typing and Look & feel; Look & feel opens the keyboard, with a field to try it in that it doesn't learn from
@@ -459,7 +467,8 @@ derived lists from `find-boosts.py`, `find-supplement.py` and
 language, random) are left out of all counts. Jolla's layouts, as adapted:
 QWERTY gets a full-width apostrophe key at the end of the middle row and `"`
 on B in the symbol view; QWERTZ unchanged; AZERTY the apostrophe in place of
-ç after N, ç on C's long press; QWERTY (ÅÖÄ) is fi.qml unchanged; all get æ
+ç after N, ç on C's long press (QWERTY ÅÖÄ, fi.qml, was dropped in 1.1:
+the language keys put å ö ä in its places); all get æ
 ă on A, õ œ on O, ș on S, ț on T.
 
 `tools/data/build-dict.py` turns an AOSP wordlist into a memory-mapped `.pfd`

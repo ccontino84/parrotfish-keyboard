@@ -194,6 +194,19 @@
         <source>Long-press the spacebar to switch too</source>
         <translation>Și apăsarea lungă pe bara de spațiu schimbă tastatura</translation>
     </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Taste de limbă</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Litere cu diacritice care urmează limba în care scrii</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Dezactivate</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishSettings</name>

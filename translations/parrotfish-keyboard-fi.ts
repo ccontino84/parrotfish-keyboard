@@ -194,6 +194,19 @@
         <source>Long-press the spacebar to switch too</source>
         <translation>Myös välilyöntinäppäimen pitkä painallus vaihtaa</translation>
     </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Kielinäppäimet</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Tarkkeelliset kirjaimet sen kielen mukaan, jolla kirjoitat</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Pois</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishSettings</name>

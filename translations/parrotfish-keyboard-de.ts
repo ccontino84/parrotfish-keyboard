@@ -194,6 +194,19 @@
         <source>Long-press the spacebar to switch too</source>
         <translation>Auch langes Drücken der Leertaste wechselt</translation>
     </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Sprachtasten</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Buchstaben mit Akzent, die der Sprache folgen, in der geschrieben wird</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Aus</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishSettings</name>

@@ -194,6 +194,19 @@
         <source>Long-press the spacebar to switch too</source>
         <translation>Langt trykk på mellomromstasten bytter også</translation>
     </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Språktaster</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Bokstaver med aksent som følger språket du skriver på</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Av</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishSettings</name>

@@ -48,6 +48,9 @@ public:
     Q_INVOKABLE QString toggled(const QStringList &codes, const QString &code) const;
     // The accented letters of the languages' long-press menus, each once.
     Q_INVOKABLE QString menuLetters(const QStringList &codes) const;
+    // The letters of the language's language keys (3, in the order of their
+    // places: LANG.language's extra-keys), or "" if it has none.
+    Q_INVOKABLE QString extraKeys(const QString &code) const;
     // The comma's and the period's long-press menus: {comma, period}.
     // Jolla's (: , ; and ! . ?) plus the languages' signs.
     Q_INVOKABLE QVariantMap punctuation(const QStringList &codes) const;
@@ -57,7 +60,7 @@ public:
 
 private:
     struct Language {
-        QString code, name, menuLetters, commaExtra, periodBefore, periodAfter;
+        QString code, name, menuLetters, extraKeys, commaExtra, periodBefore, periodAfter;
         bool experimental = false, fallback = false;
         QStringList systemLanguages;
     };

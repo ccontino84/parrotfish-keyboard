@@ -194,6 +194,19 @@
         <source>Long-press the spacebar to switch too</source>
         <translation>Un appui long sur la barre d'espace change aussi de clavier</translation>
     </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Touches de langue</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Lettres accentuées qui suivent la langue dans laquelle vous écrivez</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Désactivées</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishSettings</name>

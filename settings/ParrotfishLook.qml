@@ -27,6 +27,18 @@ Page {
     }
 
     ConfigurationValue {
+        id: languageKeysConfig
+        key: "/apps/parrotfish-keyboard/language-keys"
+        defaultValue: false
+    }
+
+    ConfigurationValue {
+        id: languageKeysSideConfig
+        key: "/apps/parrotfish-keyboard/language-keys-side"
+        defaultValue: "right"
+    }
+
+    ConfigurationValue {
         id: numberRowConfig
         key: "/apps/parrotfish-keyboard/number-row"
         defaultValue: true
@@ -137,6 +149,38 @@ Page {
                         onClicked: {
                             numberRowHeightConfig.value = "75"
                             numberRowConfig.value = true
+                        }
+                    }
+                }
+            }
+
+            // Two keys, one choice: language-keys (on, off) and
+            // language-keys-side. The keys (ParrotfishKeyboard.qml) are shown
+            // only if a typing language has such letters.
+            ComboBox {
+                readonly property bool on: String(languageKeysConfig.value) === "true"
+
+                width: parent.width
+                label: qsTr("Language keys")
+                description: qsTr("Accented letters that follow the language you type")
+                currentIndex: !on ? 0 : languageKeysSideConfig.value === "left" ? 2 : 1
+                menu: ContextMenu {
+                    MenuItem {
+                        text: qsTr("Off", "language keys")
+                        onClicked: languageKeysConfig.value = false
+                    }
+                    MenuItem {
+                        text: qsTr("Right")
+                        onClicked: {
+                            languageKeysSideConfig.value = "right"
+                            languageKeysConfig.value = true
+                        }
+                    }
+                    MenuItem {
+                        text: qsTr("Left")
+                        onClicked: {
+                            languageKeysSideConfig.value = "left"
+                            languageKeysConfig.value = true
                         }
                     }
                 }

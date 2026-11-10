@@ -5,7 +5,7 @@
 // the engine picks the language, this only gives the keys. Each of
 // Jolla's entries (layouts_parrotfish.conf: parrotfish.qml,
 // parrotfish_qwertz.qml...) is this with its `arrangementKey` (qwerty,
-// qwertz, azerty, nordic: arrangements.js), so that Jolla's keyboard
+// qwertz, azerty: arrangements.js), so that Jolla's keyboard
 // switches between them. The keys can have subtle backgrounds
 // (KeyBackground.qml, dconf /apps/parrotfish-keyboard/key-fill, key-border). The
 // rows can be shorter than Jolla's (/apps/parrotfish-keyboard/key-height in
@@ -37,7 +37,26 @@ KeyboardLayout {
     // The keys: set by each entry's file.
     property string arrangementKey: "qwerty"
     readonly property var arrangement: Arrangements.get(arrangementKey, numberRowOn,
-                                                        stickySideConfig.value, stickyOn)
+                                                        stickySideConfig.value, stickyOn,
+                                                        languageKeysOn, languageKeysSideConfig.value)
+
+    // Language keys (since 1.1; the Look page's "Language
+    // keys"): three keys whose letters are those of the typing language
+    // (LANG.language's extra-keys), tinted (KeyBackground's groupLook). They follow the language the handler remembers after
+    // each committed word it is sure of (last-language), so they change
+    // only between words; a language without such letters (English) leaves
+    // them as they are. Shown only if a typing language has such letters.
+    property string groupLanguage: ""
+    readonly property string groupLetters: groupLanguage !== "" ? Languages.extraKeys(groupLanguage) : ""
+    property bool _anyGroupLanguage: false
+    // language-keys: false (the default: they narrow the letters on QWERTY
+    // and AZERTY), true.
+    readonly property bool languageKeysOn: String(languageKeysConfig.value) === "true"
+                                           && _anyGroupLanguage
+    // Bumped when the keys' letters change without a rebuild, so that the
+    // handler reads the keys again (its quick check only compares places).
+    property int keysRevision: 0
+    onGroupLettersChanged: keysRevision++
     // Shown on the spacebar until the engine knows the language.
     readonly property string arrangementName: arrangement.name
 
@@ -77,13 +96,14 @@ KeyboardLayout {
     }
     readonly property int keyGap: Math.max(1, Math.round(keyHeight * _gapShare))
 
-    // A sticky key in the bottom letter row (QWERTZ, QWERTY (ÅÖÄ)): Shift and
-    // Backspace take Jolla's narrow width, as on its layouts with more keys
-    // there (tr.qml, uk.qml), so that the letters keep their width.
+    // A sticky key or a language key in the bottom letter row (QWERTZ,
+    // QWERTY with the language keys): Shift and Backspace take
+    // Jolla's narrow width, as on its layouts with more keys there (tr.qml,
+    // uk.qml), so that the letters keep their width.
     readonly property bool _narrowEnds: {
         var last = arrangement.rows[arrangement.rows.length - 1].keys
         for (var i = 0; i < last.length; ++i)
-            if (last[i].sticky)
+            if (last[i].sticky || last[i].slot !== undefined)
                 return true
         return false
     }
@@ -96,7 +116,50 @@ KeyboardLayout {
 
     onArrangementChanged: _build()
     onAccentLettersChanged: _build()
-    Component.onCompleted: _build()
+    Component.onCompleted: {
+        _updateGroupLanguage()
+        _build()
+    }
+
+    function _updateGroupLanguage() {
+        var codes = Languages.selected(languagesConfig.value)
+        var claim = []
+        for (var i = 0; i < codes.length; ++i)
+            if (Languages.extraKeys(codes[i]) !== "")
+                claim.push(codes[i])
+        var last = String(lastLanguageConfig.value)
+        if (claim.indexOf(last) >= 0)
+            groupLanguage = last
+        else if (claim.indexOf(groupLanguage) < 0)
+            groupLanguage = claim.length > 0 ? claim[0] : ""
+        _anyGroupLanguage = claim.length > 0
+    }
+
+    // The letter of a language key: its place in the language's letters
+    // (0-2 the group, 3 the number row's last key, 4 the sticky key's place;
+    // "-": none, the key types `fallback`). Its long-press menus are those of
+    // the key that has the letter among its accents (è: E's).
+    function _slotLetter(slot, fallback) {
+        var c = groupLetters.charAt(slot)
+        return c !== "" && c !== "-" ? c : fallback
+    }
+    function _bindSlot(key, slot, fallback) {
+        key.group = Qt.binding(function() { return parrotfishLayout._slotLetter(slot, "") !== "" })
+        key.caption = Qt.binding(function() { return parrotfishLayout._slotLetter(slot, fallback) })
+        key.captionShifted = Qt.binding(function() {
+            var c = parrotfishLayout._slotLetter(slot, fallback)
+            var upper = c.toUpperCase()
+            return upper.length === 1 ? upper : c   // ß stays ß
+        })
+        var menus = function() {
+            return Arrangements.menusOf(parrotfishLayout.arrangement,
+                                        parrotfishLayout._slotLetter(slot, ""), parrotfishLayout.accentLetters)
+        }
+        key.accents = Qt.binding(function() { return menus().a })
+        key.accentsShifted = Qt.binding(function() { return menus().A })
+        key.moreAccents = Qt.binding(function() { return menus().more })
+        key.moreAccentsShifted = Qt.binding(function() { return menus().moreShifted })
+    }
     // Jolla's updateSizes() sets keyHeight and then sizes the rows from it:
     // replacing the value here, as it is set, makes the rows use ours. Its
     // value only counts as set if it changes: so scale first, then size.
@@ -123,6 +186,20 @@ KeyboardLayout {
         id: languagesConfig
         key: "/apps/parrotfish-keyboard/languages"   // "en it de"; "": the system language
         defaultValue: ""
+        onValueChanged: parrotfishLayout._updateGroupLanguage()
+    }
+
+    ConfigurationValue {
+        id: lastLanguageConfig
+        key: "/apps/parrotfish-keyboard/last-language"   // written by the handler
+        defaultValue: ""
+        onValueChanged: parrotfishLayout._updateGroupLanguage()
+    }
+
+    ConfigurationValue {
+        id: languageKeysConfig
+        key: "/apps/parrotfish-keyboard/language-keys"   // false, true
+        defaultValue: false
     }
 
     ConfigurationValue {
@@ -137,6 +214,11 @@ KeyboardLayout {
         defaultValue: true
     }
 
+    ConfigurationValue {
+        id: languageKeysSideConfig
+        key: "/apps/parrotfish-keyboard/language-keys-side"   // right, left
+        defaultValue: "right"
+    }
     ConfigurationValue {
         id: stickySideConfig
         key: "/apps/parrotfish-keyboard/sticky-side"   // right, left
@@ -203,6 +285,12 @@ KeyboardLayout {
 
     BottomRow {}
 
+    Timer {
+        id: _relayoutLater
+        interval: 0
+        onTriggered: parrotfishLayout.updateSizes()
+    }
+
     LongPressMenu {
         keyboardItem: typeof keyboard !== "undefined" ? keyboard : null
         layout: parrotfishLayout
@@ -262,6 +350,8 @@ KeyboardLayout {
                 })
                 if (k.fit)
                     key.fontSizeMode = Text.HorizontalFit
+                if (k.slot !== undefined)
+                    _bindSlot(key, k.slot, k.fb || "")
                 if (k.sticky) {
                     key.sticky = true
                     key.caption = Qt.binding(function() { return parrotfishLayout.stickySign })
@@ -282,6 +372,7 @@ KeyboardLayout {
             created.push(keys)
         }
         _createdKeys = created
+        keysRevision++
         for (i = 0; i < _numberKeys.length; ++i) {
             _numberKeys[i].parent = null
             _numberKeys[i].destroy()
@@ -289,14 +380,24 @@ KeyboardLayout {
         var numbers = []
         var digits = arrangement.numbers || []
         for (i = 0; i < digits.length; ++i) {
-            numbers.push(letterKeyComponent.createObject(numberRow, {
+            var digit = letterKeyComponent.createObject(numberRow, {
                 "caption": digits[i].c, "captionShifted": digits[i].s,
                 "symView": digits[i].y, "symView2": digits[i].y2, "numberRow": true
-            }))
+            })
+            if (digits[i].slot !== undefined) {
+                digit.fontSizeMode = Text.HorizontalFit
+                _bindSlot(digit, digits[i].slot, digits[i].fb || "")
+            }
+            numbers.push(digit)
         }
         _numberKeys = numbers
         _placeNumbers()
         updateSizes()
+        // Shift's and Backspace's widths (_narrowEnds) are bindings that can
+        // update after this updateSizes() has placed the keys (seen when the
+        // language keys are turned off: keys overlapped until the next
+        // resize). Place them again once all bindings have their values.
+        _relayoutLater.restart()
     }
 
     function _placeNumbers() {
@@ -304,7 +405,7 @@ KeyboardLayout {
         if (n === 0)
             return
         var gap = avoidanceWidth > 0 ? avoidanceWidth : 0
-        var half = Math.floor(n / 2)
+        var half = arrangement.numbersSplit !== undefined ? arrangement.numbersSplit : Math.floor(n / 2)
         var w = (numberRow.width - gap) / n
         for (var i = 0; i < n; ++i) {
             var key = _numberKeys[i]

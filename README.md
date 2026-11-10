@@ -23,8 +23,10 @@ What it adds to Jolla's keyboard:
   only on the phone. One Backspace undoes a correction, and one you keep
   undoing stops. Four strengths, from Strong (also fixes real words typed by
   mistake) to Off.
-- **Four arrangements:** QWERTY, QWERTZ, AZERTY and QWERTY with å ö ä, for
-  any language. A dot marks the keys with more characters; a long press
+- **Three arrangements:** QWERTY, QWERTZ and AZERTY, for any language.
+  Optional language keys put the most used accented letters of the
+  language you are typing on keys of their own (å ö ä for Swedish, ł ę ż
+  for Polish), and change with it. A dot marks the keys with more characters; a long press
   shows your languages' accents first, and the sticky key keeps the last
   sign you picked.
 - **Customizable, and at home on Sailfish:** it looks like Jolla's keyboard,

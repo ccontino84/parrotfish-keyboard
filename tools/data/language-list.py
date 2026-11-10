@@ -16,6 +16,15 @@ LANG.language, one setting a line (# comments):
   system-languages CODES     system language codes that mean this one
                              (nb: no nn; pt_PT: pt)
   fallback                   the language when the system's has none (en)
+  extra-keys ABC [N [S]]     its language keys: ABC the 3 letters at the
+                             end of the top row (A) and of the middle row
+                             (B C), as Jolla's de.qml ü / ö ä; N the last
+                             key of the number row (it ì, de ß: as on the
+                             PC keyboards); S the sticky key's place while
+                             the sticky key is off. "-" or left out: that
+                             key keeps its sign (% or '). No line: the
+                             language leaves the keys as they are (en, nl).
+                             In languages.json: 5 characters, "-" for none.
 
 usage: language-list.py RULES_DIR OUT.json LANG...
 """
@@ -25,7 +34,7 @@ import sys
 
 def read(path):
     out = {"name": "", "experimental": False, "menuLetters": "", "commaExtra": "", "periodBefore": "",
-           "periodAfter": "", "systemLanguages": [], "fallback": False}
+           "periodAfter": "", "systemLanguages": [], "fallback": False, "extraKeys": ""}
     with open(path, encoding="utf-8") as f:
         for n, line in enumerate(f, 1):
             line = line.strip()
@@ -40,6 +49,11 @@ def read(path):
             elif key in ("menu-letters", "comma-extra", "period-before", "period-after"):
                 parts = key.split("-")
                 out[parts[0] + parts[1].capitalize()] = value.replace(" ", "")
+            elif key == "extra-keys":
+                parts = value.split()
+                if len(parts[0]) != 3 or len(parts) > 3 or any(len(p) != 1 for p in parts[1:]):
+                    sys.exit(f"{path}:{n}: extra-keys needs 3 letters, then up to 2 single ones")
+                out["extraKeys"] = parts[0] + "".join(parts[1:]).ljust(2, "-")
             elif key == "system-languages":
                 out["systemLanguages"] = value.split()
             else:

@@ -63,6 +63,7 @@ QStringList KeyboardInfo::settingKeys()
     return {QStringLiteral("languages"), QStringLiteral("autocorrect"),
             QStringLiteral("learning"), QStringLiteral("number-row"), QStringLiteral("number-row-height"),
             QStringLiteral("sticky"), QStringLiteral("sticky-side"), QStringLiteral("swipe"),
+            QStringLiteral("language-keys"), QStringLiteral("language-keys-side"),
             QStringLiteral("key-height"), QStringLiteral("key-height-landscape"), QStringLiteral("key-gap"),
             QStringLiteral("key-fill"), QStringLiteral("key-border"), QStringLiteral("long-press-hint"),
             QStringLiteral("space-before-punctuation")};

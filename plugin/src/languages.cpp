@@ -40,6 +40,7 @@ Languages::Languages(QObject *parent)
         l.experimental = o.value(QStringLiteral("experimental")).toBool();
         l.fallback = o.value(QStringLiteral("fallback")).toBool();
         l.menuLetters = o.value(QStringLiteral("menuLetters")).toString();
+        l.extraKeys = o.value(QStringLiteral("extraKeys")).toString();
         l.commaExtra = o.value(QStringLiteral("commaExtra")).toString();
         l.periodBefore = o.value(QStringLiteral("periodBefore")).toString();
         l.periodAfter = o.value(QStringLiteral("periodAfter")).toString();
@@ -128,6 +129,12 @@ QString Languages::menuLetters(const QStringList &codes) const
                 if (!out.contains(c))
                     out += c;
     return out;
+}
+
+QString Languages::extraKeys(const QString &code) const
+{
+    const Language *l = find(code);
+    return l ? l->extraKeys : QString();
 }
 
 QVariantMap Languages::punctuation(const QStringList &codes) const

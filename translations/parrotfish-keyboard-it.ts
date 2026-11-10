@@ -194,6 +194,19 @@
         <source>Long-press the spacebar to switch too</source>
         <translation>Puoi cambiarla anche tenendo premuta la barra spaziatrice</translation>
     </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Tasti della lingua</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Lettere accentate che seguono la lingua in cui scrivi</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Disattivati</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishSettings</name>

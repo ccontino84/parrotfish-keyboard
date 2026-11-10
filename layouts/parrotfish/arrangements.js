@@ -10,11 +10,11 @@
 // s shifted, y and y2 the two symbol pages, a and A accents (A shifted;
 // not "as": Qt 5.6 reads that as a keyword in QML files), fit = shrink
 // the caption to the key's width, sticky = the sticky key (stickySigns:
-// it types the sign last picked from its long press; QWERTZ and QWERTY (ÅÖÄ)
-// get one in the bottom letter row, placeSticky).
+// it types the sign last picked from its long press; QWERTZ, and QWERTY
+// with the language keys, get one in the bottom letter row, placeSticky).
 //
-// The keys come from en.qml (QWERTY), de.qml (QWERTZ), fr.qml (AZERTY) and
-// fi.qml (QWERTY (ÅÖÄ): sv.qml has the same letters) of jolla-keyboard
+// The keys come from en.qml (QWERTY), de.qml (QWERTZ) and fr.qml (AZERTY) of
+// jolla-keyboard
 // 0.10.4 (Jolla Ltd., BSD-3-Clause, notice below).
 // QWERTY changes: a
 // full-width apostrophe key ends the middle row (no half-key indent, as on
@@ -26,7 +26,9 @@
 // spacebar) and is the sticky key; ç is on C's long press, and typed as c
 // the engine puts it back. As the sticky key may type something else, the
 // symbol pages have ' and " where en.qml has them: ' on B, " on C's second
-// page (fr.qml's ÷ there is dropped). QWERTY (ÅÖÄ): fi.qml's keys.
+// page (fr.qml's ÷ there is dropped). (QWERTY (ÅÖÄ), from fi.qml, was
+// dropped in 1.1: QWERTY with Swedish, Finnish,
+// Danish or Norwegian on gets å ö ä or their letters at the same places.)
 // All: more accents for the typing languages, from Jolla's da/fr/pt/ro
 // layouts (A: æ ă, O: õ œ, S: ș, T: ț).
 
@@ -62,7 +64,12 @@
 
 var arrangements = {
     // Without the sticky key (withoutSticky): these signs, as on en.qml.
-    "qwerty": { "name": "QWERTY", "noSticky": {"k": ["!", "¡"], "l": ["?", "¿"], "m": [":", "~"]}, "rows": [
+    // With the language keys (withLanguageKeys): one at the end of the top
+    // row, two at the end of the middle row, which loses the sticky key (it
+    // goes to the last row, as on QWERTZ; the first new key takes its signs).
+    "qwerty": { "name": "QWERTY", "noSticky": {"k": ["!", "¡"], "l": ["?", "¿"], "m": [":", "~"]},
+                "slots": [{"row": 0, "y": "%", "y2": "‰"}, {"row": 1, "y": "?", "y2": "¿"},
+                          {"row": 1, "y": "\"", "y2": "·"}], "rows": [
         { "split": 5, "keys": [
             {"c": "q", "s": "Q", "y": "1", "y2": "€"},
             {"c": "w", "s": "W", "y": "2", "y2": "£"},
@@ -109,7 +116,7 @@ var arrangements = {
             {"c": "i", "s": "I", "y": "8", "y2": ">", "a": "îïiìí", "A": "ÎÏIÌÍ"},
             {"c": "o", "s": "O", "y": "9", "y2": "[", "a": "öòóôõoøœ", "A": "ÖÒÓÔÕOØŒ"},
             {"c": "p", "s": "P", "y": "0", "y2": "]"},
-            {"c": "ü", "s": "Ü", "y": "%", "y2": "‰", "fit": true}
+            {"c": "ü", "s": "Ü", "y": "%", "y2": "‰", "fit": true, "slot": 0}
         ] },
         { "split": 5, "keys": [
             {"c": "a", "s": "A", "y": "*", "y2": "`", "a": "aäàáãâåæă", "A": "AÄÀÁÃÂÅÆĂ"},
@@ -121,8 +128,8 @@ var arrangements = {
             {"c": "j", "s": "J", "y": ")", "y2": "}"},
             {"c": "k", "s": "K", "y": "\"", "y2": "°"},
             {"c": "l", "s": "L", "y": "~", "y2": "·"},
-            {"c": "ö", "s": "Ö", "y": "!", "y2": "¡"},
-            {"c": "ä", "s": "Ä", "y": "?", "y2": "¿"}
+            {"c": "ö", "s": "Ö", "y": "!", "y2": "¡", "fit": true, "slot": 1},
+            {"c": "ä", "s": "Ä", "y": "?", "y2": "¿", "fit": true, "slot": 2}
         ] },
         { "split": 5, "keys": [
             {"c": "y", "s": "Y", "y": "@", "y2": "«", "a": "ýy¥", "A": "ÝY¥"},
@@ -134,8 +141,13 @@ var arrangements = {
             {"c": "m", "s": "M", "y": ":", "y2": "×"}
         ] }
     ] },
-    // Without the sticky key: a plain apostrophe key (withoutSticky).
-    "azerty": { "name": "AZERTY", "stickyStays": true, "rows": [
+    // Without the sticky key: a plain apostrophe key (withoutSticky). With
+    // the language keys: one at the end of each letter row (in the last
+    // row before the sticky key, which stays the outermost), and with the
+    // sticky key off a fourth one in its place (withLanguageKeyInLastRow).
+    "azerty": { "name": "AZERTY", "stickyStays": true,
+                "slots": [{"row": 0, "y": "%", "y2": "‰"}, {"row": 1, "y": "\"", "y2": "·"},
+                          {"row": 2, "y": "…", "y2": "–"}], "rows": [
         { "split": 5, "keys": [
             {"c": "a", "s": "A", "y": "1", "y2": "€", "a": "aâàæäáãåă", "A": "AÂÀÆÄÁÃÅĂ"},
             {"c": "z", "s": "Z", "y": "2", "y2": "£"},
@@ -169,43 +181,6 @@ var arrangements = {
             {"c": "n", "s": "N", "y": ";", "y2": "„", "a": "nñ", "A": "NÑ"},
             {"c": "'", "s": "'", "y": ":", "y2": "‰", "sticky": true}
         ] }
-    ] },
-    "nordic": { "name": "QWERTY (ÅÖÄ)", "stickyInLastRow": true, "rows": [
-        { "split": 5, "keys": [
-            {"c": "q", "s": "Q", "y": "1", "y2": "€"},
-            {"c": "w", "s": "W", "y": "2", "y2": "£"},
-            {"c": "e", "s": "E", "y": "3", "y2": "$", "a": "éeèëê€", "A": "ÉEÈËÊ€"},
-            {"c": "r", "s": "R", "y": "4", "y2": "¥"},
-            {"c": "t", "s": "T", "y": "5", "y2": "₹", "a": "þtŧț", "A": "ÞTŦȚ"},
-            {"c": "y", "s": "Y", "y": "6", "y2": "¤", "a": "y¥", "A": "Y¥"},
-            {"c": "u", "s": "U", "y": "7", "y2": "<", "a": "üùuûú", "A": "ÜÙUÛÚ"},
-            {"c": "i", "s": "I", "y": "8", "y2": ">", "a": "îïiìí", "A": "ÎÏIÌÍ"},
-            {"c": "o", "s": "O", "y": "9", "y2": "[", "a": "öøòóôoõœ", "A": "ÖØÒÓÔOÕŒ"},
-            {"c": "p", "s": "P", "y": "0", "y2": "]"},
-            {"c": "å", "s": "Å", "y": "%", "y2": "‰", "fit": true}
-        ] },
-        { "split": 5, "keys": [
-            {"c": "a", "s": "A", "y": "*", "y2": "`", "a": "aäåæàáâãă", "A": "AÄÅÆÀÁÂÃĂ"},
-            {"c": "s", "s": "S", "y": "#", "y2": "^", "a": "sšßș$", "A": "SŠẞȘ$"},
-            {"c": "d", "s": "D", "y": "+", "y2": "|", "a": "ðdđ", "A": "ÐDĐ"},
-            {"c": "f", "s": "F", "y": "-", "y2": "_"},
-            {"c": "g", "s": "G", "y": "=", "y2": "§"},
-            {"c": "h", "s": "H", "y": "(", "y2": "{"},
-            {"c": "j", "s": "J", "y": ")", "y2": "}"},
-            {"c": "k", "s": "K", "y": "\"", "y2": "°"},
-            {"c": "l", "s": "L", "y": "~", "y2": "·"},
-            {"c": "ö", "s": "Ö", "y": "!", "y2": "¡", "a": "øö", "A": "ØÖ"},
-            {"c": "ä", "s": "Ä", "y": "?", "y2": "¿", "a": "æä", "A": "ÆÄ"}
-        ] },
-        { "split": 5, "keys": [
-            {"c": "z", "s": "Z", "y": "@", "y2": "«", "a": "zž", "A": "ZŽ"},
-            {"c": "x", "s": "X", "y": "&", "y2": "»"},
-            {"c": "c", "s": "C", "y": "/", "y2": "÷", "a": "çcč", "A": "ÇCČ"},
-            {"c": "v", "s": "V", "y": "\\", "y2": "“"},
-            {"c": "b", "s": "B", "y": "'", "y2": "”"},
-            {"c": "n", "s": "N", "y": ";", "y2": "„", "a": "ñnŋ", "A": "ÑNŊ"},
-            {"c": "m", "s": "M", "y": ":", "y2": "×"}
-        ] }
     ] }
 }
 
@@ -217,7 +192,8 @@ var stickySigns = "'\"-_@#/"
 // The sticky key on the right or the left of its row (agreed 2026-10-31:
 // in the same row, so that no key gets smaller; "right" is the default,
 // "left" suits left hands or keeps it away from Backspace). QWERTY has it
-// at the end of the middle row, AZERTY after N. QWERTZ and QWERTY (ÅÖÄ) have
+// at the end of the middle row, AZERTY after N. QWERTZ (and QWERTY with the
+// language keys) have
 // no apostrophe key: theirs goes in the bottom letter row, whose end keys
 // are wider than the letters and leave room; it has no symbol-view sign of
 // its own there, so it types its sign in the symbol view too. On the left,
@@ -244,18 +220,9 @@ function placeSticky(a, side) {
                 keys.push(key)
             }
         } else if (left && at > 0) {
-            var signs = []
-            for (i = 0; i < keys.length; ++i)
-                signs.push([keys[i].y, keys[i].y2])
-            keys.unshift(keys.splice(at, 1)[0])
-            for (i = 0; i < keys.length; ++i) {
-                var copy = {}
-                for (var p in keys[i])
-                    copy[p] = keys[i][p]
-                copy.y = signs[i][0]
-                copy.y2 = signs[i][1]
-                keys[i] = copy
-            }
+            var moved = keys.slice()
+            moved.unshift(moved.splice(at, 1)[0])
+            keys = keepSigns(keys, moved)
             split += 1
         }
         rows.push({"split": split, "keys": keys})
@@ -264,7 +231,7 @@ function placeSticky(a, side) {
 }
 
 // `a` without the sticky key (/apps/parrotfish-keyboard/sticky false,
-// agreed 2026-11-04): Jolla's rows back. QWERTZ and QWERTY (ÅÖÄ) only get
+// agreed 2026-11-04): Jolla's rows back. QWERTZ only gets
 // it from placeSticky; QWERTY drops it from the middle row, whose signs
 // become en.qml's (noSticky: caption → [y, y2]); AZERTY keeps a plain '
 // key (stickyStays: French needs it, and fr.qml has one too).
@@ -292,14 +259,187 @@ function withoutSticky(a) {
     return {"name": a.name, "rows": rows}
 }
 
+// Language keys (/apps/parrotfish-keyboard/language-keys, since 1.1): three keys whose letters follow the typing language (the
+// layout sets them: a key's `slot` is the index in the language's
+// extra-keys, LANG.language). QWERTZ has them where Jolla's de.qml has
+// ü / ö ä; QWERTY and AZERTY get them at their `slots`. Off: QWERTZ loses
+// those keys, so its letters are wider, and becomes QWERTY's rows with Z
+// and Y swapped; QWERTY and AZERTY are as without the setting.
+function withLanguageKeys(a) {
+    if (!a.slots)
+        return a
+    var rows = []
+    for (var r = 0; r < a.rows.length; ++r) {
+        var keys = [], sticky = null
+        for (var i = 0; i < a.rows[r].keys.length; ++i) {
+            var k = a.rows[r].keys[i]
+            if (k.sticky && r < a.rows.length - 1)
+                continue   // to the last row (placeSticky)
+            if (k.sticky)
+                sticky = keys.length
+            keys.push(k)
+        }
+        for (i = 0; i < a.slots.length; ++i)
+            if (a.slots[i].row === r)
+                keys.push({"c": "", "s": "", "y": a.slots[i].y, "y2": a.slots[i].y2, "fit": true, "slot": i})
+        // The sticky key stays the outermost key of its row (AZERTY's: after
+        // the language key); the signs keep their places.
+        if (sticky !== null) {
+            var outer = keys.slice()
+            outer.push(outer.splice(sticky, 1)[0])
+            keys = keepSigns(keys, outer)
+        }
+        rows.push({"split": a.rows[r].split, "keys": keys})
+    }
+    // A sticky key that was in the middle row goes to the last one.
+    var moved = rows.length > 1 && a.rows[1].keys.some(function(k) { return k.sticky })
+    return {"name": a.name, "rows": rows, "stickyInLastRow": moved || a.stickyInLastRow === true,
+            "stickyStays": a.stickyStays}
+}
+
+function withoutLanguageKeys(name, a) {
+    if (a.slots)
+        return a
+    var q = arrangements["qwerty"]
+    var rows = []
+    for (var r = 0; r < q.rows.length; ++r) {
+        var keys = []
+        for (var i = 0; i < q.rows[r].keys.length; ++i) {
+            var k = q.rows[r].keys[i]
+            var swap = k.c === "y" ? a.rows[0].keys[5] : k.c === "z" ? a.rows[2].keys[0] : null
+            if (swap) {
+                var copy = {}
+                for (var p in k)
+                    copy[p] = k[p]
+                copy.c = swap.c
+                copy.s = swap.s
+                copy.a = swap.a
+                copy.A = swap.A
+                k = copy
+            }
+            keys.push(k)
+        }
+        rows.push({"split": q.rows[r].split, "keys": keys})
+    }
+    return {"name": a.name, "noSticky": q.noSticky, "rows": rows}
+}
+
+// With the sticky key off, the sticky key's place in the last row gets a
+// language key instead (slot 4: the language's letter for that place, else
+// a plain '), so that the keys keep their places: added where placeSticky
+// would add the sticky key, or in place of AZERTY's (with its signs; the
+// apostrophe is then on the symbol page, or back with the sticky key).
+function withLanguageKeyInLastRow(a) {
+    if (!a.stickyInLastRow && !a.stickyStays)
+        return a
+    var rows = a.rows.slice()
+    var last = rows.length - 1
+    var keys = rows[last].keys.slice()
+    var key = {"c": "'", "s": "'", "fit": true, "slot": 4, "fb": "'"}
+    var at = -1
+    for (var i = 0; i < keys.length; ++i)
+        if (keys[i].sticky)
+            at = i
+    if (at >= 0) {
+        key.y = keys[at].y
+        key.y2 = keys[at].y2
+        keys[at] = key
+    } else {
+        keys.push(key)
+    }
+    rows[last] = {"split": rows[last].split, "keys": keys}
+    return {"name": a.name, "rows": rows, "stickyInLastRow": false}
+}
+
+// The language keys on the left (/apps/parrotfish-keyboard/language-keys-side
+// "left"; "right" is the default): each row's language keys move to its
+// start, after a sticky key there (the sticky key stays the outermost), and
+// the letters one place right per key. As with the sticky key, the
+// symbol-view signs stay in place. The number row's language key moves to
+// its start too, the digits with their keys (numbersSplit: the first key of
+// its right half in landscape).
+function placeLanguageKeys(a, side) {
+    if (side !== "left")
+        return a
+    var toLeft = function(keys, split) {
+        var lead = [], slots = [], rest = []
+        for (var i = 0; i < keys.length; ++i) {
+            var k = keys[i]
+            if (i === 0 && k.sticky) {
+                lead.push(k)
+            } else if (k.slot !== undefined) {
+                slots.push(k)
+                if (i >= split)
+                    split += 1   // the same letters on each half
+            } else {
+                rest.push(k)
+            }
+        }
+        return {"split": split, "keys": lead.concat(slots, rest)}
+    }
+    var rows = []
+    for (var r = 0; r < a.rows.length; ++r) {
+        var row = toLeft(a.rows[r].keys, a.rows[r].split)
+        rows.push({"split": row.split, "keys": keepSigns(a.rows[r].keys, row.keys)})
+    }
+    var result = {"name": a.name, "rows": rows}
+    if (a.numbers) {
+        var numbers = toLeft(a.numbers, Math.floor(a.numbers.length / 2))
+        result.numbers = numbers.keys
+        result.numbersSplit = numbers.split
+    }
+    return result
+}
+
+// `keys` in a new order (`moved`), with each place keeping the symbol-view
+// signs it had: the symbol views stay the same whatever the keys' sides.
+// Only for rows where every key has its signs (a key added to the last row
+// has none: there the keys keep theirs).
+function keepSigns(keys, moved) {
+    for (var i = 0; i < keys.length; ++i)
+        if (keys[i].y === undefined)
+            return moved
+    var result = []
+    for (i = 0; i < moved.length; ++i) {
+        var copy = {}
+        for (var p in moved[i])
+            copy[p] = moved[i][p]
+        copy.y = keys[i].y
+        copy.y2 = keys[i].y2
+        result.push(copy)
+    }
+    return result
+}
+
+// The long-press menus of a language key showing `letter`: those of the
+// arrangement's key that has it among its accents (è: E's), as accentMenus
+// gives them for the typing languages' `letters`.
+function menusOf(a, letter, letters) {
+    for (var r = 0; letter !== "" && r < a.rows.length; ++r)
+        for (var i = 0; i < a.rows[r].keys.length; ++i) {
+            var k = a.rows[r].keys[i]
+            if (k.slot === undefined && k.a && k.a.indexOf(letter) >= 0)
+                return accentMenus(k.a, k.A || "", letters)
+        }
+    return {"a": "", "A": "", "more": "", "moreShifted": ""}
+}
+
 // The arrangement called `name`, or QWERTY. With `numberRow`, it gets a
 // "numbers" row above the letters (withNumberRow). `stickySide` ("right",
 // "left") places the sticky key (placeSticky); `stickyOn` false: none
-// (withoutSticky).
-function get(name, numberRow, stickySide, stickyOn) {
+// (withoutSticky). `languageKeys`: with or without the language keys, on
+// `languageSide` ("right", "left": placeLanguageKeys).
+function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide) {
     var a = arrangements[name] || arrangements["qwerty"]
+    if (!arrangements[name])
+        name = "qwerty"
+    a = languageKeys ? withLanguageKeys(a) : withoutLanguageKeys(name, a)
+    if (languageKeys && stickyOn === false)
+        a = withLanguageKeyInLastRow(a)
     a = stickyOn === false ? withoutSticky(a) : placeSticky(a, stickySide)
-    return numberRow ? withNumberRow(a) : a
+    if (numberRow)
+        a = withNumberRow(a)
+    return languageKeys ? placeLanguageKeys(a, languageSide) : a
 }
 
 // The first row of the second symbol page while the number row is on:
@@ -317,8 +457,14 @@ var freeRow = "¹ ² ³ ½ ¼ ¾ ± ≈ – … ≠"
 function withNumberRow(a) {
     var digits = a.rows[0].keys
     var numbers = []
-    for (var i = 0; i < digits.length; ++i)
-        numbers.push({"c": digits[i].y, "s": digits[i].y, "y": digits[i].y, "y2": digits[i].y})
+    for (var i = 0; i < digits.length; ++i) {
+        var n = {"c": digits[i].y, "s": digits[i].y, "y": digits[i].y, "y2": digits[i].y}
+        if (digits[i].slot === 0) {
+            n.slot = 3   // above the top row's language key: one too
+            n.fb = digits[i].y
+        }
+        numbers.push(n)
+    }
     var free = freeRow.split(" ")
     var rows = []
     for (var r = 0; r < a.rows.length; ++r) {

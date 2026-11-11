@@ -443,6 +443,17 @@ function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide) 
     return languageKeys ? placeLanguageKeys(a, languageSide) : a
 }
 
+// In split landscape, where a row's halves split: as many keys on each
+// (`count`: the row's keys, Shift and Backspace included), or one more on
+// the half that has it at the arrangement's `split`, so that no half's
+// keys are narrower than the rest (Jolla's keyboard gives all letter keys
+// the width of the fullest half's). Some keys change halves when the
+// sticky key or the language keys are on the left.
+function evenSplit(count, split) {
+    var low = Math.floor(count / 2), high = Math.ceil(count / 2)
+    return Math.abs(high - split) < Math.abs(low - split) ? high : low
+}
+
 // The first row of the second symbol page while the number row is on:
 // superscripts and fractions next to the digits, then the most used
 // maths and typographic signs; an 11th sign for

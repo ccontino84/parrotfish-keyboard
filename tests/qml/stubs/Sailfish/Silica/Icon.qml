@@ -1,2 +1,2 @@
 import QtQuick 2.15
-Image {}
+Image { property bool highlighted }

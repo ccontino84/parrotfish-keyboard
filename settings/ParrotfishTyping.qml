@@ -81,6 +81,12 @@ Page {
                 text: qsTr("Space before ! ? : ;")
                 description: qsTr("Keeps the space after a picked suggestion, as in French")
             }
+
+            SettingSwitch {
+                key: "replace-emoticons"
+                text: qsTr("Replace emoticons")
+                description: qsTr("Space turns :-) into 🙂. Otherwise the emoji button offers it")
+            }
         }
 
         VerticalScrollDecorator {}

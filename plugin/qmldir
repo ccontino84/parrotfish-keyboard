@@ -1,2 +1,4 @@
 module Parrotfish.Keyboard
 plugin parrotfishkeyboard
+EmojiUtil 1.0 emojiutil.js
+Emoticons 1.0 emoticons.js

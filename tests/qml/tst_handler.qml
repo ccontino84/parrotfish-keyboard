@@ -7,6 +7,7 @@ import com.meego.maliitquick 1.0
 import com.jolla.keyboard 1.0
 import Nemo.Configuration 1.0
 import "handlers"
+import Parrotfish.Keyboard 1.0
 
 // Our handler (handler/ParrotfishHandler.qml) with the real engine plugin
 // and dictionaries, in a stand-in keyboard: keys are tapped by calling
@@ -742,6 +743,192 @@ Item {
             compare(handler._loggedContext, "I think this is the house. It ")
             MInputMethodQuick.showsPreedit = false
             MInputMethodQuick.insertsCommits = false
+        }
+        function test_backspaceEmoji_data() {
+            return [
+                { "tag": "ZWJ sequence", "text": "Hi \u{1F9D1}\u200D\u{1F4BB}", "left": "Hi ", "keys": 3 },
+                { "tag": "family", "text": "a \u{1F468}\u200D\u{1F469}\u200D\u{1F467}", "left": "a ", "keys": 5 },
+                { "tag": "skin tone", "text": "ok \u{1F44D}\u{1F3FD}", "left": "ok ", "keys": 2 },
+                { "tag": "tone and ZWJ", "text": "\u{1F469}\u{1F3FF}\u200D\u{1F4BB}", "left": "", "keys": 4 },
+                { "tag": "flags", "text": "\u{1F1EE}\u{1F1F9}\u{1F1EB}\u{1F1F7}", "left": "\u{1F1EE}\u{1F1F9}", "keys": 2 },
+                { "tag": "keycap", "text": "x 1\uFE0F\u20E3", "left": "x ", "keys": 3 },
+                { "tag": "heart", "text": "I \u2764\uFE0F", "left": "I ", "keys": 2 },
+                { "tag": "subdivision flag", "text": "\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}", "left": "", "keys": 7 },
+                // One code point: the app's own Backspace (Jolla's key event).
+                { "tag": "single", "text": "a \u{1F642}", "left": "a \u{1F642}", "keys": 0 },
+                { "tag": "accent", "text": "cafe\u0301 ", "left": "cafe\u0301 ", "keys": 0 },
+            ]
+        }
+
+        // One Backspace deletes a whole emoji: one key event per code point,
+        // each once the app shows the last one done.
+        function test_backspaceEmoji(data) {
+            MInputMethodQuick.backspaceCodePoints = 1
+            context(data.text)
+            MInputMethodQuick.sentKeys = []
+            backspace()
+            tryCompare(MInputMethodQuick, "surroundingText", data.left)
+            wait(50)   // no further key events
+            compare(MInputMethodQuick.sentKeys.length, data.keys)
+            MInputMethodQuick.backspaceCodePoints = 0
+        }
+
+        // An app that deletes more than a code point per key event: no more
+        // key events, so nothing before the emoji is lost.
+        function test_backspaceEmojiWholeApp() {
+            MInputMethodQuick.backspaceCodePoints = 2
+            context("\u{1F44D}\u{1F44D}\u{1F3FD}")
+            MInputMethodQuick.sentKeys = []
+            backspace()
+            wait(50)
+            compare(MInputMethodQuick.sentKeys.length, 1)
+            compare(MInputMethodQuick.surroundingText, "\u{1F44D}")
+            MInputMethodQuick.backspaceCodePoints = 0
+        }
+        // Recent emoji: the most used first, older uses fading; a new one
+        // always gets in, at the end when full.
+        function test_emojiRecent() {
+            var stored = ""
+            var use = function(e) { stored = EmojiUtil.recentUse(stored, e) }
+            use("a"); use("b"); use("b")
+            compare(EmojiUtil.recentList(stored), ["b", "a"])
+            use("c")
+            compare(EmojiUtil.recentList(stored), ["b", "c", "a"], "the latest before an equal or older one")
+            for (var i = 0; i < 40; ++i)
+                use("x" + i)
+            var list = EmojiUtil.recentList(stored)
+            compare(list.length, EmojiUtil.recentMax)
+            compare(list[0], "x39", "the latest single use first")
+            verify(list.indexOf("b") > 0, "used twice: still there")
+            verify(list.indexOf("a") < 0, "used once long ago: gone")
+            // Full of emoji used more often: a new one still gets in.
+            stored = ""
+            for (var round = 0; round < 3; ++round)
+                for (i = 0; i < EmojiUtil.recentMax; ++i)
+                    use("y" + i)
+            use("new")
+            list = EmojiUtil.recentList(stored)
+            compare(list.length, EmojiUtil.recentMax)
+            verify(list.indexOf("new") >= 0)
+            compare(EmojiUtil.recentList(""), [])
+            // Removed by hand.
+            stored = ""
+            use("z0"); use("z0"); use("z1"); use("z2")
+            compare(EmojiUtil.recentList(EmojiUtil.recentForget(stored, "z1")), ["z0", "z2"])
+        }
+        // The variants picked from emoji's menus: the latest per emoji; the
+        // emoji itself takes its entry out.
+        function test_emojiPicked() {
+            var stored = EmojiUtil.pick("", "\u{1F44D}", "\u{1F44D}\u{1F3FD}")
+            stored = EmojiUtil.pick(stored, "\u{1F9D1}", "\u{1F469}")
+            stored = EmojiUtil.pick(stored, "\u{1F44D}", "\u{1F44D}\u{1F3FF}")
+            var map = EmojiUtil.pickedMap(stored)
+            compare(map["\u{1F44D}"], "\u{1F44D}\u{1F3FF}")
+            compare(map["\u{1F9D1}"], "\u{1F469}")
+            map = EmojiUtil.pickedMap(EmojiUtil.pick(stored, "\u{1F44D}", "\u{1F44D}"))
+            compare(map["\u{1F44D}"], undefined)
+            compare(map["\u{1F9D1}"], "\u{1F469}")
+            compare(Object.keys(EmojiUtil.pickedMap("")).length, 0)
+        }
+        // An emoticon before the cursor: the emoji button offers its emoji,
+        // replaceEmoticon() (a tap on it) puts it in the emoticon's place.
+        function test_emoticon() {
+            context("Hi ")
+            type(":)")
+            compare(handler.emoticonBefore.emoji, "\u{1F642}")
+            MInputMethodQuick.sentKeys = []
+            MInputMethodQuick.committedText = ""
+            handler.replaceEmoticon()
+            compare(MInputMethodQuick.sentKeys, [Qt.Key_Backspace, Qt.Key_Backspace])
+            compare(MInputMethodQuick.committedText, "\u{1F642}")
+            compare(handler.emoticonBefore, null)
+
+            // Partly the word being typed: :P has its P there.
+            context("ok ")
+            type(":P")
+            compare(handler.preedit, "P")
+            compare(handler.emoticonBefore.emoji, "\u{1F61B}")
+            MInputMethodQuick.sentKeys = []
+            MInputMethodQuick.committedText = ""
+            handler.replaceEmoticon()
+            compare(MInputMethodQuick.sentKeys, [Qt.Key_Backspace], "only the committed colon")
+            compare(handler.preedit, "")
+            compare(MInputMethodQuick.committedText, "\u{1F61B}")
+
+            context("")
+            type("XD")
+            compare(handler.emoticonBefore.emoji, "\u{1F606}")
+            // (Switching fields commits XD: the app reports nothing here.)
+            context("see http:/")
+            handler._awaitingReport = false
+            compare(handler.emoticonBefore, null, "not after a letter")
+            context("I <3")
+            compare(handler.emoticonBefore.emoji, "\u2764\uFE0F")
+            context("so >:(")
+            compare(handler.emoticonBefore.text, ">:(", "the longest")
+            context("yes \\m/")
+            compare(handler.emoticonBefore.emoji, "\u{1F918}")
+            context("\\o/")
+            compare(handler.emoticonBefore.text, "\\o/", "not o/")
+            context("hi o/")
+            compare(handler.emoticonBefore.emoji, "\u{1F44B}")
+        }
+        // The same with an app that reports commits at once.
+        function test_emoticonReported() {
+            MInputMethodQuick.insertsCommits = true
+            context("Hi ")
+            type(":)")
+            verify(handler.emoticonBefore !== null, ":) reported")
+            context("")
+            type("XD")
+            verify(handler.emoticonBefore !== null, "XD")
+            MInputMethodQuick.insertsCommits = false
+        }
+
+        // An app that shows the word being typed in its text: :D is not :DD.
+        function test_emoticonShownPreedit() {
+            MInputMethodQuick.showsPreedit = true
+            MInputMethodQuick.insertsCommits = true
+            context("Hi ")
+            type(":D")
+            compare(MInputMethodQuick.surroundingText, "Hi :D", "the app shows the D")
+            compare(handler.emoticonBefore.emoji, "\u{1F600}")
+            MInputMethodQuick.sentKeys = []
+            handler.replaceEmoticon()
+            compare(MInputMethodQuick.sentKeys, [Qt.Key_Backspace], "only the colon")
+            context("")
+            type("XD")
+            compare(handler.emoticonBefore.emoji, "\u{1F606}")
+            MInputMethodQuick.showsPreedit = false
+            MInputMethodQuick.insertsCommits = false
+        }
+        // Replace emoticons (off by default): Space turns the emoticon into
+        // its emoji; Backspace straight after brings the emoticon back.
+        function test_emoticonOnSpace() {
+            context("Hi ")
+            MInputMethodQuick.committedText = ""
+            type(":D ")
+            compare(MInputMethodQuick.committedText, ":D ", "off: only offered")
+            var values = { "/apps/parrotfish-keyboard/languages": "en",
+                           "/apps/parrotfish-keyboard/autocorrect": "normal",
+                           "/apps/parrotfish-keyboard/replace-emoticons": true }
+            Dconf.values = values
+            context("Hi ")
+            MInputMethodQuick.sentKeys = []
+            compare(type(":D "), ":\u{1F600} ", "the colon, deleted, then the emoji")
+            compare(MInputMethodQuick.sentKeys, [Qt.Key_Backspace], "the committed colon")
+            MInputMethodQuick.sentKeys = []
+            MInputMethodQuick.committedText = ""
+            backspace()
+            compare(MInputMethodQuick.sentKeys, [Qt.Key_Backspace, Qt.Key_Backspace], "the emoji and the space")
+            compare(MInputMethodQuick.committedText, ":D ")
+            context("I ")
+            compare(type("<3 "), "<3\u2764\uFE0F ")
+            MInputMethodQuick.sentKeys = []
+            backspace()
+            compare(MInputMethodQuick.sentKeys.length, 3, "two code points and the space")
+            Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
+                             "/apps/parrotfish-keyboard/autocorrect": "normal" }
         }
     }
 }

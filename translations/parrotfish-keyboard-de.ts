@@ -348,5 +348,13 @@
         <source>Keeps the space after a picked suggestion, as in French</source>
         <translation>Behält das Leerzeichen nach einem gewählten Vorschlag, wie im Französischen</translation>
     </message>
+    <message>
+        <source>Replace emoticons</source>
+        <translation>Emoticons ersetzen</translation>
+    </message>
+    <message>
+        <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
+        <translation>Leertaste macht aus :-) 🙂. Sonst bietet die Emoji-Taste es an</translation>
+    </message>
 </context>
 </TS>

@@ -38,7 +38,21 @@ QtObject {
         keyTypes = keyTypes.concat([type])
         if (type !== 1 && (key === Qt.Key_Left || key === Qt.Key_Right))   // not on a release
             _moveBy(key === Qt.Key_Left ? -1 : 1)
+        if (key === Qt.Key_Backspace && backspaceCodePoints > 0) {
+            var end = cursorPosition
+            var start = end
+            for (var n = 0; n < backspaceCodePoints && start > 0; ++n) {
+                var c = surroundingText.charCodeAt(start - 1)
+                start -= (c >= 0xDC00 && c <= 0xDFFF && start >= 2) ? 2 : 1
+            }
+            var text = surroundingText.substring(0, start) + surroundingText.substring(end)
+            cursorPosition = start
+            surroundingText = text
+        }
     }
+    // Code points a Backspace key event deletes before the cursor (0: the
+    // text stays as the test set it).
+    property int backspaceCodePoints: 0
     property var preedits: []   // [text, replaceStart, replaceLength, cursorPos]
     function sendPreedit(text, formatting, replaceStart, replaceLength, cursorPos) {
         preedits = preedits.concat([[text, replaceStart, replaceLength, cursorPos]])

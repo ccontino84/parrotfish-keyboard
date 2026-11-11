@@ -348,5 +348,13 @@
         <source>Keeps the space after a picked suggestion, as in French</source>
         <translation>Ponechá mezeru po vybraném návrhu, jako ve francouzštině</translation>
     </message>
+    <message>
+        <source>Replace emoticons</source>
+        <translation>Nahrazovat emotikony</translation>
+    </message>
+    <message>
+        <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
+        <translation>Mezera změní :-) na 🙂. Jinak ho nabídne tlačítko emoji</translation>
+    </message>
 </context>
 </TS>

@@ -22,6 +22,7 @@ mkdir -p "$TMP/imports/Parrotfish/Keyboard" "$TMP/handlers" "$TMP/home/.local/sh
 cp -r "$HERE/stubs/." "$TMP/imports/"
 cp "$SRC/plugin/qmldir" "$BUILD/plugin/libparrotfishkeyboard.so" "$TMP/imports/Parrotfish/Keyboard/"
 ln -s "$SRC/handler/ParrotfishHandler.qml" "$TMP/handlers/ParrotfishHandler.qml"
+cp "$SRC/plugin/emoji/emojiutil.js" "$SRC/plugin/emoji/emoticons.js" "$TMP/imports/Parrotfish/Keyboard/"
 touch "$TMP/home/.local/share/parrotfish-keyboard/debug"
 sed -e "s|HOMEPATH|$TMP/home|" "$HERE/tst_handler.qml" > "$TMP/tst_handler.qml"
 cd "$TMP"

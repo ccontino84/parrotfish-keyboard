@@ -14,10 +14,12 @@
 // letters, the others behind › (parrotfish/LongPressMenu.qml).
 import QtQuick 2.6
 import Sailfish.Silica 1.0
+import com.meego.maliitquick 1.0
 import Nemo.Configuration 1.0
 import Parrotfish.Keyboard 1.0
 import "../.."
 import "arrangements.js" as Arrangements
+import "emoji"
 
 KeyboardLayout {
     id: parrotfishLayout
@@ -106,6 +108,36 @@ KeyboardLayout {
             if (last[i].sticky || last[i].slot !== undefined)
                 return true
         return false
+    }
+
+    // Shift's and Backspace's width. In split landscape, with six keys on a
+    // half of the bottom letter row (the emoji key, and a language key or
+    // the sticky key there), as wide as a letter key of a six-key half, so
+    // that the letters keep their width.
+    property int _row3Count: 0
+    readonly property real _endWidth: splitActive && _row3Count >= 11
+                                      ? (width - avoidanceWidth) / 12
+                                      : _narrowEnds ? shiftKeyWidthNarrow : shiftKeyWidth
+
+    // The emoji panel (emoji/EmojiPanel.qml) instead of the rows; off when
+    // the keyboard closes or Jolla's handler takes over (passwords, numbers).
+    property bool emojiView: false
+    // The recent emoji: read when the panel opens, so that they don't move
+    // while it is open.
+    property var emojiRecent: []
+    onEmojiViewChanged: if (emojiView) emojiRecent = EmojiUtil.recentList(emojiRecentConfig.value)
+    function emojiUsed(emoji) {
+        emojiRecentConfig.value = EmojiUtil.recentUse(emojiRecentConfig.value, emoji)
+    }
+    // Removed from the recent emoji by hand: gone from the panel at once.
+    function emojiForget(emoji) {
+        emojiRecentConfig.value = EmojiUtil.recentForget(emojiRecentConfig.value, emoji)
+        emojiRecent = EmojiUtil.recentList(emojiRecentConfig.value)
+    }
+    // The variant last picked per emoji ({ emoji: variant }).
+    readonly property var emojiPicked: EmojiUtil.pickedMap(emojiPickedConfig.value)
+    function emojiPick(emoji, variant) {
+        emojiPickedConfig.value = EmojiUtil.pick(emojiPickedConfig.value, emoji, variant)
     }
 
     // The keys this layout created, per letter row, and in the number row.
@@ -264,31 +296,67 @@ KeyboardLayout {
     // The number row: not one of Jolla's rows (their sizing doesn't fit a
     // shorter row), so its keys are placed by _placeNumbers(), with the
     // split gap of the letter rows in landscape.
+    readonly property int _numberRowHeight: numberRowOn ? Math.round(keyHeight * numberRowPercent / 100) : 0
+
     Item {
         id: numberRow
-        visible: parrotfishLayout.numberRowOn
-        height: visible ? Math.round(parrotfishLayout.keyHeight * parrotfishLayout.numberRowPercent / 100) : 0
+        visible: parrotfishLayout.numberRowOn && !parrotfishLayout.emojiView
+        height: parrotfishLayout._numberRowHeight
         onWidthChanged: parrotfishLayout._placeNumbers()
         onHeightChanged: parrotfishLayout._placeNumbers()
     }
 
     // The letter rows are filled by _build(), in order, so that the keys'
     // order (and the split index) is the arrangement's.
-    KeyboardRow { id: row1 }
-    KeyboardRow { id: row2 }
+    KeyboardRow { id: row1; visible: !parrotfishLayout.emojiView }
+    KeyboardRow { id: row2; visible: !parrotfishLayout.emojiView }
     KeyboardRow {
         id: row3
+        visible: !parrotfishLayout.emojiView
         ShiftKey {
-            implicitWidth: parrotfishLayout._narrowEnds ? shiftKeyWidthNarrow : shiftKeyWidth
+            implicitWidth: parrotfishLayout._endWidth
         }
     }
 
-    BottomRow {}
+    BottomRow { visible: !parrotfishLayout.emojiView }
+
+    // As tall as what it replaces: the number row, three letter rows and the
+    // bottom row.
+    EmojiPanel {
+        visible: parrotfishLayout.emojiView
+        keyHeight: parrotfishLayout.keyHeight
+        recent: parrotfishLayout.emojiRecent
+        picked: parrotfishLayout.emojiPicked
+        longPressHint: parrotfishLayout.longPressHint
+        keyboardKey: parrotfishLayout.splitActive
+        current: typeof keyboard !== "undefined" && keyboard.layout === parrotfishLayout
+        height: parrotfishLayout._numberRowHeight + 4 * parrotfishLayout.keyHeight
+        onVariantPicked: parrotfishLayout.emojiPick(emoji, variant)
+        onRecentRemoved: parrotfishLayout.emojiForget(emoji)
+        onCloseRequested: parrotfishLayout.emojiView = false
+    }
+
+    Connections {
+        target: MInputMethodQuick
+        onActiveChanged: if (!MInputMethodQuick.active) parrotfishLayout.emojiView = false
+    }
 
     Timer {
         id: _relayoutLater
         interval: 0
         onTriggered: parrotfishLayout.updateSizes()
+    }
+
+    ConfigurationValue {
+        id: emojiRecentConfig
+        key: "/apps/parrotfish-keyboard/emoji-recent"   // EmojiUtil.recentUse()
+        defaultValue: ""
+    }
+
+    ConfigurationValue {
+        id: emojiPickedConfig
+        key: "/apps/parrotfish-keyboard/emoji-variants"   // EmojiUtil.pick()
+        defaultValue: ""
     }
 
     LongPressMenu {
@@ -300,6 +368,14 @@ KeyboardLayout {
     Component {
         id: letterKeyComponent
         LetterKey {}
+    }
+
+    // The emoji key of split landscape (emoji/EmojiButtonKey.qml), where there is
+    // no suggestion bar for the handler's emoji button: in the bottom letter
+    // row, at the inner edge of its half with fewer keys.
+    Component {
+        id: emojiKeyComponent
+        EmojiButtonKey { layout: parrotfishLayout }
     }
 
     Component {
@@ -339,7 +415,22 @@ KeyboardLayout {
             }
             var spec = arrangement.rows[r]
             var keys = []
+            // The split: as many keys on each half (Arrangements.evenSplit).
+            // Row 3 counts Shift and Backspace, and gets the emoji key at the
+            // inner edge of its shorter half; if even, on the language keys'
+            // side, where the other rows have their extra key (right without
+            // them), so that every row's fuller half is on the same side.
+            var last = rows[r] === row3
+            var count = spec.keys.length + (last ? 2 : 0)
+            var split = Arrangements.evenSplit(count, spec.split)
+            var emojiAt = last ? split : -1   // its index in the row (Shift is 0)
+            if (last && (split < count - split
+                         || (split === count - split && languageKeysOn
+                             && languageKeysSideConfig.value === "left")))
+                split += 1
             for (i = 0; i < spec.keys.length; ++i) {
+                if (i + 1 === emojiAt)
+                    keys.push(emojiKeyComponent.createObject(row3))
                 var k = spec.keys[i]
                 var menus = Arrangements.accentMenus(k.a || "", k.A || "", accentLetters)
                 var key = letterKeyComponent.createObject(rows[r], {
@@ -361,14 +452,16 @@ KeyboardLayout {
                 }
                 keys.push(key)
             }
-            if (rows[r] === row3) {
+            if (last) {
+                if (emojiAt === spec.keys.length + 1)
+                    keys.push(emojiKeyComponent.createObject(row3))
                 var backspace = backspaceKeyComponent.createObject(row3)
-                backspace.implicitWidth = Qt.binding(function() {
-                    return parrotfishLayout._narrowEnds ? shiftKeyWidthNarrow : shiftKeyWidth
-                })
+                backspace.implicitWidth = Qt.binding(function() { return parrotfishLayout._endWidth })
                 keys.push(backspace)
             }
-            rows[r].splitIndex = spec.split
+            rows[r].splitIndex = split
+            if (last)
+                _row3Count = keys.length + 1   // and Shift
             created.push(keys)
         }
         _createdKeys = created
@@ -406,10 +499,16 @@ KeyboardLayout {
             return
         var gap = avoidanceWidth > 0 ? avoidanceWidth : 0
         var half = arrangement.numbersSplit !== undefined ? arrangement.numbersSplit : Math.floor(n / 2)
-        var w = (numberRow.width - gap) / n
+        // Split: each half on its side of the gap, its keys as wide as those
+        // of the fuller half and centred, as Jolla's rows place theirs.
+        var side = (numberRow.width - gap) / 2
+        var w = gap > 0 ? side / Math.max(half, n - half) : numberRow.width / n
         for (var i = 0; i < n; ++i) {
             var key = _numberKeys[i]
-            key.x = i * w + (gap > 0 && i >= half ? gap : 0)
+            var right = gap > 0 && i >= half
+            var count = gap > 0 ? (right ? n - half : half) : n
+            var start = gap > 0 ? (right ? side + gap : 0) + (side - count * w) / 2 : 0
+            key.x = start + (right ? i - half : i) * w
             key.width = w
             key.height = numberRow.height
             key.implicitSeparator = i < n - 1 && !(gap > 0 && i === half - 1)

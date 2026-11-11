@@ -14,6 +14,8 @@
 // - Backspace straight after an autocorrection brings back what was typed;
 //   a word changed by hand later (Backspace into it) is logged as a manual
 //   correction, or as a late undo if it was an autocorrection;
+// - Backspace after an emoji of several code points (a skin tone, a flag,
+//   a ZWJ sequence such as 🧑‍💻) deletes all of them, not one at a time;
 // - punctuation straight after a picked suggestion replaces its space with
 //   a Backspace key event (also in Android apps); ! ? : ; keep it if the
 //   user wants a space before them (dconf
@@ -38,7 +40,10 @@
 //   (dconf /apps/parrotfish-keyboard/last-language);
 // - thin dividers between the suggestions; the suggestion
 //   delegates are those of HorizontalPredictionListView.qml and
-//   VerticalPredictionListView.qml (Jolla Ltd., BSD-3-Clause) plus a divider.
+//   VerticalPredictionListView.qml (Jolla Ltd., BSD-3-Clause) plus a divider;
+// - an emoji button at the bar's right end: the layout's emoji panel, or
+//   the emoji for the emoticon before the cursor (emoticons.js; on Space
+//   with /apps/parrotfish-keyboard/replace-emoticons).
 import QtQuick 2.6
 import com.meego.maliitquick 1.0
 import Sailfish.Silica 1.0
@@ -114,6 +119,13 @@ InputHandler {
     // The word being typed when the keyboard last closed (committed as it
     // was), to type on with when the cursor is back at its end.
     property string _interrupted: ""
+    // An emoji being deleted ({ rest, before }), or null. Apps delete one
+    // code point per Backspace key event (🧑‍💻 is three): the next event is
+    // sent once the app shows the last one done.
+    property var _emojiDeleting: null
+    // An emoticon Space just replaced ({ text, emoji }), for Backspace to
+    // bring back straight after; else null.
+    property var _emoticonReplaced: null
     // For each letter of preedit: "" or the tap's other key and "1"/"0" (the
     // letter shown is where the finger lifted / touched down), for the
     // engine (predictionEngine.preeditKeys). Kept in step with preedit.
@@ -187,6 +199,12 @@ InputHandler {
     }
 
     ConfigurationValue {
+        id: replaceEmoticonsConfig
+        key: "/apps/parrotfish-keyboard/replace-emoticons"   // false, true
+        defaultValue: false
+    }
+
+    ConfigurationValue {
         id: spaceBeforeConfig
         key: "/apps/parrotfish-keyboard/space-before-punctuation"   // false, true
         defaultValue: false
@@ -242,6 +260,9 @@ InputHandler {
     }
 
     onActiveChanged: {
+        // Jolla's handler has no emoji button: nothing to go back with.
+        if (!active && keyboard.layout && keyboard.layout.emojiView === true)
+            keyboard.layout.emojiView = false
         if (!active && preedit !== "") {
             _interrupted = preedit
             commit(preedit)
@@ -298,10 +319,14 @@ InputHandler {
                 predictionEngine.endText()
             inputHandler._fieldHadText = !empty
             inputHandler._contextChanged("text")
+            if (inputHandler._emojiDeleting !== null)
+                emojiDeletingCheck.restart()
         }
         onCursorPositionChanged: {
             inputHandler._awaitingReport = false
             inputHandler._contextChanged("cursor")
+            if (inputHandler._emojiDeleting !== null)
+                emojiDeletingCheck.restart()
         }
     }
 
@@ -324,6 +349,37 @@ InputHandler {
         }
 
         return _escape(text)
+    }
+
+    // The emoticon right before the cursor ({ text, emoji }), or null; the
+    // word being typed counts (:P). The text before that word is the one
+    // from when it started: some apps report the word in their text too.
+    readonly property var emoticonBefore: Emoticons.atEnd(_textBeforeWord() + preedit)
+
+    function _textBeforeWord() {
+        return preedit !== "" ? _wordContext : _currentTextBefore()
+    }
+
+    // The emoticon is deleted with Backspace key events (every app handles
+    // those, unlike replacing text), then the emoji typed.
+    function replaceEmoticon() {
+        var found = emoticonBefore
+        if (!found)
+            return
+        var typed = preedit
+        var before = _textBeforeWord()
+        var length = found.text.length - typed.length   // what was committed of it
+        if (typed !== "") {
+            preedit = ""
+            MInputMethodQuick.sendPreedit("")
+        }
+        for (var n = 0; n < length; ++n)
+            MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+        _committedContext = before.substring(0, before.length - length)
+        _awaitingReport = true
+        commit(found.emoji)
+        if (keyboard.layout && typeof keyboard.layout.emojiUsed === "function")
+            keyboard.layout.emojiUsed(found.emoji)   // for its recent emoji
     }
 
     function applyPrediction(replacement, index) {
@@ -355,6 +411,13 @@ InputHandler {
         var handled = false
         var correction = _correction
         _correction = null   // Backspace can only undo straight after
+        _emojiDeleting = null
+        var emoticonReplaced = _emoticonReplaced
+        _emoticonReplaced = null
+        if (keyboard.layout && keyboard.layout.emojiView === true
+                && typeof keyboard.layout.emojiUsed === "function" && pressedKey.text !== ""
+                && (pressedKey.keyType === KeyType.CharacterKey || pressedKey.keyType === KeyType.PopupKey))
+            keyboard.layout.emojiUsed(pressedKey.text)   // for its recent emoji
         if (correction !== null && !(pressedKey.key === Qt.Key_Backspace && preedit === "")) {
             predictionEngine.acceptCorrection(correction.typed)   // kept
             if (!correction.redone)   // already logged as redone
@@ -366,7 +429,13 @@ InputHandler {
         keyboard.expandedPaste = false
 
         if (pressedKey.key === Qt.Key_Space) {
-            if (preedit !== "") {
+            var emoticon = emoticonBefore
+            if (emoticon !== null && (replaceEmoticonsConfig.value === true
+                                      || replaceEmoticonsConfig.value === "true")) {
+                replaceEmoticon()
+                commit(" ")
+                _emoticonReplaced = emoticon
+            } else if (preedit !== "") {
                 _commitWord(" ")
                 keyboard.autocaps = false // assuming no autocaps after input
             } else {
@@ -405,6 +474,16 @@ InputHandler {
             predictionEngine.logSlips(correction.typed, correction.corrected, "undone")
             predictionEngine.log("undo: " + length + " characters replaced by "
                                  + (correction.typed.length + correction.suffix.length))
+            handled = true
+
+        } else if (pressedKey.key === Qt.Key_Backspace && preedit === "" && emoticonReplaced !== null
+                   && _currentTextBefore().slice(-emoticonReplaced.emoji.length - 1) === emoticonReplaced.emoji + " ") {
+            // Undo the emoticon's replacement: delete the emoji (a key event
+            // per code point) and the space, type back the emoticon.
+            var points = EmojiUtil.codePoints(emoticonReplaced.emoji).split("-").length + 1
+            for (var k = 0; k < points; ++k)
+                MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+            commit(emoticonReplaced.text + " ")
             handled = true
 
         } else if (pressedKey.key === Qt.Key_Backspace && preedit !== "") {
@@ -507,9 +586,66 @@ InputHandler {
             predictionEngine.dropKept()   // being typed again
             preedit = word
             handled = true
+
+        } else if (pressedKey.key === Qt.Key_Backspace && _deleteEmoji()) {
+            handled = true
         }
 
         return handled
+    }
+
+    // Backspace after an emoji of several code points: deletes all of them
+    // (_emojiDeleting goes on when the app reports each one gone).
+    function _deleteEmoji() {
+        if (!MInputMethodQuick.surroundingTextValid || MInputMethodQuick.hasSelection)
+            return false
+        var before = _textBefore()
+        var emoji = EmojiUtil.emojiAtEnd(before)
+        if (emoji === "")
+            return false
+        _emojiDeleting = { "rest": EmojiUtil.withoutLastCodePoint(emoji),
+                           "before": EmojiUtil.withoutLastCodePoint(before) }
+        emojiDeletingTimeout.restart()
+        MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+        return true
+    }
+
+    function _emojiDeletingNext() {
+        var deleting = _emojiDeleting
+        if (deleting === null)
+            return
+        var now = _textBefore()
+        var expected = deleting.before
+        // _textBefore() is a window of the last 1000 characters: in a longer
+        // text it moves back as text is deleted, so only its end is compared.
+        if (now.length >= 900 && expected.length >= 900) {
+            now = now.substring(now.length - 100)
+            expected = expected.substring(expected.length - 100)
+        }
+        if (now !== expected)
+            return   // not yet, or the app did something else: stop at the timeout
+        if (deleting.rest === "") {
+            _emojiDeleting = null
+            return
+        }
+        _emojiDeleting = { "rest": EmojiUtil.withoutLastCodePoint(deleting.rest),
+                           "before": EmojiUtil.withoutLastCodePoint(deleting.before) }
+        emojiDeletingTimeout.restart()
+        MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+    }
+
+    // The text and the cursor are reported one after the other: checked
+    // once both are in.
+    Timer {
+        id: emojiDeletingCheck
+        interval: 0
+        onTriggered: inputHandler._emojiDeletingNext()
+    }
+
+    Timer {
+        id: emojiDeletingTimeout
+        interval: 1000
+        onTriggered: inputHandler._emojiDeleting = null
     }
 
     // The word the cursor is right at the end of (word characters before it,
@@ -901,9 +1037,72 @@ InputHandler {
 
     topItem: Component {
         TopItem {
+            // The emoji button (experimental) at the bar's right end, across
+            // from Jolla's paste button: it opens the layout's emoji panel
+            // (emoji/EmojiPanel.qml), and shows the keyboard icon to go back to the
+            // letters. Above the suggestions (z), which are clipped at its edge.
+            BackgroundItem {
+                id: emojiButton
+
+                readonly property bool open: available && keyboard.layout.emojiView
+                // The emoji for the emoticon before the cursor, or "".
+                readonly property string offer: !open && inputHandler.emoticonBefore
+                                                ? inputHandler.emoticonBefore.emoji : ""
+                z: 1
+
+                readonly property bool available: keyboard.layout !== null
+                                                  && keyboard.layout.emojiView !== undefined
+                anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
+                width: available ? height : 0
+                visible: available
+                // With an emoji offered, a tap puts it in the emoticon's place
+                // and a long press opens the panel; else both open it.
+                onClicked: {
+                    if (offer !== "")
+                        inputHandler.replaceEmoticon()
+                    else
+                        keyboard.layout.emojiView = !keyboard.layout.emojiView
+                }
+                onPressAndHold: keyboard.layout.emojiView = !keyboard.layout.emojiView
+
+                // An offered emoji is highlighted.
+                Rectangle {
+                    anchors.centerIn: parent
+                    width: Math.round(parent.height * 0.8)
+                    height: width
+                    radius: width / 4
+                    color: Theme.highlightBackgroundColor
+                    opacity: Theme.highlightBackgroundOpacity
+                    visible: emojiButton.offer !== ""
+                }
+
+                Icon {
+                    anchors.centerIn: parent
+                    visible: emojiButton.open
+                    source: "image://theme/icon-m-keyboard"
+                    highlighted: emojiButton.highlighted
+                }
+
+                Image {
+                    anchors.centerIn: parent
+                    visible: !emojiButton.open
+                    readonly property int side: Math.round(parent.height * 0.55)
+                    width: side
+                    height: side
+                    sourceSize.width: side
+                    sourceSize.height: side
+                    source: !emojiButton.available || side <= 0 ? ""
+                            : emojiButton.offer !== "" ? EmojiUtil.source(emojiButton.offer)
+                            : EmojiUtil.source("\uD83D\uDE42")
+                }
+            }
+
             HorizontalPredictionListView {
                 id: predictionList
 
+                anchors.fill: undefined
+                anchors { left: parent.left; top: parent.top; bottom: parent.bottom; right: emojiButton.left }
+                clip: true
                 handler: inputHandler
                 model: inputHandler.showApplicationSuggestions ? suggestionModel: predictionEngine
                 canRemove: inputHandler.showApplicationSuggestions
@@ -1002,9 +1201,11 @@ InputHandler {
 
             property int inactivePadding: Theme.paddingMedium
 
+            // Empty while the emoji panel is open: the panel is under it.
             VerticalPredictionListView {
                 id: verticalList
 
+                visible: !(keyboard.layout && keyboard.layout.emojiView === true)
                 handler: inputHandler
                 model: inputHandler.showApplicationSuggestions ? suggestionModel: predictionEngine
                 canRemove: inputHandler.showApplicationSuggestions

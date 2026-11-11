@@ -348,5 +348,13 @@
         <source>Keeps the space after a picked suggestion, as in French</source>
         <translation>Ohrani presledek po izbranem predlogu, kot v francoščini</translation>
     </message>
+    <message>
+        <source>Replace emoticons</source>
+        <translation>Zamenjaj emotikone</translation>
+    </message>
+    <message>
+        <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
+        <translation>Presledek spremeni :-) v 🙂. Sicer ga ponudi gumb za emojije</translation>
+    </message>
 </context>
 </TS>

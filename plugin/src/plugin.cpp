@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include "emojiimageprovider.h"
 #include "keyboardinfo.h"
 #include "languages.h"
 #include "learnedwords.h"
@@ -8,6 +9,7 @@
 
 #include <QCoreApplication>
 #include <QLocale>
+#include <QQmlEngine>
 #include <QQmlExtensionPlugin>
 #include <QTranslator>
 #include <qqml.h>
@@ -33,8 +35,12 @@ public:
     // imports us: Jolla's settings, which load our pages without a
     // catalogue of their own, and the keyboard. Installed once, before the
     // pages' texts are evaluated; the contexts are our QML files' names.
-    void initializeEngine(QQmlEngine *, const char *) override
+    // Also the colour emoji images (EmojiImageProvider), in every engine
+    // that imports us.
+    void initializeEngine(QQmlEngine *engine, const char *) override
     {
+        if (engine && !engine->imageProvider(QStringLiteral("parrotfish-emoji")))
+            engine->addImageProvider(QStringLiteral("parrotfish-emoji"), new EmojiImageProvider);
         static bool installed = false;
         if (installed)
             return;

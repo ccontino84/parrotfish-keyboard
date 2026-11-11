@@ -348,5 +348,13 @@
         <source>Keeps the space after a picked suggestion, as in French</source>
         <translation>Beholder mellomrommet etter et valgt forslag, som på fransk</translation>
     </message>
+    <message>
+        <source>Replace emoticons</source>
+        <translation>Erstatt emotikoner</translation>
+    </message>
+    <message>
+        <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
+        <translation>Mellomrom gjør :-) til 🙂. Ellers tilbyr emojiknappen det</translation>
+    </message>
 </context>
 </TS>

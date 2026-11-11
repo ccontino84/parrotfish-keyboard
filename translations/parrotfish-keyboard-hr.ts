@@ -348,5 +348,13 @@
         <source>Keeps the space after a picked suggestion, as in French</source>
         <translation>Zadržava razmak nakon odabranog prijedloga, kao u francuskom</translation>
     </message>
+    <message>
+        <source>Replace emoticons</source>
+        <translation>Zamijeni emotikone</translation>
+    </message>
+    <message>
+        <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
+        <translation>Razmak pretvara :-) u 🙂. Inače ga nudi gumb za emojije</translation>
+    </message>
 </context>
 </TS>

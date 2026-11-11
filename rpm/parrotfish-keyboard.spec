@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 Name:       parrotfish-keyboard
-Version:    1.1.0
+Version:    1.2.0~alpha1.emoji6
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LGPL-2.1-or-later AND BSD-3-Clause AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
@@ -20,6 +20,11 @@ BuildRequires:  cmake
 BuildRequires:  python3-base
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(cairo)
+BuildRequires:  pkgconfig(freetype2)
+BuildRequires:  pkgconfig(harfbuzz)
+BuildRequires:  pkgconfig(fontconfig)
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(dconf)
 # lrelease, for the settings' translations

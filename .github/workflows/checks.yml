@@ -37,7 +37,8 @@ jobs:
             cmake ninja-build g++ pkg-config python3 \
             qtbase5-dev qtdeclarative5-dev qtdeclarative5-dev-tools qttools5-dev-tools \
             qml-module-qttest qml-module-qtquick2 \
-            libsqlite3-dev libdconf-dev
+            libsqlite3-dev libdconf-dev \
+            libcairo2-dev libfreetype-dev libharfbuzz-dev libfontconfig-dev
       - name: Build
         run: |
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release

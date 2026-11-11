@@ -348,5 +348,13 @@
         <source>Keeps the space after a picked suggestion, as in French</source>
         <translation>Garde l'espace après une suggestion choisie, comme en français</translation>
     </message>
+    <message>
+        <source>Replace emoticons</source>
+        <translation>Remplacer les émoticônes</translation>
+    </message>
+    <message>
+        <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
+        <translation>Espace transforme :-) en 🙂. Sinon, le bouton émoji le propose</translation>
+    </message>
 </context>
 </TS>

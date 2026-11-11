@@ -348,5 +348,13 @@
         <source>Keeps the space after a picked suggestion, as in French</source>
         <translation>Säilyttää välilyönnin valitun ehdotuksen jälkeen, kuten ranskassa</translation>
     </message>
+    <message>
+        <source>Replace emoticons</source>
+        <translation>Korvaa hymiöt</translation>
+    </message>
+    <message>
+        <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
+        <translation>Välilyönti muuttaa :-) muotoon 🙂. Muuten emojipainike tarjoaa sitä</translation>
+    </message>
 </context>
 </TS>

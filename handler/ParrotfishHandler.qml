@@ -79,6 +79,9 @@ InputHandler {
     // late, so unchanged text means the cursor is still after the space.
     property string _autoSpaced: ""
     property string _autoSpacedBefore: ""
+    // That space came after a sign that replaced the pick's (word. ): a
+    // next . ? ! goes before it (word... word?!), never after a space.
+    property bool _autoSpacedSign: false
     // The last autocorrection, while Backspace can still undo it:
     // { typed, corrected, suffix }.
     property var _correction: null
@@ -405,6 +408,7 @@ InputHandler {
         commit(replacement)
         _autoSpaced = replacement
         _autoSpacedBefore = before
+        _autoSpacedSign = false
         // As Space: a next word (nothing was typed, so the preedit's commit
         // path didn't run) counts as a committed word too, and Shift goes
         // back to automatic (Jolla does that too, but only when the app
@@ -582,18 +586,25 @@ InputHandler {
                         commit(preedit + pressedKey.text)
                     }
                 } else {
-                    if (autoSpaced !== "" && ",.;:?!".indexOf(pressedKey.text) >= 0
+                    var afterSign = _autoSpacedSign
+                    if (autoSpaced !== "" && (afterSign ? ".?!" : ",.;:?!").indexOf(pressedKey.text) >= 0
                             && (_endsTextBefore(autoSpaced) || _textBefore() === _autoSpacedBefore)) {
                         // Replace the space added by a picked suggestion: a
                         // Backspace key event, as for undo (Jolla's replacing
                         // commit failed in Android apps). Kept before ! ? : ;
-                        // if the user wants it (mot ?).
-                        if (!_spaceBefore(pressedKey.text)) {
+                        // if the user wants it (mot ?), not between signs.
+                        var reported = _textBefore()   // as at a pick: unchanged if the app is late
+                        if (afterSign || !_spaceBefore(pressedKey.text)) {
                             MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
                             if (_awaitingReport)
                                 _committedContext = _committedContext.slice(0, -1)
                         }
                         commit(pressedKey.text + " ")
+                        if (".?!".indexOf(pressedKey.text) >= 0) {
+                            _autoSpaced = pressedKey.text + " "
+                            _autoSpacedBefore = reported
+                            _autoSpacedSign = true
+                        }
                     } else {
                         commit(pressedKey.text)
                     }

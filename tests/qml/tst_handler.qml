@@ -258,6 +258,36 @@ Item {
                              "/apps/parrotfish-keyboard/autocorrect": "normal" }
         }
 
+        // After a pick, signs typed in a row stay together: the space moves
+        // after the last one (word... and word?!), also with the space
+        // before ! ? kept (mot ?!).
+        function test_signsAfterPick() {
+            context("I think it is ")
+            handler._awaitingReport = false
+            handler.applyPrediction("good", 0)
+            MInputMethodQuick.committedText = ""
+            MInputMethodQuick.sentKeys = []
+            type("...")
+            compare(MInputMethodQuick.sentKeys, [Qt.Key_Backspace, Qt.Key_Backspace, Qt.Key_Backspace])
+            compare(handler._currentTextBefore(), "I think it is good... ")
+            context("Really ")
+            handler._awaitingReport = false
+            handler.applyPrediction("good", 0)
+            type("?!")
+            compare(handler._currentTextBefore(), "Really good?! ")
+            var values = { "/apps/parrotfish-keyboard/languages": "en",
+                           "/apps/parrotfish-keyboard/autocorrect": "normal",
+                           "/apps/parrotfish-keyboard/space-before-punctuation": true }
+            Dconf.values = values
+            context("Vraiment ")
+            handler._awaitingReport = false
+            handler.applyPrediction("bien", 0)
+            type("?!")
+            compare(handler._currentTextBefore(), "Vraiment bien ?! ")
+            Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
+                             "/apps/parrotfish-keyboard/autocorrect": "normal" }
+        }
+
         function learningMode(mode) {
             Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
                              "/apps/parrotfish-keyboard/autocorrect": "normal",

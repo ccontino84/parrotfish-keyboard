@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Prova qui la tastiera</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Parole ed emoji scritti qui non vengono ricordati</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,48 @@
         <translation>Parole apprese</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Aiuti alla digitazione</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Disattivati</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n attivo</numerusform>
+            <numerusform>%n attivi</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Punto con doppio spazio</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Spazio prima di ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Mantiene lo spazio dopo un suggerimento scelto, come in francese</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Sostituisci le emoticon</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Aiuti alla digitazione</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>Due spazi dopo una parola scrivono un punto</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Mantiene lo spazio dopo un suggerimento scelto, come in francese</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

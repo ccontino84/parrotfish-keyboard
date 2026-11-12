@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Prøv tastaturet her</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Ord og emoji skrevet her huskes ikke</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,48 @@
         <translation>Lærte ord</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Skrivehjælp</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Fra</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n til</numerusform>
+            <numerusform>%n til</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Punktum ved dobbelt mellemrum</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Mellemrum før ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Beholder mellemrummet efter et valgt forslag, som på fransk</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Erstat emotikoner</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Skrivehjælp</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>To mellemrum efter et ord skriver et punktum</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Beholder mellemrummet efter et valgt forslag, som på fransk</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

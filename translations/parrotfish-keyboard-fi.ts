@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Kokeile näppäimistöä tässä</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Tähän kirjoitettuja sanoja ja emojeja ei muisteta</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,48 @@
         <translation>Opitut sanat</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Kirjoitusapu</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Pois</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n päällä</numerusform>
+            <numerusform>%n päällä</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Piste kahdella välilyönnillä</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Välilyönti ennen merkkejä ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Säilyttää välilyönnin valitun ehdotuksen jälkeen, kuten ranskassa</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Korvaa hymiöt</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Kirjoitusapu</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>Kaksi välilyöntiä sanan jälkeen lisää pisteen</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Säilyttää välilyönnin valitun ehdotuksen jälkeen, kuten ranskassa</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

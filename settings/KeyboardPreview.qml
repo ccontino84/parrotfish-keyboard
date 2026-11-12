@@ -6,7 +6,8 @@
 // it is open: the field takes the focus when the page opens (a keyboard
 // without a focused field doesn't open: Qt.inputMethod.show() alone does
 // nothing on the phone).
-// The keyboard doesn't learn from it: its __inputMethodExtensions, which
+// The keyboard doesn't learn from it, nor add its emoji to the recent ones
+// (a line below says so): its __inputMethodExtensions, which
 // Maliit passes on from the focused item, carry parrotfishNoLearning (the
 // handler pauses learning). A plain TextInput, not a TextField: the focused
 // item must carry the flag, and a TextField's is its inner editor.
@@ -23,7 +24,7 @@ Item {
 
     x: Theme.horizontalPageMargin
     width: (parent ? parent.width : 0) - 2 * x
-    height: preview.height + 2 * Theme.paddingMedium
+    height: hint.y + hint.height + Theme.paddingMedium
 
     Connections {
         target: previewItem.page
@@ -55,6 +56,18 @@ Item {
             color: Theme.secondaryHighlightColor
             font.pixelSize: Theme.fontSizeMedium
         }
+    }
+
+    // What the field doesn't keep (the handler: no learning, no recent emoji).
+    Label {
+        id: hint
+
+        y: preview.y + preview.height + Theme.paddingSmall
+        width: parent.width
+        wrapMode: Text.Wrap
+        color: Theme.secondaryHighlightColor
+        font.pixelSize: Theme.fontSizeExtraSmall
+        text: qsTr("Words and emoji typed here aren't remembered")
     }
 
     IconButton {

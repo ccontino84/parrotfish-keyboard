@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Încearcă tastatura aici</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Cuvintele și emoji tastate aici nu sunt reținute</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,49 @@
         <translation>Cuvinte învățate</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Ajutoare la tastare</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Dezactivate</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n activat</numerusform>
+            <numerusform>%n activate</numerusform>
+            <numerusform>%n de activate</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Punct la spațiu dublu</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Spațiu înainte de ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Păstrează spațiul după o sugestie aleasă, ca în franceză</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Înlocuiește emoticoanele</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Ajutoare la tastare</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>Două spații după un cuvânt scriu un punct</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Păstrează spațiul după o sugestie aleasă, ca în franceză</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Vyzkoušejte klávesnici zde</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Slova a emoji napsané zde se neukládají</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,49 @@
         <translation>Naučená slova</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Pomůcky pro psaní</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Vypnuto</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n zapnutá</numerusform>
+            <numerusform>%n zapnuté</numerusform>
+            <numerusform>%n zapnutých</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Tečka dvojitou mezerou</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Mezera před ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Ponechá mezeru po vybraném návrhu, jako ve francouzštině</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Nahrazovat emotikony</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Pomůcky pro psaní</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>Dvě mezery za slovem napíšou tečku</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Ponechá mezeru po vybraném návrhu, jako ve francouzštině</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

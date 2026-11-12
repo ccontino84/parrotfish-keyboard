@@ -816,6 +816,23 @@ Item {
             use("z0"); use("z0"); use("z1"); use("z2")
             compare(EmojiUtil.recentList(EmojiUtil.recentForget(stored, "z1")), ["z0", "z2"])
         }
+        // An emoji typed goes to the layout's recent emoji, except in the
+        // settings' preview field (parrotfishNoLearning).
+        function test_emojiRecentNotInPreview() {
+            var layout = Qt.createQmlObject('import QtQuick 2.15; Item { property var used: []; '
+                                            + 'function emojiUsed(e) { used = used.concat([e]) } }', root)
+            var saved = keyboard.layout
+            keyboard.layout = layout
+            handler._emojiUsed("\u{1F600}")
+            compare(layout.used, ["\u{1F600}"])
+            MInputMethodQuick.extensions = { "parrotfishNoLearning": true }
+            handler._emojiUsed("\u{1F601}")
+            compare(layout.used, ["\u{1F600}"], "not from the preview")
+            MInputMethodQuick.extensions = {}
+            keyboard.layout = saved
+            layout.destroy()
+        }
+
         // The variants picked from emoji's menus: the latest per emoji; the
         // emoji itself takes its entry out.
         function test_emojiPicked() {
@@ -902,6 +919,51 @@ Item {
             MInputMethodQuick.showsPreedit = false
             MInputMethodQuick.insertsCommits = false
         }
+        // Period on double space (on by default): a second Space within a
+        // second after a word puts a period before the first; Backspace
+        // straight after goes back to the one space.
+        function test_doubleSpacePeriod() {
+            // A new field each time: nothing reported from the last one.
+            var fresh = function(text) {
+                context(text)
+                handler._awaitingReport = false
+            }
+            fresh("I think it is ")
+            MInputMethodQuick.sentKeys = []
+            compare(type("good  "), "good . ", "the space, deleted, then the period")
+            compare(MInputMethodQuick.sentKeys, [Qt.Key_Backspace])
+            compare(handler._currentTextBefore(), "I think it is good. ")
+            compare(keyboard.shiftState, ShiftState.AutoShift)
+            compare(type(" "), " ", "a third Space: just a space")
+            fresh("I think it is ")
+            type("good  ")
+            MInputMethodQuick.sentKeys = []
+            MInputMethodQuick.committedText = ""
+            backspace()
+            compare(MInputMethodQuick.sentKeys, [Qt.Key_Backspace, Qt.Key_Backspace], "the period and the space")
+            compare(MInputMethodQuick.committedText, " ")
+            compare(handler._currentTextBefore(), "I think it is good ")
+            fresh("I was born in ")
+            compare(type("1984  "), "1984 . ", "after a digit too")
+            fresh("I think it is ")
+            compare(type("good,  "), "good,  ", "not after punctuation")
+            fresh("I think it is ")
+            type("good ")
+            handler._spaceTime -= 1500
+            compare(type(" "), " ", "not after a pause")
+            fresh("I think it is ")
+            type("goo")
+            handler.select("good", 0)
+            compare(type(" "), ". ", "after a picked suggestion's space")
+            Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
+                             "/apps/parrotfish-keyboard/autocorrect": "normal",
+                             "/apps/parrotfish-keyboard/double-space-period": false }
+            fresh("I think it is ")
+            compare(type("good  "), "good  ", "off")
+            Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
+                             "/apps/parrotfish-keyboard/autocorrect": "normal" }
+        }
+
         // Replace emoticons (off by default): Space turns the emoticon into
         // its emoji; Backspace straight after brings the emoticon back.
         function test_emoticonOnSpace() {

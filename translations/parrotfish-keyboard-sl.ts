@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Preizkusite tipkovnico tukaj</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Besede in emoji, vtipkani tukaj, se ne shranijo</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,50 @@
         <translation>Naučene besede</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Pomoč pri tipkanju</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Izklopljeno</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n vklopljena</numerusform>
+            <numerusform>%n vklopljeni</numerusform>
+            <numerusform>%n vklopljene</numerusform>
+            <numerusform>%n vklopljenih</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Pika z dvojnim presledkom</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Presledek pred ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Ohrani presledek po izbranem predlogu, kot v francoščini</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Zamenjaj emotikone</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Pomoč pri tipkanju</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>Dva presledka za besedo vstavita piko</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Ohrani presledek po izbranem predlogu, kot v francoščini</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

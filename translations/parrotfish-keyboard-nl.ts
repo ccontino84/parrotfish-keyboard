@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Probeer het toetsenbord hier</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Woorden en emoji die je hier typt, worden niet onthouden</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,48 @@
         <translation>Geleerde woorden</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Typhulp</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Uit</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n aan</numerusform>
+            <numerusform>%n aan</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Punt bij dubbele spatie</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Spatie voor ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Houdt de spatie na een gekozen suggestie, zoals in het Frans</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Emoticons vervangen</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Typhulp</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>Twee keer spatie na een woord typt een punt</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Houdt de spatie na een gekozen suggestie, zoals in het Frans</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

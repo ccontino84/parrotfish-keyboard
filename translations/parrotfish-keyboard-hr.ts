@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Isprobajte tipkovnicu ovdje</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Riječi i emoji upisani ovdje ne pamte se</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,49 @@
         <translation>Naučene riječi</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Pomoć pri pisanju</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Isključeno</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n uključena</numerusform>
+            <numerusform>%n uključene</numerusform>
+            <numerusform>%n uključenih</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Točka dvostrukim razmakom</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Razmak prije ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Zadržava razmak nakon odabranog prijedloga, kao u francuskom</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Zamijeni emotikone</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Pomoć pri pisanju</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>Dva razmaka nakon riječi upisuju točku</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Zadržava razmak nakon odabranog prijedloga, kao u francuskom</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

@@ -126,6 +126,11 @@ InputHandler {
     // An emoticon Space just replaced ({ text, emoji }), for Backspace to
     // bring back straight after; else null.
     property var _emoticonReplaced: null
+    // When the last key was a Space (or a picked suggestion added one), for
+    // the period on double space; else 0. _periodAdded: that Space just
+    // turned "word " into "word. ", for Backspace to bring back.
+    property double _spaceTime: 0
+    property bool _periodAdded: false
     // For each letter of preedit: "" or the tap's other key and "1"/"0" (the
     // letter shown is where the finger lifted / touched down), for the
     // engine (predictionEngine.preeditKeys). Kept in step with preedit.
@@ -202,6 +207,12 @@ InputHandler {
         id: replaceEmoticonsConfig
         key: "/apps/parrotfish-keyboard/replace-emoticons"   // false, true
         defaultValue: false
+    }
+
+    ConfigurationValue {
+        id: doubleSpacePeriodConfig
+        key: "/apps/parrotfish-keyboard/double-space-period"   // true (the default), false
+        defaultValue: true
     }
 
     ConfigurationValue {
@@ -378,8 +389,7 @@ InputHandler {
         _committedContext = before.substring(0, before.length - length)
         _awaitingReport = true
         commit(found.emoji)
-        if (keyboard.layout && typeof keyboard.layout.emojiUsed === "function")
-            keyboard.layout.emojiUsed(found.emoji)   // for its recent emoji
+        _emojiUsed(found.emoji)
     }
 
     function applyPrediction(replacement, index) {
@@ -405,6 +415,7 @@ InputHandler {
         }
         if (keyboard.shiftState !== ShiftState.LockedShift)
             keyboard.shiftState = ShiftState.AutoShift
+        _spaceTime = Date.now()
     }
 
     function handleKeyClick() {
@@ -414,10 +425,13 @@ InputHandler {
         _emojiDeleting = null
         var emoticonReplaced = _emoticonReplaced
         _emoticonReplaced = null
-        if (keyboard.layout && keyboard.layout.emojiView === true
-                && typeof keyboard.layout.emojiUsed === "function" && pressedKey.text !== ""
+        var spaceTime = _spaceTime
+        _spaceTime = 0
+        var periodAdded = _periodAdded
+        _periodAdded = false
+        if (keyboard.layout && keyboard.layout.emojiView === true && pressedKey.text !== ""
                 && (pressedKey.keyType === KeyType.CharacterKey || pressedKey.keyType === KeyType.PopupKey))
-            keyboard.layout.emojiUsed(pressedKey.text)   // for its recent emoji
+            _emojiUsed(pressedKey.text)
         if (correction !== null && !(pressedKey.key === Qt.Key_Backspace && preedit === "")) {
             predictionEngine.acceptCorrection(correction.typed)   // kept
             if (!correction.redone)   // already logged as redone
@@ -438,6 +452,15 @@ InputHandler {
             } else if (preedit !== "") {
                 _commitWord(" ")
                 keyboard.autocaps = false // assuming no autocaps after input
+            } else if (_periodOnDoubleSpace(spaceTime)) {
+                // "word " → "word. ": the space deleted with a Backspace key
+                // event (as for a picked suggestion's), then ". ".
+                var spaced = _currentTextBefore()
+                MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+                _committedContext = spaced.slice(0, -1)
+                _awaitingReport = true
+                commit(". ")
+                _periodAdded = true
             } else {
                 commit(" ")
             }
@@ -445,6 +468,8 @@ InputHandler {
             if (keyboard.shiftState !== ShiftState.LockedShift) {
                 keyboard.shiftState = ShiftState.AutoShift
             }
+            if (!_periodAdded)
+                _spaceTime = Date.now()
 
             handled = true
 
@@ -484,6 +509,19 @@ InputHandler {
             for (var k = 0; k < points; ++k)
                 MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
             commit(emoticonReplaced.text + " ")
+            handled = true
+
+        } else if (pressedKey.key === Qt.Key_Backspace && preedit === "" && periodAdded
+                   && _currentTextBefore().slice(-2) === ". ") {
+            // Undo the period on double space: back to the one space.
+            var dotted = _currentTextBefore()
+            MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+            MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
+            _committedContext = dotted.slice(0, -2)
+            _awaitingReport = true
+            commit(" ")
+            if (keyboard.shiftState !== ShiftState.LockedShift)
+                keyboard.shiftState = ShiftState.AutoShift
             handled = true
 
         } else if (pressedKey.key === Qt.Key_Backspace && preedit !== "") {
@@ -592,6 +630,14 @@ InputHandler {
         }
 
         return handled
+    }
+
+    // An emoji typed: the layout's recent emoji have it, except in the
+    // settings' preview field, which keeps nothing (parrotfishNoLearning).
+    function _emojiUsed(emoji) {
+        if (keyboard.layout && typeof keyboard.layout.emojiUsed === "function"
+                && !MInputMethodQuick.extensions.parrotfishNoLearning)
+            keyboard.layout.emojiUsed(emoji)
     }
 
     // Backspace after an emoji of several code points: deletes all of them
@@ -781,6 +827,19 @@ InputHandler {
         if (!picked)
             predictionEngine.logSlips(reopened.word, word, "manual")
         return false
+    }
+
+    // Period on double space (/apps/parrotfish-keyboard/double-space-period,
+    // on unless false): a Space within a second of the one that ended a word
+    // (a letter or a digit before it, not punctuation) puts a period before
+    // that space; Shift goes to automatic as after any sentence end.
+    function _periodOnDoubleSpace(spaceTime) {
+        if (spaceTime === 0 || Date.now() - spaceTime > 1000
+                || doubleSpacePeriodConfig.value === false || doubleSpacePeriodConfig.value === "false")
+            return false
+        var before = _currentTextBefore()
+        var last = before.charAt(before.length - 2)
+        return before.slice(-1) === " " && (predictionEngine.isLetter(last) || _isDigit(last))
     }
 
     // Whether the sign is written after a space: ! ? : ; if the user wants

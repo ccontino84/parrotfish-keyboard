@@ -9,6 +9,10 @@
         <source>Try the keyboard here</source>
         <translation>Tastatur hier ausprobieren</translation>
     </message>
+    <message>
+        <source>Words and emoji typed here aren't remembered</source>
+        <translation>Hier getippte Wörter und Emoji werden nicht gespeichert</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishDiagnostics</name>
@@ -341,16 +345,48 @@
         <translation>Gelernte Wörter</translation>
     </message>
     <message>
+        <source>Typing aids</source>
+        <translation>Tipphilfen</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>typing aids</comment>
+        <translation>Aus</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n on</source>
+        <comment>typing aids</comment>
+        <translation>
+            <numerusform>%n aktiv</numerusform>
+            <numerusform>%n aktiv</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishTypingAids</name>
+    <message>
+        <source>Period on double space</source>
+        <translation>Punkt bei doppeltem Leerzeichen</translation>
+    </message>
+    <message>
         <source>Space before ! ? : ;</source>
         <translation>Leerzeichen vor ! ? : ;</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Behält das Leerzeichen nach einem gewählten Vorschlag, wie im Französischen</translation>
-    </message>
-    <message>
         <source>Replace emoticons</source>
         <translation>Emoticons ersetzen</translation>
+    </message>
+    <message>
+        <source>Typing aids</source>
+        <translation>Tipphilfen</translation>
+    </message>
+    <message>
+        <source>Space twice after a word types a period</source>
+        <translation>Zweimal Leertaste nach einem Wort setzt einen Punkt</translation>
+    </message>
+    <message>
+        <source>Keeps the space after a picked suggestion, as in French</source>
+        <translation>Behält das Leerzeichen nach einem gewählten Vorschlag, wie im Französischen</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

@@ -100,6 +100,15 @@ Page {
             }
 
             SettingSlider {
+                key: "space-width"
+                label: qsTr("Space key width")
+                minimumValue: 82
+                maximumValue: 118
+                stepSize: 6
+                defaultValue: 100
+            }
+
+            SettingSlider {
                 key: "key-gap"
                 label: qsTr("Space between keys")
                 minimumValue: 0

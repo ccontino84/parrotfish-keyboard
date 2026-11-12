@@ -140,6 +140,10 @@
         <translation>Înălțimea tastelor pe orizontală</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Lățimea tastei spațiu</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Spațiu între taste</translation>
     </message>

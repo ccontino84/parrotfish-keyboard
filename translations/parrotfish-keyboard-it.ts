@@ -140,6 +140,10 @@
         <translation>Altezza tasti in orizzontale</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Larghezza barra spaziatrice</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Spazio tra i tasti</translation>
     </message>

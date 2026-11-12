@@ -92,6 +92,12 @@ KeyboardLayout {
                                                                   : keyHeightLandscapeConfig.value,
                                                      portraitMode ? 85 : 100)
 
+    // The spacebar's width in percent of Jolla's (BottomRow.qml): 82-118.
+    readonly property int spaceWidthPercent: {
+        var p = parseInt(spaceWidthConfig.value)
+        return p >= 82 && p <= 118 ? p : 100
+    }
+
     // The space around each key background, the same across and down: a
     // share of the row height (/apps/parrotfish-keyboard/key-gap percent,
     // default 5), so that shorter rows keep most of their background.
@@ -210,6 +216,7 @@ KeyboardLayout {
         _scaleKeyHeight()
         updateSizes()
     }
+    onSpaceWidthPercentChanged: updateSizes()
     onAvoidanceWidthChanged: _placeNumbers()
 
     ConfigurationValue {
@@ -288,6 +295,12 @@ KeyboardLayout {
     ConfigurationValue {
         id: keyHeightLandscapeConfig
         key: "/apps/parrotfish-keyboard/key-height-landscape"   // 80-100 (default 100)
+        defaultValue: ""
+    }
+
+    ConfigurationValue {
+        id: spaceWidthConfig
+        key: "/apps/parrotfish-keyboard/space-width"   // 82-118 (default 100)
         defaultValue: ""
     }
 

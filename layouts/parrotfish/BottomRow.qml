@@ -9,7 +9,8 @@
 // press on the comma offers : and ; as the period offers ! and ? (not where
 // it types / or @), with the typing languages' signs added (the layout's
 // punctuation: ¡ ¿, —); the backgrounds of ?123, the spacebar and Enter take the layout's gap;
-// comma and period have a LongPressHint.
+// comma and period have a LongPressHint; outside split landscape, the keys'
+// widths are set in relayout().
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
@@ -40,8 +41,40 @@ KeyboardRow {
 
     readonly property var _punctuation: parent && parent.punctuation !== undefined ? parent.punctuation : null
 
-    SymbolKey {}
+    // As KeyboardRow's, with the widths set first (outside split landscape):
+    // comma and period as the letter keys of ten-key rows, whatever the
+    // options; the spacebar as Jolla's (SpacebarRow.qml) times the layout's
+    // spaceWidthPercent; ?123 and Enter the rest, at least as wide as Shift.
+    // The percent is read here: a binding may not have followed the setting
+    // yet when the layout sizes its rows.
+    function relayout(basicButtonWidth) {
+        var percent = parent && parent.spaceWidthPercent !== undefined ? parent.spaceWidthPercent : 100
+        var punctuation = splitActive ? punctuationKeyWidth : width / 10
+        var space = (width - 2 * (functionKeyWidth + punctuationKeyWidth)) * percent / 100
+        var end = splitActive ? functionKeyWidth : Math.max(shiftKeyWidth, (width - space) / 2 - punctuation)
+        if (comma.implicitWidth !== punctuation)
+            comma.implicitWidth = punctuation
+        if (period.implicitWidth !== punctuation)
+            period.implicitWidth = punctuation
+        if (symbol.implicitWidth !== end)
+            symbol.implicitWidth = end
+        if (enter.implicitWidth !== end)
+            enter.implicitWidth = end
+        if (avoidanceWidth > 1) {
+            var shareableWidth = width - avoidanceWidth
+            var split = splitIndex > 0 ? splitIndex : Math.floor(children.length / 2)
+            _relayoutPart(basicButtonWidth, 0, split, 0, shareableWidth / 2)
+            _relayoutPart(basicButtonWidth, split, children.length, width / 2 + avoidanceWidth / 2, shareableWidth / 2)
+        } else {
+            _relayoutPart(basicButtonWidth, 0, children.length, 0, width)
+        }
+    }
+
+    SymbolKey {
+        id: symbol
+    }
     ContextAwareCommaKey {
+        id: comma
         property bool popupAlways: true   // as PeriodKey: also in the symbol view
         accents: caption !== "," ? "" : bottomRow._punctuation ? bottomRow._punctuation.comma : ":,;"
         accentsShifted: accents
@@ -55,11 +88,14 @@ KeyboardRow {
         languageLabel: ""
     }
     PeriodKey {
+        id: period
         accents: bottomRow._punctuation ? bottomRow._punctuation.period : "!.?"
         accentsShifted: accents
         showHighlight: !periodBackground.styled
         KeyBackground { id: periodBackground }
         LongPressHint { frame: periodBackground }
     }
-    EnterKey {}
+    EnterKey {
+        id: enter
+    }
 }

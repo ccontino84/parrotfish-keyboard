@@ -140,6 +140,10 @@
         <translation>Toetshoogte liggend</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Breedte van de spatiebalk</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Ruimte tussen toetsen</translation>
     </message>

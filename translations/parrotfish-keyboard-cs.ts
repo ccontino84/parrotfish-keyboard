@@ -140,6 +140,10 @@
         <translation>Výška kláves na šířku</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Šířka mezerníku</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Mezera mezi klávesami</translation>
     </message>

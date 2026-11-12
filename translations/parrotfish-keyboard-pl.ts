@@ -140,6 +140,10 @@
         <translation>Wysokość klawiszy w poziomie</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Szerokość spacji</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Odstęp między klawiszami</translation>
     </message>

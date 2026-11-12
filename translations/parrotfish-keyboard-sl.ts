@@ -140,6 +140,10 @@
         <translation>Višina tipk v ležeči postavitvi</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Širina preslednice</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Razmik med tipkami</translation>
     </message>

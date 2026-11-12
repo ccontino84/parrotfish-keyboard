@@ -140,6 +140,10 @@
         <translation>Altura de las teclas en horizontal</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Ancho de la barra espaciadora</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Espacio entre teclas</translation>
     </message>

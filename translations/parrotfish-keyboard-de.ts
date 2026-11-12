@@ -140,6 +140,10 @@
         <translation>Tastenhöhe im Querformat</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Breite der Leertaste</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Abstand zwischen den Tasten</translation>
     </message>

@@ -140,6 +140,10 @@
         <translation>Näppäinten korkeus vaakatilassa</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Välilyöntinäppäimen leveys</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Näppäinten väli</translation>
     </message>

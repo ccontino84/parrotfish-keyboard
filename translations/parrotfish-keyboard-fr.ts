@@ -140,6 +140,10 @@
         <translation>Hauteur des touches en paysage</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Largeur de la barre d'espace</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Espace entre les touches</translation>
     </message>

@@ -140,6 +140,10 @@
         <translation>Altura das teclas no modo paisagem</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Largura da barra de espaço</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Espaço entre as teclas</translation>
     </message>

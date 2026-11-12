@@ -140,6 +140,10 @@
         <translation>Tasthøjde i liggende format</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Mellemrumstastens bredde</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Afstand mellem taster</translation>
     </message>

@@ -140,6 +140,10 @@
         <translation>Tangenthöjd i liggande läge</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Mellanslagstangentens bredd</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Avstånd mellan tangenter</translation>
     </message>

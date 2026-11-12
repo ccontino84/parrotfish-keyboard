@@ -140,6 +140,10 @@
         <translation>Visina tipki u vodoravnom položaju</translation>
     </message>
     <message>
+        <source>Space key width</source>
+        <translation>Širina razmaknice</translation>
+    </message>
+    <message>
         <source>Space between keys</source>
         <translation>Razmak između tipki</translation>
     </message>

@@ -40,7 +40,8 @@ KeyboardLayout {
     property string arrangementKey: "qwerty"
     readonly property var arrangement: Arrangements.get(arrangementKey, numberRowOn,
                                                         stickySideConfig.value, stickyOn,
-                                                        languageKeysOn, languageKeysSideConfig.value)
+                                                        languageKeysOn, languageKeysSideConfig.value,
+                                                        _anyLastRowLetter)
 
     // Language keys (since 1.1; the Look page's "Language
     // keys"): three keys whose letters are those of the typing language
@@ -51,6 +52,10 @@ KeyboardLayout {
     property string groupLanguage: ""
     readonly property string groupLetters: groupLanguage !== "" ? Languages.extraKeys(groupLanguage) : ""
     property bool _anyGroupLanguage: false
+    // A typing language has a letter for the sticky key's place (the 5th of
+    // its extra-keys): only then does that place get a language key while
+    // the sticky key is off.
+    property bool _anyLastRowLetter: false
     // language-keys: false (the default: they narrow the letters on QWERTY
     // and AZERTY), true.
     readonly property bool languageKeysOn: String(languageKeysConfig.value) === "true"
@@ -155,16 +160,21 @@ KeyboardLayout {
 
     function _updateGroupLanguage() {
         var codes = Languages.selected(languagesConfig.value)
-        var claim = []
-        for (var i = 0; i < codes.length; ++i)
-            if (Languages.extraKeys(codes[i]) !== "")
+        var claim = [], lastRow = false
+        for (var i = 0; i < codes.length; ++i) {
+            var letters = Languages.extraKeys(codes[i])
+            if (letters !== "")
                 claim.push(codes[i])
+            if (letters.length > 4 && letters.charAt(4) !== "-")
+                lastRow = true
+        }
         var last = String(lastLanguageConfig.value)
         if (claim.indexOf(last) >= 0)
             groupLanguage = last
         else if (claim.indexOf(groupLanguage) < 0)
             groupLanguage = claim.length > 0 ? claim[0] : ""
         _anyGroupLanguage = claim.length > 0
+        _anyLastRowLetter = lastRow
     }
 
     // The letter of a language key: its place in the language's letters

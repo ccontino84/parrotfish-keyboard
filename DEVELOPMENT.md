@@ -324,7 +324,9 @@ keys for the typing language's most used accented letters (`extra-keys` in
 `LANG.language`): three at the row ends where Jolla's QWERTZ has ü / ö ä
 (each arrangement's `slots`, `withLanguageKeys()`), at the row starts on the
 left (`placeLanguageKeys()`), plus up to two more at the end of the number
-row and in the sticky key's place when that key is off; they follow the
+row and in the sticky key's place when that key is off (that one only if an
+enabled language has a letter for it; AZERTY always, in place of its
+apostrophe key); they follow the
 language of the last word the keyboard was sure of, show only if an enabled language has them, and
 narrow Shift and Backspace, not the letters. The sticky key always stays
 outermost. `/apps/parrotfish-keyboard/long-press-hint`

@@ -328,10 +328,12 @@ function withoutLanguageKeys(name, a) {
 // With the sticky key off, the sticky key's place in the last row gets a
 // language key instead (slot 4: the language's letter for that place, else
 // a plain '), so that the keys keep their places: added where placeSticky
-// would add the sticky key, or in place of AZERTY's (with its signs; the
-// apostrophe is then on the symbol page, or back with the sticky key).
-function withLanguageKeyInLastRow(a) {
-    if (!a.stickyInLastRow && !a.stickyStays)
+// would add the sticky key, only if a typing language has a letter for it
+// (`withLetter`; otherwise the row is as without the sticky key), or in
+// place of AZERTY's (with its signs; the apostrophe is then on the symbol
+// page, or back with the sticky key).
+function withLanguageKeyInLastRow(a, withLetter) {
+    if (!a.stickyStays && (!a.stickyInLastRow || !withLetter))
         return a
     var rows = a.rows.slice()
     var last = rows.length - 1
@@ -429,14 +431,16 @@ function menusOf(a, letter, letters) {
 // "numbers" row above the letters (withNumberRow). `stickySide` ("right",
 // "left") places the sticky key (placeSticky); `stickyOn` false: none
 // (withoutSticky). `languageKeys`: with or without the language keys, on
-// `languageSide` ("right", "left": placeLanguageKeys).
-function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide) {
+// `languageSide` ("right", "left": placeLanguageKeys); `lastRowLetter`: a
+// typing language has a letter for the sticky key's place
+// (withLanguageKeyInLastRow).
+function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide, lastRowLetter) {
     var a = arrangements[name] || arrangements["qwerty"]
     if (!arrangements[name])
         name = "qwerty"
     a = languageKeys ? withLanguageKeys(a) : withoutLanguageKeys(name, a)
     if (languageKeys && stickyOn === false)
-        a = withLanguageKeyInLastRow(a)
+        a = withLanguageKeyInLastRow(a, lastRowLetter === true)
     a = stickyOn === false ? withoutSticky(a) : placeSticky(a, stickySide)
     if (numberRow)
         a = withNumberRow(a)

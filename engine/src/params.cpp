@@ -54,6 +54,7 @@ const Param Params[] = {
     {"autocorrectConfidence",      true,  [](EngineParams &p, double v) { p.autocorrectConfidence = v; }},
     {"firstWordConfidence",        true,  [](EngineParams &p, double v) { p.firstWordConfidence = v; }},
     {"firstWordShare",             true,  [](EngineParams &p, double v) { p.firstWordShare = v; }},
+    {"unsureGentle",               true,  [](EngineParams &p, double v) { p.unsureGentle = v; }},
     {"gentleConfidence",           true,  [](EngineParams &p, double v) { p.gentleConfidence = v; }},
     {"gentleMinLength",            true,  [](EngineParams &p, double v) { p.gentleMinLength = static_cast<size_t>(v); }},
     {"gentleShortLength",          true,  [](EngineParams &p, double v) { p.gentleShortLength = static_cast<size_t>(v); }},

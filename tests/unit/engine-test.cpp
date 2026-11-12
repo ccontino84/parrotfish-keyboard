@@ -303,9 +303,10 @@ void testFirstWord()
     // A new text leans towards the language of the last text (×3, as the
     // plugin does): 0.6 of three languages, below autocorrectConfidence.
     auto space = [](const std::string &lean, Strength strength, const std::string &text,
-                    const std::string &typed, const std::string &layoutLang = "en") {
+                    const std::string &typed, const std::string &layoutLang = "en", double unsureGentle = 1) {
         EngineParams p;
         p.strength = strength;
+        p.unsureGentle = unsureGentle;
         p.corrector.completions = true;
         Engine e(p);
         for (const char *l : {"en", "it", "de"})
@@ -322,10 +323,16 @@ void testFirstWord()
     CHECK_EQ(space("en", Strength::Gentle, "", "Tje"), "The");
     CHECK_EQ(space("en", Strength::Normal, "", "Exampke"), "Example");
     CHECK_EQ(space("it", Strength::Normal, "", "Ciap", "it"), "Ciao");
-    // ...but not when it is another language, or there is no lean.
-    CHECK_EQ(space("it", Strength::Gentle, "", "Tje"), "Tje");
-    CHECK_EQ(space("", Strength::Gentle, "", "Tje"), "Tje");
-    CHECK_EQ(space("en", Strength::Normal, "", "Ciap", "it"), "Ciap");
+    // ...not when it is another language, or there is no lean...
+    CHECK_EQ(space("it", Strength::Gentle, "", "Tje", "en", 0), "Tje");
+    CHECK_EQ(space("", Strength::Gentle, "", "Tje", "en", 0), "Tje");
+    CHECK_EQ(space("en", Strength::Normal, "", "Ciap", "it", 0), "Ciap");
+    // ...except Gentle's obvious slips (unsureGentle, the default), whatever
+    // the strength.
+    CHECK_EQ(space("it", Strength::Gentle, "", "Tje"), "The");
+    CHECK_EQ(space("", Strength::Gentle, "", "Tje"), "The");
+    CHECK_EQ(space("en", Strength::Normal, "", "Ciap", "it"), "Ciao");
+    CHECK_EQ(space("en", Strength::Off, "", "Tje", "en"), "Tje");
 
     // Gentle: two letters, one of them the next key in the row (ub → un;
     // a slip up or down a row is rarer on the phone's tall keys).

@@ -36,6 +36,10 @@ struct EngineParams {
     // the probability (the lower of the two) is at least firstWordShare.
     double firstWordConfidence = 0.5;
     double firstWordShare = 0.7;
+    // With the language not sure (above), whatever the strength, what
+    // Gentle would fix is still fixed (an obvious slip, not a word), if this
+    // is at least 1; 0: nothing is fixed until the language is sure.
+    double unsureGentle = 1;
     // Gentle: the share of the probability the best correction needs, and
     // its limits below (one edit, few letters: only obvious slips).
     double gentleConfidence = 0.95;

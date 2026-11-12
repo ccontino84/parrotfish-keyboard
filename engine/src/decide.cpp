@@ -6,7 +6,8 @@
 //   1. the model's last term, "a word missing from the dictionaries"
 //      (unknownReading), and the shares of all readings (shares);
 //   2. the suggestion bar and the fix Space would type (bar);
-//   3. gates: the language must be sure (languageSure), a word of another
+//   3. gates: the language must be sure (languageSure; if not, only Gentle's
+//      fixes: unsureGentle), a word of another
 //      typing language is not replaced lightly (otherLanguageAllows);
 //   4. the rule: a valid word (fixValidWord: case fixes, Strong's real-word
 //      fixes), Gentle's obvious slips (fixGentle), or Normal and Strong's
@@ -109,7 +110,12 @@ Result Engine::decide(Searched in, const EngineParams &params) const
     shares(d);
     if (!bar(d))
         return std::move(d.r);
-    if (!languageSure(d) || !otherLanguageAllows(d))
+    const bool sure = languageSure(d);
+    // The language not sure yet (unsureGentle): Gentle's obvious slips are
+    // still fixed.
+    const bool unsureGentle = !sure && params.unsureGentle >= 1 && r.reason == Reason::LanguageNotSure
+            && !r.typedIsWord && params.strength != Strength::Off && !(d.best.attrs & format::AttrOffensive);
+    if ((!sure && !unsureGentle) || !otherLanguageAllows(d))
         return std::move(d.r);
 
     // A single letter is never replaced, except by itself in another case:
@@ -117,8 +123,8 @@ Result Engine::decide(Searched in, const EngineParams &params) const
     // dictionaries). The handler applies it at Space only (i.e. stays).
     d.caseOnly = in.taps.size() == 1 && d.bestLower == d.typedLower;
     const bool apply = r.typedIsWord ? fixValidWord(d)
-                       : params.strength == Strength::Gentle ? fixGentle(d)
-                                                              : fixExpectedCost(d);
+                       : params.strength == Strength::Gentle || unsureGentle ? fixGentle(d)
+                                                                              : fixExpectedCost(d);
     if (apply) {
         // What Space will type comes first in the bar.
         std::rotate(r.suggestions.begin(), r.suggestions.begin() + d.candidate,

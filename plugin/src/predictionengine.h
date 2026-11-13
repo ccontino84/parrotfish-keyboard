@@ -235,11 +235,13 @@ private:
     bool m_learnPaused = false;
     parrotfish::Learned m_learned;
     // The last word committed, learned once kept: the text before it, the
-    // word, the text's language then.
+    // word, the text's language then (if not sure then: the language when
+    // the word is learned, the tracker having seen more of the text).
     struct Kept {
         bool valid = false;
         std::u32string before, word;
         std::string language;
+        bool sure = true;
     } m_kept;
     int m_keptSinceSave = 0;
     // The last searches' results (Backspace back to a prefix shows its

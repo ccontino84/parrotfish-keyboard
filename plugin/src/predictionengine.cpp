@@ -111,8 +111,9 @@ void PredictionEngine::committed(const QString &textBefore, const QString &text)
     std::u32string before = toU32(textBefore);
     const std::vector<std::u32string> ws = parrotfish::words(toU32(text));
     const std::string language = leadingLanguage().toStdString();
+    const bool sure = confidence() >= m_engine.params().autocorrectConfidence;
     for (size_t i = 0; i < ws.size(); ++i) {
-        m_kept = {true, before, ws[i], language};
+        m_kept = {true, before, ws[i], language, sure};
         if (i + 1 < ws.size()) {   // more than one word: all but the last are kept
             learnKept();
             before += ws[i] + U' ';
@@ -202,7 +203,8 @@ void PredictionEngine::learnKept()
     m_kept.valid = false;
     if (m_learnPaused)
         return;
-    m_engine.learn(m_learned, m_kept.before, m_kept.word, m_kept.language);
+    m_engine.learn(m_learned, m_kept.before, m_kept.word,
+                   m_kept.sure ? m_kept.language : leadingLanguage().toStdString());
     if (++m_keptSinceSave >= 50)
         saveLearned();
 }

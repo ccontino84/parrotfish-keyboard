@@ -217,6 +217,15 @@ KeyboardLayout {
         updateSizes()
     }
     onSpaceWidthPercentChanged: updateSizes()
+    // Jolla's keyboard picks the handler again when the field's hints change
+    // (jolla-keyboard.qml: updateInputHandler()), but can read `handler`
+    // before it follows them, and keep the wrong one: pick again.
+    onHandlerChanged: {
+        if (typeof keyboard !== "undefined" && keyboard.layout === parrotfishLayout
+                && keyboard.allowLayoutChanges && keyboard.inputHandler !== handler
+                && typeof keyboard.updateInputHandler === "function")
+            keyboard.updateInputHandler()
+    }
     onAvoidanceWidthChanged: _placeNumbers()
 
     ConfigurationValue {

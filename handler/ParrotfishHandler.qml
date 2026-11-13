@@ -342,6 +342,35 @@ InputHandler {
             if (inputHandler._emojiDeleting !== null)
                 emojiDeletingCheck.restart()
         }
+        // Debug log only: what the field tells, and the keyboard's handler then.
+        onHiddenTextChanged: inputHandler._logField("hidden text")
+        onContentTypeChanged: inputHandler._logField("content type")
+        onPredictionEnabledChanged: inputHandler._logField("prediction enabled")
+        onFocusTargetChanged: inputHandler._logField("focus target, active editor " + activeEditor)
+    }
+
+    // The keyboard's own handlers react to the same signals: log after them.
+    Timer {
+        id: fieldLog
+        interval: 0
+        property string why
+        onTriggered: {
+            var layoutHandler = keyboard.layout ? keyboard.layout.handler : null
+            predictionEngine.log("field (" + why + "): hidden " + MInputMethodQuick.hiddenText
+                                 + ", content type " + MInputMethodQuick.contentType
+                                 + ", prediction " + MInputMethodQuick.predictionEnabled
+                                 + ", layout changes allowed " + keyboard.allowLayoutChanges
+                                 + ", keyboard handler is " + (keyboard.inputHandler === inputHandler ? "ours" : "another")
+                                 + ", layout wants " + (layoutHandler === inputHandler ? "ours" : "another")
+                                 + ", active " + active)
+        }
+    }
+
+    function _logField(why) {
+        if (!predictionEngine.debug)
+            return
+        fieldLog.why = fieldLog.running ? fieldLog.why + ", " + why : why
+        fieldLog.restart()
     }
 
     function formatText(text) {

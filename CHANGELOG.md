@@ -5,6 +5,23 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Changelog
 
+## 1.2.1 (2026-11-13)
+
+### Improved
+
+- **The language packages are renamed** `parrotfish-keyboard-languages-latin`
+  and `parrotfish-keyboard-languages-latin-experimental`, so that
+  installers that take a release's packages together, such as
+  [Harpoon](https://github.com/JuhaniLehtimaeki/Harpoon), install and update
+  all three. Installing them replaces the packages with the old names.
+
+### Fixed
+
+- The package description no longer lists the QWERTY ÅÖÄ layout, gone
+  since 1.1.
+
+Install all three RPMs this time; your settings and learned words are kept.
+
 ## 1.2.0 (2026-11-13)
 
 ### New

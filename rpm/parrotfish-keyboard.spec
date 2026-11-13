@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 Name:       parrotfish-keyboard
-Version:    1.2.0
+Version:    1.2.1
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LGPL-2.1-or-later AND BSD-3-Clause AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
@@ -44,14 +44,15 @@ Provides:   parrotfish-dictionary-format = %{dictformat}
 %description
 Word suggestions, autocorrect with undo, learning and next-word prediction
 for the Sailfish OS keyboard, in several languages at once: the typing
-language follows the text. Adds four layouts (QWERTY, QWERTZ, AZERTY,
-QWERTY with å ö ä) to the stock keyboard, with a prediction handler and a
-settings section in Text input; no system files are modified, and Jolla's
-own layouts are left as they are.
+language follows the text, and emoji. Adds three layouts (QWERTY, QWERTZ,
+AZERTY) to the stock keyboard, with a prediction handler and a settings
+section in Text input; no system files are modified, and Jolla's own
+layouts are left as they are.
 
 The dictionaries come in language packages: install
-parrotfish-languages-latin, parrotfish-languages-latin-experimental or
-both. Each one installs the keyboard too.
+parrotfish-keyboard-languages-latin,
+parrotfish-keyboard-languages-latin-experimental or both. Each one installs
+the keyboard too.
 
 %if 0%{?_chum}
 Title: Parrotfish Keyboard
@@ -66,7 +67,7 @@ Links:
   Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
 %endif
 
-%package -n parrotfish-languages-latin
+%package languages-latin
 Summary:    Languages for Parrotfish Keyboard: Czech, Dutch, English, French, German, Italian, Polish, Portuguese, Slovenian, Spanish
 # The Slovenian dictionary comes from the Sloleks lexicon and the Kres
 # n-grams (CC BY-SA 4.0).
@@ -75,8 +76,11 @@ BuildArch:  noarch
 Requires:   %{name}
 Requires:   parrotfish-dictionary-format = %{dictformat}
 Provides:   parrotfish-dictionaries
+# Its name until 1.2.
+Obsoletes:  parrotfish-languages-latin < %{version}-%{release}
+Provides:   parrotfish-languages-latin = %{version}-%{release}
 
-%description -n parrotfish-languages-latin
+%description languages-latin
 Dictionaries and word-pair data for Parrotfish Keyboard, for languages
 written in the Latin script: Czech, Dutch, English, French, German,
 Italian, Polish, Portuguese (Brazil and Portugal), Slovenian and Spanish.
@@ -95,15 +99,18 @@ Links:
   Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
 %endif
 
-%package -n parrotfish-languages-latin-experimental
+%package languages-latin-experimental
 Summary:    Experimental languages for Parrotfish Keyboard: Croatian, Danish, Finnish, Norwegian, Romanian, Swedish
 License:    Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
 BuildArch:  noarch
 Requires:   %{name}
 Requires:   parrotfish-dictionary-format = %{dictformat}
 Provides:   parrotfish-dictionaries
+# Its name until 1.2.
+Obsoletes:  parrotfish-languages-latin-experimental < %{version}-%{release}
+Provides:   parrotfish-languages-latin-experimental = %{version}-%{release}
 
-%description -n parrotfish-languages-latin-experimental
+%description languages-latin-experimental
 Dictionaries for the Latin-script languages Parrotfish Keyboard supports
 less well, for lack of public text to build and test them: Croatian,
 Danish, Finnish, Norwegian Bokmål, Romanian and Swedish. Installs
@@ -151,18 +158,18 @@ if [ $1 -eq 0 ]; then
     systemctl-user try-restart maliit-server.service || :
 fi
 
-%posttrans -n parrotfish-languages-latin
+%posttrans languages-latin
 systemctl-user try-restart maliit-server.service || :
 
-%postun -n parrotfish-languages-latin
+%postun languages-latin
 if [ $1 -eq 0 ]; then
     systemctl-user try-restart maliit-server.service || :
 fi
 
-%posttrans -n parrotfish-languages-latin-experimental
+%posttrans languages-latin-experimental
 systemctl-user try-restart maliit-server.service || :
 
-%postun -n parrotfish-languages-latin-experimental
+%postun languages-latin-experimental
 if [ $1 -eq 0 ]; then
     systemctl-user try-restart maliit-server.service || :
 fi
@@ -183,8 +190,8 @@ fi
 %{_libexecdir}/%{name}
 %endif
 
-%files -n parrotfish-languages-latin -f latin.files
+%files languages-latin -f latin.files
 %license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE
 
-%files -n parrotfish-languages-latin-experimental -f latin-experimental.files
+%files languages-latin-experimental -f latin-experimental.files
 %license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE

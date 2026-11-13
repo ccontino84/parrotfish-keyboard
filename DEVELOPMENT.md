@@ -257,9 +257,11 @@ sentences. Release builds leave them out.
 
 Three packages: `parrotfish-keyboard` (no dictionaries), and two noarch
 language packages named by script (Latin: every language so far; later
-`-cyrillic` and the like), `parrotfish-languages-latin` and
-`parrotfish-languages-latin-experimental` (the languages marked
-experimental in `data/rules/*.language`); the spec's file lists come from
+`-cyrillic` and the like), `parrotfish-keyboard-languages-latin` and
+`parrotfish-keyboard-languages-latin-experimental` (the languages marked
+experimental in `data/rules/*.language`; named after the keyboard, so that
+installers taking a release's packages together, such as Harpoon, accept
+them; `parrotfish-languages-*` until 1.2, which they obsolete); the spec's file lists come from
 `languages.json` (`tools/split-languages.py`). A language package requires
 `parrotfish-keyboard` and `parrotfish-dictionary-format = N`, which the
 keyboard provides (the spec's `dictformat`, checked against the engine's

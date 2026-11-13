@@ -56,10 +56,11 @@ the 32-bit build (armv7hl) is untested, reports are welcome.
    download:
    - `parrotfish-keyboard-<version>` for your device: `aarch64` for most
      current devices, `armv7hl` for 32-bit installations;
-   - `parrotfish-languages-latin-<version>.noarch`: Czech, Dutch, English,
-     French, German, Italian, Polish, Portuguese, Slovenian, Spanish;
+   - `parrotfish-keyboard-languages-latin-<version>.noarch`: Czech, Dutch,
+     English, French, German, Italian, Polish, Portuguese, Slovenian,
+     Spanish;
    - for Croatian, Danish, Finnish, Norwegian, Romanian or Swedish, also
-     `parrotfish-languages-latin-experimental-<version>.noarch`.
+     `parrotfish-keyboard-languages-latin-experimental-<version>.noarch`.
 2. In **Settings > Untrusted software**, turn on *Allow untrusted software*.
 3. Open the downloaded files (from the browser's downloads or the Files app)
    and install them, `parrotfish-keyboard` first. The keyboard restarts by
@@ -82,13 +83,17 @@ With Developer mode, the same from a terminal:
 devel-su pkcon install-local parrotfish-*.rpm
 ```
 
+With [Harpoon](https://github.com/JuhaniLehtimaeki/Harpoon), add
+`https://github.com/ccontino84/parrotfish-keyboard`: it installs and updates
+the keyboard and both language packages.
+
 ## Uninstall
 
 From a terminal (Developer mode):
 
 ```sh
-devel-su pkcon remove parrotfish-languages-latin-experimental   # if installed
-devel-su pkcon remove parrotfish-languages-latin parrotfish-keyboard
+devel-su pkcon remove parrotfish-keyboard-languages-latin-experimental   # if installed
+devel-su pkcon remove parrotfish-keyboard-languages-latin parrotfish-keyboard
 ```
 
 Settings stay in dconf and learned words in your home directory. To remove

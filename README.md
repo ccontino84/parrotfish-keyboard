@@ -23,6 +23,12 @@ What it adds to Jolla's keyboard:
   only on the phone. One Backspace undoes a correction, and one you keep
   undoing stops. Four strengths, from Strong (also fixes real words typed by
   mistake) to Off.
+- **Emoji.** A button at the end of the suggestion bar opens an emoji
+  panel, with your recent emoji first, skin tones and gender forms on long
+  press, in colour. Type an emoticon such as `:-)` and the button offers
+  its emoji.
+- **Typing aids,** each one on or off: a period on double space, a space
+  before ! ? : ; (as in French), and emoticons replaced by their emoji.
 - **Three arrangements:** QWERTY, QWERTZ and AZERTY, for any language.
   Optional language keys put the most used accented letters of the
   language you are typing on keys of their own (å ö ä for Swedish, ł ę ż
@@ -30,8 +36,8 @@ What it adds to Jolla's keyboard:
   shows your languages' accents first, and the sticky key keeps the last
   sign you picked.
 - **Customizable, and at home on Sailfish:** it looks like Jolla's keyboard,
-  and key fill, border, height, spacing, number row and hints can be
-  changed, with a live preview.
+  and key fill, border, height, spacing, the width of the space key, the
+  number row and hints can be changed, with a live preview.
 
 Languages: Czech, Dutch, English, French, German, Italian, Polish,
 Portuguese (Brazil and Portugal), Slovenian, Spanish. Experimental:
@@ -40,7 +46,7 @@ separate package. There is too little public text
 to build and test these as well as the others; feedback from native speakers
 is welcome. The settings are translated into all of them.
 
-**Status:** 1.1. Tested on Sailfish OS 5.2 (aarch64);
+**Status:** 1.2. Tested on Sailfish OS 5.2 (aarch64);
 the 32-bit build (armv7hl) is untested, reports are welcome.
 
 ## Install
@@ -97,7 +103,8 @@ rm -r ~/.local/share/parrotfish-keyboard
 
 - **Nothing leaves the phone.** The keyboard makes no network connections.
   Learned words are stored only on the phone. *Clear all learned data*, in
-  the settings, removes them.
+  the settings, removes them. Recent emoji are kept with the settings; a
+  long press in the panel removes one.
 - **No system file is changed.** Parrotfish adds its own layouts, handler
   and settings to the stock keyboard. Jolla's own layouts are left as they
   are.

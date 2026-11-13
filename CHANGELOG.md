@@ -5,6 +5,59 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Changelog
 
+## 1.2.0 (2026-11-13)
+
+### New
+
+- **Emoji:** the button at the right end of the suggestion bar opens an
+  emoji panel in place of the keys, and the same button (then a keyboard)
+  goes back; split landscape, which has no bar, gets an emoji key. The
+  panel scrolls sideways through the groups, with the recent emoji first,
+  in colour. A long press offers skin tones and gender forms (the one
+  picked is remembered), or removes a recent emoji. Backspace deletes a
+  whole emoji, even one made of several characters. How emoji look in an
+  app is up to the app.
+- **Emoticons:** after typing one such as `:-)`, `<3` or `\o/`, the emoji
+  button offers its emoji, and a tap puts it in place. *Replace emoticons*
+  (off by default) does it on Space instead; Backspace straight after
+  brings the emoticon back.
+- **Typing aids:** a new page in Typing for the helpers you can turn on
+  or off. New among them, and on by default: **period on double space**,
+  Space twice after a word types ". " and capitalises the next word
+  (Backspace straight after goes back to one space). Also there: space
+  before ! ? : ; and replace emoticons.
+- **Space key width,** in Look & feel: from 82% to 118% of Jolla's
+  spacebar; ?123 and Enter take the difference, and are never narrower
+  than Shift.
+
+### Improved
+
+- **Bottom row:** comma and period are as wide as the letter keys (?123
+  and Enter a little narrower), and the row stays the same with language
+  keys on, so that comma and period stay easy to hit.
+- **Autocorrect at the start of a text:** while the keyboard isn't sure
+  of the language yet, it now fixes obvious slips (what Gentle fixes),
+  instead of nothing.
+- Words typed before the keyboard is sure of the language are learned in
+  the language it settles on, not in its first guess.
+- Words and emoji typed in the settings' preview are not kept, and a line
+  under it says so.
+
+### Fixed
+
+- **Password fields in some apps** could be typed in as normal text
+  fields (the whole word underlined) until the keyboard was switched.
+- Dots typed after a picked suggestion stay together (`word...`,
+  `word?!`), instead of getting a space after the first one.
+- With language keys on, Danish, Finnish, Norwegian and Swedish no longer
+  get an é key next to M. That place gets a language key only if one of
+  your languages has a letter for it.
+
+The changes are in `parrotfish-keyboard`; the language packages are the
+same as 1.1's apart from the version, so installing all three together
+keeps them in step. The new settings texts were translated without native
+speakers: corrections are welcome.
+
 ## 1.1.0 (2026-11-10)
 
 - **Language keys:** the most used accented letters of the language you

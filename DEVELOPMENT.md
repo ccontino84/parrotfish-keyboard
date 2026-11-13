@@ -34,6 +34,16 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 | `tests/qml/` | the handler on the PC with the plugin, Sailfish OS's modules replaced by stand-ins (ctest `qml`, needs `qmltestrunner`) |
 | `tests/bench/` | accuracy benchmarks: typos and autocorrect in running text (`sentence-bench`), next words (`nextword-bench`), single words (`typo-bench`), mixed languages (`lang-bench`) |
 
+## Comments
+
+Comments say what the code can't: a non-obvious reason (Qt 5.6 draws emoji
+in black and white; apps delete one code point per Backspace), a trap, or
+what a function takes and returns, in a line or two. They don't describe
+what the user sees (that is the README and CHANGELOG), repeat what another
+comment or this file says, give the reasons behind a design decision, or
+tell how a bug was found. Files based on Jolla's list their changes in the
+header, briefly. Examples are in English.
+
 ## Build and test
 
 ```sh

@@ -1136,7 +1136,7 @@ InputHandler {
 
     topItem: Component {
         TopItem {
-            // The emoji button (experimental) at the bar's right end, across
+            // The emoji button at the bar's right end, across
             // from Jolla's paste button: it opens the layout's emoji panel
             // (emoji/EmojiPanel.qml), and shows the keyboard icon to go back to the
             // letters. Above the suggestions (z), which are clipped at its edge.

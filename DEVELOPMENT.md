@@ -343,11 +343,12 @@ language of the last word the keyboard was sure of, show only if an enabled lang
 narrow Shift and Backspace, not the letters. The sticky key always stays
 outermost. `/apps/parrotfish-keyboard/long-press-hint`
 (`dot` = the default, `off`): a dot on keys with a long-press menu. The
-settings section (`settings/ParrotfishSettings.qml`) opens two pages,
-Typing and Look & feel; both open the keyboard, with a field to try it in (and a clear button) that it doesn't learn from
+settings section (`settings/ParrotfishSettings.qml`) opens three pages:
+Typing, Layout (number row, language keys, sticky key) and Look & feel; each
+opens the keyboard, with a field to try it in (and a clear button) that it doesn't learn from
 (`settings/KeyboardPreview.qml`: its `__inputMethodExtensions` carry
 `parrotfishNoLearning`, which the handler passes to the plugin's
-`learnPaused`). Below the two rows, Reset unsets every key under
+`learnPaused`). Below the three rows, Reset unsets every key under
 `/apps/parrotfish-keyboard/`, as on a new installation (after a remorse
 timer; nothing learned is touched, nor the debug file). A double tap on
 the version opens the diagnostics: version, system, settings and learning

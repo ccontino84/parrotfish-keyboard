@@ -126,9 +126,10 @@ KeyboardLayout {
     // the sticky key there), as wide as a letter key of a six-key half, so
     // that the letters keep their width.
     property int _row3Count: 0
-    readonly property real _endWidth: splitActive && _row3Count >= 11
-                                      ? (width - avoidanceWidth) / 12
-                                      : _narrowEnds ? shiftKeyWidthNarrow : shiftKeyWidth
+    function _endWidth() {
+        return splitActive && _row3Count >= 11 ? (width - avoidanceWidth) / 12
+                                               : _narrowEnds ? shiftKeyWidthNarrow : shiftKeyWidth
+    }
 
     // The emoji panel (emoji/EmojiPanel.qml) instead of the rows; off when
     // the keyboard closes or Jolla's handler takes over (passwords, numbers).
@@ -345,9 +346,24 @@ KeyboardLayout {
     KeyboardRow {
         id: row3
         visible: !parrotfishLayout.emojiView
-        ShiftKey {
-            implicitWidth: parrotfishLayout._endWidth
+        // KeyboardRow's, with Shift's and Backspace's widths set first: a
+        // binding could still have the layout's previous width.
+        function maximumBasicButtonWidth(shareableWidth) {
+            var end = parrotfishLayout._endWidth()
+            if (children[0].implicitWidth !== end)
+                children[0].implicitWidth = end
+            var last = children[children.length - 1]
+            if (last !== children[0] && last.implicitWidth !== end)
+                last.implicitWidth = end
+            if (avoidanceWidth > 0) {
+                var split = splitIndex > 0 ? splitIndex : Math.floor(children.length / 2)
+                shareableWidth = (shareableWidth - avoidanceWidth) / 2
+                return Math.min(_maximumButtonWidthPart(shareableWidth, 0, split),
+                                _maximumButtonWidthPart(shareableWidth, split, children.length))
+            }
+            return _maximumButtonWidthPart(shareableWidth, 0, children.length)
         }
+        ShiftKey {}
     }
 
     BottomRow { visible: !parrotfishLayout.emojiView }
@@ -488,7 +504,7 @@ KeyboardLayout {
                 if (emojiAt === spec.keys.length + 1)
                     keys.push(emojiKeyComponent.createObject(row3))
                 var backspace = backspaceKeyComponent.createObject(row3)
-                backspace.implicitWidth = Qt.binding(function() { return parrotfishLayout._endWidth })
+                backspace.implicitWidth = _endWidth()
                 keys.push(backspace)
             }
             rows[r].splitIndex = split

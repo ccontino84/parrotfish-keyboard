@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Parrotfish's section in Settings → Text input: the version and two
-// rows, each opening a page (Typing, Look & feel) and showing its main
-// choice. Jolla's text input page loads it (a Loader per settings=
+// Parrotfish's section in Settings → Text input: the version and three
+// rows, each opening a page (Typing, Layout, Look & feel) and showing its
+// main choices. Jolla's text input page loads it (a Loader per settings=
 // page of the enabled layouts' handlers), so it's a plain Column; Jolla
 // shows it while the Parrotfish layout is enabled. Every value is a dconf
 // key the keyboard watches: changes apply at once. Below the rows, Reset
@@ -25,6 +25,24 @@ Column {
         id: languagesConfig
         key: "/apps/parrotfish-keyboard/languages"
         defaultValue: ""
+    }
+
+    ConfigurationValue {
+        id: numberRowConfig
+        key: "/apps/parrotfish-keyboard/number-row"
+        defaultValue: true
+    }
+
+    ConfigurationValue {
+        id: languageKeysConfig
+        key: "/apps/parrotfish-keyboard/language-keys"
+        defaultValue: false
+    }
+
+    ConfigurationValue {
+        id: stickyConfig
+        key: "/apps/parrotfish-keyboard/sticky"
+        defaultValue: true
     }
 
     ConfigurationValue {
@@ -71,6 +89,23 @@ Column {
         value: Languages.names(Languages.selected(languagesConfig.value))
                        || qsTr("No languages installed")
         onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishTyping.qml"))
+    }
+
+    // The keys that are on, as a list: "Number row, sticky key".
+    ValueButton {
+        label: qsTr("Layout")
+        value: {
+            var on = []
+            if (numberRowConfig.value !== false && numberRowConfig.value !== "false")
+                on.push(qsTr("number row", "in a list"))
+            if (String(languageKeysConfig.value) === "true")
+                on.push(qsTr("language keys", "in a list"))
+            if (stickyConfig.value !== false && stickyConfig.value !== "false")
+                on.push(qsTr("sticky key", "in a list"))
+            var text = on.join(", ") || qsTr("Off", "layout")
+            return text.charAt(0).toUpperCase() + text.slice(1)
+        }
+        onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishLayout.qml"))
     }
 
     ValueButton {

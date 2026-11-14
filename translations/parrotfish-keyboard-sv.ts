@@ -92,6 +92,69 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Layout</translation>
+    </message>
+    <message>
+        <source>Number row</source>
+        <translation>Sifferrad</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>number row</comment>
+        <translation>Av</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>number row</comment>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>Smaller</source>
+        <translation>Mindre</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Språktangenter</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Inget av dina skrivspråk använder dem</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Bokstäver med accent som följer språket du skriver på</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Av</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Till höger</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Till vänster</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Minnestangent</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Behåller det senaste tecknet som valts med långt tryck</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Av</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLook</name>
     <message>
         <source>Look &amp; feel</source>
@@ -156,64 +219,12 @@
         <translation>En prick på tangenter med fler tecken</translation>
     </message>
     <message>
-        <source>Number row</source>
-        <translation>Sifferrad</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Av</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normal</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Mindre</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Minnestangent</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Behåller det senaste tecknet som valts med långt tryck</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Av</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Till höger</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Till vänster</translation>
-    </message>
-    <message>
         <source>Swipe to switch keyboards</source>
         <translation>Svep för att byta tangentbord</translation>
     </message>
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Långt tryck på blanksteg byter också</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Språktangenter</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Bokstäver med accent som följer språket du skriver på</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Av</translation>
     </message>
 </context>
 <context>
@@ -253,6 +264,30 @@
     <message>
         <source>raised</source>
         <translation>upphöjd</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>Layout</translation>
+    </message>
+    <message>
+        <source>number row</source>
+        <comment>in a list</comment>
+        <translation>sifferrad</translation>
+    </message>
+    <message>
+        <source>language keys</source>
+        <comment>in a list</comment>
+        <translation>språktangenter</translation>
+    </message>
+    <message>
+        <source>sticky key</source>
+        <comment>in a list</comment>
+        <translation>minnestangent</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>layout</comment>
+        <translation>Av</translation>
     </message>
     <message>
         <source>Look &amp; feel</source>

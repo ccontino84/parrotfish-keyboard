@@ -92,6 +92,69 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Disposizione</translation>
+    </message>
+    <message>
+        <source>Number row</source>
+        <translation>Riga dei numeri</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>number row</comment>
+        <translation>Disattivata</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>number row</comment>
+        <translation>Normale</translation>
+    </message>
+    <message>
+        <source>Smaller</source>
+        <translation>Più piccola</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Tasti della lingua</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Nessuna delle tue lingue di scrittura li usa</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Lettere accentate che seguono la lingua in cui scrivi</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Disattivati</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>A destra</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>A sinistra</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Tasto memoria</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Tiene l'ultimo segno scelto con la pressione prolungata</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Disattivato</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLook</name>
     <message>
         <source>Look &amp; feel</source>
@@ -156,64 +219,12 @@
         <translation>Un punto sui tasti con altri caratteri</translation>
     </message>
     <message>
-        <source>Number row</source>
-        <translation>Riga dei numeri</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Disattivata</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normale</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Più piccola</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Tasto memoria</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Tiene l'ultimo segno scelto con la pressione prolungata</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Disattivato</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>A destra</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>A sinistra</translation>
-    </message>
-    <message>
         <source>Swipe to switch keyboards</source>
         <translation>Scorri per cambiare tastiera</translation>
     </message>
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Puoi cambiarla anche tenendo premuta la barra spaziatrice</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Tasti della lingua</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Lettere accentate che seguono la lingua in cui scrivi</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Disattivati</translation>
     </message>
 </context>
 <context>
@@ -253,6 +264,30 @@
     <message>
         <source>raised</source>
         <translation>rilievo</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>Disposizione</translation>
+    </message>
+    <message>
+        <source>number row</source>
+        <comment>in a list</comment>
+        <translation>riga dei numeri</translation>
+    </message>
+    <message>
+        <source>language keys</source>
+        <comment>in a list</comment>
+        <translation>tasti della lingua</translation>
+    </message>
+    <message>
+        <source>sticky key</source>
+        <comment>in a list</comment>
+        <translation>tasto memoria</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>layout</comment>
+        <translation>Disattivato</translation>
     </message>
     <message>
         <source>Look &amp; feel</source>

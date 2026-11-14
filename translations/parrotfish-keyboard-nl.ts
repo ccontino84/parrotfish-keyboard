@@ -92,6 +92,69 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Indeling</translation>
+    </message>
+    <message>
+        <source>Number row</source>
+        <translation>Cijferrij</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>number row</comment>
+        <translation>Uit</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>number row</comment>
+        <translation>Normaal</translation>
+    </message>
+    <message>
+        <source>Smaller</source>
+        <translation>Kleiner</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Taaltoetsen</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Geen van je typtalen gebruikt ze</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Letters met accent die de taal volgen waarin je typt</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Uit</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Rechts</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Links</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Geheugentoets</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Onthoudt het laatste teken gekozen met lang drukken</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Uit</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLook</name>
     <message>
         <source>Look &amp; feel</source>
@@ -156,64 +219,12 @@
         <translation>Een stip op toetsen met meer tekens</translation>
     </message>
     <message>
-        <source>Number row</source>
-        <translation>Cijferrij</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Uit</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normaal</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Kleiner</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Geheugentoets</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Onthoudt het laatste teken gekozen met lang drukken</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Uit</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Rechts</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Links</translation>
-    </message>
-    <message>
         <source>Swipe to switch keyboards</source>
         <translation>Veeg om van toetsenbord te wisselen</translation>
     </message>
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Lang drukken op de spatiebalk wisselt ook</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Taaltoetsen</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Letters met accent die de taal volgen waarin je typt</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Uit</translation>
     </message>
 </context>
 <context>
@@ -253,6 +264,30 @@
     <message>
         <source>raised</source>
         <translation>verhoogd</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>Indeling</translation>
+    </message>
+    <message>
+        <source>number row</source>
+        <comment>in a list</comment>
+        <translation>cijferrij</translation>
+    </message>
+    <message>
+        <source>language keys</source>
+        <comment>in a list</comment>
+        <translation>taaltoetsen</translation>
+    </message>
+    <message>
+        <source>sticky key</source>
+        <comment>in a list</comment>
+        <translation>geheugentoets</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>layout</comment>
+        <translation>Uit</translation>
     </message>
     <message>
         <source>Look &amp; feel</source>

@@ -92,6 +92,69 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Asettelu</translation>
+    </message>
+    <message>
+        <source>Number row</source>
+        <translation>Numerorivi</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>number row</comment>
+        <translation>Pois</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>number row</comment>
+        <translation>Normaali</translation>
+    </message>
+    <message>
+        <source>Smaller</source>
+        <translation>Pienempi</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Kielinäppäimet</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Mikään kirjoituskielistäsi ei käytä niitä</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Tarkkeelliset kirjaimet sen kielen mukaan, jolla kirjoitat</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Pois</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Oikealla</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Vasemmalla</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Muistinäppäin</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Muistaa viimeksi pitkällä painalluksella valitun merkin</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Pois</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLook</name>
     <message>
         <source>Look &amp; feel</source>
@@ -156,64 +219,12 @@
         <translation>Piste näppäimissä, joissa on lisää merkkejä</translation>
     </message>
     <message>
-        <source>Number row</source>
-        <translation>Numerorivi</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Pois</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normaali</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Pienempi</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Muistinäppäin</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Muistaa viimeksi pitkällä painalluksella valitun merkin</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Pois</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Oikealla</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Vasemmalla</translation>
-    </message>
-    <message>
         <source>Swipe to switch keyboards</source>
         <translation>Pyyhkäise vaihtaaksesi näppäimistöä</translation>
     </message>
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Myös välilyöntinäppäimen pitkä painallus vaihtaa</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Kielinäppäimet</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Tarkkeelliset kirjaimet sen kielen mukaan, jolla kirjoitat</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Pois</translation>
     </message>
 </context>
 <context>
@@ -253,6 +264,30 @@
     <message>
         <source>raised</source>
         <translation>korotettu</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>Asettelu</translation>
+    </message>
+    <message>
+        <source>number row</source>
+        <comment>in a list</comment>
+        <translation>numerorivi</translation>
+    </message>
+    <message>
+        <source>language keys</source>
+        <comment>in a list</comment>
+        <translation>kielinäppäimet</translation>
+    </message>
+    <message>
+        <source>sticky key</source>
+        <comment>in a list</comment>
+        <translation>muistinäppäin</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>layout</comment>
+        <translation>Pois</translation>
     </message>
     <message>
         <source>Look &amp; feel</source>

@@ -92,6 +92,69 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Oppsett</translation>
+    </message>
+    <message>
+        <source>Number row</source>
+        <translation>Tallrad</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>number row</comment>
+        <translation>Av</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>number row</comment>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>Smaller</source>
+        <translation>Mindre</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Språktaster</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Ingen av skrivespråkene dine bruker dem</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Bokstaver med aksent som følger språket du skriver på</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Av</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Til høyre</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Til venstre</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Huske-tast</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Husker det siste tegnet valgt med langt trykk</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Av</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLook</name>
     <message>
         <source>Look &amp; feel</source>
@@ -156,64 +219,12 @@
         <translation>En prikk på taster med flere tegn</translation>
     </message>
     <message>
-        <source>Number row</source>
-        <translation>Tallrad</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Av</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normal</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Mindre</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Huske-tast</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Husker det siste tegnet valgt med langt trykk</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Av</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Til høyre</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Til venstre</translation>
-    </message>
-    <message>
         <source>Swipe to switch keyboards</source>
         <translation>Sveip for å bytte tastatur</translation>
     </message>
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Langt trykk på mellomromstasten bytter også</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Språktaster</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Bokstaver med aksent som følger språket du skriver på</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Av</translation>
     </message>
 </context>
 <context>
@@ -253,6 +264,30 @@
     <message>
         <source>raised</source>
         <translation>hevet</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>Oppsett</translation>
+    </message>
+    <message>
+        <source>number row</source>
+        <comment>in a list</comment>
+        <translation>tallrad</translation>
+    </message>
+    <message>
+        <source>language keys</source>
+        <comment>in a list</comment>
+        <translation>språktaster</translation>
+    </message>
+    <message>
+        <source>sticky key</source>
+        <comment>in a list</comment>
+        <translation>huske-tast</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>layout</comment>
+        <translation>Av</translation>
     </message>
     <message>
         <source>Look &amp; feel</source>

@@ -83,9 +83,8 @@ With Developer mode, the same from a terminal:
 devel-su pkcon install-local parrotfish-*.rpm
 ```
 
-With [Harpoon](https://github.com/JuhaniLehtimaeki/Harpoon), add
-`https://github.com/ccontino84/parrotfish-keyboard`: it installs and updates
-the keyboard and both language packages.
+[Harpoon](https://github.com/JuhaniLehtimaeki/Harpoon) can't install the
+language packages yet, only the keyboard: use one of the ways above.
 
 ## Uninstall
 

@@ -92,6 +92,69 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Aranjament</translation>
+    </message>
+    <message>
+        <source>Number row</source>
+        <translation>Rândul de cifre</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>number row</comment>
+        <translation>Dezactivat</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>number row</comment>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>Smaller</source>
+        <translation>Mai mic</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Taste de limbă</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Niciuna dintre limbile tale de tastare nu le folosește</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Litere cu diacritice care urmează limba în care scrii</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Dezactivate</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>În dreapta</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>În stânga</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Tastă cu memorie</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Păstrează ultimul semn ales prin apăsare lungă</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Dezactivată</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLook</name>
     <message>
         <source>Look &amp; feel</source>
@@ -156,64 +219,12 @@
         <translation>Un punct pe tastele cu mai multe caractere</translation>
     </message>
     <message>
-        <source>Number row</source>
-        <translation>Rândul de cifre</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Dezactivat</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normal</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Mai mic</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Tastă cu memorie</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Păstrează ultimul semn ales prin apăsare lungă</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Dezactivată</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>În dreapta</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>În stânga</translation>
-    </message>
-    <message>
         <source>Swipe to switch keyboards</source>
         <translation>Glisează pentru a schimba tastatura</translation>
     </message>
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Și apăsarea lungă pe bara de spațiu schimbă tastatura</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Taste de limbă</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Litere cu diacritice care urmează limba în care scrii</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Dezactivate</translation>
     </message>
 </context>
 <context>
@@ -253,6 +264,30 @@
     <message>
         <source>raised</source>
         <translation>în relief</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>Aranjament</translation>
+    </message>
+    <message>
+        <source>number row</source>
+        <comment>in a list</comment>
+        <translation>rândul de cifre</translation>
+    </message>
+    <message>
+        <source>language keys</source>
+        <comment>in a list</comment>
+        <translation>taste de limbă</translation>
+    </message>
+    <message>
+        <source>sticky key</source>
+        <comment>in a list</comment>
+        <translation>tastă cu memorie</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>layout</comment>
+        <translation>Dezactivat</translation>
     </message>
     <message>
         <source>Look &amp; feel</source>

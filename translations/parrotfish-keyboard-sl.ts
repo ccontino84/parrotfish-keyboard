@@ -92,6 +92,69 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Razporeditev</translation>
+    </message>
+    <message>
+        <source>Number row</source>
+        <translation>Vrstica s številkami</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>number row</comment>
+        <translation>Izklopljeno</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>number row</comment>
+        <translation>Običajna</translation>
+    </message>
+    <message>
+        <source>Smaller</source>
+        <translation>Manjša</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Jezikovne tipke</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Noben od vaših jezikov pisanja jih ne uporablja</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Črke s strešicami jezika, v katerem pišete</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Izklopljeno</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Desno</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Levo</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Pomnilna tipka</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Ohrani zadnji znak, izbran z dolgim pritiskom</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Izklopljeno</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLook</name>
     <message>
         <source>Look &amp; feel</source>
@@ -156,64 +219,12 @@
         <translation>Pika na tipkah z več znaki</translation>
     </message>
     <message>
-        <source>Number row</source>
-        <translation>Vrstica s številkami</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Izklopljeno</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Običajna</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Manjša</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Pomnilna tipka</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Ohrani zadnji znak, izbran z dolgim pritiskom</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Izklopljeno</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Desno</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Levo</translation>
-    </message>
-    <message>
         <source>Swipe to switch keyboards</source>
         <translation>Podrsajte za preklop tipkovnice</translation>
     </message>
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Preklopite lahko tudi z dolgim pritiskom preslednice</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Jezikovne tipke</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Črke s strešicami jezika, v katerem pišete</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Izklopljeno</translation>
     </message>
 </context>
 <context>
@@ -253,6 +264,30 @@
     <message>
         <source>raised</source>
         <translation>dvignjeno</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>Razporeditev</translation>
+    </message>
+    <message>
+        <source>number row</source>
+        <comment>in a list</comment>
+        <translation>vrstica s številkami</translation>
+    </message>
+    <message>
+        <source>language keys</source>
+        <comment>in a list</comment>
+        <translation>jezikovne tipke</translation>
+    </message>
+    <message>
+        <source>sticky key</source>
+        <comment>in a list</comment>
+        <translation>pomnilna tipka</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>layout</comment>
+        <translation>Izklopljeno</translation>
     </message>
     <message>
         <source>Look &amp; feel</source>

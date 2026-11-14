@@ -92,6 +92,69 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Rozložení</translation>
+    </message>
+    <message>
+        <source>Number row</source>
+        <translation>Řada číslic</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>number row</comment>
+        <translation>Vypnuto</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>number row</comment>
+        <translation>Normální</translation>
+    </message>
+    <message>
+        <source>Smaller</source>
+        <translation>Menší</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Jazykové klávesy</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Žádný z vašich jazyků psaní je nepoužívá</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Písmena s diakritikou podle jazyka, kterým píšete</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Vypnuto</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Vpravo</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Vlevo</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Paměťová klávesa</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Pamatuje si poslední znak vybraný dlouhým stiskem</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Vypnuto</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLook</name>
     <message>
         <source>Look &amp; feel</source>
@@ -156,64 +219,12 @@
         <translation>Tečka na klávesách s dalšími znaky</translation>
     </message>
     <message>
-        <source>Number row</source>
-        <translation>Řada číslic</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Vypnuto</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normální</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Menší</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Paměťová klávesa</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Pamatuje si poslední znak vybraný dlouhým stiskem</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Vypnuto</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Vpravo</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Vlevo</translation>
-    </message>
-    <message>
         <source>Swipe to switch keyboards</source>
         <translation>Přejetím přepnete klávesnici</translation>
     </message>
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Přepnout lze i dlouhým stiskem mezerníku</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Jazykové klávesy</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Písmena s diakritikou podle jazyka, kterým píšete</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Vypnuto</translation>
     </message>
 </context>
 <context>
@@ -253,6 +264,30 @@
     <message>
         <source>raised</source>
         <translation>vystouplý</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>Rozložení</translation>
+    </message>
+    <message>
+        <source>number row</source>
+        <comment>in a list</comment>
+        <translation>řada číslic</translation>
+    </message>
+    <message>
+        <source>language keys</source>
+        <comment>in a list</comment>
+        <translation>jazykové klávesy</translation>
+    </message>
+    <message>
+        <source>sticky key</source>
+        <comment>in a list</comment>
+        <translation>paměťová klávesa</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>layout</comment>
+        <translation>Vypnuto</translation>
     </message>
     <message>
         <source>Look &amp; feel</source>

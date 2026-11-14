@@ -10,7 +10,7 @@
 // it types / or @), with the typing languages' signs added (the layout's
 // punctuation: ¡ ¿, —); the backgrounds of ?123, the spacebar and Enter take the layout's gap;
 // comma and period have a LongPressHint; outside split landscape, the keys'
-// widths are set in relayout().
+// widths are set when the layout sizes the rows.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
@@ -41,13 +41,13 @@ KeyboardRow {
 
     readonly property var _punctuation: parent && parent.punctuation !== undefined ? parent.punctuation : null
 
-    // As KeyboardRow's, with the widths set first (outside split landscape):
+    // The widths (outside split landscape):
     // comma and period as the letter keys of ten-key rows, whatever the
     // options; the spacebar as Jolla's (SpacebarRow.qml) times the layout's
     // spaceWidthPercent; ?123 and Enter the rest, at least as wide as Shift.
-    // The percent is read here: a binding may not have followed the setting
-    // yet when the layout sizes its rows.
-    function relayout(basicButtonWidth) {
+    // Set when the layout sizes the rows, not by bindings, which may not
+    // have followed the setting or the layout's width yet.
+    function _setWidths() {
         var percent = parent && parent.spaceWidthPercent !== undefined ? parent.spaceWidthPercent : 100
         var punctuation = splitActive ? punctuationKeyWidth : width / 10
         var space = (width - 2 * (functionKeyWidth + punctuationKeyWidth)) * percent / 100
@@ -60,6 +60,21 @@ KeyboardRow {
             symbol.implicitWidth = end
         if (enter.implicitWidth !== end)
             enter.implicitWidth = end
+    }
+    // KeyboardRow's, with the widths set first: the layout reads them
+    // before it calls relayout().
+    function maximumBasicButtonWidth(shareableWidth) {
+        _setWidths()
+        if (avoidanceWidth > 0) {
+            var split = splitIndex > 0 ? splitIndex : Math.floor(children.length / 2)
+            shareableWidth = (shareableWidth - avoidanceWidth) / 2
+            return Math.min(_maximumButtonWidthPart(shareableWidth, 0, split),
+                            _maximumButtonWidthPart(shareableWidth, split, children.length))
+        }
+        return _maximumButtonWidthPart(shareableWidth, 0, children.length)
+    }
+    function relayout(basicButtonWidth) {
+        _setWidths()
         if (avoidanceWidth > 1) {
             var shareableWidth = width - avoidanceWidth
             var split = splitIndex > 0 ? splitIndex : Math.floor(children.length / 2)

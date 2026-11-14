@@ -5,6 +5,30 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Changelog
 
+## 1.2.2 (2026-11-14)
+
+### Improved
+
+- **A Layout page in the settings,** between Typing and Look & feel. The
+  number row, the language keys and the sticky key move there from Look &
+  feel, as they change which keys the keyboard has; your settings are
+  kept.
+- With language keys on but none of your typing languages using any, the
+  setting now says so, instead of seeming to do nothing.
+
+### Fixed
+
+- After rotating the phone, the keys could keep the wrong widths until a
+  size setting was changed (when portrait and landscape had the same key
+  height).
+- 1.2.1's notes said that Harpoon installs all three packages: for now it
+  installs only the keyboard. Install the language packages as the README
+  says.
+
+The changes are in `parrotfish-keyboard`; the language packages are the
+same as 1.2.1's apart from the version. The new settings texts were
+translated without native speakers: corrections are welcome.
+
 ## 1.2.1 (2026-11-13)
 
 ### Improved

@@ -43,3 +43,19 @@ SPDX-License-Identifier = "LGPL-2.1-or-later"
 path = ["plugin/qmldir", ".github/ISSUE_TEMPLATE/*.yml"]
 SPDX-FileCopyrightText = "2026 ccontino84"
 SPDX-License-Identifier = "LGPL-2.1-or-later"
+
+[[annotations]]
+path = ["voice/licenses/onnxruntime-LICENSE.txt", "voice/licenses/onnxruntime-ThirdPartyNotices.txt"]
+SPDX-FileCopyrightText = "Microsoft Corporation and the ONNX Runtime third parties named in the notices"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "voice/licenses/silero-vad-LICENSE.txt"
+SPDX-FileCopyrightText = "2020-present Silero Team"
+SPDX-License-Identifier = "MIT"
+
+# The licence of the voice helper's binary (THIRD-PARTY.md), not of any source file.
+[[annotations]]
+path = ["voice/licenses/LGPL-3.0.txt", "voice/licenses/GPL-3.0.txt"]
+SPDX-FileCopyrightText = "2007 Free Software Foundation, Inc."
+SPDX-License-Identifier = "LicenseRef-FSF-verbatim"

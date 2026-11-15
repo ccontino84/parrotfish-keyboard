@@ -30,6 +30,21 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Se finalizează…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>În pauză</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Ascultă…</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLanguages</name>
     <message>
         <source>Typing languages</source>
@@ -301,6 +316,28 @@
         <source>Settings back to defaults</source>
         <translation>Setările implicite restabilite</translation>
     </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Dictare vocală</translation>
+    </message>
+    <message>
+        <source>Downloading the model</source>
+        <translation>Se descarcă modelul</translation>
+    </message>
+    <message>
+        <source>Model not downloaded</source>
+        <translation>Modelul nu e descărcat</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <comment>voice input</comment>
+        <translation>Activată</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>voice input</comment>
+        <translation>Dezactivată</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -431,6 +468,120 @@
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
         <translation>Spațiul transformă :-) în 🙂. Altfel, butonul de emoji îl oferă</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishVoice</name>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Spațiu insuficient: mai sunt necesari %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed: %1</source>
+        <translation>Descărcarea a eșuat: %1</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Un fișier descărcat era deteriorat</translation>
+    </message>
+    <message>
+        <source>The model couldn't be saved</source>
+        <translation>Modelul nu a putut fi salvat</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Descărcarea s-a oprit</translation>
+    </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Dictare vocală</translation>
+    </message>
+    <message>
+        <source>Hold the spacebar and lift the finger on the microphone. Speech is recognised on the phone</source>
+        <translation>Ține apăsată bara de spațiu și ridică degetul pe microfon. Vorbirea e recunoscută pe telefon</translation>
+    </message>
+    <message>
+        <source>Speech model</source>
+        <translation>Model de vorbire</translation>
+    </message>
+    <message>
+        <source>Downloaded: %1 MB</source>
+        <translation>Descărcat: %1 MB</translation>
+    </message>
+    <message>
+        <source>Voice input needs a speech model, downloaded once from Hugging Face (%1 MB). Nothing else uses the network.</source>
+        <translation>Dictarea vocală are nevoie de un model de vorbire, descărcat o singură dată de pe Hugging Face (%1 MB). Nimic altceva nu folosește rețeaua.</translation>
+    </message>
+    <message>
+        <source>Try again: it continues where it stopped.</source>
+        <translation>Încearcă din nou: continuă de unde s-a oprit.</translation>
+    </message>
+    <message>
+        <source>You're on mobile data. The download is %1 MB: Wi-Fi is better.</source>
+        <translation>Folosești date mobile. Descărcarea are %1 MB: e mai bine prin Wi-Fi.</translation>
+    </message>
+    <message>
+        <source>Download anyway</source>
+        <translation>Descarcă oricum</translation>
+    </message>
+    <message>
+        <source>Continue download</source>
+        <translation>Continuă descărcarea</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Descarcă</translation>
+    </message>
+    <message>
+        <source>Checking the files</source>
+        <translation>Se verifică fișierele</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 din %2 MB</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Oprește</translation>
+    </message>
+    <message>
+        <source>Delete model</source>
+        <translation>Șterge modelul</translation>
+    </message>
+    <message>
+        <source>Speech model deleted</source>
+        <translation>Modelul de vorbire a fost șters</translation>
+    </message>
+    <message>
+        <source>Model: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted by the sherpa-onnx project. Licence: CC BY 4.0.</source>
+        <translation>Model: NVIDIA Parakeet TDT 0.6B v3, antrenat suplimentar de Moondream (parakeet-ultra), convertit de proiectul sherpa-onnx. Licență: CC BY 4.0.</translation>
+    </message>
+</context>
+<context>
+    <name>VoicePanel</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Se finalizează…</translation>
+    </message>
+    <message>
+        <source>Loading the model…</source>
+        <translation>Se încarcă modelul…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>În pauză</translation>
+    </message>
+    <message>
+        <source>Speak</source>
+        <translation>Vorbește</translation>
+    </message>
+    <message>
+        <source>Tap the mic to replace</source>
+        <translation>Atinge microfonul pentru a înlocui</translation>
+    </message>
+    <message>
+        <source>Say the replacement</source>
+        <translation>Spune înlocuirea</translation>
     </message>
 </context>
 </TS>

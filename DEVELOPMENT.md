@@ -17,9 +17,11 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 | `plugin/` | QML module `Parrotfish.Keyboard` (Qt 5.6): the engine as the list model Jolla's `PreeditHandler` expects; the colour emoji images (`image://parrotfish-emoji`); in `emoji/`, the emoji code in plain JavaScript, `EmojiUtil` (code points, recent emoji, variant picks) and `Emoticons` (`:-)` → 🙂) |
 | `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
 | `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press), picked by `/apps/parrotfish-keyboard/layout`; the language keys (the typing language's `extra-keys`) placed by `placeLanguageKeys` there; optional key backgrounds in `parrotfish/`; the emoji panel in `parrotfish/emoji/` (`EmojiPanel.qml`, with the emoji list `emojidata.js` from `tools/data/emoji-list.py`; it gets its state through properties and reports through signals, so any layout can host it) |
+| `voice/` | the voice package: `helper/` (`parrotfish-voice`, recognition in its own process: microphone, Silero VAD, Parakeet through sherpa-onnx's C API, phrase by phrase; a line protocol on stdin/stdout, described in `main.cpp`; no network, through a seccomp filter), `downloader/` (`parrotfish-voice-download`, the model download from the settings: pinned revision, SHA-256, resumable), `licenses/`; `fetch-deps.sh` downloads the prebuilt aarch64 libraries into `deps/` (not in the repository) |
+| `plugin/src/voice*` | voice on the keyboard's side: `VoiceInput` (the helper process, QML singleton `Voice`), `VoiceText` (the text, its edits and undo; unit test `voicetext`), `VoiceModel` (the download, singleton `VoiceModel`); the panel and the space key's menu in `layouts/parrotfish/voice/` |
 | `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`; the list comes from the plugin's `Languages`) |
 | `cli/` | `parrotfish`, a command that shows what the keyboard is learning (reads `learning.db`) |
-| `translations/` | the settings' translations, `parrotfish-keyboard-<lang>.ts` (qsTr; the context is the QML file's name, a second argument tells gendered words apart: `qsTr("Off", "learning")`); new texts: `lupdate settings -ts translations/*.ts`, then translate them (Qt Linguist or by hand). Built with the SDK's Qt 5 `lrelease` (none on the PC: skipped), installed in `/usr/share/translations`, loaded by the plugin |
+| `translations/` | the settings' and the voice panel's translations, `parrotfish-keyboard-<lang>.ts` (qsTr; the context is the QML file's name, a second argument tells gendered words apart: `qsTr("Off", "learning")`); new texts: `lupdate settings handler layouts -ts translations/*.ts`, then translate them (Qt Linguist or by hand) and put back the SPDX header lupdate drops. Built with the SDK's Qt 5 `lrelease` (none on the PC: skipped), installed in `/usr/share/translations`, loaded by the plugin |
 | `rpm/` | RPM spec (also used by SailfishOS:Chum, below) |
 | `tools/split-languages.py` | the RPM's file lists: each dictionary to its language package |
 | `tools/pf` | the developer front door (below): tests, lint, benchmark suite, comparisons, RPM |
@@ -245,6 +247,7 @@ Sanitizers: configure a second tree with
 ## Phone build (RPM)
 
 ```sh
+voice/fetch-deps.sh        # once: the voice package's prebuilt libraries (aarch64)
 sfdk config target=SailfishOS-5.1.0.11-aarch64
 sfdk build                 # RPM in RPMS/
 ```
@@ -262,7 +265,12 @@ language packages named by script (Latin: every language so far; later
 experimental in `data/rules/*.language`; named after the keyboard, so that
 installers taking a release's packages together, such as Harpoon, accept
 them; `parrotfish-languages-*` until 1.2, which they obsolete); the spec's file lists come from
-`languages.json` (`tools/split-languages.py`). A language package requires
+`languages.json` (`tools/split-languages.py`). On aarch64 a fourth,
+`parrotfish-keyboard-voice`: the voice helper, the model downloader,
+sherpa-onnx and onnxruntime (private copies in
+`/usr/lib64/parrotfish-keyboard-voice`, neither provided nor required) and
+Silero VAD; the keyboard shows the microphone only with it installed and the
+model downloaded (`~/.local/share/parrotfish-keyboard/voice/`). A language package requires
 `parrotfish-keyboard` and `parrotfish-dictionary-format = N`, which the
 keyboard provides (the spec's `dictformat`, checked against the engine's
 `FormatVersion` by ctest `spec`): a keyboard update needs new language
@@ -414,7 +422,8 @@ Making a release:
    the RPMs for aarch64 and armv7hl against the Sailfish OS 5.1.0.11 SDK
    targets with the checks' dictionaries in `prebuilt/`. Finally it creates
    the release `v<Version>` for that commit, with the two
-   `parrotfish-keyboard` RPMs and the two noarch language packages attached
+   `parrotfish-keyboard` RPMs, the aarch64 voice package and the two noarch
+   language packages attached
    (the aarch64 build's copies; every package is checked with `rpm -K`
    before it is attached). The
    release text is the changelog entry (`ci/release-notes.sh <version>`)
@@ -432,6 +441,8 @@ through `ci/build-rpm.sh`, which also runs locally with Docker:
 ```sh
 ci/build-rpm.sh aarch64      # or armv7hl; RPM in out/ (the image is about 3 GB)
 ```
+
+For aarch64 it runs `voice/fetch-deps.sh` first.
 
 With dictionaries in `prebuilt/` (copy `build/data/*.pfd` and
 `build/data/inputs.sha256` there), the RPM's build copies them instead of
@@ -458,6 +469,8 @@ repository, pinned to a release tag (`v<Version>`) or its commit:
   builds' developer tools stay out, as the version has no `~`.
 - The dictionaries are built from `data/` during the build (no `prebuilt/`),
   so it takes longer than the RPMs from GitHub; nothing is downloaded.
+- No voice package: its prebuilt libraries can't be downloaded during the
+  build (the spec's `voice` is 0 with `_chum`).
 - One spec, three packages. Each `%description` ends with Chum's metadata,
   so the keyboard and both language packages show up in the Chum app;
   a language package installs the keyboard, which needs no language

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 Name:       parrotfish-keyboard
-Version:    1.2.2
+Version:    1.3.0~alpha0.voice20
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 License:    LGPL-2.1-or-later AND BSD-3-Clause AND Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
@@ -16,6 +16,19 @@ Source0:    %{name}-%{version}.tar.bz2
 # keyboard of the same format, so a keyboard update needs no new
 # dictionaries unless the format changed.
 %global dictformat 5
+# Voice input (the voice package): aarch64 only, with prebuilt libraries
+# that voice/fetch-deps.sh downloads before the build; Chum's build service
+# works offline, so its builds leave voice out.
+%global voice 0
+%ifarch aarch64
+%if 0%{!?_chum:1}
+%global voice 1
+%endif
+%endif
+# The voice package's private libraries (sherpa-onnx, onnxruntime) are
+# neither provided to nor required from other packages.
+%global __provides_exclude_from ^%{_libdir}/%{name}-voice/.*$
+%global __requires_exclude ^(libsherpa-onnx-c-api|libonnxruntime)\\.so.*$
 BuildRequires:  cmake
 BuildRequires:  python3-base
 BuildRequires:  pkgconfig(Qt5Core)
@@ -27,6 +40,9 @@ BuildRequires:  pkgconfig(harfbuzz)
 BuildRequires:  pkgconfig(fontconfig)
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(dconf)
+# The voice package (voice/)
+BuildRequires:  pkgconfig(libpulse-simple)
+BuildRequires:  pkgconfig(Qt5Network)
 # lrelease, for the settings' translations
 BuildRequires:  qt5-qttools-linguist
 Requires:   jolla-keyboard
@@ -129,6 +145,20 @@ Links:
   Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
 %endif
 
+%if %{voice}
+%package voice
+Summary:    Offline voice input for Parrotfish Keyboard
+License:    LGPL-3.0-or-later AND Apache-2.0 AND MIT
+Requires:   %{name} = %{version}-%{release}
+
+%description voice
+Voice input for Parrotfish Keyboard, recognised on the phone: hold the
+spacebar and lift the finger on the microphone. The speech model (NVIDIA
+Parakeet TDT 0.6B post-trained by Moondream, converted by the sherpa-onnx
+project, CC-BY-4.0, 671 MB) is downloaded once from the keyboard settings;
+nothing else uses the network. Uses sherpa-onnx, onnxruntime and Silero VAD.
+%endif
+
 %prep
 %autosetup -n %{name}-%{version}
 
@@ -139,6 +169,7 @@ cmake -S . -B build-rpm \
     -DCMAKE_INSTALL_LIBDIR=%{_lib} \
     -DPARROTFISH_QML_DIR=%{_libdir}/qt5/qml \
     -DPARROTFISH_DEVTOOLS=%{devtools} \
+    -DPARROTFISH_VOICE=%{voice} \
     -DPARROTFISH_VERSION=%{version}
 cmake --build build-rpm -- %{?_smp_mflags}
 
@@ -195,3 +226,12 @@ fi
 
 %files languages-latin-experimental -f latin-experimental.files
 %license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE
+
+%if %{voice}
+%files voice
+%license LICENSES/LGPL-2.1-or-later.txt
+%license LICENSES/Apache-2.0.txt THIRD-PARTY.md voice/licenses/*
+%{_libexecdir}/%{name}-voice
+%{_libdir}/%{name}-voice
+%{_datadir}/%{name}-voice
+%endif

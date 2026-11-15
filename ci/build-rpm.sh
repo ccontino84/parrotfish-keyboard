@@ -16,6 +16,10 @@ release=${2:-5.1.0.11}
 image=coderus/sailfishos-platform-sdk-$arch:$release
 
 cd "$(dirname "$0")/.."
+# The voice package's prebuilt libraries (aarch64 only)
+if [ "$arch" = aarch64 ]; then
+    voice/fetch-deps.sh
+fi
 mkdir -p out
 chmod 777 out
 

@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // Parrotfish's section in Settings → Text input: the version and three
-// rows, each opening a page (Typing, Layout, Look & feel) and showing its
-// main choices. Jolla's text input page loads it (a Loader per settings=
+// rows, each opening a page (Typing, Layout, Look & feel, and Voice input
+// with the voice package) and showing its main choices. Jolla's text input page loads it (a Loader per settings=
 // page of the enabled layouts' handlers), so it's a plain Column; Jolla
 // shows it while the Parrotfish layout is enabled. Every value is a dconf
 // key the keyboard watches: changes apply at once. Below the rows, Reset
@@ -43,6 +43,11 @@ Column {
         id: stickyConfig
         key: "/apps/parrotfish-keyboard/sticky"
         defaultValue: true
+    }
+
+    ConfigurationValue {
+        id: voiceConfig
+        key: "/apps/parrotfish-keyboard/voice"
     }
 
     ConfigurationValue {
@@ -114,6 +119,16 @@ Column {
         label: qsTr("Look & feel")
         value: (fills[fillConfig.value] || fills["none"]) + ", " + (borders[borderConfig.value] || borders["none"])
         onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishLook.qml"))
+    }
+
+    // With the voice package installed.
+    ValueButton {
+        visible: VoiceModel.installed
+        label: qsTr("Voice input")
+        value: VoiceModel.state === "downloading" ? qsTr("Downloading the model")
+               : !VoiceModel.ready ? qsTr("Model not downloaded")
+               : voiceConfig.value !== false && voiceConfig.value !== "false" ? qsTr("On", "voice input") : qsTr("Off", "voice input")
+        onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishVoice.qml"))
     }
 
     // The page Jolla loaded this section into (for the remorse popup).

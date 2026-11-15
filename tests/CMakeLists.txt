@@ -33,6 +33,21 @@ set_tests_properties(bench-final-apostrophes PROPERTIES
                      PASS_REGULAR_EXPRESSION "un \\| po' \\| di.*girls' \\| room.*boys \\| toys.*said \\| hello \\| to.*casa \\| de \\| nonni"
                      FAIL_REGULAR_EXPRESSION "hello'|boys'|de'")
 
+# The voice helper's network block (voice/helper/sandbox.cpp).
+add_executable(voice-sandbox-test unit/voice-sandbox-test.cpp ${PROJECT_SOURCE_DIR}/voice/helper/sandbox.cpp)
+target_include_directories(voice-sandbox-test PRIVATE ${PROJECT_SOURCE_DIR}/voice/helper)
+add_test(NAME voice-sandbox COMMAND voice-sandbox-test)
+
+# The voice panel's text and edits (plugin/src/voicetext.cpp).
+if(PARROTFISH_PLUGIN)
+    find_package(Qt5 REQUIRED COMPONENTS Core)
+    add_executable(voicetext-test unit/voicetext-test.cpp ${PROJECT_SOURCE_DIR}/plugin/src/voicetext.cpp)
+    target_include_directories(voicetext-test PRIVATE ${PROJECT_SOURCE_DIR}/plugin/src)
+    target_compile_definitions(voicetext-test PRIVATE QT_NO_CAST_FROM_ASCII)
+    target_link_libraries(voicetext-test PRIVATE Qt5::Core)
+    add_test(NAME voicetext COMMAND voicetext-test)
+endif()
+
 # parrotfish candidates / learned on a small learning.db.
 if(PARROTFISH_PLUGIN)
     add_test(NAME cli COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/cli/test-cli.py

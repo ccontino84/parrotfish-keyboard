@@ -30,6 +30,21 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Finalizando…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pausado</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Ouvindo…</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLanguages</name>
     <message>
         <source>Typing languages</source>
@@ -301,6 +316,28 @@
         <source>Settings back to defaults</source>
         <translation>Configurações padrão restauradas</translation>
     </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Entrada de voz</translation>
+    </message>
+    <message>
+        <source>Downloading the model</source>
+        <translation>Baixando o modelo</translation>
+    </message>
+    <message>
+        <source>Model not downloaded</source>
+        <translation>Modelo não baixado</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <comment>voice input</comment>
+        <translation>Ativada</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>voice input</comment>
+        <translation>Desativada</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -430,6 +467,120 @@
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
         <translation>O espaço transforma :-) em 🙂. Senão, o botão de emoji o oferece</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishVoice</name>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Espaço insuficiente: faltam %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed: %1</source>
+        <translation>O download falhou: %1</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Um arquivo baixado estava corrompido</translation>
+    </message>
+    <message>
+        <source>The model couldn't be saved</source>
+        <translation>Não foi possível salvar o modelo</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>O download parou</translation>
+    </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Entrada de voz</translation>
+    </message>
+    <message>
+        <source>Hold the spacebar and lift the finger on the microphone. Speech is recognised on the phone</source>
+        <translation>Mantenha a barra de espaço pressionada e solte o dedo no microfone. A fala é reconhecida no telefone</translation>
+    </message>
+    <message>
+        <source>Speech model</source>
+        <translation>Modelo de voz</translation>
+    </message>
+    <message>
+        <source>Downloaded: %1 MB</source>
+        <translation>Baixado: %1 MB</translation>
+    </message>
+    <message>
+        <source>Voice input needs a speech model, downloaded once from Hugging Face (%1 MB). Nothing else uses the network.</source>
+        <translation>A entrada de voz precisa de um modelo de voz, baixado uma única vez do Hugging Face (%1 MB). Nada mais usa a rede.</translation>
+    </message>
+    <message>
+        <source>Try again: it continues where it stopped.</source>
+        <translation>Tente de novo: o download continua de onde parou.</translation>
+    </message>
+    <message>
+        <source>You're on mobile data. The download is %1 MB: Wi-Fi is better.</source>
+        <translation>Você está usando dados móveis. O download tem %1 MB: é melhor usar Wi-Fi.</translation>
+    </message>
+    <message>
+        <source>Download anyway</source>
+        <translation>Baixar mesmo assim</translation>
+    </message>
+    <message>
+        <source>Continue download</source>
+        <translation>Continuar download</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Baixar</translation>
+    </message>
+    <message>
+        <source>Checking the files</source>
+        <translation>Verificando os arquivos</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 de %2 MB</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Parar</translation>
+    </message>
+    <message>
+        <source>Delete model</source>
+        <translation>Excluir modelo</translation>
+    </message>
+    <message>
+        <source>Speech model deleted</source>
+        <translation>Modelo de voz excluído</translation>
+    </message>
+    <message>
+        <source>Model: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted by the sherpa-onnx project. Licence: CC BY 4.0.</source>
+        <translation>Modelo: NVIDIA Parakeet TDT 0.6B v3, pós-treinado pela Moondream (parakeet-ultra), convertido pelo projeto sherpa-onnx. Licença: CC BY 4.0.</translation>
+    </message>
+</context>
+<context>
+    <name>VoicePanel</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Finalizando…</translation>
+    </message>
+    <message>
+        <source>Loading the model…</source>
+        <translation>Carregando o modelo…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pausado</translation>
+    </message>
+    <message>
+        <source>Speak</source>
+        <translation>Fale</translation>
+    </message>
+    <message>
+        <source>Tap the mic to replace</source>
+        <translation>Toque no microfone para substituir</translation>
+    </message>
+    <message>
+        <source>Say the replacement</source>
+        <translation>Diga o texto novo</translation>
     </message>
 </context>
 </TS>

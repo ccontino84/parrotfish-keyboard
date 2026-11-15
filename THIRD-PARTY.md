@@ -23,5 +23,21 @@ Sloleks Morphological Lexicon of Slovene 3.1 (hdl.handle.net/11356/2080)
 and the Kres corpus n-grams 2.0 (hdl.handle.net/11356/1193), both licensed
 under CC BY-SA 4.0, and are shared under the same licence.
 
+## Voice package (`parrotfish-keyboard-voice`)
+
+| What | Licence | Our changes |
+|---|---|---|
+| sherpa-onnx 2.0.1 C API, prebuilt for aarch64 (github.com/k2-fsa/sherpa-onnx) | Apache-2.0 | none; linked by the helper `parrotfish-voice` |
+| ONNX Runtime 1.28.2, as bundled by sherpa-onnx (github.com/microsoft/onnxruntime), Microsoft Corporation | MIT, with its third-party notices (`voice/licenses/`) | none |
+| Silero VAD (`silero_vad.onnx`, github.com/snakers4/silero-vad), Silero Team | MIT | none |
+| Speech model, downloaded by the user from the settings, not shipped: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted to int8 ONNX by the sherpa-onnx project (huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-ultra-int8) | CC BY 4.0 | none; credited on the settings page |
+
+The helper `parrotfish-voice` is our code (LGPL-2.1-or-later) linked with
+sherpa-onnx (Apache-2.0); Apache-2.0 is compatible with version 3 of the
+LGPL only, so the helper binary is distributed under LGPL-3.0-or-later, as
+the "or later" permits (`voice/licenses/LGPL-3.0.txt` and `GPL-3.0.txt`,
+beside ONNX Runtime's and Silero VAD's notices). The downloader
+`parrotfish-voice-download` uses only Qt.
+
 The licence texts are in `LICENSES/`. Where each source was taken from
 (commits, dates): DEVELOPMENT.md, "Dictionary data".

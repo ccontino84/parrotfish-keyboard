@@ -5,6 +5,22 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Changelog
 
+## 1.3.0 (unreleased)
+
+### New
+
+- **Voice input,** recognised on the phone, in a new optional package,
+  `parrotfish-keyboard-voice` (aarch64). Hold the spacebar and lift the
+  finger on the microphone: the text appears phrase by phrase as you speak,
+  and ✓ types it. Tap or drag over words and say the replacement; undo
+  takes back the last change, and shows what it would change while you hold
+  it. The mic button pauses and resumes.
+- The speech model (NVIDIA Parakeet TDT 0.6B v3 as post-trained by
+  Moondream, 670 MB, CC BY 4.0) is downloaded once from the new *Voice
+  input* settings page, with a warning on mobile data. This download is the
+  only network use in Parrotfish: the recognizer itself can't use the
+  network, and the audio is neither sent nor saved.
+
 ## 1.2.2 (2026-11-14)
 
 ### Improved

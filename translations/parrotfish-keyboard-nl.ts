@@ -30,6 +30,21 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Afronden…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Gepauzeerd</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Luistert…</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLanguages</name>
     <message>
         <source>Typing languages</source>
@@ -301,6 +316,28 @@
         <source>Settings back to defaults</source>
         <translation>Standaardinstellingen hersteld</translation>
     </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Spraakinvoer</translation>
+    </message>
+    <message>
+        <source>Downloading the model</source>
+        <translation>Model wordt gedownload</translation>
+    </message>
+    <message>
+        <source>Model not downloaded</source>
+        <translation>Model niet gedownload</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <comment>voice input</comment>
+        <translation>Aan</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>voice input</comment>
+        <translation>Uit</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -430,6 +467,120 @@
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
         <translation>Spatie maakt van :-) 🙂. Anders biedt de emojiknop het aan</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishVoice</name>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Niet genoeg opslag: nog %1 MB nodig</translation>
+    </message>
+    <message>
+        <source>The download failed: %1</source>
+        <translation>Downloaden mislukt: %1</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Een gedownload bestand was beschadigd</translation>
+    </message>
+    <message>
+        <source>The model couldn't be saved</source>
+        <translation>Het model kon niet worden opgeslagen</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Het downloaden is gestopt</translation>
+    </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Spraakinvoer</translation>
+    </message>
+    <message>
+        <source>Hold the spacebar and lift the finger on the microphone. Speech is recognised on the phone</source>
+        <translation>Houd de spatiebalk ingedrukt en laat je vinger los op de microfoon. Spraak wordt op de telefoon herkend</translation>
+    </message>
+    <message>
+        <source>Speech model</source>
+        <translation>Spraakmodel</translation>
+    </message>
+    <message>
+        <source>Downloaded: %1 MB</source>
+        <translation>Gedownload: %1 MB</translation>
+    </message>
+    <message>
+        <source>Voice input needs a speech model, downloaded once from Hugging Face (%1 MB). Nothing else uses the network.</source>
+        <translation>Spraakinvoer heeft een spraakmodel nodig, eenmalig gedownload van Hugging Face (%1 MB). Verder gebruikt niets het netwerk.</translation>
+    </message>
+    <message>
+        <source>Try again: it continues where it stopped.</source>
+        <translation>Probeer opnieuw: het gaat verder waar het stopte.</translation>
+    </message>
+    <message>
+        <source>You're on mobile data. The download is %1 MB: Wi-Fi is better.</source>
+        <translation>Je gebruikt mobiele data. De download is %1 MB: wifi is beter.</translation>
+    </message>
+    <message>
+        <source>Download anyway</source>
+        <translation>Toch downloaden</translation>
+    </message>
+    <message>
+        <source>Continue download</source>
+        <translation>Download hervatten</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Downloaden</translation>
+    </message>
+    <message>
+        <source>Checking the files</source>
+        <translation>Bestanden controleren</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 van %2 MB</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stoppen</translation>
+    </message>
+    <message>
+        <source>Delete model</source>
+        <translation>Model verwijderen</translation>
+    </message>
+    <message>
+        <source>Speech model deleted</source>
+        <translation>Spraakmodel verwijderd</translation>
+    </message>
+    <message>
+        <source>Model: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted by the sherpa-onnx project. Licence: CC BY 4.0.</source>
+        <translation>Model: NVIDIA Parakeet TDT 0.6B v3, nagetraind door Moondream (parakeet-ultra), geconverteerd door het sherpa-onnx-project. Licentie: CC BY 4.0.</translation>
+    </message>
+</context>
+<context>
+    <name>VoicePanel</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Afronden…</translation>
+    </message>
+    <message>
+        <source>Loading the model…</source>
+        <translation>Model laden…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Gepauzeerd</translation>
+    </message>
+    <message>
+        <source>Speak</source>
+        <translation>Spreek</translation>
+    </message>
+    <message>
+        <source>Tap the mic to replace</source>
+        <translation>Tik op de microfoon om te vervangen</translation>
+    </message>
+    <message>
+        <source>Say the replacement</source>
+        <translation>Zeg de vervanging</translation>
     </message>
 </context>
 </TS>

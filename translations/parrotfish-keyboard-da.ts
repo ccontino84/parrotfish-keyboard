@@ -30,6 +30,21 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Afslutter…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>På pause</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Lytter…</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLanguages</name>
     <message>
         <source>Typing languages</source>
@@ -301,6 +316,28 @@
         <source>Settings back to defaults</source>
         <translation>Standardindstillinger gendannet</translation>
     </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Taleindtastning</translation>
+    </message>
+    <message>
+        <source>Downloading the model</source>
+        <translation>Henter modellen</translation>
+    </message>
+    <message>
+        <source>Model not downloaded</source>
+        <translation>Modellen er ikke hentet</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <comment>voice input</comment>
+        <translation>Til</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>voice input</comment>
+        <translation>Fra</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -430,6 +467,120 @@
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
         <translation>Mellemrum gør :-) til 🙂. Ellers tilbyder emoji-knappen det</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishVoice</name>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Ikke nok lagerplads: der mangler %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed: %1</source>
+        <translation>Download mislykkedes: %1</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>En hentet fil var beskadiget</translation>
+    </message>
+    <message>
+        <source>The model couldn't be saved</source>
+        <translation>Modellen kunne ikke gemmes</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Download stoppede</translation>
+    </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Taleindtastning</translation>
+    </message>
+    <message>
+        <source>Hold the spacebar and lift the finger on the microphone. Speech is recognised on the phone</source>
+        <translation>Hold mellemrumstasten nede, og løft fingeren på mikrofonen. Talen genkendes på telefonen</translation>
+    </message>
+    <message>
+        <source>Speech model</source>
+        <translation>Talemodel</translation>
+    </message>
+    <message>
+        <source>Downloaded: %1 MB</source>
+        <translation>Hentet: %1 MB</translation>
+    </message>
+    <message>
+        <source>Voice input needs a speech model, downloaded once from Hugging Face (%1 MB). Nothing else uses the network.</source>
+        <translation>Taleindtastning kræver en talemodel, som hentes én gang fra Hugging Face (%1 MB). Intet andet bruger netværket.</translation>
+    </message>
+    <message>
+        <source>Try again: it continues where it stopped.</source>
+        <translation>Prøv igen: det fortsætter, hvor det stoppede.</translation>
+    </message>
+    <message>
+        <source>You're on mobile data. The download is %1 MB: Wi-Fi is better.</source>
+        <translation>Du bruger mobildata. Download er på %1 MB: Wi-Fi er bedre.</translation>
+    </message>
+    <message>
+        <source>Download anyway</source>
+        <translation>Hent alligevel</translation>
+    </message>
+    <message>
+        <source>Continue download</source>
+        <translation>Fortsæt download</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Hent</translation>
+    </message>
+    <message>
+        <source>Checking the files</source>
+        <translation>Kontrollerer filerne</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 af %2 MB</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <source>Delete model</source>
+        <translation>Slet model</translation>
+    </message>
+    <message>
+        <source>Speech model deleted</source>
+        <translation>Talemodel slettet</translation>
+    </message>
+    <message>
+        <source>Model: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted by the sherpa-onnx project. Licence: CC BY 4.0.</source>
+        <translation>Model: NVIDIA Parakeet TDT 0.6B v3, eftertrænet af Moondream (parakeet-ultra), konverteret af sherpa-onnx-projektet. Licens: CC BY 4.0.</translation>
+    </message>
+</context>
+<context>
+    <name>VoicePanel</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Afslutter…</translation>
+    </message>
+    <message>
+        <source>Loading the model…</source>
+        <translation>Indlæser modellen…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>På pause</translation>
+    </message>
+    <message>
+        <source>Speak</source>
+        <translation>Tal</translation>
+    </message>
+    <message>
+        <source>Tap the mic to replace</source>
+        <translation>Tryk på mikrofonen for at erstatte</translation>
+    </message>
+    <message>
+        <source>Say the replacement</source>
+        <translation>Sig erstatningen</translation>
     </message>
 </context>
 </TS>

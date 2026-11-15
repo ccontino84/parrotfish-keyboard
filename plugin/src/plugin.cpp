@@ -6,6 +6,9 @@
 #include "languages.h"
 #include "learnedwords.h"
 #include "predictionengine.h"
+#include "voiceinput.h"
+#include "voicemodel.h"
+#include "voicewave.h"
 
 #include <QCoreApplication>
 #include <QLocale>
@@ -26,8 +29,16 @@ public:
         qmlRegisterType<PredictionEngine>(uri, 1, 0, "PredictionEngine");
         qmlRegisterType<LearnedWords>(uri, 1, 0, "LearnedWords");
         qmlRegisterType<KeyboardInfo>(uri, 1, 0, "KeyboardInfo");
+        qmlRegisterType<VoiceWave>(uri, 1, 0, "VoiceWave");
         qmlRegisterSingletonType<Languages>(uri, 1, 0, "Languages", [](QQmlEngine *, QJSEngine *) -> QObject * {
             return new Languages;
+        });
+        qmlRegisterSingletonType<VoiceInput>(uri, 1, 0, "Voice", [](QQmlEngine *, QJSEngine *) -> QObject * {
+            return new VoiceInput;
+        });
+        // A singleton: the download goes on when its settings page closes.
+        qmlRegisterSingletonType<VoiceModel>(uri, 1, 0, "VoiceModel", [](QQmlEngine *, QJSEngine *) -> QObject * {
+            return new VoiceModel;
         });
     }
 

@@ -30,6 +30,21 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Dokončování…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pozastaveno</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Poslouchám…</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLanguages</name>
     <message>
         <source>Typing languages</source>
@@ -301,6 +316,28 @@
         <source>Settings back to defaults</source>
         <translation>Nastavení obnovena na výchozí</translation>
     </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Hlasové zadávání</translation>
+    </message>
+    <message>
+        <source>Downloading the model</source>
+        <translation>Stahování modelu</translation>
+    </message>
+    <message>
+        <source>Model not downloaded</source>
+        <translation>Model není stažen</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <comment>voice input</comment>
+        <translation>Zapnuto</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>voice input</comment>
+        <translation>Vypnuto</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -431,6 +468,120 @@
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
         <translation>Mezera změní :-) na 🙂. Jinak ho nabídne tlačítko emoji</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishVoice</name>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Nedostatek místa: je potřeba ještě %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed: %1</source>
+        <translation>Stahování selhalo: %1</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Stažený soubor byl poškozený</translation>
+    </message>
+    <message>
+        <source>The model couldn't be saved</source>
+        <translation>Model se nepodařilo uložit</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Stahování se přerušilo</translation>
+    </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Hlasové zadávání</translation>
+    </message>
+    <message>
+        <source>Hold the spacebar and lift the finger on the microphone. Speech is recognised on the phone</source>
+        <translation>Podržte mezerník a zvedněte prst na mikrofonu. Řeč se rozpoznává v telefonu</translation>
+    </message>
+    <message>
+        <source>Speech model</source>
+        <translation>Řečový model</translation>
+    </message>
+    <message>
+        <source>Downloaded: %1 MB</source>
+        <translation>Staženo: %1 MB</translation>
+    </message>
+    <message>
+        <source>Voice input needs a speech model, downloaded once from Hugging Face (%1 MB). Nothing else uses the network.</source>
+        <translation>Hlasové zadávání potřebuje řečový model, který se jednou stáhne z Hugging Face (%1 MB). Nic jiného síť nepoužívá.</translation>
+    </message>
+    <message>
+        <source>Try again: it continues where it stopped.</source>
+        <translation>Zkuste to znovu: stahování bude pokračovat tam, kde skončilo.</translation>
+    </message>
+    <message>
+        <source>You're on mobile data. The download is %1 MB: Wi-Fi is better.</source>
+        <translation>Používáte mobilní data. Stahování má %1 MB: lepší je Wi-Fi.</translation>
+    </message>
+    <message>
+        <source>Download anyway</source>
+        <translation>Přesto stáhnout</translation>
+    </message>
+    <message>
+        <source>Continue download</source>
+        <translation>Pokračovat ve stahování</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Stáhnout</translation>
+    </message>
+    <message>
+        <source>Checking the files</source>
+        <translation>Kontrola souborů</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 z %2 MB</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Zastavit</translation>
+    </message>
+    <message>
+        <source>Delete model</source>
+        <translation>Smazat model</translation>
+    </message>
+    <message>
+        <source>Speech model deleted</source>
+        <translation>Řečový model smazán</translation>
+    </message>
+    <message>
+        <source>Model: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted by the sherpa-onnx project. Licence: CC BY 4.0.</source>
+        <translation>Model: NVIDIA Parakeet TDT 0.6B v3, dotrénovaný firmou Moondream (parakeet-ultra), převedený projektem sherpa-onnx. Licence: CC BY 4.0.</translation>
+    </message>
+</context>
+<context>
+    <name>VoicePanel</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Dokončování…</translation>
+    </message>
+    <message>
+        <source>Loading the model…</source>
+        <translation>Načítání modelu…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pozastaveno</translation>
+    </message>
+    <message>
+        <source>Speak</source>
+        <translation>Mluvte</translation>
+    </message>
+    <message>
+        <source>Tap the mic to replace</source>
+        <translation>Klepnutím na mikrofon nahradíte</translation>
+    </message>
+    <message>
+        <source>Say the replacement</source>
+        <translation>Řekněte náhradu</translation>
     </message>
 </context>
 </TS>

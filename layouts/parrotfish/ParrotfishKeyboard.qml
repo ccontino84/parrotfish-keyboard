@@ -20,6 +20,7 @@ import Parrotfish.Keyboard 1.0
 import "../.."
 import "arrangements.js" as Arrangements
 import "emoji"
+import "voice"
 
 KeyboardLayout {
     id: parrotfishLayout
@@ -134,6 +135,18 @@ KeyboardLayout {
     // The emoji panel (emoji/EmojiPanel.qml) instead of the rows; off when
     // the keyboard closes or Jolla's handler takes over (passwords, numbers).
     property bool emojiView: false
+    // Voice input's panel (voice/VoicePanel.qml) instead of the rows: set by
+    // the handler while it records.
+    property bool voiceView: false
+    // Voice input is offered: the voice package is installed, the model
+    // downloaded, and /apps/parrotfish-keyboard/voice isn't off.
+    readonly property bool voiceEnabled: Voice.available && voiceConfig.value !== false && voiceConfig.value !== "false"
+    ConfigurationValue {
+        id: voiceConfig
+        key: "/apps/parrotfish-keyboard/voice"
+        defaultValue: true
+    }
+    readonly property bool _rowsShown: !emojiView && !voiceView
     // The recent emoji: read when the panel opens, so that they don't move
     // while it is open.
     property var emojiRecent: []
@@ -333,7 +346,7 @@ KeyboardLayout {
 
     Item {
         id: numberRow
-        visible: parrotfishLayout.numberRowOn && !parrotfishLayout.emojiView
+        visible: parrotfishLayout.numberRowOn && parrotfishLayout._rowsShown
         height: parrotfishLayout._numberRowHeight
         onWidthChanged: parrotfishLayout._placeNumbers()
         onHeightChanged: parrotfishLayout._placeNumbers()
@@ -341,11 +354,11 @@ KeyboardLayout {
 
     // The letter rows are filled by _build(), in order, so that the keys'
     // order (and the split index) is the arrangement's.
-    KeyboardRow { id: row1; visible: !parrotfishLayout.emojiView }
-    KeyboardRow { id: row2; visible: !parrotfishLayout.emojiView }
+    KeyboardRow { id: row1; visible: parrotfishLayout._rowsShown }
+    KeyboardRow { id: row2; visible: parrotfishLayout._rowsShown }
     KeyboardRow {
         id: row3
-        visible: !parrotfishLayout.emojiView
+        visible: parrotfishLayout._rowsShown
         // KeyboardRow's, with Shift's and Backspace's widths set first: a
         // binding could still have the layout's previous width.
         function maximumBasicButtonWidth(shareableWidth) {
@@ -366,7 +379,7 @@ KeyboardLayout {
         ShiftKey {}
     }
 
-    BottomRow { visible: !parrotfishLayout.emojiView }
+    BottomRow { visible: parrotfishLayout._rowsShown }
 
     // As tall as what it replaces: the number row, three letter rows and the
     // bottom row.
@@ -384,9 +397,30 @@ KeyboardLayout {
         onCloseRequested: parrotfishLayout.emojiView = false
     }
 
+    VoicePanel {
+        visible: parrotfishLayout.voiceView
+        height: parrotfishLayout._numberRowHeight + 4 * parrotfishLayout.keyHeight
+    }
+
+    // No height (the layout is a Column): its menu opens upwards, over the rows.
+    LayoutMenu {
+        z: 10
+        layout: parrotfishLayout
+        onVoiceRequested: {
+            var handler = keyboard.inputHandler
+            if (handler && typeof handler.startVoice === "function")
+                handler.startVoice()
+        }
+    }
+
     Connections {
         target: MInputMethodQuick
-        onActiveChanged: if (!MInputMethodQuick.active) parrotfishLayout.emojiView = false
+        onActiveChanged: {
+            if (!MInputMethodQuick.active) {
+                parrotfishLayout.emojiView = false
+                parrotfishLayout.voiceView = false
+            }
+        }
     }
 
     Timer {

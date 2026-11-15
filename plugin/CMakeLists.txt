@@ -21,12 +21,17 @@ add_library(parrotfishkeyboard MODULE
     src/plugin.cpp
     src/predictionengine.cpp
     src/storewriter.cpp
+    src/voiceinput.cpp
+    src/voicemodel.cpp
+    src/voicetext.cpp
+    src/voicewave.cpp
 )
 target_link_libraries(parrotfishkeyboard PRIVATE parrotfish-engine Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick PkgConfig::SQLITE3 PkgConfig::DCONF PkgConfig::EMOJI Threads::Threads)
 target_compile_definitions(parrotfishkeyboard PRIVATE
     PARROTFISH_DATA_DIR="${PARROTFISH_DATA_DIR}"
     PARROTFISH_VERSION="${PARROTFISH_VERSION}"
     PARROTFISH_TRANSLATIONS_DIR="${CMAKE_INSTALL_FULL_DATADIR}/translations"
+    PARROTFISH_VOICE_LIBEXEC_DIR="${CMAKE_INSTALL_FULL_LIBEXECDIR}/parrotfish-keyboard-voice"
     QT_NO_CAST_FROM_ASCII)
 target_compile_options(parrotfishkeyboard PRIVATE -Wall -Wextra)
 

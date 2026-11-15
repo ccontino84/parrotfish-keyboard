@@ -30,6 +30,21 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Završavanje…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pauzirano</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Slušam…</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLanguages</name>
     <message>
         <source>Typing languages</source>
@@ -301,6 +316,28 @@
         <source>Settings back to defaults</source>
         <translation>Postavke vraćene na zadane</translation>
     </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Glasovni unos</translation>
+    </message>
+    <message>
+        <source>Downloading the model</source>
+        <translation>Preuzimanje modela</translation>
+    </message>
+    <message>
+        <source>Model not downloaded</source>
+        <translation>Model nije preuzet</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <comment>voice input</comment>
+        <translation>Uključeno</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>voice input</comment>
+        <translation>Isključeno</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -431,6 +468,120 @@
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
         <translation>Razmak pretvara :-) u 🙂. Inače ga nudi gumb za emojije</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishVoice</name>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Nema dovoljno prostora: potrebno je još %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed: %1</source>
+        <translation>Preuzimanje nije uspjelo: %1</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Preuzeta datoteka bila je oštećena</translation>
+    </message>
+    <message>
+        <source>The model couldn't be saved</source>
+        <translation>Model nije moguće spremiti</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Preuzimanje je prekinuto</translation>
+    </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Glasovni unos</translation>
+    </message>
+    <message>
+        <source>Hold the spacebar and lift the finger on the microphone. Speech is recognised on the phone</source>
+        <translation>Držite razmaknicu i podignite prst na mikrofonu. Govor se prepoznaje na telefonu</translation>
+    </message>
+    <message>
+        <source>Speech model</source>
+        <translation>Govorni model</translation>
+    </message>
+    <message>
+        <source>Downloaded: %1 MB</source>
+        <translation>Preuzeto: %1 MB</translation>
+    </message>
+    <message>
+        <source>Voice input needs a speech model, downloaded once from Hugging Face (%1 MB). Nothing else uses the network.</source>
+        <translation>Glasovni unos treba govorni model koji se jednom preuzima s Hugging Facea (%1 MB). Ništa drugo ne koristi mrežu.</translation>
+    </message>
+    <message>
+        <source>Try again: it continues where it stopped.</source>
+        <translation>Pokušajte ponovno: preuzimanje se nastavlja gdje je stalo.</translation>
+    </message>
+    <message>
+        <source>You're on mobile data. The download is %1 MB: Wi-Fi is better.</source>
+        <translation>Koristite mobilne podatke. Preuzimanje ima %1 MB: bolje je Wi-Fi.</translation>
+    </message>
+    <message>
+        <source>Download anyway</source>
+        <translation>Ipak preuzmi</translation>
+    </message>
+    <message>
+        <source>Continue download</source>
+        <translation>Nastavi preuzimanje</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Preuzmi</translation>
+    </message>
+    <message>
+        <source>Checking the files</source>
+        <translation>Provjera datoteka</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 od %2 MB</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Zaustavi</translation>
+    </message>
+    <message>
+        <source>Delete model</source>
+        <translation>Izbriši model</translation>
+    </message>
+    <message>
+        <source>Speech model deleted</source>
+        <translation>Govorni model izbrisan</translation>
+    </message>
+    <message>
+        <source>Model: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted by the sherpa-onnx project. Licence: CC BY 4.0.</source>
+        <translation>Model: NVIDIA Parakeet TDT 0.6B v3, dodatno istreniran u Moondreamu (parakeet-ultra), pretvoren u projektu sherpa-onnx. Licenca: CC BY 4.0.</translation>
+    </message>
+</context>
+<context>
+    <name>VoicePanel</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Završavanje…</translation>
+    </message>
+    <message>
+        <source>Loading the model…</source>
+        <translation>Učitavanje modela…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pauzirano</translation>
+    </message>
+    <message>
+        <source>Speak</source>
+        <translation>Govorite</translation>
+    </message>
+    <message>
+        <source>Tap the mic to replace</source>
+        <translation>Dodirnite mikrofon za zamjenu</translation>
+    </message>
+    <message>
+        <source>Say the replacement</source>
+        <translation>Izgovorite zamjenu</translation>
     </message>
 </context>
 </TS>

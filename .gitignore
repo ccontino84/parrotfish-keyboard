@@ -14,3 +14,6 @@ __pycache__/
 
 # Dictionaries built on the PC for a local RPM (tools/pf rpm)
 /prebuilt/
+
+# Voice package: prebuilt sherpa-onnx and the models, never committed
+/voice/deps/

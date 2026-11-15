@@ -30,6 +30,21 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Viimeistellään…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Tauolla</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Kuunnellaan…</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLanguages</name>
     <message>
         <source>Typing languages</source>
@@ -301,6 +316,28 @@
         <source>Settings back to defaults</source>
         <translation>Oletusasetukset palautettu</translation>
     </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Puhesyöte</translation>
+    </message>
+    <message>
+        <source>Downloading the model</source>
+        <translation>Mallin lataus käynnissä</translation>
+    </message>
+    <message>
+        <source>Model not downloaded</source>
+        <translation>Mallia ei ole ladattu</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <comment>voice input</comment>
+        <translation>Päällä</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>voice input</comment>
+        <translation>Pois</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -430,6 +467,120 @@
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
         <translation>Välilyönti muuttaa :-) muotoon 🙂. Muuten emojipainike tarjoaa sitä</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishVoice</name>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Tila ei riitä: tarvitaan vielä %1 Mt</translation>
+    </message>
+    <message>
+        <source>The download failed: %1</source>
+        <translation>Lataus epäonnistui: %1</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Ladattu tiedosto oli vioittunut</translation>
+    </message>
+    <message>
+        <source>The model couldn't be saved</source>
+        <translation>Mallia ei voitu tallentaa</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Lataus keskeytyi</translation>
+    </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Puhesyöte</translation>
+    </message>
+    <message>
+        <source>Hold the spacebar and lift the finger on the microphone. Speech is recognised on the phone</source>
+        <translation>Pidä välilyöntiä painettuna ja nosta sormi mikrofonin kohdalla. Puhe tunnistetaan puhelimessa</translation>
+    </message>
+    <message>
+        <source>Speech model</source>
+        <translation>Puhemalli</translation>
+    </message>
+    <message>
+        <source>Downloaded: %1 MB</source>
+        <translation>Ladattu: %1 Mt</translation>
+    </message>
+    <message>
+        <source>Voice input needs a speech model, downloaded once from Hugging Face (%1 MB). Nothing else uses the network.</source>
+        <translation>Puhesyöte tarvitsee puhemallin, joka ladataan kerran Hugging Facesta (%1 Mt). Mikään muu ei käytä verkkoa.</translation>
+    </message>
+    <message>
+        <source>Try again: it continues where it stopped.</source>
+        <translation>Yritä uudelleen: lataus jatkuu siitä, mihin se jäi.</translation>
+    </message>
+    <message>
+        <source>You're on mobile data. The download is %1 MB: Wi-Fi is better.</source>
+        <translation>Käytät mobiilidataa. Lataus on %1 Mt: Wi-Fi on parempi.</translation>
+    </message>
+    <message>
+        <source>Download anyway</source>
+        <translation>Lataa silti</translation>
+    </message>
+    <message>
+        <source>Continue download</source>
+        <translation>Jatka latausta</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Lataa</translation>
+    </message>
+    <message>
+        <source>Checking the files</source>
+        <translation>Tarkistetaan tiedostoja</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 / %2 Mt</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Pysäytä</translation>
+    </message>
+    <message>
+        <source>Delete model</source>
+        <translation>Poista malli</translation>
+    </message>
+    <message>
+        <source>Speech model deleted</source>
+        <translation>Puhemalli poistettu</translation>
+    </message>
+    <message>
+        <source>Model: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted by the sherpa-onnx project. Licence: CC BY 4.0.</source>
+        <translation>Malli: NVIDIA Parakeet TDT 0.6B v3, Moondreamin jatkokouluttama (parakeet-ultra), sherpa-onnx-projektin muuntama. Lisenssi: CC BY 4.0.</translation>
+    </message>
+</context>
+<context>
+    <name>VoicePanel</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Viimeistellään…</translation>
+    </message>
+    <message>
+        <source>Loading the model…</source>
+        <translation>Malli latautuu…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Tauolla</translation>
+    </message>
+    <message>
+        <source>Speak</source>
+        <translation>Puhu</translation>
+    </message>
+    <message>
+        <source>Tap the mic to replace</source>
+        <translation>Korvaa napauttamalla mikrofonia</translation>
+    </message>
+    <message>
+        <source>Say the replacement</source>
+        <translation>Sano korvaava teksti</translation>
     </message>
 </context>
 </TS>

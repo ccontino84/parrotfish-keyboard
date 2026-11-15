@@ -30,6 +30,21 @@
     </message>
 </context>
 <context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Finalisation…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>En pause</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Écoute…</translation>
+    </message>
+</context>
+<context>
     <name>ParrotfishLanguages</name>
     <message>
         <source>Typing languages</source>
@@ -301,6 +316,28 @@
         <source>Settings back to defaults</source>
         <translation>Réglages par défaut rétablis</translation>
     </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Saisie vocale</translation>
+    </message>
+    <message>
+        <source>Downloading the model</source>
+        <translation>Téléchargement du modèle</translation>
+    </message>
+    <message>
+        <source>Model not downloaded</source>
+        <translation>Modèle non téléchargé</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <comment>voice input</comment>
+        <translation>Activée</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>voice input</comment>
+        <translation>Désactivée</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -430,6 +467,120 @@
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>
         <translation>Espace transforme :-) en 🙂. Sinon, le bouton émoji le propose</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishVoice</name>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Espace insuffisant : %1 Mo de plus nécessaires</translation>
+    </message>
+    <message>
+        <source>The download failed: %1</source>
+        <translation>Échec du téléchargement : %1</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Un fichier téléchargé était endommagé</translation>
+    </message>
+    <message>
+        <source>The model couldn't be saved</source>
+        <translation>Impossible d'enregistrer le modèle</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Le téléchargement s'est interrompu</translation>
+    </message>
+    <message>
+        <source>Voice input</source>
+        <translation>Saisie vocale</translation>
+    </message>
+    <message>
+        <source>Hold the spacebar and lift the finger on the microphone. Speech is recognised on the phone</source>
+        <translation>Maintenez la barre d'espace et relâchez le doigt sur le micro. La parole est reconnue sur le téléphone</translation>
+    </message>
+    <message>
+        <source>Speech model</source>
+        <translation>Modèle vocal</translation>
+    </message>
+    <message>
+        <source>Downloaded: %1 MB</source>
+        <translation>Téléchargé : %1 Mo</translation>
+    </message>
+    <message>
+        <source>Voice input needs a speech model, downloaded once from Hugging Face (%1 MB). Nothing else uses the network.</source>
+        <translation>La saisie vocale a besoin d'un modèle vocal, téléchargé une seule fois depuis Hugging Face (%1 Mo). Rien d'autre n'utilise le réseau.</translation>
+    </message>
+    <message>
+        <source>Try again: it continues where it stopped.</source>
+        <translation>Réessayez : le téléchargement reprend là où il s'est arrêté.</translation>
+    </message>
+    <message>
+        <source>You're on mobile data. The download is %1 MB: Wi-Fi is better.</source>
+        <translation>Vous utilisez les données mobiles. Le téléchargement fait %1 Mo : le Wi-Fi est préférable.</translation>
+    </message>
+    <message>
+        <source>Download anyway</source>
+        <translation>Télécharger quand même</translation>
+    </message>
+    <message>
+        <source>Continue download</source>
+        <translation>Reprendre le téléchargement</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Télécharger</translation>
+    </message>
+    <message>
+        <source>Checking the files</source>
+        <translation>Vérification des fichiers</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 sur %2 Mo</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Arrêter</translation>
+    </message>
+    <message>
+        <source>Delete model</source>
+        <translation>Supprimer le modèle</translation>
+    </message>
+    <message>
+        <source>Speech model deleted</source>
+        <translation>Modèle vocal supprimé</translation>
+    </message>
+    <message>
+        <source>Model: NVIDIA Parakeet TDT 0.6B v3, post-trained by Moondream (parakeet-ultra), converted by the sherpa-onnx project. Licence: CC BY 4.0.</source>
+        <translation>Modèle : NVIDIA Parakeet TDT 0.6B v3, post-entraîné par Moondream (parakeet-ultra), converti par le projet sherpa-onnx. Licence : CC BY 4.0.</translation>
+    </message>
+</context>
+<context>
+    <name>VoicePanel</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Finalisation…</translation>
+    </message>
+    <message>
+        <source>Loading the model…</source>
+        <translation>Chargement du modèle…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>En pause</translation>
+    </message>
+    <message>
+        <source>Speak</source>
+        <translation>Parlez</translation>
+    </message>
+    <message>
+        <source>Tap the mic to replace</source>
+        <translation>Touchez le micro pour remplacer</translation>
+    </message>
+    <message>
+        <source>Say the replacement</source>
+        <translation>Dites le remplacement</translation>
     </message>
 </context>
 </TS>

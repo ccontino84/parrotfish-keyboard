@@ -11,7 +11,8 @@ Better typing for the Sailfish OS keyboard, in several languages at once.
 switching keyboards again and again, often in the middle of a sentence.
 Parrotfish follows the language you are writing instead. And it stays just
 a keyboard: fully open source, it changes nothing in the system, never goes
-online, and leaves out everything that isn't about typing.
+online (one exception: the optional voice input's speech model, downloaded
+once when you ask for it), and leaves out everything that isn't about typing.
 
 What it adds to Jolla's keyboard:
 
@@ -27,6 +28,15 @@ What it adds to Jolla's keyboard:
   panel, with your recent emoji first, skin tones and gender forms on long
   press, in colour. Type an emoticon such as `:-)` and the button offers
   its emoji.
+- **Voice input,** recognised on the phone, in an optional package
+  (aarch64): hold the spacebar and lift the finger on the microphone. The
+  text appears as you speak, phrase by phrase, and is typed when you tap ✓.
+  Tap or drag over words and say the replacement; undo takes back the last
+  change. The speech model, NVIDIA's Parakeet (670 MB), is downloaded once
+  from the settings. It picks the language by itself: in our tests it works
+  well in Croatian, Czech, Dutch, English, Finnish, French, German, Italian,
+  Polish, Portuguese and Spanish, less well in Danish, Romanian, Slovenian
+  and Swedish; Norwegian isn't supported.
 - **Typing aids,** each one on or off: a period on double space, a space
   before ! ? : ; (as in French), and emoticons replaced by their emoji.
 - **Three arrangements:** QWERTY, QWERTZ and AZERTY, for any language.
@@ -46,7 +56,7 @@ separate package. There is too little public text
 to build and test these as well as the others; feedback from native speakers
 is welcome. The settings are translated into all of them.
 
-**Status:** 1.2. Tested on Sailfish OS 5.2 (aarch64);
+**Status:** 1.3. Tested on Sailfish OS 5.2 (aarch64);
 the 32-bit build (armv7hl) is untested, reports are welcome.
 
 ## Install
@@ -60,7 +70,8 @@ the 32-bit build (armv7hl) is untested, reports are welcome.
      English, French, German, Italian, Polish, Portuguese, Slovenian,
      Spanish;
    - for Croatian, Danish, Finnish, Norwegian, Romanian or Swedish, also
-     `parrotfish-keyboard-languages-latin-experimental-<version>.noarch`.
+     `parrotfish-keyboard-languages-latin-experimental-<version>.noarch`;
+   - for voice input, also `parrotfish-keyboard-voice-<version>.aarch64`.
 2. In **Settings > Untrusted software**, turn on *Allow untrusted software*.
 3. Open the downloaded files (from the browser's downloads or the Files app)
    and install them, `parrotfish-keyboard` first. The keyboard restarts by
@@ -70,7 +81,8 @@ the 32-bit build (armv7hl) is untested, reports are welcome.
    at the top of the list. Switch to it as to any other keyboard: long-press
    the spacebar, or swipe.
 5. Its settings are under **Settings > Text input**, in the Parrotfish
-   section. Start with *Typing languages*.
+   section. Start with *Typing languages*. With the voice package, download
+   the speech model in *Voice input* (Wi-Fi is better).
 
 **Upgrading** works the same way: install the new RPMs over the old ones,
 `parrotfish-keyboard` first. The language packages only need updating when
@@ -91,12 +103,13 @@ language packages yet, only the keyboard: use one of the ways above.
 From a terminal (Developer mode):
 
 ```sh
+devel-su pkcon remove parrotfish-keyboard-voice                          # if installed
 devel-su pkcon remove parrotfish-keyboard-languages-latin-experimental   # if installed
 devel-su pkcon remove parrotfish-keyboard-languages-latin parrotfish-keyboard
 ```
 
-Settings stay in dconf and learned words in your home directory. To remove
-them too:
+Settings stay in dconf, learned words and the speech model in your home
+directory. To remove them too:
 
 ```sh
 dconf reset -f /apps/parrotfish-keyboard/
@@ -106,6 +119,11 @@ rm -r ~/.local/share/parrotfish-keyboard
 ## Safety and privacy
 
 - **Nothing leaves the phone.** The keyboard makes no network connections.
+  The one exception is in the optional voice package: its settings page
+  downloads the speech model from Hugging Face once, when you tap
+  *Download*, through a separate program (the pinned files, checked by
+  SHA-256). Speech is recognised on the phone, by a process that can't use
+  the network; the audio is neither sent nor saved.
   Learned words are stored only on the phone. *Clear all learned data*, in
   the settings, removes them. Recent emoji are kept with the settings; a
   long press in the panel removes one.

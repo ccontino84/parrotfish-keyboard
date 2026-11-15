@@ -163,6 +163,12 @@ InputHandler {
     property Item _spacebarLabel: null
     // The keyboard's own drag threshold, restored when we're not active.
     property real _jollaDragThreshold: -1
+    // Voice input (the layout's voice/LayoutMenu.qml calls startVoice()): the
+    // text before the cursor when it started, and the space put before the
+    // dictation.
+    property string _voiceBefore: ""
+    property string _voicePrefix: ""
+    readonly property bool voiceActive: Voice.state !== "off"
 
     PredictionEngine {
         id: predictionEngine
@@ -274,6 +280,8 @@ InputHandler {
     }
 
     onActiveChanged: {
+        if (!active && Voice.state !== "off")
+            Voice.cancel()
         // Jolla's handler has no emoji button: nothing to go back with.
         if (!active && keyboard.layout && keyboard.layout.emojiView === true)
             keyboard.layout.emojiView = false
@@ -769,6 +777,56 @@ InputHandler {
         return character !== "" && (predictionEngine.isLetter(character) || "\'-".indexOf(character) >= 0)
     }
 
+    function startVoice() {
+        if (Voice.state !== "off" || !Voice.available)
+            return
+        if (preedit !== "")
+            commit(preedit)
+        _voiceBefore = _currentTextBefore()
+        _voicePrefix = _voiceBefore !== "" && !/\s$/.test(_voiceBefore) ? " " : ""
+        _setVoiceView(true)
+        Voice.start()
+    }
+
+    function _setVoiceView(on) {
+        if (keyboard.layout && keyboard.layout.voiceView !== undefined)
+            keyboard.layout.voiceView = on
+    }
+
+    function _voiceDone(text) {
+        _setVoiceView(false)
+        if (text === "")
+            return
+        var sent = _voicePrefix + text
+        MInputMethodQuick.sendCommit(sent)
+        _committedContext = (_voiceBefore + sent).slice(-1000)
+        _awaitingReport = true
+        _setContext(_committedContext, "voice")
+    }
+
+    Connections {
+        target: Voice
+        onFinished: inputHandler._voiceDone(text)
+        onFailed: inputHandler._voiceDone(Voice.text)
+        onStateChanged: if (Voice.state === "off") inputHandler._setVoiceView(false)
+    }
+
+    // The keyboard hidden while listening (the screen off, another app):
+    // the microphone stops and the text waits for the keyboard to come back.
+    // Shown, it looks again for the model (downloaded in the settings).
+    Connections {
+        target: MInputMethodQuick
+        onActiveChanged: {
+            if (!MInputMethodQuick.active) {
+                Voice.pause()
+                return
+            }
+            Voice.refresh()
+            if (inputHandler.active && Voice.state !== "off")
+                inputHandler._setVoiceView(true)
+        }
+    }
+
     function reset() {
         preedit = ""
         _correction = null
@@ -1151,6 +1209,7 @@ InputHandler {
 
                 readonly property bool available: keyboard.layout !== null
                                                   && keyboard.layout.emojiView !== undefined
+                                                  && !inputHandler.voiceActive
                 anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
                 width: available ? height : 0
                 visible: available
@@ -1196,9 +1255,36 @@ InputHandler {
                 }
             }
 
+            // While voice input records: cancel on the left (done is in the panel).
+            Item {
+                anchors.fill: parent
+                visible: inputHandler.voiceActive
+                z: 2
+
+                BackgroundItem {
+                    anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
+                    width: height * 1.5
+                    onClicked: Voice.cancel()
+                    Icon {
+                        anchors.centerIn: parent
+                        source: "image://theme/icon-m-dismiss"
+                        highlighted: parent.highlighted
+                    }
+                }
+
+                Label {
+                    anchors.centerIn: parent
+                    color: Theme.secondaryHighlightColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    text: Voice.state === "finishing" ? qsTr("Finishing…")
+                          : Voice.state === "paused" ? qsTr("Paused") : qsTr("Listening…")
+                }
+            }
+
             HorizontalPredictionListView {
                 id: predictionList
 
+                visible: !inputHandler.voiceActive
                 anchors.fill: undefined
                 anchors { left: parent.left; top: parent.top; bottom: parent.bottom; right: emojiButton.left }
                 clip: true

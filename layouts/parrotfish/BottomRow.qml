@@ -14,6 +14,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
+import Parrotfish.Keyboard 1.0
 import "../.."
 
 KeyboardRow {
@@ -97,7 +98,19 @@ KeyboardRow {
         KeyBackground { id: commaBackground }
         LongPressHint { frame: commaBackground }
     }
-    SpacebarKey {}
+    SpacebarKey {
+        // Voice input is on: the long press offers it (voice/LayoutMenu.qml).
+        Icon {
+            visible: !!bottomRow.parent && bottomRow.parent.voiceEnabled === true
+            anchors { right: parent.right; rightMargin: Theme.paddingLarge; verticalCenter: parent.verticalCenter }
+            width: Math.round(parent.height * 0.42)
+            height: width
+            sourceSize.width: width
+            sourceSize.height: height
+            source: "image://theme/icon-m-mic"
+            opacity: 0.6
+        }
+    }
     SpacebarKey {
         active: splitActive
         languageLabel: ""

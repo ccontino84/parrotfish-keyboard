@@ -259,6 +259,15 @@ void testNextWords()
     s.engine.startText(u("Ciao, come stai? "));
     const auto start = s.engine.predict(u("Ciao, come stai? "));
     CHECK(!start.empty() && utf8::isUpper(start[0].word[0]));   // sentence start
+    // Automatic capitals off: the dictionary's case ("I" keeps its capital).
+    const auto lower = s.engine.predict(u("Ciao, come stai? "), 10, false);
+    CHECK(lower.size() == start.size());
+    CHECK(std::any_of(lower.begin(), lower.end(), [](const Suggestion &x) { return !utf8::isUpper(x.word[0]); }));
+    for (size_t i = 0; i < lower.size() && i < start.size(); ++i) {
+        std::u32string up = lower[i].word;
+        up[0] = utf8::toUpper(up[0]);
+        CHECK(up == start[i].word);
+    }
     // A word without its own pairs falls back to frequent words.
     CHECK(!s.engine.predict(u("Thank xqzzy ")).empty());
 }

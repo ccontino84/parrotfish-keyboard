@@ -441,6 +441,14 @@
 <context>
     <name>ParrotfishTypingAids</name>
     <message>
+        <source>Automatic capitals</source>
+        <translation>Automatisk versal</translation>
+    </message>
+    <message>
+        <source>A capital letter at the start of a sentence</source>
+        <translation>Stor bokstav i början av en mening</translation>
+    </message>
+    <message>
         <source>Period on double space</source>
         <translation>Punkt vid dubbelt mellanslag</translation>
     </message>

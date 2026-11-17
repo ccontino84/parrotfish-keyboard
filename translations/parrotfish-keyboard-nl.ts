@@ -441,6 +441,14 @@
 <context>
     <name>ParrotfishTypingAids</name>
     <message>
+        <source>Automatic capitals</source>
+        <translation>Automatische hoofdletters</translation>
+    </message>
+    <message>
+        <source>A capital letter at the start of a sentence</source>
+        <translation>Een hoofdletter aan het begin van een zin</translation>
+    </message>
+    <message>
         <source>Period on double space</source>
         <translation>Punt bij dubbele spatie</translation>
     </message>

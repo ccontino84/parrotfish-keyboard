@@ -442,6 +442,14 @@
 <context>
     <name>ParrotfishTypingAids</name>
     <message>
+        <source>Automatic capitals</source>
+        <translation>Majuscule automate</translation>
+    </message>
+    <message>
+        <source>A capital letter at the start of a sentence</source>
+        <translation>Majusculă la începutul propoziției</translation>
+    </message>
+    <message>
         <source>Period on double space</source>
         <translation>Punct la spațiu dublu</translation>
     </message>

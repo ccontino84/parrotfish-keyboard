@@ -441,6 +441,14 @@
 <context>
     <name>ParrotfishTypingAids</name>
     <message>
+        <source>Automatic capitals</source>
+        <translation>Majuscules automatiques</translation>
+    </message>
+    <message>
+        <source>A capital letter at the start of a sentence</source>
+        <translation>Une majuscule en début de phrase</translation>
+    </message>
+    <message>
         <source>Period on double space</source>
         <translation>Point avec double espace</translation>
     </message>

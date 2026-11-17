@@ -37,8 +37,9 @@ What it adds to Jolla's keyboard:
   well in Croatian, Czech, Dutch, English, Finnish, French, German, Italian,
   Polish, Portuguese and Spanish, less well in Danish, Romanian, Slovenian
   and Swedish; Norwegian isn't supported.
-- **Typing aids,** each one on or off: a period on double space, a space
-  before ! ? : ; (as in French), and emoticons replaced by their emoji.
+- **Typing aids,** each one on or off: automatic capitals, a period on
+  double space, a space before ! ? : ; (as in French), and emoticons
+  replaced by their emoji.
 - **Three arrangements:** QWERTY, QWERTZ and AZERTY, for any language.
   Optional language keys put the most used accented letters of the
   language you are typing on keys of their own (å ö ä for Swedish, ł ę ż

@@ -441,6 +441,14 @@
 <context>
     <name>ParrotfishTypingAids</name>
     <message>
+        <source>Automatic capitals</source>
+        <translation>Automaattiset isot kirjaimet</translation>
+    </message>
+    <message>
+        <source>A capital letter at the start of a sentence</source>
+        <translation>Iso kirjain virkkeen alussa</translation>
+    </message>
+    <message>
         <source>Period on double space</source>
         <translation>Piste kahdella välilyönnillä</translation>
     </message>

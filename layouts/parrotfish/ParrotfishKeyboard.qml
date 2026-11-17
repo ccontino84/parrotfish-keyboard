@@ -146,6 +146,33 @@ KeyboardLayout {
         key: "/apps/parrotfish-keyboard/voice"
         defaultValue: true
     }
+    // Automatic capitals (/apps/parrotfish-keyboard/automatic-capitals,
+    // Typing aids): Jolla's keyboard has no switch for them, so while this
+    // layout is in use and they are off, its autocaps is set back to false.
+    readonly property bool automaticCapitals: autocapsConfig.value !== false && autocapsConfig.value !== "false"
+    readonly property bool layoutInUse: typeof keyboard !== "undefined" && keyboard.layout === parrotfishLayout
+    onAutomaticCapitalsChanged: _updateAutocaps()
+    onLayoutInUseChanged: _updateAutocaps()
+    function _updateAutocaps() {
+        if (typeof keyboard === "undefined")
+            return
+        if (layoutInUse && !automaticCapitals)
+            keyboard.autocaps = false
+        else if (typeof keyboard.applyAutocaps === "function")
+            keyboard.applyAutocaps()
+    }
+    ConfigurationValue {
+        id: autocapsConfig
+        key: "/apps/parrotfish-keyboard/automatic-capitals"   // true (the default), false
+        defaultValue: true
+    }
+    Connections {
+        target: typeof keyboard !== "undefined" ? keyboard : null
+        onAutocapsChanged: {
+            if (keyboard.autocaps && parrotfishLayout.layoutInUse && !parrotfishLayout.automaticCapitals)
+                keyboard.autocaps = false
+        }
+    }
     readonly property bool _rowsShown: !emojiView && !voiceView
     // The recent emoji: read when the panel opens, so that they don't move
     // while it is open.
@@ -176,6 +203,8 @@ KeyboardLayout {
     Component.onCompleted: {
         _updateGroupLanguage()
         _build()
+        if (layoutInUse && !automaticCapitals)
+            keyboard.autocaps = false
     }
 
     function _updateGroupLanguage() {

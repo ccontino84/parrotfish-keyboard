@@ -165,7 +165,7 @@ bool Engine::neighbourSwap(const std::u32string &typed, const std::u32string &wo
     return std::find(near.begin(), near.end(), meant) != near.end();
 }
 
-std::vector<Suggestion> Engine::predict(const std::u32string &textBefore, size_t max) const
+std::vector<Suggestion> Engine::predict(const std::u32string &textBefore, size_t max, bool capitals) const
 {
     const Context ctx = parseContext(textBefore);
     if (ctx.insideWord)
@@ -207,7 +207,7 @@ std::vector<Suggestion> Engine::predict(const std::u32string &textBefore, size_t
             break;
         Suggestion sug;
         sug.word = s.word;
-        if (sentenceStart && !sug.word.empty())
+        if (sentenceStart && capitals && !sug.word.empty())
             sug.word[0] = utf8::toUpper(sug.word[0]);
         sug.cost = -std::log(s.score);
         if (std::none_of(out.begin(), out.end(), [&](const Suggestion &o) { return o.word == sug.word; }))

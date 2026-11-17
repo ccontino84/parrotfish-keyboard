@@ -23,6 +23,13 @@ Page {
             }
 
             SettingSwitch {
+                key: "automatic-capitals"
+                defaultValue: true
+                text: qsTr("Automatic capitals")
+                description: qsTr("A capital letter at the start of a sentence")
+            }
+
+            SettingSwitch {
                 key: "double-space-period"
                 defaultValue: true
                 text: qsTr("Period on double space")

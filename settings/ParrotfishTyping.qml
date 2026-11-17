@@ -25,6 +25,10 @@ Page {
 
     // The typing aids (ParrotfishTypingAids.qml), for how many are on.
     ConfigurationValue {
+        id: autocapsConfig
+        key: "/apps/parrotfish-keyboard/automatic-capitals"
+    }
+    ConfigurationValue {
         id: doubleSpacePeriodConfig
         key: "/apps/parrotfish-keyboard/double-space-period"
     }
@@ -98,7 +102,8 @@ Page {
             ValueButton {
                 label: qsTr("Typing aids")
                 value: {
-                    var on = (page._on(doubleSpacePeriodConfig.value, true) ? 1 : 0)
+                    var on = (page._on(autocapsConfig.value, true) ? 1 : 0)
+                            + (page._on(doubleSpacePeriodConfig.value, true) ? 1 : 0)
                             + (page._on(spaceBeforeConfig.value, false) ? 1 : 0)
                             + (page._on(replaceEmoticonsConfig.value, false) ? 1 : 0)
                     // The number of typing aids on.

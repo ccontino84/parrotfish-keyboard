@@ -440,6 +440,16 @@ void PredictionEngine::setStrength(const QString &strength)
     applyParams();
 }
 
+void PredictionEngine::setCapitals(bool on)
+{
+    if (on == m_capitals)
+        return;
+    m_capitals = on;
+    emit capitalsChanged();
+    if (m_preedit.isEmpty())
+        update();
+}
+
 void PredictionEngine::applyParams()
 {
     parrotfish::EngineParams params = mvpParams();
@@ -729,7 +739,7 @@ void PredictionEngine::update()
     if (m_preedit.isEmpty()) {
         QElapsedTimer timer;
         timer.start();
-        for (const parrotfish::Suggestion &s : m_engine.predict(toU32(m_context), MaxSuggestions))
+        for (const parrotfish::Suggestion &s : m_engine.predict(toU32(m_context), MaxSuggestions, m_capitals))
             items.append(fromU32(s.word));
         if (m_debug)
             qInfo("parrotfish: next word, %.1f ms, %d suggestions, lead %s %.2f",

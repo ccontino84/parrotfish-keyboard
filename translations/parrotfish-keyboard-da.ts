@@ -441,6 +441,14 @@
 <context>
     <name>ParrotfishTypingAids</name>
     <message>
+        <source>Automatic capitals</source>
+        <translation>Automatisk stort bogstav</translation>
+    </message>
+    <message>
+        <source>A capital letter at the start of a sentence</source>
+        <translation>Stort bogstav i starten af en sætning</translation>
+    </message>
+    <message>
         <source>Period on double space</source>
         <translation>Punktum ved dobbelt mellemrum</translation>
     </message>

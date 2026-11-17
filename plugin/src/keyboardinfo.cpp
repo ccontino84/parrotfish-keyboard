@@ -66,7 +66,8 @@ QStringList KeyboardInfo::settingKeys()
             QStringLiteral("language-keys"), QStringLiteral("language-keys-side"),
             QStringLiteral("key-height"), QStringLiteral("key-height-landscape"), QStringLiteral("key-gap"),
             QStringLiteral("key-fill"), QStringLiteral("key-border"), QStringLiteral("long-press-hint"),
-            QStringLiteral("space-before-punctuation"), QStringLiteral("replace-emoticons")};
+            QStringLiteral("automatic-capitals"), QStringLiteral("double-space-period"),
+            QStringLiteral("space-before-punctuation"), QStringLiteral("replace-emoticons"), QStringLiteral("voice")};
 }
 
 QString KeyboardInfo::diagnostics() const

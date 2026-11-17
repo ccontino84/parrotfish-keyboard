@@ -32,6 +32,7 @@ Item {
         property string arrangementName: "QWERTY"
         property int keyHeightPercent: 100
         property bool numberRowOn: numberRow
+        property bool automaticCapitals: true
         width: 1080; height: 800
         Repeater {
             model: letters.numberRow ? "1234567890".split("") : []
@@ -725,6 +726,20 @@ Item {
             compare(bar(), next, "the same text again")
             context("I think this is a ")
             verify(bar() !== next, "another text, other next words")
+        }
+
+        // Automatic capitals off (the layout's switch): next words at a
+        // sentence start keep the dictionary's case.
+        function test_nextWordsCapitals() {
+            context("It was late. ")
+            var capital = bar()
+            verify(capital !== "" && capital[0] === capital[0].toUpperCase(), "capitalised: " + capital)
+            withNumbers.automaticCapitals = false
+            context("It was late. ")
+            var lower = bar()
+            withNumbers.automaticCapitals = true
+            verify(lower !== "" && lower[0] === lower[0].toLowerCase(), "dictionary case: " + lower)
+            compare(lower.toLowerCase(), capital.toLowerCase())
         }
 
         // After an autocorrection the next words follow the corrected word

@@ -21,6 +21,12 @@ SPDX-License-Identifier: LGPL-2.1-or-later
   only network use in Parrotfish: the recognizer itself can't use the
   network, and the audio is neither sent nor saved.
 
+### Improved
+
+- **Automatic capitals can be turned off,** in *Typing aids*. Off, the
+  next-word suggestions at the start of a sentence keep their usual case
+  too.
+
 ## 1.2.2 (2026-11-14)
 
 ### Improved

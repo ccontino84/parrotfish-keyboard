@@ -442,6 +442,14 @@
 <context>
     <name>ParrotfishTypingAids</name>
     <message>
+        <source>Automatic capitals</source>
+        <translation>Automatska velika slova</translation>
+    </message>
+    <message>
+        <source>A capital letter at the start of a sentence</source>
+        <translation>Veliko slovo na početku rečenice</translation>
+    </message>
+    <message>
         <source>Period on double space</source>
         <translation>Točka dvostrukim razmakom</translation>
     </message>

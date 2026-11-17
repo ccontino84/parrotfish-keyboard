@@ -304,10 +304,12 @@ public:
     Result decide(Searched searched, const EngineParams &params) const;
 
     // Next-word suggestions for the text before the cursor, when no word is
-    // being typed: sentence starters at the start of a sentence (capitalised),
-    // otherwise the usual next words of the last word. Empty when the text
-    // ends inside a word. Uses the current language weights.
-    std::vector<Suggestion> predict(const std::u32string &textBefore, size_t max = 10) const;
+    // being typed: sentence starters at the start of a sentence (capitalised
+    // if `capitals`, as the keyboard's automatic capitals), otherwise the
+    // usual next words of the last word. Empty when the text ends inside a
+    // word. Uses the current language weights.
+    std::vector<Suggestion> predict(const std::u32string &textBefore, size_t max = 10,
+                                    bool capitals = true) const;
 
     // An uncertain tap: the finger went down on `initial` and lifted on
     // `lifted`. Returns the letter that makes `word` (typed so far) the more

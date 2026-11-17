@@ -175,6 +175,7 @@ InputHandler {
         language: inputHandler.language
         languages: languagesConfig.value
         strength: strengthConfig.value
+        capitals: !keyboard.layout || keyboard.layout.automaticCapitals !== false
         learning: learningConfig.value
         // A field can ask not to be learned from (the settings' preview).
         learnPaused: !!MInputMethodQuick.extensions.parrotfishNoLearning

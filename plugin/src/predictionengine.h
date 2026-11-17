@@ -48,6 +48,9 @@ class PredictionEngine : public QAbstractListModel
     // For the slips.log header: the layout's settings, e.g. "QWERTY portrait
     // height=90" (no spaces inside a setting).
     Q_PROPERTY(QString slipsConfig READ slipsConfig WRITE setSlipsConfig NOTIFY slipsConfigChanged)
+    // Whether next words at a sentence start are capitalised (the keyboard's
+    // automatic capitals); otherwise they keep the dictionary's case.
+    Q_PROPERTY(bool capitals READ capitals WRITE setCapitals NOTIFY capitalsChanged)
     // The word Space or punctuation would put in place of the word being
     // typed; empty if it stays as typed. Always the first suggestion.
     Q_PROPERTY(QString autocorrection READ autocorrection NOTIFY predictionsChanged)
@@ -88,6 +91,8 @@ public:
     void setRememberedLanguage(const QString &language);
     QString strength() const { return m_strength; }
     void setStrength(const QString &strength);
+    bool capitals() const { return m_capitals; }
+    void setCapitals(bool on);
     QString autocorrection() const { return m_autocorrection; }
     bool debug() const { return m_debug; }
     QString slipsConfig() const { return m_slipsConfig; }
@@ -178,6 +183,7 @@ signals:
     void languageChanged();
     void leadingLanguageChanged();
     void strengthChanged();
+    void capitalsChanged();
     void rememberedLanguageChanged();
     void slipsConfigChanged();
     void learningChanged();
@@ -209,6 +215,7 @@ private:
     QString m_remembered;
     QStringList m_items;
     QString m_strength = QStringLiteral("normal");
+    bool m_capitals = true;
     QString m_autocorrection;
     // (language, lowercase typed word) → undos in a row
     QHash<LearningStore::UndoKey, int> m_undos;

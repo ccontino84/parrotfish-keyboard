@@ -443,6 +443,14 @@
 <context>
     <name>ParrotfishTypingAids</name>
     <message>
+        <source>Automatic capitals</source>
+        <translation>Samodejne velike začetnice</translation>
+    </message>
+    <message>
+        <source>A capital letter at the start of a sentence</source>
+        <translation>Velika začetnica na začetku povedi</translation>
+    </message>
+    <message>
         <source>Period on double space</source>
         <translation>Pika z dvojnim presledkom</translation>
     </message>

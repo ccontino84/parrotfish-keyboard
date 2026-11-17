@@ -5,7 +5,7 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Changelog
 
-## 1.3.0 (unreleased)
+## 1.3.0 (2026-11-17)
 
 ### New
 
@@ -26,6 +26,11 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 - **Automatic capitals can be turned off,** in *Typing aids*. Off, the
   next-word suggestions at the start of a sentence keep their usual case
   too.
+
+The changes are in `parrotfish-keyboard` and the new
+`parrotfish-keyboard-voice`; the language packages are the same as 1.2.2's
+apart from the version. The new settings texts were translated without
+native speakers: corrections are welcome.
 
 ## 1.2.2 (2026-11-14)
 

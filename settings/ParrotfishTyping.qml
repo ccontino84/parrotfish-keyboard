@@ -1,10 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Typing: languages, autocorrect, learning, typing aids. Opened from Parrotfish's
-// section in Settings → Text input (ParrotfishSettings.qml), with the
-// keyboard open to try the languages and autocorrect (KeyboardPreview.qml:
-// it learns nothing there).
+// Typing: languages, autocorrect, learning, typing aids.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0

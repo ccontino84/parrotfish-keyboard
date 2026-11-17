@@ -1,14 +1,9 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Parrotfish's section in Settings → Text input: the version and three
-// rows, each opening a page (Typing, Layout, Look & feel, and Voice input
-// with the voice package) and showing its main choices. Jolla's text input page loads it (a Loader per settings=
-// page of the enabled layouts' handlers), so it's a plain Column; Jolla
-// shows it while the Parrotfish layout is enabled. Every value is a dconf
-// key the keyboard watches: changes apply at once. Below the rows, Reset
-// (every dconf key unset, as on a new installation). A double tap on the
-// version opens the diagnostics, with Report a bug (ParrotfishDiagnostics.qml).
+// Parrotfish's section in Settings → Text input. Jolla's page loads it (a
+// Loader per settings= of the enabled layouts' handlers), so it's a plain
+// Column. Every value is a dconf key the keyboard watches.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0
@@ -82,7 +77,6 @@ Column {
             text: qsTr("Version %1").arg(info.version)
         }
 
-        // For support: the diagnostics and Report a bug.
         MouseArea {
             anchors.fill: parent   // the title and the version: a larger target
             onDoubleClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishDiagnostics.qml"), { "info": info })
@@ -121,7 +115,6 @@ Column {
         onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishLook.qml"))
     }
 
-    // With the voice package installed.
     ValueButton {
         visible: VoiceModel.installed
         label: qsTr("Voice input")

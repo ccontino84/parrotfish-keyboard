@@ -13,12 +13,9 @@
 
 class LearningStore;
 
-// Writes to learning.db on a thread of its own, in the order asked, so
-// that a long write never holds up typing: a language stored whole after
-// fading is tens of thousands of rows, a second or so on a phone. It has
-// its own connection to the file (a LearningStore opened on its thread);
-// the jobs get only copies of the data (LearningStore::LearnedRows), never
-// the keyboard's objects.
+// Writes to learning.db on a thread of its own, in order (a language
+// stored whole is a second or so on a phone), with its own connection; the
+// jobs get only copies of the data, never the keyboard's objects.
 class StoreWriter
 {
 public:

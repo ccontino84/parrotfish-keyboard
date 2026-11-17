@@ -16,13 +16,9 @@
 
 struct sqlite3;
 
-// What the keyboard keeps between sessions, in one SQLite file, readable
-// only by the user: the undo memory (typed words whose autocorrection the
-// user undid, per language of the text they were typed in) and the learned
-// words and word pairs (parrotfish::Learned). The engine
-// keeps the data in memory; this file only stores it. Every table has a cap
-// and drops what was used least recently, so the file doesn't grow without
-// end. Without a file (it can't be opened), nothing is kept between sessions.
+// What the keyboard keeps between sessions, in one SQLite file readable
+// only by the user: the undo memory (per language) and the learned words
+// and pairs (parrotfish::Learned). Every table has a cap.
 class LearningStore
 {
 public:
@@ -77,10 +73,8 @@ public:
     // Stores them, in one transaction.
     void saveLearned(const LearnedRows &rows);
 
-    // For the settings page (another process; the keyboard reloads after a
-    // change): the words learned as new and those whose correction was
-    // undone at least `undosToStop` times, one per language and lowercase
-    // word (a new word's spelling first), unsorted.
+    // For the settings page: the words learned as new and those undone at
+    // least `undosToStop` times, one per language and lowercase word, unsorted.
     struct ListedWord {
         QString language, word;
     };
@@ -95,9 +89,8 @@ public:
     // The languages something is learned in (words, pairs, undos or words
     // typed), as codes.
     QStringList languagesWithData() const;
-    // For the diagnostics (settings page): per language, counts only, no
-    // words: "en: typed 1234, words 567 (new 8, pending 9), pairs 1011,
-    // undos 12".
+    // For the diagnostics, counts only: "en: typed 1234, words 567 (new 8,
+    // pending 9), pairs 1011, undos 12".
     QStringList summary() const;
 
 private:

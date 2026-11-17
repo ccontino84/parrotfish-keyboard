@@ -11,13 +11,9 @@
 
 #include <memory>
 
-// The learned words for the settings page (Settings → Text input →
-// Learned words), from learning.db: the words learned as new and those
-// whose correction the user undid, one row per language and word (roles
-// "word", "language": its code, "languageName"), sorted by language name,
-// then word. The settings page runs in another process than the keyboard:
-// after forget(), clearLanguage() or clearAll() it tells the keyboard to
-// reload (a dconf key).
+// The learned words for the settings page, from learning.db (roles "word",
+// "language", "languageName"). Changes tell the keyboard, another process,
+// to reload (a dconf key).
 class LearnedWords : public QAbstractListModel
 {
     Q_OBJECT

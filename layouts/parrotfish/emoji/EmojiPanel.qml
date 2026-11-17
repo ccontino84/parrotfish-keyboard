@@ -1,20 +1,13 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// The emoji panel, in place of a layout's rows while its emojiView is on.
-// It knows nothing of the layout: the layout passes the recent emoji, the
-// picked variants and its settings in, and stores what the signals report.
+// The emoji panel, in place of a layout's rows. It knows nothing of the
+// layout: state comes in through properties and goes out through signals.
 //
 // Only the visible columns (and one more) have keys, reused as the grid
-// scrolls (each slot keeps its column modulo their number). Jolla's
-// keyboard finds the keys under a touch like any key (keyType). The
-// touches are read as in SpaceCursor.qml, listening to Jolla's touch area
-// without taking them; once a slide starts, the touch is cancelled in
-// Jolla's keyboard (keyboard.cancelTouchPoint), so that no emoji is typed,
-// and keyboard.interactive is turned off, so that it doesn't swipe to
-// another layout (Jolla's keyboard turns it back on when all fingers lift).
-// A menu pick is typed as Jolla's Popper types: a PopupKey given to the
-// input handler.
+// scrolls. Touches are heard from Jolla's touch area without taking them;
+// a slide cancels the touch in Jolla's keyboard (no emoji typed) and turns
+// keyboard.interactive off (no swipe; Jolla turns it back on).
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
@@ -46,9 +39,8 @@ Item {
         return out
     }
 
-    // Laid out only while shown, and in one step (_takeSize): a binding
-    // seeing a new width with an old key height would make and drop
-    // thousands of keys.
+    // Laid out in one step (_takeSize): a new width with an old key height
+    // would make and drop thousands of keys.
     property var _grid: ({ "width": 0, "height": 0, "columns": 6, "rows": 2 })
     function _takeSize() {
         var gridHeight = height - keyHeight
@@ -93,9 +85,7 @@ Item {
                                          ? Math.max(0, columns - Math.ceil(recent.length / rows)) : 0
     readonly property int totalColumns: groupStart[groups.length]
 
-    // The space between groups, and each group's x (the end's too): its
-    // columns plus a gap before every group that has a line before it
-    // (separated(), not the first nor an empty one).
+    // The space between groups, and each group's x (the end's too).
     readonly property real groupGap: Math.round(cellWidth / 2)
     function separated(g) {
         return g > 0 && g < groups.length && groupStart[g] > 0 && groupStart[g] < groupStart[g + 1]
@@ -274,8 +264,7 @@ Item {
         onCanceled: panel._released(touchPoints, true)
     }
 
-    // Jolla's keyboard adds a touch after this item hears of it: the touch
-    // that stopped a flick is cancelled right after.
+    // Jolla's keyboard adds a touch after we hear of it: cancelled right after.
     Timer {
         id: stopTouch
         interval: 0
@@ -402,8 +391,7 @@ Item {
             }
             return
         }
-        // A flick goes on, slowing down (OutQuad: it starts at the finger's
-        // speed when it travels half its duration times that speed).
+        // OutQuad starts at the finger's speed over half its duration × speed.
         if (_sliding && !canceled && Date.now() - _lastTime < 100 && Math.abs(_velocity) > 0.3)
             scrollTo(scrollX - _velocity * 400, 800)
         if (canceled)
@@ -439,8 +427,6 @@ Item {
             }
         }
         emojiMenu.rows = rows
-        // Where the current variant's cell goes: under the finger, or (one
-        // row) one cell above the key.
         var single = rows.length === 1
         var targetX = single ? key.x + key.width / 2 : _fingerX
         var targetY = single ? key.y - cellHeight / 2 : _fingerY
@@ -453,8 +439,7 @@ Item {
         emojiMenu.visible = true
     }
 
-    // The active cell: the one under the finger (grid and panel coordinates
-    // are the same).
+    // The active cell: the one under the finger.
     function _moveMenu(x, y) {
         var rows = emojiMenu.rows
         var column = Math.floor((x - emojiMenu.x - emojiMenu.padding) / cellWidth)
@@ -481,8 +466,7 @@ Item {
         visible: false
     }
 
-    // The groups, Backspace. (Not called `bottom`: inside the Repeater's
-    // keys that name is their own anchor line.)
+    // The groups, Backspace. (Not `bottom`: inside the keys that's an anchor line.)
     Item {
         id: groupRow
         y: panel.height - panel.keyHeight

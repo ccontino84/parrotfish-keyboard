@@ -1,10 +1,8 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// The emoji panel's long-press menu: a row each for the person, the man and
-// the woman, each with its skin tones. The panel opens it, moves the active
-// cell with the finger and types it; `removeCell`: a recent emoji's delete
-// icon.
+// The emoji panel's long-press menu (the panel drives it); `removeCell`: a
+// recent emoji's delete icon.
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import Parrotfish.Keyboard 1.0

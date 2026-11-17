@@ -8,24 +8,18 @@
 #include <QVariantList>
 #include <QVariantMap>
 
-// The typing languages Parrotfish has, and what each brings: its name,
-// whether it is experimental, the accented letters its long-press menus
-// show, its punctuation signs. From languages.json in the data folder (written by
-// tools/data/language-list.py from data/rules/LANG.language), only the
-// languages whose dictionary is installed. One copy for the plugin, the
-// layout and the settings (a QML singleton, "Languages").
+// The installed typing languages and what each brings, from languages.json
+// (tools/data/language-list.py). A QML singleton, "Languages".
 //
-// The dconf key /apps/parrotfish-keyboard/languages holds the chosen codes
-// separated by spaces; empty means the system language (or the one it
-// stands for: no -> nb), else the fallback language (English).
+// /apps/parrotfish-keyboard/languages: codes separated by spaces; empty:
+// the system language (no → nb), else English.
 class Languages : public QObject
 {
     Q_OBJECT
     // [{code, name, experimental}], sorted by name.
     Q_PROPERTY(QVariantList all READ all CONSTANT)
-    // Every enabled language is searched on each keystroke (about 6 ms each
-    // at worst on a phone, estimated from 3 languages), and close languages
-    // compete for the same words. Beyond this many, the settings say so.
+    // Beyond this many languages, the settings warn (each costs up to ~6 ms
+    // a keystroke on a phone, and close languages compete).
     Q_PROPERTY(int comfortable READ comfortable CONSTANT)
 
 public:
@@ -48,8 +42,7 @@ public:
     Q_INVOKABLE QString toggled(const QStringList &codes, const QString &code) const;
     // The accented letters of the languages' long-press menus, each once.
     Q_INVOKABLE QString menuLetters(const QStringList &codes) const;
-    // The letters of the language's language keys (3, in the order of their
-    // places: LANG.language's extra-keys), or "" if it has none.
+    // The letters of the language's language keys (extra-keys), or "".
     Q_INVOKABLE QString extraKeys(const QString &code) const;
     // The comma's and the period's long-press menus: {comma, period}.
     // Jolla's (: , ; and ! . ?) plus the languages' signs.

@@ -1,30 +1,14 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Our additions to Jolla's long-press menu (the Popper), which shows while
-// the finger is held and types the cell under it when the finger lifts:
+// Our additions to Jolla's long-press menu (the Popper): the arrows to a
+// key's other letters (› and ‹, after `dwell` ms), the key's own letter in
+// its place (_fixOrder), and picked(sign) for the sticky key.
 //
-// - A key's other accented letters. Its menu shows the typing languages'
-//   letters, and › at the end when the key has more (arrangements.js,
-//   accentMenus; Arrangements.more, drawn as a MoreArrow). Resting the
-//   finger on › for `dwell` ms puts the key's other letters (moreAccents)
-//   in the menu, with ‹ (Arrangements.back) under the finger; resting on ‹
-//   puts the menu's letters back. Lifting on a letter types it, on an arrow
-//   nothing. A switch needs the finger to leave the arrow and come back
-//   before the next one.
-// - The key's own letter in its place in the menu (_fixOrder).
-// - picked(sign): a sign picked from the sticky key's menu, so that the key
-//   keeps it.
-//
-// The Popper keeps its cells in a ListModel ({labelText, inputText}); its
-// active cell follows the finger (Jolla's keyboard calls setActiveCell on
-// every move while it is expanded) and release() types the active cell's
-// inputText through a key of its own (keyType PopupKey): it sets that key's
-// text, then passes the key to the input handler, ours or Jolla's
-// (passwords, addresses). The cells are swapped in that model, the
-// Popper's place and width through the properties its expanded state uses.
-// The Popper is not an exported type: it is found among the keyboard's
-// children (two levels deep).
+// The Popper isn't an exported type: it is found among the keyboard's
+// children (two levels deep). Its cells are a ListModel ({labelText,
+// inputText}), swapped here; release() types the active cell through a key
+// of its own (PopupKey), passed to the input handler.
 import QtQuick 2.6
 import com.jolla.keyboard 1.0
 import "arrangements.js" as Arrangements
@@ -143,8 +127,7 @@ Item {
             _saved = {"cells": saved, "width": popper.expandedWidth, "x": popper.expandedX,
                       "initial": popper.initialActiveCell}
             var letters = (keyboardItem.isShifted ? key.moreAccentsShifted : key.moreAccents).split("")
-            // ‹ where › was, the letters on its left; first if they don't
-            // fit there.
+            // ‹ where › was, the letters on its left, or first if they don't fit.
             var first = fingerX - (letters.length + 0.5) * cell - margin < geometry.popperMargin
             var at = first ? 0 : letters.length
             letters.splice(at, 0, Arrangements.back)
@@ -161,8 +144,7 @@ Item {
         } else {
             return
         }
-        // The arrow if it is still under the finger (the Popper's place is
-        // kept on the keyboard), else nothing until the finger moves.
+        // The arrow if still under the finger, else nothing until it moves.
         var under = Math.floor((fingerX - popper.x - margin) / cell)
         _switched = true
         popper.activeCell = _arrowAt(under) !== "" ? under : -1
@@ -203,13 +185,9 @@ Item {
         }
     }
 
-    // The Popper puts the key's own letter in the cell under the finger plus
-    // half the key's width (Popper.qml, setup(): translatedX counts it
-    // twice): on keys wider than two cells (landscape without split) it is a
-    // cell to the right of the finger, the next letter is under it, and the
-    // menu's order changes (u's ù u ⋯ became ù ⋯ u). For this layout's keys
-    // the letter goes back to its place in the menu, under the finger as
-    // the Popper placed the menu. Runs after the Popper's setup().
+    // Popper.qml's setup() counts half the key's width twice: on keys wider
+    // than two cells the key's letter lands a cell off and the menu's order
+    // changes. Puts it back; runs after setup().
     function _fixOrder() {
         var popper = _popper
         var key = popper ? popper.target : null
@@ -233,8 +211,7 @@ Item {
                      + Math.floor((popper.width - 2 * popper.radius - geometry.accentPopperCellWidth) * .5)
     }
 
-    // The cells of the arrows show a MoreArrow instead of their text (the
-    // cells are made anew for every key and every switch).
+    // The arrows' cells show a MoreArrow (cells are made anew every time).
     function _drawArrows(item) {
         var children = item.children
         for (var i = 0; i < children.length; ++i) {

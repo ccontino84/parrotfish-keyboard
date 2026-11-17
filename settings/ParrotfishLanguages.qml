@@ -1,10 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// The typing languages, opened from Parrotfish's section in Settings → Text
-// input (ParrotfishSettings.qml). One switch per language; the last one
-// can't be switched off. The keyboard watches the dconf key, so changes
-// apply at once.
+// The typing languages.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Parrotfish.Keyboard 1.0

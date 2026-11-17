@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
 // A Slider for one dconf key under /apps/parrotfish-keyboard/ holding a
-// whole number (written as a string, as the layout reads it), shown with
-// `suffix`; unset or out of range: `defaultValue`. Written as it moves, so
-// an open keyboard follows.
+// whole number (as a string, as the layout reads it); unset or out of
+// range: `defaultValue`. Written as it moves.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0

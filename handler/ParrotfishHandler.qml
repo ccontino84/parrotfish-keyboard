@@ -5,45 +5,13 @@
 // Parrotfish prediction handler for jolla-keyboard.
 //
 // Based on PreeditHandler.qml of jolla-keyboard 0.10.4 (Jolla Ltd.,
-// BSD-3-Clause, see LICENSES/BSD-3-Clause.txt): the word being typed is
-// kept as preedit and committed on Space, punctuation or Return. Changes:
-// - suggestions and next words come from our engine (Parrotfish.Keyboard);
-// - autocorrect (Normal by default; Gentle, Off): Space or punctuation commits the engine's
-//   correction, shown first and highlighted in the bar (the typed word
-//   stays in the text field and is not repeated in the bar);
-// - Backspace straight after an autocorrection brings back what was typed;
-//   a word changed by hand later (Backspace into it) is logged as a manual
-//   correction, or as a late undo if it was an autocorrection;
-// - Backspace after an emoji of several code points (a skin tone, a flag,
-//   a ZWJ sequence such as 🧑‍💻) deletes all of them, not one at a time;
-// - punctuation straight after a picked suggestion replaces its space with
-//   a Backspace key event (also in Android apps); ! ? : ; keep it if the
-//   user wants a space before them (dconf
-//   /apps/parrotfish-keyboard/space-before-punctuation, as in French: mot ?);
-// - a letter typed right at the end of a word (no space: the keyboard was
-//   closed in the middle of it, or the cursor was put there) goes on with
-//   that word;
-// - a tap that starts on one letter key and lifts on another types the
-//   letter that makes the more likely word so far, and the engine keeps
-//   both keys for that letter: the whole word decides (autocorrect);
-// - with the number row, one digit after letters stays in the word, so a
-//   slip onto the digit above a letter can be autocorrected (h3llo); a word
-//   right after a digit (2nd) is never autocorrected;
-// - the real key geometry and the text before the cursor go to the engine;
-// - the typing languages come from dconf /apps/parrotfish-keyboard/languages
-//   (settings/ParrotfishLanguages.qml);
-// - the spacebar shows the typing language;
-// - swiping to another layout can be switched off (dconf
-//   /apps/parrotfish-keyboard/swipe: normal, off); a long press on the
-//   spacebar still opens Jolla's menu of layouts;
-// - an empty field leans towards the language the last text was in
-//   (dconf /apps/parrotfish-keyboard/last-language);
-// - thin dividers between the suggestions; the suggestion
-//   delegates are those of HorizontalPredictionListView.qml and
-//   VerticalPredictionListView.qml (Jolla Ltd., BSD-3-Clause) plus a divider;
-// - an emoji button at the bar's right end: the layout's emoji panel, or
-//   the emoji for the emoticon before the cursor (emoticons.js; on Space
-//   with /apps/parrotfish-keyboard/replace-emoticons).
+// BSD-3-Clause): the word being typed is kept as preedit and committed on
+// Space, punctuation or Return. Changes: suggestions, autocorrect with undo,
+// next words and learning from our engine (Parrotfish.Keyboard), which gets
+// the real key geometry and the text before the cursor; the typing aids;
+// emoji and emoticons; voice input; the typing language on the spacebar;
+// dividers in the bar (delegates from Jolla's HorizontalPredictionListView.qml
+// and VerticalPredictionListView.qml).
 import QtQuick 2.6
 import com.meego.maliitquick 1.0
 import Sailfish.Silica 1.0
@@ -73,14 +41,12 @@ InputHandler {
         return ""
     }
 
-    // What a picked suggestion committed, with the space it added, while
-    // punctuation can still replace that space; "" otherwise. Also the text
-    // before the cursor at the pick: Android apps can report the new text
-    // late, so unchanged text means the cursor is still after the space.
+    // What a picked suggestion committed, with its space, while punctuation
+    // can still replace that space; and the text before the cursor at the
+    // pick (Android apps report the new text late).
     property string _autoSpaced: ""
     property string _autoSpacedBefore: ""
-    // That space came after a sign that replaced the pick's (word. ): a
-    // next . ? ! goes before it (word... word?!), never after a space.
+    // That space came after a sign that replaced the pick's (word. ).
     property bool _autoSpacedSign: false
     // The last autocorrection, while Backspace can still undo it:
     // { typed, corrected, suffix }.
@@ -89,83 +55,66 @@ InputHandler {
     // True while commit() runs: an emptied preedit is then a committed word,
     // not a word deleted with Backspace.
     property bool _committing: false
-    // The text before the cursor once the app has the text commit() sent
-    // (the autocorrection, not the word as typed). Taken before sending:
-    // maliit adds a commit to its copy of the field at once, without a
-    // signal (not after a selection or a replacement), and the app reports
-    // it later; Android apps unverified.
+    // The text before the cursor once the app has what commit() sent; taken
+    // before sending, as maliit updates its copy at once without a signal.
     property string _committedContext: ""
     // The text before the word being typed, from when it started.
     property string _wordContext: ""
-    // A commit was sent and the app hasn't reported its text since: the
-    // field may not have it yet (Android apps: maliit's copy isn't updated
-    // either), so the text before the cursor is _committedContext.
+    // A commit was sent and the app hasn't reported its text since (Android
+    // apps: maliit's copy isn't updated either): use _committedContext.
     property bool _awaitingReport: false
     // The field had text (it emptying ends a text, for learning).
     property bool _fieldHadText: false
     property string _loggedContext: ""   // debug log only
-    // Whether the layout has digit keys among the letters (the number row):
-    // they are in the engine's key map, and a digit can be part of a word.
+    // The layout has digit keys among the letters (the number row).
     property bool _digitKeys: false
     // The word being typed comes right after a digit (2nd): typed as it is.
     property bool _afterDigit: false
-    // The last text we committed ends with a digit (the app may not have
-    // reported it yet).
+    // The last text we committed ends with a digit (maybe not reported yet).
     property bool _committedDigit: false
     // The word Backspace went back into ({ word }), until the next word is
     // committed: if that differs, the user corrected it by hand.
     property var _reopened: null
-    // The text before a word taken back as the word being typed (Backspace
-    // into it, or typing on at its end), for the context: the app still
-    // reports the word itself before the cursor. null: the text before.
+    // The text before a word taken back as preedit (the app still reports
+    // the word before the cursor); null: _textBefore().
     property var _contextBefore: null
-    // The word being typed when the keyboard last closed (committed as it
-    // was), to type on with when the cursor is back at its end.
+    // The word being typed when the keyboard last closed.
     property string _interrupted: ""
-    // An emoji being deleted ({ rest, before }), or null. Apps delete one
-    // code point per Backspace key event (🧑‍💻 is three): the next event is
-    // sent once the app shows the last one done.
+    // An emoji being deleted ({ rest, before }), or null: apps delete one
+    // code point per Backspace event, so the next is sent once one is done.
     property var _emojiDeleting: null
-    // An emoticon Space just replaced ({ text, emoji }), for Backspace to
-    // bring back straight after; else null.
+    // An emoticon Space just replaced ({ text, emoji }), or null.
     property var _emoticonReplaced: null
-    // When the last key was a Space (or a picked suggestion added one), for
-    // the period on double space; else 0. _periodAdded: that Space just
-    // turned "word " into "word. ", for Backspace to bring back.
+    // When the last key was a Space (or a pick added one), else 0; and
+    // whether that Space just typed the double-space period.
     property double _spaceTime: 0
     property bool _periodAdded: false
-    // For each letter of preedit: "" or the tap's other key and "1"/"0" (the
-    // letter shown is where the finger lifted / touched down), for the
-    // engine (predictionEngine.preeditKeys). Kept in step with preedit.
+    // Per letter of preedit: "" or the tap's other key and "1"/"0" (the
+    // letter is where the finger lifted / touched down): preeditKeys.
     property var _tapKeys: []
     property string _lastTapKey: ""   // the same for the last tap
-    // The last autocorrections ({ typed, corrected }, newest last), to tell
-    // a late undo from a manual correction.
+    // The last autocorrections ({ typed, corrected }, newest last).
     property var _recentCorrections: []
-    // The last undone autocorrections ({ typed, corrected }, newest last):
-    // going back into the restored word and ending it as the correction
-    // again (Space, a pick or retyping it) is a redo.
+    // The last undone autocorrections ({ typed, corrected }, newest last),
+    // to recognise a redo.
     property var _recentUndos: []
-    // The layout whose keys the engine has, and two of its keys (the first
-    // and the last letter key: opposite corners) with their geometry when
-    // read. If neither moved, the keys are taken as unchanged.
+    // The layout whose keys the engine has, and its first and last letter
+    // keys with their geometry then: if neither moved, the keys are unchanged.
     property Item _probeLayout: null
     property Item _probeFirst: null
     property Item _probeLast: null
     property string _probeFirstAt: ""
     property string _probeLastAt: ""
-    // The layout's keysRevision when the keys were read (our layouts bump it
-    // when keys change letters in place: the language keys).
+    // The layout's keysRevision when the keys were read (letters changed in
+    // place, as the language keys do, bump it).
     property int _probeRevision: -1
     property Item _spacebar: null
-    // The spacebar's text item, switched to styled text so that the language
-    // can be shown in italics; null if it can't be found.
+    // The spacebar's text item (styled text, for italics), or null.
     property Item _spacebarLabel: null
     // The keyboard's own drag threshold, restored when we're not active.
     property real _jollaDragThreshold: -1
-    // Voice input (the layout's voice/LayoutMenu.qml calls startVoice()): the
-    // text before the cursor when it started, and the space put before the
-    // dictation.
+    // Voice input (startVoice()): the text before the cursor when it
+    // started, and the space put before the dictation.
     property string _voiceBefore: ""
     property string _voicePrefix: ""
     readonly property bool voiceActive: Voice.state !== "off"
@@ -313,14 +262,12 @@ InputHandler {
             _setContext(_wordContext, "word")
             _contextBefore = null
         } else if (preedit.length === 0 && _lastPreedit.length > 0 && _committing) {
-            // The word was committed. The app reports the new text a moment
-            // later; until then, assume what was sent.
+            // The word was committed: until the app reports it, assume what was sent.
             _setContext(_committedContext, "commit")
             _rememberLanguage()
             predictionEngine.countWord()
         } else if (preedit.length === 0 && _lastPreedit.length > 0) {
-            // The word was deleted letter by letter: only the text before it
-            // counts (its last letter, say "i", is not a word typed).
+            // Deleted letter by letter: its last letter is not a word typed.
             _setContext(_textBefore(), "deleted")
         }
         _lastPreedit = preedit
@@ -404,16 +351,14 @@ InputHandler {
     }
 
     // The emoticon right before the cursor ({ text, emoji }), or null; the
-    // word being typed counts (:P). The text before that word is the one
-    // from when it started: some apps report the word in their text too.
+    // word being typed counts (:P). Some apps report that word in their text.
     readonly property var emoticonBefore: Emoticons.atEnd(_textBeforeWord() + preedit)
 
     function _textBeforeWord() {
         return preedit !== "" ? _wordContext : _currentTextBefore()
     }
 
-    // The emoticon is deleted with Backspace key events (every app handles
-    // those, unlike replacing text), then the emoji typed.
+    // Backspace key events, which every app handles (unlike replacing text).
     function replaceEmoticon() {
         var found = emoticonBefore
         if (!found)
@@ -447,10 +392,8 @@ InputHandler {
         _autoSpaced = replacement
         _autoSpacedBefore = before
         _autoSpacedSign = false
-        // As Space: a next word (nothing was typed, so the preedit's commit
-        // path didn't run) counts as a committed word too, and Shift goes
-        // back to automatic (Jolla does that too, but only when the app
-        // reports the cursor).
+        // A next word: as a committed word, and Shift back to automatic now
+        // (Jolla does it only when the app reports the cursor).
         if (typed === "") {
             _rememberLanguage()
             predictionEngine.countWord()
@@ -495,8 +438,7 @@ InputHandler {
                 _commitWord(" ")
                 keyboard.autocaps = false // assuming no autocaps after input
             } else if (_periodOnDoubleSpace(spaceTime)) {
-                // "word " → "word. ": the space deleted with a Backspace key
-                // event (as for a picked suggestion's), then ". ".
+                // "word " → "word. ": the space deleted with a Backspace event.
                 var spaced = _currentTextBefore()
                 MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
                 _committedContext = spaced.slice(0, -1)
@@ -526,9 +468,8 @@ InputHandler {
 
         } else if (pressedKey.key === Qt.Key_Backspace && preedit === "" && correction !== null
                    && _canUndo(correction)) {
-            // Undo the autocorrection, keeping the space or punctuation: delete
-            // the corrected word with Backspace key events (every app handles
-            // those, unlike replacing text) and type back what was typed.
+            // Undo, keeping the space or punctuation: Backspace key events
+            // (every app handles those, unlike replacing text), then the typed word.
             var length = correction.corrected.length + correction.suffix.length
             for (var n = 0; n < length; ++n)
                 MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
@@ -545,8 +486,7 @@ InputHandler {
 
         } else if (pressedKey.key === Qt.Key_Backspace && preedit === "" && emoticonReplaced !== null
                    && _currentTextBefore().slice(-emoticonReplaced.emoji.length - 1) === emoticonReplaced.emoji + " ") {
-            // Undo the emoticon's replacement: delete the emoji (a key event
-            // per code point) and the space, type back the emoticon.
+            // Undo the emoticon's replacement: a key event per code point.
             var points = EmojiUtil.codePoints(emoticonReplaced.emoji).split("-").length + 1
             for (var k = 0; k < points; ++k)
                 MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
@@ -627,10 +567,8 @@ InputHandler {
                     var afterSign = _autoSpacedSign
                     if (autoSpaced !== "" && (afterSign ? ".?!" : ",.;:?!").indexOf(pressedKey.text) >= 0
                             && (_endsTextBefore(autoSpaced) || _textBefore() === _autoSpacedBefore)) {
-                        // Replace the space added by a picked suggestion: a
-                        // Backspace key event, as for undo (Jolla's replacing
-                        // commit failed in Android apps). Kept before ! ? : ;
-                        // if the user wants it (mot ?), not between signs.
+                        // The pick's space: a Backspace key event (Jolla's
+                        // replacing commit fails in Android apps).
                         var reported = _textBefore()   // as at a pick: unchanged if the app is late
                         if (afterSign || !_spaceBefore(pressedKey.text)) {
                             MInputMethodQuick.sendKey(Qt.Key_Backspace, 0, "\b", Maliit.KeyClick)
@@ -681,16 +619,14 @@ InputHandler {
         return handled
     }
 
-    // An emoji typed: the layout's recent emoji have it, except in the
-    // settings' preview field, which keeps nothing (parrotfishNoLearning).
+    // Not in the settings' preview field (parrotfishNoLearning).
     function _emojiUsed(emoji) {
         if (keyboard.layout && typeof keyboard.layout.emojiUsed === "function"
                 && !MInputMethodQuick.extensions.parrotfishNoLearning)
             keyboard.layout.emojiUsed(emoji)
     }
 
-    // Backspace after an emoji of several code points: deletes all of them
-    // (_emojiDeleting goes on when the app reports each one gone).
+    // An emoji of several code points: all of them (see _emojiDeleting).
     function _deleteEmoji() {
         if (!MInputMethodQuick.surroundingTextValid || MInputMethodQuick.hasSelection)
             return false
@@ -711,8 +647,8 @@ InputHandler {
             return
         var now = _textBefore()
         var expected = deleting.before
-        // _textBefore() is a window of the last 1000 characters: in a longer
-        // text it moves back as text is deleted, so only its end is compared.
+        // _textBefore() is the last 1000 characters: in a longer text only
+        // its end can be compared.
         if (now.length >= 900 && expected.length >= 900) {
             now = now.substring(now.length - 100)
             expected = expected.substring(expected.length - 100)
@@ -743,12 +679,9 @@ InputHandler {
         onTriggered: inputHandler._emojiDeleting = null
     }
 
-    // The word the cursor is right at the end of (word characters before it,
-    // none after it, at least one letter), to type on with; "" if none. Inside
-    // a word, nothing: typing there inserts. Android apps report only the
-    // text before the cursor, so where the app reports nothing after it, the
-    // cursor may be inside a word: then only the word interrupted when the
-    // keyboard closed is taken back, if the text still ends with it.
+    // The word the cursor is right at the end of (at least one letter), or
+    // "". Android apps report only the text before the cursor, so there only
+    // the word interrupted when the keyboard closed is taken back.
     function _wordAtCursor() {
         if (!MInputMethodQuick.surroundingTextValid || MInputMethodQuick.hasSelection)
             return ""
@@ -812,9 +745,8 @@ InputHandler {
         onStateChanged: if (Voice.state === "off") inputHandler._setVoiceView(false)
     }
 
-    // The keyboard hidden while listening (the screen off, another app):
-    // the microphone stops and the text waits for the keyboard to come back.
-    // Shown, it looks again for the model (downloaded in the settings).
+    // Hidden: the microphone pauses. Shown: the model may have been
+    // downloaded meanwhile.
     Connections {
         target: MInputMethodQuick
         onActiveChanged: {
@@ -840,8 +772,7 @@ InputHandler {
         if (!hadWord)
             _reopened = null   // the word went back into was deleted and not retyped
         _committing = true
-        // The text before the word being typed: some apps show it in the
-        // field they report (the field grows while typing), others don't.
+        // Some apps report the word being typed in their text, others don't.
         var base = preedit !== "" ? _wordContext : _currentTextBefore()
         _committedContext = (base + text).slice(-1000)   // as _textBefore()
         predictionEngine.committed(base, text)   // learned once kept
@@ -850,8 +781,7 @@ InputHandler {
         _committedDigit = _isDigit(text.slice(-1))
         preedit = ""
         _committing = false
-        // A word's commit sets the context when the preedit empties
-        // (onPreeditChanged); a sign or a space alone, here.
+        // A word's commit sets the context in onPreeditChanged.
         if (!hadWord && active)
             _setContext(_committedContext, "commit")
     }
@@ -861,12 +791,10 @@ InputHandler {
         predictionEngine.flush()
         var typed = preedit
         var word = predictionEngine.autocorrection !== "" && !_afterDigit ? predictionEngine.autocorrection : typed
-        // A single letter (English i → I) is fixed at Space only: i. (i.e.)
-        // and i) (a list) stay.
+        // A single letter only at Space: i. (i.e.) and i) (a list) stay.
         if (typed.length === 1 && suffix !== " ")
             word = typed
-        // Back in an autocorrected word, the user typed it as before: they
-        // meant it (a late undo), don't correct it again.
+        // Retyped as before in an autocorrected word: a late undo.
         if (word !== typed && _reopened !== null && _recentCorrection(_reopened.word, typed))
             word = typed
         var redone = _checkManual(word)
@@ -889,13 +817,9 @@ InputHandler {
         return false
     }
 
-    // A word is committed: if Backspace went back into a word and this one
-    // differs, the user corrected that word by hand. An autocorrection
-    // changed that way was wrong: a late undo (twice stops it, as Backspace
-    // right after it). `picked`: the word came from the bar, logged as picked
-    // unless this was a redo. A word whose autocorrection was undone, ended
-    // as that correction again, is a redo: logged as redone, its undos
-    // forgotten. Returns whether it was a redo.
+    // A word is committed: logs a manual correction of a word Backspace went
+    // back into (a late undo if it was autocorrected), a pick (`picked`) or a
+    // redo of an undone autocorrection. Returns whether it was a redo.
     function _checkManual(word, picked) {
         var reopened = _reopened
         _reopened = null
@@ -928,10 +852,7 @@ InputHandler {
         return false
     }
 
-    // Period on double space (/apps/parrotfish-keyboard/double-space-period,
-    // on unless false): a Space within a second of the one that ended a word
-    // (a letter or a digit before it, not punctuation) puts a period before
-    // that space; Shift goes to automatic as after any sentence end.
+    // Whether this Space, within a second of the last after a word, types a period.
     function _periodOnDoubleSpace(spaceTime) {
         if (spaceTime === 0 || Date.now() - spaceTime > 1000
                 || doubleSpacePeriodConfig.value === false || doubleSpacePeriodConfig.value === "false")
@@ -941,8 +862,7 @@ InputHandler {
         return before.slice(-1) === " " && (predictionEngine.isLetter(last) || _isDigit(last))
     }
 
-    // Whether the sign is written after a space: ! ? : ; if the user wants
-    // it (French writes mot ?), whatever the language.
+    // Whether the sign is written after a space (space-before-punctuation).
     function _spaceBefore(sign) {
         return "!?:;".indexOf(sign) >= 0
                 && (spaceBeforeConfig.value === true || spaceBeforeConfig.value === "true")
@@ -952,22 +872,19 @@ InputHandler {
         return character.length === 1 && character >= "0" && character <= "9"
     }
 
-    // With the number row, a digit typed after a letter stays in the word
-    // (only one: mp34 and h33llo are typed as they are). The engine fixes
-    // it only as a slip onto the digit (h3llo → hello, not ps4 → is).
+    // With the number row, one digit after letters stays in the word, so
+    // that the engine can fix a slip onto it (h3llo).
     function _digitInWord(character) {
         return _digitKeys && _isDigit(character) && preedit !== ""
                 && predictionEngine.isLetter(preedit.slice(-1)) && !/[0-9]/.test(preedit)
     }
 
-    // Only if the correction is right before the cursor (the cursor may have
-    // been moved by tapping the text, which is not a key click).
+    // Only right before the cursor (a tap in the text moves it, unseen).
     function _canUndo(correction) {
         return _endsTextBefore(correction.corrected + correction.suffix)
     }
 
-    // Whether the text right before the cursor is `text`. True when the app
-    // doesn't tell: the key came straight after the commit.
+    // Whether the text right before the cursor is `text`; true if unknown.
     function _endsTextBefore(text) {
         if (!MInputMethodQuick.surroundingTextValid)
             return true
@@ -976,16 +893,14 @@ InputHandler {
                 && before.substr(before.length - text.length) === text
     }
 
-    // The text of the tapped key; for a tap that started on a neighbouring
-    // letter key and slid onto this one, the letter that fits the word better.
+    // The tapped key's text; for a tap that slid from a neighbouring letter,
+    // the letter that fits the word better.
     function _tappedText() {
         var text = pressedKey.text
         var initial = keyboard.lastInitialKey
         _lastTapKey = ""
-        // lastInitialKey belongs to the latest touch. When a second finger lands
-        // before the first lifts, Jolla's keyboard types the first finger's key
-        // while lastInitialKey is already the second finger's: then
-        // lastPressedKey is the second finger's key too, not the key being typed.
+        // With a second finger down, lastInitialKey is already its key while
+        // the first finger's key is typed: then lastPressedKey isn't this key.
         if (initial && initial !== pressedKey && keyboard.lastPressedKey === pressedKey
                 && initial.keyType === pressedKey.keyType
                 && typeof initial.text === "string" && initial.text.length === 1
@@ -1034,8 +949,8 @@ InputHandler {
         predictionEngine.setContext(text)
     }
 
-    // The text before the cursor, or, until the app reports the last
-    // commit, what it will be.
+    // The text before the cursor, or what it will be once the app reports
+    // the last commit.
     function _currentTextBefore() {
         return _awaitingReport ? _committedContext : _textBefore()
     }
@@ -1047,10 +962,8 @@ InputHandler {
         return MInputMethodQuick.surroundingText.substring(Math.max(0, pos - 1000), pos)
     }
 
-    // Letter keys and the apostrophe key: the keys words are typed with. The
-    // sticky key (the layout's apostrophe key) counts as the apostrophe
-    // whatever sign it types, so that the engine's key map stays the same.
-    // The number row's digits too: slips onto them are autocorrected.
+    // The keys words are typed with: letters, the number row's digits and
+    // the apostrophe key (the sticky key, whatever sign it types).
     function _isLetterKey(item) {
         return item.keyType !== undefined && typeof item.caption === "string"
                 && item.caption.length === 1
@@ -1100,11 +1013,8 @@ InputHandler {
         return p.x + "," + p.y + "," + key.width + "," + key.height
     }
 
-    // Checks the keys at every new word: a geometry read once and kept could
-    // be stale (wrong corrections until a settings change made the handler
-    // read the keys again). Reading them all costs 2-3 ms on the
-    // phone, so only two keys are checked; all are read again if either moved
-    // or is gone (rebuilt keys). The engine is rebuilt only when keys change.
+    // At every new word, as kept geometry can go stale. Reading all keys
+    // costs 2-3 ms on the phone, so two are checked and all read if either moved.
     function _updateLayout() {
         var layout = keyboard.layout
         if (!layout)
@@ -1146,19 +1056,16 @@ InputHandler {
         _updateSpacebar()
     }
 
-    // Store the language the text is in, once the engine is fairly sure
-    // (written only when it changes). Only after a committed word: while text
-    // is deleted, word fragments can look like another language.
+    // After a committed word only: while deleting, fragments can look like
+    // another language.
     function _rememberLanguage() {
         var lead = predictionEngine.leadingLanguage
         if (lead !== "" && predictionEngine.confidence >= 0.7 && lead !== lastLanguageConfig.value)
             lastLanguageConfig.value = lead
     }
 
-    // A horizontal drag longer than keyboard.dragThreshold switches the
-    // layout. With swiping off, while typing on our layouts, ask for one
-    // longer than the keyboard; give the keyboard its own value back when
-    // another handler takes over.
+    // Swiping off: a drag threshold longer than the keyboard, while we're
+    // active (keyboard.dragThreshold is shared with Jolla's handlers).
     function _applySwipe() {
         if (_jollaDragThreshold < 0)
             _jollaDragThreshold = keyboard.dragThreshold
@@ -1173,11 +1080,8 @@ InputHandler {
         }
     }
 
-    // The spacebar shows the typing language ("it"; the key arrangement,
-    // "QWERTY", until the engine has one). The layout only gives the keys, so
-    // it has no language of its own to show. While the engine is unsure, the
-    // language is in italics: the handler switches Jolla's label to styled
-    // text (it is plain text by default); without the label, no italics.
+    // The typing language on the spacebar (italics while unsure: Jolla's
+    // label switched to styled text, if found).
     function _updateSpacebar() {
         if (!_spacebar || !keyboard.layout)
             return
@@ -1195,10 +1099,7 @@ InputHandler {
 
     topItem: Component {
         TopItem {
-            // The emoji button at the bar's right end, across
-            // from Jolla's paste button: it opens the layout's emoji panel
-            // (emoji/EmojiPanel.qml), and shows the keyboard icon to go back to the
-            // letters. Above the suggestions (z), which are clipped at its edge.
+            // The emoji button, above the suggestions (z), which are clipped at its edge.
             BackgroundItem {
                 id: emojiButton
 
@@ -1214,8 +1115,6 @@ InputHandler {
                 anchors { right: parent.right; top: parent.top; bottom: parent.bottom }
                 width: available ? height : 0
                 visible: available
-                // With an emoji offered, a tap puts it in the emoticon's place
-                // and a long press opens the panel; else both open it.
                 onClicked: {
                     if (offer !== "")
                         inputHandler.replaceEmoticon()
@@ -1224,7 +1123,6 @@ InputHandler {
                 }
                 onPressAndHold: keyboard.layout.emojiView = !keyboard.layout.emojiView
 
-                // An offered emoji is highlighted.
                 Rectangle {
                     anchors.centerIn: parent
                     width: Math.round(parent.height * 0.8)
@@ -1256,7 +1154,6 @@ InputHandler {
                 }
             }
 
-            // While voice input records: cancel on the left (done is in the panel).
             Item {
                 anchors.fill: parent
                 visible: inputHandler.voiceActive
@@ -1294,8 +1191,7 @@ InputHandler {
                 canRemove: inputHandler.showApplicationSuggestions
                            && !!MInputMethodQuick.extensions.autoFillCanRemove
 
-                // Jolla's delegate plus a divider before every suggestion but
-                // the first.
+                // Jolla's delegate plus a divider.
                 delegate: BackgroundItem {
                     id: delegate
 
@@ -1397,8 +1293,7 @@ InputHandler {
                 canRemove: inputHandler.showApplicationSuggestions
                         && !!MInputMethodQuick.extensions.autoFillCanRemove
 
-                // Jolla's delegate plus a divider above every suggestion but
-                // the first.
+                // Jolla's delegate plus a divider.
                 delegate: BackgroundItem {
                     id: verticalDelegate
 

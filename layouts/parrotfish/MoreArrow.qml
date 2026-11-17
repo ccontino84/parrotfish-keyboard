@@ -1,11 +1,8 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// The cell of a long-press menu that switches to a key's other letters
-// (›) and back (‹) when the finger rests on it (LongPressMenu). Drawn as two
-// strokes in the highlight colour, as Sailfish draws its controls, so that
-// it doesn't read as a character to type (the letters are text in the
-// primary colour). Brighter while the finger is on it (active).
+// The › / ‹ cell of a long-press menu (LongPressMenu), drawn as strokes in
+// the highlight colour so that it doesn't read as a character to type.
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 
@@ -37,8 +34,7 @@ Item {
                 radius: height / 2
                 color: arrow._color
                 antialiasing: true
-                // The right end is the tip, a quarter of the chevron's height
-                // right of the middle (the strokes reach half of it left).
+                // The tip, a quarter of the chevron's height right of the middle.
                 x: arrow.width / 2 + arrow._size / 4 - width + arrow._thickness / 2
                 y: arrow.height / 2 - height / 2
                 transformOrigin: Item.Right

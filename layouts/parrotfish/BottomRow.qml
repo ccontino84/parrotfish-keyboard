@@ -3,14 +3,10 @@
 // SPDX-License-Identifier: BSD-3-Clause AND LGPL-2.1-or-later
 //
 // The bottom row of the Parrotfish layouts. Based on SpacebarRow.qml of
-// jolla-keyboard 0.10.4 (Jolla Ltd., BSD-3-Clause, see
-// LICENSES/BSD-3-Clause.txt); changes: comma and period have a KeyBackground
-// (the spacebar keeps Jolla's own, set apart from the letter keys); a long
-// press on the comma offers : and ; as the period offers ! and ? (not where
-// it types / or @), with the typing languages' signs added (the layout's
-// punctuation: ¡ ¿, —); the backgrounds of ?123, the spacebar and Enter take the layout's gap;
-// comma and period have a LongPressHint; outside split landscape, the keys'
-// widths are set when the layout sizes the rows.
+// jolla-keyboard 0.10.4 (Jolla Ltd., BSD-3-Clause). Changes: comma and
+// period with a KeyBackground, a LongPressHint and the typing languages'
+// signs on long press (the comma's too); the layout's gap; the widths set
+// by the layout; the mic glyph.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
@@ -22,9 +18,7 @@ KeyboardRow {
 
     splitIndex: 3
 
-    // Jolla's backgrounds of ?123, the spacebar and Enter are inset by
-    // paddingMedium; they get the layout's gap instead, as the other keys
-    // (KeyBackground), so that the rows line up.
+    // The layout's gap instead of Jolla's paddingMedium, so that the rows line up.
     Component.onCompleted: {
         for (var i = 0; i < children.length; ++i) {
             var key = children[i]
@@ -42,12 +36,8 @@ KeyboardRow {
 
     readonly property var _punctuation: parent && parent.punctuation !== undefined ? parent.punctuation : null
 
-    // The widths (outside split landscape):
-    // comma and period as the letter keys of ten-key rows, whatever the
-    // options; the spacebar as Jolla's (SpacebarRow.qml) times the layout's
-    // spaceWidthPercent; ?123 and Enter the rest, at least as wide as Shift.
-    // Set when the layout sizes the rows, not by bindings, which may not
-    // have followed the setting or the layout's width yet.
+    // Outside split landscape. Set when the layout sizes the rows: bindings
+    // may not have followed the setting or the layout's width yet.
     function _setWidths() {
         var percent = parent && parent.spaceWidthPercent !== undefined ? parent.spaceWidthPercent : 100
         var punctuation = splitActive ? punctuationKeyWidth : width / 10
@@ -99,7 +89,6 @@ KeyboardRow {
         LongPressHint { frame: commaBackground }
     }
     SpacebarKey {
-        // Voice input is on: the long press offers it (voice/LayoutMenu.qml).
         Icon {
             visible: !!bottomRow.parent && bottomRow.parent.voiceEnabled === true
             anchors { right: parent.right; rightMargin: Theme.paddingLarge; verticalCenter: parent.verticalCenter }

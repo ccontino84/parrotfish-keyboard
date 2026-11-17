@@ -24,20 +24,16 @@ class PredictionEngine : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QString preedit READ preedit WRITE setPreedit NOTIFY preeditChanged)
-    // Set before `preedit`: for each of its letters, "" or the tap's other
-    // key and whether the letter shown is where the finger lifted ("e1": the
-    // tap also touched e, and lifted on the letter shown; "e0": it lifted on
-    // e, and the letter shown is where it touched down). The search weighs
-    // both keys with the whole word. Ignored if its length differs.
+    // Set before `preedit`: per letter, "" or the tap's other key and "1" if
+    // the letter shown is where the finger lifted ("e1"), "0" if where it
+    // touched down. Ignored if its length differs.
     Q_PROPERTY(QStringList preeditKeys READ preeditKeys WRITE setPreeditKeys NOTIFY preeditKeysChanged)
-    // The typing languages: dictionary codes separated by spaces ("en it
-    // pt_BR"); empty: the system language (English if there is no
-    // dictionary for it). Codes without a dictionary are skipped.
+    // The typing languages ("en it pt_BR"); empty: the system language, else
+    // English. Codes without a dictionary are skipped.
     Q_PROPERTY(QString languages READ languages WRITE setLanguages NOTIFY languagesChanged)
     // The layout's language code (EN, IT, DE): a weak hint for the start.
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
-    // The language the last text was in (en, it, de; empty: none), used as the
-    // starting lean for an empty field.
+    // The language the last text was in: the starting lean for an empty field.
     Q_PROPERTY(QString rememberedLanguage READ rememberedLanguage WRITE setRememberedLanguage
                NOTIFY rememberedLanguageChanged)
     // The language the text seems to be in (en, it, de), and how sure.
@@ -56,15 +52,10 @@ class PredictionEngine : public QAbstractListModel
     Q_PROPERTY(QString autocorrection READ autocorrection NOTIFY predictionsChanged)
     // Whether the debug file exists (read once at start): log details.
     Q_PROPERTY(bool debug READ debug CONSTANT)
-    // Learning: "on" (word counts, new words, word
-    // pairs learned and used), "privacy" (only the undo memory: nothing
-    // typed shows up in the bar elsewhere) or "off" (nothing learned or
-    // used, the undo memory included). What was learned is kept until
-    // cleared.
+    // Learning: "on", "privacy" (only the undo memory) or "off" (nothing
+    // learned or used; what was learned is kept).
     Q_PROPERTY(QString learning READ learning WRITE setLearning NOTIFY learningChanged)
-    // While true, nothing is learned or stored (words, pairs, undos); what
-    // was learned is still used. For a field that asks for it (the
-    // settings' preview field).
+    // While true, nothing is learned or stored; what was learned is still used.
     Q_PROPERTY(bool learnPaused READ learnPaused WRITE setLearnPaused NOTIFY learnPausedChanged)
 
 public:
@@ -102,78 +93,51 @@ public:
     bool learnPaused() const { return m_learnPaused; }
     void setLearnPaused(bool paused);
 
-    // The field's text before the cursor changed (or a new word begins):
-    // updates the language weights and, while no word is being typed, the
-    // next-word suggestions.
+    // The text before the cursor changed or a new word begins: updates the
+    // language weights and the next words.
     Q_INVOKABLE void setContext(const QString &textBefore);
-    // Letter keys of the current layout: [{ch, x, y, width, height}], centres
-    // in any one coordinate system. Returns how many keys were taken. The
-    // engine is rebuilt only when they differ from the keys it has.
+    // The layout's letter keys, [{ch, x, y, width, height}] (centres, any one
+    // coordinate system). Returns how many were taken.
     Q_INVOKABLE int setKeys(const QJSValue &keys);
     // An uncertain tap on `lifted` that started on `initial`: the letter to
     // type after `preedit`.
     Q_INVOKABLE QString resolveTap(const QString &preedit, const QString &lifted,
                                    const QString &initial) const;
-    // The user undid the autocorrection of `typed`. After the second undo
-    // (the first for a Strong fix of a valid word) it isn't corrected again
-    // in text of the same language: the language the text was in when it
-    // was corrected (kept between sessions in learning.db, up to
-    // LearningStore::MaxUndos words).
+    // The autocorrection of `typed` was undone: after two (a Strong fix of a
+    // valid word: one), not corrected again in that language.
     Q_INVOKABLE void rejectCorrection(const QString &typed);
-    // The user kept an autocorrection of `typed` or picked a correction of it
-    // from the bar: its undos in that language are forgotten.
+    // An autocorrection of `typed` was kept or picked: its undos are forgotten.
     Q_INVOKABLE void acceptCorrection(const QString &typed);
-    // With the debug file only: the user kept an autocorrection ("kept"),
-    // undid it ("undone"; "undone late" when the corrected word was changed
-    // after more typing), took the undo back ("redone"), picked a
-    // correction from the bar ("picked") or
-    // changed a word by hand ("manual": slips only, no "other"); a
-    // Strong fix of a valid word is "strong kept" or "strong undone", with
-    // " margin=5.3" (nats);
-    // appends the kind of slip (a letter pair for a wrong key, never the
-    // words) to slips.log. A header line names the settings whenever they
-    // change (and each day), with how many words were typed under the old.
+    // With the debug file only: appends the kind of slip (never the words)
+    // to slips.log; `how`: kept, undone, undone late, redone, picked, manual,
+    // strong kept, strong undone.
     Q_INVOKABLE void logSlips(const QString &typed, const QString &meant, const QString &how);
-    // With the debug file only: a word typed letter by letter was committed
-    // (counted in slips.log in batches, and when the settings change).
+    // With the debug file only: a word typed letter by letter was committed.
     Q_INVOKABLE void countWord();
-    // With the debug file only: a suggestion was used, `how` "picked" (from
-    // the bar while typing), "next" (from the bar before a letter) or
-    // "fixed" (autocorrected at Space or a sign). Counted on the words line
-    // of slips.log with how many came from learning: a learned new word
-    // picked or fixed to, a next word the user typed after the same word
-    // before (numbers only).
+    // With the debug file only: a suggestion was used, `how` "picked",
+    // "next" or "fixed"; counted in slips.log (numbers only).
     Q_INVOKABLE void countUse(const QString &how, const QString &word);
     // Whether `character` (its first code point) is a letter. Jolla's
     // KeyboardSupport.isLetter is missing before Sailfish OS 5.2.
     Q_INVOKABLE bool isLetter(const QString &character) const;
-    // A diagnostic line for the journal, only while debugging is on. Never
-    // pass typed text.
+    // A journal line while debugging is on. Never pass typed text.
     Q_INVOKABLE void log(const QString &message) const;
-    // Brings the suggestions and `autocorrection` up to date with preedit
-    // now (they follow it on the next pass of the event loop otherwise).
+    // Updates the suggestions now instead of on the next event loop pass.
     Q_INVOKABLE void flush();
 
-    // Learning. `text` was committed after `textBefore` (a word with its
-    // space or sign, a sign, a picked word): its words are learned once
-    // kept, i.e. at the next commit or the end of the text, unless undone
-    // first.
+    // `text` was committed after `textBefore`: its words are learned once
+    // kept (the next commit or the end of the text).
     Q_INVOKABLE void committed(const QString &textBefore, const QString &text);
     // The autocorrection to `corrected` was undone: the word kept is `typed`.
     Q_INVOKABLE void replaceKept(const QString &corrected, const QString &typed);
-    // The last word committed is being typed again (Backspace into it, or
-    // typing on at its end): not learned as it was.
+    // The last word committed is being typed again: not learned as it was.
     Q_INVOKABLE void dropKept();
-    // The text ended (the keyboard closed, the field was emptied): a new
-    // word counts once per text. Saves what was learned. `closed`: the
-    // keyboard closed, the time for the fading and trimming that are due
-    // (Learned::maintain), not while the user types.
+    // The text ended: saves what was learned. `closed`: the keyboard closed,
+    // the time for Learned::maintain.
     Q_INVOKABLE void endText(bool closed = false);
-    // The keyboard opened: the fading and trimming still due if it didn't
-    // close cleanly last time (else nothing is due).
+    // The keyboard opened: maintenance still due from an unclean close.
     Q_INVOKABLE void opened();
-    // The settings page changed learning.db (a word forgotten, all
-    // cleared): read it again, dropping what wasn't saved.
+    // The settings page changed learning.db: read it again.
     Q_INVOKABLE void reloadLearned();
 
 signals:
@@ -221,8 +185,7 @@ private:
     QHash<LearningStore::UndoKey, int> m_undos;
     std::unique_ptr<LearningStore> m_store;   // keeps m_undos between sessions (reads)
     std::unique_ptr<StoreWriter> m_writer;    // all writes, on a thread of their own
-    // Recent autocorrections: lowercase typed word → the text's leading
-    // language when it was corrected (undos are kept per language).
+    // Recent autocorrections: lowercase typed word → the leading language then.
     QHash<QString, QString> m_fixLanguages;
     // Strong's autocorrections of valid words: lowercase typed word →
     // (lowercase correction, margin in nats), for slips.log and undo.
@@ -241,9 +204,8 @@ private:
     QString m_learning = QStringLiteral("on");
     bool m_learnPaused = false;
     parrotfish::Learned m_learned;
-    // The last word committed, learned once kept: the text before it, the
-    // word, the text's language then (if not sure then: the language when
-    // the word is learned, the tracker having seen more of the text).
+    // The last word committed, learned once kept (its language: the one when
+    // learned, if unsure when typed).
     struct Kept {
         bool valid = false;
         std::u32string before, word;
@@ -251,9 +213,8 @@ private:
         bool sure = true;
     } m_kept;
     int m_keptSinceSave = 0;
-    // The last searches' results (Backspace back to a prefix shows its
-    // suggestions without searching again): by preedit, keys, context and
-    // learned data. Cleared when the engine changes.
+    // The last searches' results, for Backspace back to a prefix. Cleared
+    // when the engine changes.
     QHash<QString, parrotfish::Result> m_results;
     QString resultKey() const;
 };

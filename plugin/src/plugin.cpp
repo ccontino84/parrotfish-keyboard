@@ -42,12 +42,9 @@ public:
         });
     }
 
-    // The settings' translations (translations/), in the process that
-    // imports us: Jolla's settings, which load our pages without a
-    // catalogue of their own, and the keyboard. Installed once, before the
-    // pages' texts are evaluated; the contexts are our QML files' names.
-    // Also the colour emoji images (EmojiImageProvider), in every engine
-    // that imports us.
+    // Our translations, in whichever process imports us (Jolla's settings
+    // load our pages without a catalogue of their own), before the pages'
+    // texts are evaluated; and the colour emoji images.
     void initializeEngine(QQmlEngine *engine, const char *) override
     {
         if (engine && !engine->imageProvider(QStringLiteral("parrotfish-emoji")))

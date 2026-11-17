@@ -6,10 +6,8 @@
 #include <QStringList>
 #include <QVector>
 
-// The dictated text while voice input listens (VoiceInput): the fixed
-// words, the open phrase (which can still change), and the user's edits:
-// undo, a selection of words, its deletion or its replacement by the next
-// phrase. Phrases come numbered from the helper, from 0 in each recording.
+// The dictated text (VoiceInput): the fixed words, the open phrase, and the
+// user's edits. Phrases come numbered from 0 in each recording.
 class VoiceText
 {
 public:

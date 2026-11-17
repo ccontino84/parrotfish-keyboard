@@ -1,10 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Voice input, opened from the main section while the voice package is
-// installed: the switch (/apps/parrotfish-keyboard/voice) and the speech
-// model's download (VoiceModel, through the package's downloader), with a
-// warning on mobile data. The keyboard offers voice once the model is here.
+// Voice input: the switch and the speech model's download (VoiceModel).
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Parrotfish.Keyboard 1.0
@@ -80,7 +77,7 @@ Page {
                 height: Theme.paddingLarge
             }
 
-            // Not downloaded: the download, with a warning on mobile data.
+            // Not downloaded.
             Column {
                 width: parent.width
                 spacing: Theme.paddingLarge
@@ -141,7 +138,7 @@ Page {
                 }
             }
 
-            // Downloaded: it can go, to free the space.
+            // Downloaded.
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: VoiceModel.ready

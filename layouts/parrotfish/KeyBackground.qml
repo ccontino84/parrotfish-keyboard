@@ -1,20 +1,9 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// A subtle rounded background for a key of the Parrotfish layouts, in the
-// ambience's colours. Put it inside a key (in a KeyboardRow of a layout).
-// Fill and border are chosen separately, by the layout's keyFill and
-// keyBorder:
-// - fill "none", "flat", or "shaded" (lighter at the top, darker at the
-//   bottom);
-// - border "none", "line" (one colour), or "raised" (a rim lit from above:
-//   light top edge, dark bottom edge, as on a raised button).
-// Both "none" is Jolla's look. Letter keys stay fainter than the spacebar
-// (Jolla's 0.07), so that it stands out: alphas of the ambience's primary
-// colour, fill 0.04, shade 0.05, border 0.12 (for "raised", 0.2 of its
-// white and black edges). functionLook (the sticky key) sets a key apart
-// from the letters, whatever their look: flat, no border, as Jolla's
-// function keys (Shift, Backspace, ?123, Enter: 0.17).
+// A key's background in the ambience's colours, by the layout's keyFill
+// (none, flat, shaded) and keyBorder (none, line, raised). Letter keys stay
+// fainter than Jolla's spacebar (0.07); functionLook is Jolla's function keys'.
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 
@@ -24,9 +13,7 @@ Rectangle {
     readonly property Item key: parent
     readonly property Item layout: key && key.parent ? key.parent.parent : null
     property bool functionLook: false
-    // A language key (LetterKey's group): its fill is 0.07 stronger than
-    // the letter keys' (the step from the plain background to Jolla's
-    // spacebar), shown whatever the key fill.
+    // A language key: 0.07 more fill, whatever the key fill.
     property bool groupLook: false
     readonly property real _groupExtra: groupLook ? 0.07 : 0
     readonly property bool shown: styled || groupLook
@@ -65,8 +52,7 @@ Rectangle {
 
     visible: shown
     z: -2   // below the label and Jolla's pressed highlight
-    // The layout's gap all round (Jolla's spacebar and function keys get the
-    // same, BottomRow); Jolla's paddings in other layouts.
+    // The layout's gap all round; Jolla's paddings in other layouts.
     readonly property real _gap: layout && layout.keyGap !== undefined ? layout.keyGap : -1
     anchors {
         fill: parent
@@ -102,9 +88,8 @@ Rectangle {
         visible: keyBackground.raised && !keyBackground.key.pressed
         blending: true
 
-        // The distance to the rounded rectangle's edge gives the rim; the
-        // edge's outward direction, against light from above (a little from
-        // the left), mixes the light and the dark colour.
+        // The rim: the distance to the edge; its direction against light from
+        // above-left mixes the light and dark colours.
         fragmentShader: "
             varying highp vec2 qt_TexCoord0;
             uniform lowp float qt_Opacity;

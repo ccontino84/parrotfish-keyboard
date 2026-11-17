@@ -263,10 +263,8 @@ void PredictionEngine::setPreedit(const QString &preedit)
         return;
     m_preedit = preedit;
     emit preeditChanged();
-    // Not now: the handler sends the letter to the app after setting
-    // preedit, and the search (up to 15 ms on a phone between taps) must
-    // not hold it back. The bar follows on the next pass of the event loop;
-    // whatever needs the result earlier calls flush() first.
+    // Not now: the search (up to 15 ms on a phone) mustn't hold back the
+    // letter the handler sends next. flush() for the result earlier.
     if (!m_updatePending) {
         m_updatePending = true;
         QMetaObject::invokeMethod(this, "flush", Qt::QueuedConnection);
@@ -298,8 +296,7 @@ void PredictionEngine::setLanguages(const QString &languages)
     emit languagesChanged();
     loadLanguages();
     m_contextValid = false;
-    // The undo memory stays: it is kept per language, for when a language
-    // is used again (and it is loaded before them at start).
+    // The undo memory stays: it is kept per language.
     setContext(m_context);
 }
 
@@ -354,9 +351,7 @@ double PredictionEngine::confidence() const
 void PredictionEngine::setContext(const QString &textBefore)
 {
     flush();
-    // Starting leans: the language the last text was in (×3) and
-    // the layout's language (×2). The text already in the field soon
-    // outweighs both; one distinctive word of another language switches.
+    // Starting leans: the last text's language (×3), the layout's (×2).
     std::vector<double> prior(m_engine.languageCount(), 1.0);
     const int remembered = m_engine.languageIndex(m_remembered.toStdString());
     if (remembered >= 0)
@@ -364,9 +359,7 @@ void PredictionEngine::setContext(const QString &textBefore)
     const int hinted = m_engine.languageIndex(m_language.toLower().toStdString());
     if (hinted >= 0)
         prior[hinted] *= 2.0;
-    // At Space the handler passes the same text up to four times (the
-    // committed word, then the app's text and cursor, then the next word's
-    // first letter): read it once.
+    // At Space the handler passes the same text up to four times: read it once.
     if (m_contextValid && textBefore == m_context && prior == m_contextPrior) {
         if (m_preedit.isEmpty() && !m_nextValid)
             update();
@@ -485,10 +478,8 @@ QString PredictionEngine::resolveTap(const QString &preedit, const QString &lift
     return c == l[0] ? lifted : initial;
 }
 
-// The language `typed` was corrected in: the text's leading language then
-// (the corrected word has been counted since). A word picked from the bar
-// is still being typed: the leading language now, even if it was corrected
-// in another language before.
+// The language `typed` was corrected in (for a word picked from the bar,
+// still being typed: the leading language now).
 QString PredictionEngine::fixLanguage(const QString &typed) const
 {
     if (typed.compare(m_preedit, Qt::CaseInsensitive) == 0)
@@ -589,8 +580,7 @@ void PredictionEngine::logSlips(const QString &typed, const QString &meant, cons
         prefix = QStringLiteral("strong ") + how;
         suffix = QStringLiteral(" margin=") + QString::number(strong->second, 'f', 1);
     }
-    // A word changed by hand into a quite different one is a new word, not
-    // a slip.
+    // A word changed by hand into a quite different one isn't a slip.
     if (how == QLatin1String("manual"))
         slips.removeAll(QStringLiteral("other"));
     if (slips.isEmpty())
@@ -615,8 +605,7 @@ void PredictionEngine::countWord()
 
 QString PredictionEngine::wordsLine(int words)
 {
-    // words N picks A/B next C/D fixes E/F: suggestions used, of them from
-    // learning (countUse).
+    // words N picks A/B next C/D fixes E/F (used / of them from learning).
     const Uses u = m_uses;
     m_uses = Uses();
     return QStringLiteral("words %1 picks %2/%3 next %4/%5 fixes %6/%7")
@@ -655,8 +644,7 @@ void PredictionEngine::countUse(const QString &how, const QString &word)
 
 QString PredictionEngine::slipsHeader() const
 {
-    // Rows apart, in key widths (the letter keys' median width): how close
-    // vertical neighbours are.
+    // Rows apart, in median key widths.
     std::vector<float> widths, ys;
     for (const parrotfish::Key &k : m_keys) {
         if (k.ch >= U'0' && k.ch <= U'9')
@@ -759,8 +747,7 @@ void PredictionEngine::update()
                 }
             }
         }
-        // The same input as a moment ago (Backspace back to a prefix): its
-        // result, without searching again.
+        // The same input as a moment ago (Backspace back to a prefix).
         const QString key = resultKey();
         const auto cached = m_results.constFind(key);
         const bool reused = cached != m_results.constEnd();

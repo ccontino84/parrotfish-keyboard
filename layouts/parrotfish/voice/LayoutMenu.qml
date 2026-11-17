@@ -1,14 +1,10 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// The spacebar's long press while voice input is on (the layout's
-// voiceEnabled): Jolla's layout popup (LanguageSelectionPopup.qml: its look,
-// sizes, cell rows and selection), with a microphone row below the layouts, selected when it
-// opens. Lifting the finger there starts voice input; sliding onto a layout
-// switches to it. Jolla's popup is kept from opening
-// (keyboard.layoutChangeAllowed). Touches are read from Jolla's touch area
-// as in emoji/EmojiPanel.qml; once the popup opens, the touch is cancelled
-// in Jolla's keyboard, so that no space is typed.
+// The spacebar's long press with voice input: Jolla's layout popup
+// (LanguageSelectionPopup.qml's look, sizes and selection) plus a microphone
+// row. Jolla's own is kept closed (keyboard.layoutChangeAllowed); touches as
+// in emoji/EmojiPanel.qml.
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import Parrotfish.Keyboard 1.0
@@ -51,8 +47,7 @@ Item {
     }
     Component.onDestruction: if (_took) _allowJollaMenu(true)
 
-    // Jolla's menu is kept closed while this layout is in use; another
-    // Parrotfish layout taking over keeps it closed (its own menu does).
+    // Jolla's menu was closed by us (another Parrotfish layout keeps it closed).
     property bool _took: false
     function _allowJollaMenu(force) {
         if (typeof keyboard === "undefined" || !keyboard || keyboard.layoutChangeAllowed === undefined)
@@ -143,8 +138,7 @@ Item {
         if (!_moved && dx * dx + dy * dy < _initialDeltaSquared)
             return
         _moved = true
-        // As Jolla's: the point counts a little above the finger, and the
-        // selection stays when the finger is between two cells.
+        // As Jolla's: a point a little above the finger; between cells, no change.
         var old = _active
         var inPopup = popup.mapFromItem(_touchArea, p.x, p.y)
         if (inPopup.y < 0)
@@ -214,8 +208,7 @@ Item {
         if (typeof canvas !== "undefined" && canvas.captureFullScreen !== undefined)
             canvas.captureFullScreen()
 
-        // Jolla's rows: filled from the last layout, so that the uneven row
-        // is the topmost, each in the layouts' order.
+        // As Jolla's: filled from the last layout, the uneven row topmost.
         var maxAllowed = Math.min(menu.width - Theme.paddingSmall * 2,
                                   _geometry ? geometry.languageSelectionPopupMaxWidth : menu.width)
         var margins = _geometry ? geometry.languageSelectionPopupContentMargins : Theme.paddingLarge * 2

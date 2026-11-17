@@ -1,10 +1,9 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// A key of the emoji panel. The emoji is drawn by the plugin
-// (image://parrotfish-emoji): Qt 5.6 draws emoji in black and white, which
-// is also why it has no popper. `base`: the emoji in the panel's list,
-// `emoji` its picked variant; `removable`: a recent emoji.
+// A key of the emoji panel, drawn by the plugin (image://parrotfish-emoji):
+// Qt 5.6 draws emoji in black and white, which is also why it has no popper.
+// `base`: the emoji in the list, `emoji` its picked variant.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0

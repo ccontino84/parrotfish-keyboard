@@ -1,14 +1,9 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// A small mark on a key whose long press opens a menu in the current view:
-// as Jolla's Popper, a key with accents, but in the symbol view only a key
-// with popupAlways: a dot in the top right corner, unless the layout's
-// longPressHint is off. Put it inside a key, next to its KeyBackground
-// (frame): the mark sits in the background's rectangle, also when the
-// background isn't drawn, so it fits every key look. 3.5 × Theme.pixelRatio
-// across, alpha 0.4; a menu with nothing for the typing languages (the
-// letter and ⋯ only: D's d ⋯ in English) gets a fainter one (0.15).
+// A dot on a key whose long press opens a menu in the current view (as
+// Jolla's Popper decides), in its KeyBackground's (`frame`) corner; fainter
+// when the menu has nothing for the typing languages.
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 

@@ -1,11 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Look & feel: the keys' look and sizes, the long-press hint, swiping
-// (our layouts are switched on in Jolla's Keyboards page, as any other).
-// Opened from Parrotfish's section in Settings → Text input
-// (ParrotfishSettings.qml), with the keyboard open to try the changes
-// (KeyboardPreview.qml).
+// Look & feel: the keys' look and sizes, the long-press hint, swiping.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Parrotfish.Keyboard 1.0

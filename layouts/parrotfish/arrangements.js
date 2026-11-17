@@ -3,35 +3,19 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: BSD-3-Clause AND LGPL-2.1-or-later
 //
-// The key arrangements of the Parrotfish layout (parrotfish.qml), as data:
-// the setting /apps/parrotfish-keyboard/layout picks one. Each has three
-// letter rows; "split" is the child index where a split row's right half
-// starts (row 3 counts the Shift key before the letters). Keys: c caption,
-// s shifted, y and y2 the two symbol pages, a and A accents (A shifted;
-// not "as": Qt 5.6 reads that as a keyword in QML files), fit = shrink
-// the caption to the key's width, sticky = the sticky key (stickySigns:
-// it types the sign last picked from its long press; QWERTZ, and QWERTY
-// with the language keys, get one in the bottom letter row, placeSticky).
+// The key arrangements of the Parrotfish layout, as data. "split" is the
+// child index where a split row's right half starts (row 3 counts Shift).
+// Keys: c caption, s shifted, y and y2 the two symbol pages, a and A
+// accents (not "as": a keyword for Qt 5.6's QML), fit = shrink the caption,
+// sticky = the sticky key (stickySigns).
 //
-// The keys come from en.qml (QWERTY), de.qml (QWERTZ) and fr.qml (AZERTY) of
-// jolla-keyboard
-// 0.10.4 (Jolla Ltd., BSD-3-Clause, notice below).
-// QWERTY changes: a
-// full-width apostrophe key ends the middle row (no half-key indent, as on
-// Jolla's it.qml) and is the sticky key, the middle row of the
-// symbol view is it.qml's but keeps en.qml's ` (~ before ! and ?, ° on the
-// second page), and M's second-page ~ became × (as on de.qml). QWERTZ:
-// de.qml's keys. AZERTY: fr.qml's keys, but the apostrophe takes the place
-// of ç after N (fr.qml has it in the bottom row, which narrows the
-// spacebar) and is the sticky key; ç is on C's long press, and typed as c
-// the engine puts it back. As the sticky key may type something else, the
-// symbol pages have ' and " where en.qml has them: ' on B, " on C's second
-// page (fr.qml's ÷ there is dropped). (QWERTY (ÅÖÄ), from fi.qml, was
-// dropped in 1.1: QWERTY with Swedish, Finnish,
-// Danish or Norwegian on gets å ö ä or their letters at the same places.)
-// All: more accents for the typing languages, from Jolla's da/fr/pt/ro
-// layouts (A: æ ă, O: õ œ, S: ș, T: ț) and its pl/cs/sl layouts (A: ą,
-// C: ć č, D: ď đ, E: ę ě, L: ł, N: ń ň, R: ř, S: ś š, T: ť, U: ů, Z: ż ź ž).
+// From en.qml (QWERTY), de.qml (QWERTZ) and fr.qml (AZERTY) of
+// jolla-keyboard 0.10.4 (Jolla Ltd., BSD-3-Clause, notice below). Changes:
+// QWERTY: a full-width apostrophe key (the sticky key) ends the middle row,
+// whose symbol view is it.qml's with en.qml's `; M's second-page ~ is ×.
+// AZERTY: the apostrophe (the sticky key) takes ç's place after N, ç goes to
+// C's long press; ' on B and " on C's second page (÷ dropped). All: more
+// accents, from Jolla's da/fr/pt/ro and pl/cs/sl layouts.
 
 /*
  * Copyright (C) 2012-2013 Jolla ltd and/or its subsidiary(-ies). All rights reserved.
@@ -64,10 +48,7 @@
 
 
 var arrangements = {
-    // Without the sticky key (withoutSticky): these signs, as on en.qml.
-    // With the language keys (withLanguageKeys): one at the end of the top
-    // row, two at the end of the middle row, which loses the sticky key (it
-    // goes to the last row, as on QWERTZ; the first new key takes its signs).
+    // noSticky: the signs without the sticky key (withoutSticky), as on en.qml.
     "qwerty": { "name": "QWERTY", "noSticky": {"k": ["!", "¡"], "l": ["?", "¿"], "m": [":", "~"]},
                 "slots": [{"row": 0, "y": "%", "y2": "‰"}, {"row": 1, "y": "?", "y2": "¿"},
                           {"row": 1, "y": "\"", "y2": "·"}], "rows": [
@@ -142,10 +123,7 @@ var arrangements = {
             {"c": "m", "s": "M", "y": ":", "y2": "×"}
         ] }
     ] },
-    // Without the sticky key: a plain apostrophe key (withoutSticky). With
-    // the language keys: one at the end of each letter row (in the last
-    // row before the sticky key, which stays the outermost), and with the
-    // sticky key off a fourth one in its place (withLanguageKeyInLastRow).
+    // stickyStays: without the sticky key, a plain apostrophe key.
     "azerty": { "name": "AZERTY", "stickyStays": true,
                 "slots": [{"row": 0, "y": "%", "y2": "‰"}, {"row": 1, "y": "\"", "y2": "·"},
                           {"row": 2, "y": "…", "y2": "–"}], "rows": [
@@ -185,21 +163,12 @@ var arrangements = {
     ] }
 }
 
-// What the sticky key can type, in the order of its long-press menu: a
-// short list of the most used signs; the setting
-// /apps/parrotfish-keyboard/sticky-key keeps the one last picked.
+// What the sticky key can type, in its long-press menu's order.
 var stickySigns = "'\"-_@#/"
 
-// The sticky key on the right or the left of its row (in the same row, so
-// that no key gets smaller; "right" is the default, "left" suits left
-// hands or keeps it away from Backspace). QWERTY has it
-// at the end of the middle row, AZERTY after N. QWERTZ (and QWERTY with the
-// language keys) have
-// no apostrophe key: theirs goes in the bottom letter row, whose end keys
-// are wider than the letters and leave room; it has no symbol-view sign of
-// its own there, so it types its sign in the symbol view too. On the left,
-// the letters of its row move one key to the right, while the symbol-view
-// signs stay in place (they go by position, not with the letters).
+// The sticky key on the `side` of its row. Without an apostrophe key
+// (QWERTZ, QWERTY with the language keys) it goes in the bottom letter row,
+// typing its sign in the symbol view too. Symbol-view signs stay in place.
 function placeSticky(a, side) {
     var left = side === "left"
     if (!left && !a.stickyInLastRow)
@@ -231,11 +200,8 @@ function placeSticky(a, side) {
     return {"name": a.name, "rows": rows}
 }
 
-// `a` without the sticky key (/apps/parrotfish-keyboard/sticky false):
-// Jolla's rows back. QWERTZ only gets
-// it from placeSticky; QWERTY drops it from the middle row, whose signs
-// become en.qml's (noSticky: caption → [y, y2]); AZERTY keeps a plain '
-// key (stickyStays: French needs it, and fr.qml has one too).
+// `a` without the sticky key: Jolla's rows (noSticky: caption → [y, y2];
+// stickyStays: a plain ' key).
 function withoutSticky(a) {
     var rows = []
     for (var r = 0; r < a.rows.length; ++r) {
@@ -260,12 +226,9 @@ function withoutSticky(a) {
     return {"name": a.name, "rows": rows}
 }
 
-// Language keys (/apps/parrotfish-keyboard/language-keys, since 1.1): three keys whose letters follow the typing language (the
-// layout sets them: a key's `slot` is the index in the language's
-// extra-keys, LANG.language). QWERTZ has them where Jolla's de.qml has
-// ü / ö ä; QWERTY and AZERTY get them at their `slots`. Off: QWERTZ loses
-// those keys, so its letters are wider, and becomes QWERTY's rows with Z
-// and Y swapped; QWERTY and AZERTY are as without the setting.
+// `a` with the language keys (a key's `slot`: its index in the language's
+// extra-keys): QWERTZ's are de.qml's ü / ö ä; QWERTY and AZERTY get them at
+// their `slots`. Without them, QWERTZ is QWERTY with Z and Y swapped.
 function withLanguageKeys(a) {
     if (!a.slots)
         return a
@@ -283,8 +246,7 @@ function withLanguageKeys(a) {
         for (i = 0; i < a.slots.length; ++i)
             if (a.slots[i].row === r)
                 keys.push({"c": "", "s": "", "y": a.slots[i].y, "y2": a.slots[i].y2, "fit": true, "slot": i})
-        // The sticky key stays the outermost key of its row (AZERTY's: after
-        // the language key); the signs keep their places.
+        // The sticky key stays the outermost; the signs keep their places.
         if (sticky !== null) {
             var outer = keys.slice()
             outer.push(outer.splice(sticky, 1)[0])
@@ -325,13 +287,8 @@ function withoutLanguageKeys(name, a) {
     return {"name": a.name, "noSticky": q.noSticky, "rows": rows}
 }
 
-// With the sticky key off, the sticky key's place in the last row gets a
-// language key instead (slot 4: the language's letter for that place, else
-// a plain '), so that the keys keep their places: added where placeSticky
-// would add the sticky key, only if a typing language has a letter for it
-// (`withLetter`; otherwise the row is as without the sticky key), or in
-// place of AZERTY's (with its signs; the apostrophe is then on the symbol
-// page, or back with the sticky key).
+// With the sticky key off, a language key (slot 4) in its place, if a typing
+// language has a letter for it (`withLetter`), so that the keys keep their places.
 function withLanguageKeyInLastRow(a, withLetter) {
     if (!a.stickyStays && (!a.stickyInLastRow || !withLetter))
         return a
@@ -354,13 +311,8 @@ function withLanguageKeyInLastRow(a, withLetter) {
     return {"name": a.name, "rows": rows, "stickyInLastRow": false}
 }
 
-// The language keys on the left (/apps/parrotfish-keyboard/language-keys-side
-// "left"; "right" is the default): each row's language keys move to its
-// start, after a sticky key there (the sticky key stays the outermost), and
-// the letters one place right per key. As with the sticky key, the
-// symbol-view signs stay in place. The number row's language key moves to
-// its start too, the digits with their keys (numbersSplit: the first key of
-// its right half in landscape).
+// The language keys on the `side` of their rows (inside a sticky key there);
+// the symbol-view signs stay in place, the digits move with their keys.
 function placeLanguageKeys(a, side) {
     if (side !== "left")
         return a
@@ -394,10 +346,8 @@ function placeLanguageKeys(a, side) {
     return result
 }
 
-// `keys` in a new order (`moved`), with each place keeping the symbol-view
-// signs it had: the symbol views stay the same whatever the keys' sides.
-// Only for rows where every key has its signs (a key added to the last row
-// has none: there the keys keep theirs).
+// `keys` in a new order (`moved`), each place keeping its symbol-view signs
+// (only if every key has signs).
 function keepSigns(keys, moved) {
     for (var i = 0; i < keys.length; ++i)
         if (keys[i].y === undefined)
@@ -414,9 +364,8 @@ function keepSigns(keys, moved) {
     return result
 }
 
-// The long-press menus of a language key showing `letter`: those of the
-// arrangement's key that has it among its accents (è: E's), as accentMenus
-// gives them for the typing languages' `letters`.
+// The long-press menus for a language key showing `letter`: those of the
+// key that has it among its accents (è: E's).
 function menusOf(a, letter, letters) {
     for (var r = 0; letter !== "" && r < a.rows.length; ++r)
         for (var i = 0; i < a.rows[r].keys.length; ++i) {
@@ -427,13 +376,8 @@ function menusOf(a, letter, letters) {
     return {"a": "", "A": "", "more": "", "moreShifted": ""}
 }
 
-// The arrangement called `name`, or QWERTY. With `numberRow`, it gets a
-// "numbers" row above the letters (withNumberRow). `stickySide` ("right",
-// "left") places the sticky key (placeSticky); `stickyOn` false: none
-// (withoutSticky). `languageKeys`: with or without the language keys, on
-// `languageSide` ("right", "left": placeLanguageKeys); `lastRowLetter`: a
-// typing language has a letter for the sticky key's place
-// (withLanguageKeyInLastRow).
+// The arrangement called `name` (else QWERTY) with the layout's settings;
+// `lastRowLetter`: a typing language has a letter for the sticky key's place.
 function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide, lastRowLetter) {
     var a = arrangements[name] || arrangements["qwerty"]
     if (!arrangements[name])
@@ -447,29 +391,19 @@ function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide, 
     return languageKeys ? placeLanguageKeys(a, languageSide) : a
 }
 
-// In split landscape, where a row's halves split: as many keys on each
-// (`count`: the row's keys, Shift and Backspace included), or one more on
-// the half that has it at the arrangement's `split`, so that no half's
-// keys are narrower than the rest (Jolla's keyboard gives all letter keys
-// the width of the fullest half's). Some keys change halves when the
-// sticky key or the language keys are on the left.
+// Where a row of `count` keys splits in landscape: as many on each half, or
+// one more where the arrangement's `split` has it (Jolla's keyboard gives
+// all letters the fullest half's width).
 function evenSplit(count, split) {
     var low = Math.floor(count / 2), high = Math.ceil(count / 2)
     return Math.abs(high - split) < Math.abs(low - split) ? high : low
 }
 
-// The first row of the second symbol page while the number row is on:
-// superscripts and fractions next to the digits, then the most used
-// maths and typographic signs; an 11th sign for
-// 11-key rows.
+// The second symbol page's first row with the number row (11 for 11-key rows).
 var freeRow = "¹ ² ³ ½ ¼ ¾ ± ≈ – … ≠"
 
-// `a` with a number row: Jolla's digit
-// row of the first symbol page becomes the number row, shown the same in
-// every view. Below it, the first symbol page is the second page's first
-// row (currencies, %, brackets) over the first page's other two rows; the
-// second page is freeRow over the second page's other two rows. Every
-// other sign keeps its page and row.
+// `a` with a number row: the first symbol page's digits, in every view;
+// the second page's first row moves to the first page, freeRow takes its place.
 function withNumberRow(a) {
     var digits = a.rows[0].keys
     var numbers = []
@@ -505,11 +439,8 @@ function withNumberRow(a) {
 var more = "\u22ef"   // ⋯, drawn as ›
 var back = "\u22ee"   // ⋮, drawn as ‹ (with a key's other letters)
 
-// A key's long-press menus, unshifted and shifted (accents `a`, `A` of an
-// arrangement), for the typing languages' `letters`: {a, A, more,
-// moreShifted}. The menu keeps the plain letter, signs (€ on E) and the
-// typing languages' letters, then `more` if the key has other letters:
-// those go to more, moreShifted.
+// A key's long-press menus for the typing languages' `letters`: {a, A,
+// more, moreShifted}; the other letters go behind `more`.
 function accentMenus(a, A, letters) {
     var split = function(accents) {
         var keep = "", rest = ""

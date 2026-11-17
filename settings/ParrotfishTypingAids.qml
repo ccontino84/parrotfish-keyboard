@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Typing aids: the on-off helpers for typing, opened from the Typing page
-// (ParrotfishTyping.qml, which shows how many are on).
+// Typing aids, opened from the Typing page.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 

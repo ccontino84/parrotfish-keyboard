@@ -1,14 +1,8 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// The learned words, opened from Parrotfish's section in Settings → Text
-// input (ParrotfishSettings.qml): the words learned as new and those whose
-// correction was undone, one row each, under the name of their language.
-// Forget one in its language (long press); clear everything learned in one
-// language (pull-down menu, then the language) or in all, each with
-// Sailfish's remorse timer.
-// The keyboard is closed while Settings is open: this page edits
-// learning.db itself and bumps a dconf key for the keyboard to reload.
+// The learned words. The keyboard is closed while Settings is open: this
+// page edits learning.db itself and bumps a dconf key for it to reload.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0

@@ -1,10 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Layout: which keys the keyboard has (the number row, the language keys,
-// the sticky key). Opened from Parrotfish's section in Settings → Text
-// input (ParrotfishSettings.qml), with the keyboard open to try the
-// changes (KeyboardPreview.qml).
+// Layout: which keys the keyboard has.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Parrotfish.Keyboard 1.0
@@ -104,9 +101,7 @@ Page {
                 }
             }
 
-            // Two keys, one choice: language-keys (on, off) and
-            // language-keys-side. The keys (ParrotfishKeyboard.qml) are shown
-            // only if a typing language has such letters.
+            // Two keys, one choice: language-keys (on, off) and language-keys-side.
             ComboBox {
                 readonly property bool on: String(languageKeysConfig.value) === "true"
                 readonly property bool anyLetters: {

@@ -1,10 +1,8 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// The emoji button of split landscape, which has no suggestion bar: a key
-// in the bottom letter row, doing what the handler's button does. It has
-// symView, so that Jolla's KeyboardRow sizes it as a letter, and types
-// nothing.
+// The handler's emoji button as a key, for split landscape (no suggestion
+// bar). symView makes Jolla's KeyboardRow size it as a letter.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0

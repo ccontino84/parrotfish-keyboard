@@ -9,18 +9,15 @@
 #include <QString>
 #include <QStringList>
 
-// Voice input through the helper process (parrotfish-voice, the optional
-// voice package): QML singleton Voice. The helper is started on prepare()
-// or start() and quits by itself when idle. The text and its edits are in
-// VoiceText.
+// Voice input through the helper process (parrotfish-voice): QML singleton
+// Voice. The helper quits by itself when idle; the text is in VoiceText.
 class VoiceInput : public QObject
 {
     Q_OBJECT
     // The helper is installed and the model downloaded (refresh() checks again).
     Q_PROPERTY(bool available READ available NOTIFY availableChanged)
     // "off", "listening", "finishing" (the last phrase is being decoded) or
-    // "paused" (pause(), also when the keyboard is hidden: the text is kept,
-    // start() continues it, stop() finishes it).
+    // "paused" (the text is kept: start() continues, stop() finishes).
     Q_PROPERTY(QString state READ state NOTIFY stateChanged)
     // The model is loaded.
     Q_PROPERTY(bool ready READ ready NOTIFY readyChanged)

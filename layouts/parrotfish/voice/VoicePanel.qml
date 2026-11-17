@@ -1,13 +1,9 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// In place of the layout's rows while voice input listens: the text so far
-// (the part that can still change dimmed), the controls (undo the last
-// change, or delete the selection; pause and continue; done) and the microphone level in a strip at the bottom. Pressing the
-// text pauses the recording; a tap or a drag selects words, and the next
-// phrase replaces them. Touches are read from Jolla's touch area
-// as in ../emoji/EmojiPanel.qml (there are no keys here, so Jolla's keyboard
-// types nothing).
+// Voice input's panel, in place of the layout's rows. Touches are read from
+// Jolla's touch area as in ../emoji/EmojiPanel.qml; with no keys here,
+// Jolla's keyboard types nothing.
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import Parrotfish.Keyboard 1.0
@@ -72,9 +68,8 @@ Item {
         return null
     }
 
-    // The word index at a point: the nearest word on its line; with
-    // `nearest`, also from above or below the lines. -1 for none, or for the
-    // replacement being said.
+    // The word index at a point (with `nearest`, also above or below the
+    // lines); -1 for none or for the replacement being said.
     function _wordAt(point, nearest) {
         var p = flow.mapFromItem(_touchArea, point.x, point.y)
         var best = null, bestRow = -1, bestDx = 0
@@ -132,8 +127,6 @@ Item {
         scroller.stop()
         if (!_dragged && (_anchor < 0 || _tapOnSelected))
             Voice.clearSelection()
-        // Listening again, the next phrase replaces the selection; paused
-        // by the mic, it waits for the mic.
         _endHold()
     }
 
@@ -254,10 +247,7 @@ Item {
         onTextChanged: if (panel._pressed !== "text" && !panel._selected) panel._scroll = 0
     }
 
-    // The words: Voice.words, the open phrase dimmed (in place of the
-    // selection when it replaces it), the selection highlighted, and while
-    // undo is held, what it changes: the words it removes struck through,
-    // then those it puts back highlighted.
+    // The words to show, each with its look (fixed, open, selected, removed, restored).
     readonly property var _items: {
         var words = Voice.words
         var from = Voice.selectionStart, to = Voice.selectionEnd
@@ -367,8 +357,7 @@ Item {
         text: Voice.state === "paused" ? qsTr("Tap the mic to replace") : qsTr("Say the replacement")
     }
 
-    // The level as a line rising from the bottom edge of the screen (below
-    // the layout's corner padding too), filled below.
+    // The level, rising from the screen's bottom edge (below the layout's padding).
     VoiceWave {
         id: wave
         anchors { left: parent.left; right: parent.right; bottom: parent.bottom
@@ -423,9 +412,7 @@ Item {
             width: parent.width / 3
             height: parent.height
 
-            // Behind the button while listening, the level: a lighter
-            // disc that spreads out as the voice gets louder (the room's
-            // noise is the floor, as for the wave).
+            // The level behind the button (the room's noise is the floor).
             Rectangle {
                 anchors.centerIn: parent
                 width: micBackground.width * (1.08 + 0.45 * Math.max(0, (Voice.level - 0.25) / 0.75))
@@ -444,8 +431,7 @@ Item {
                 color: Theme.rgba(Theme.highlightBackgroundColor,
                                   panel._pressed === "mic" ? 2 * Theme.highlightBackgroundOpacity : Theme.highlightBackgroundOpacity)
             }
-            // What a tap does: pause while listening (two bars: the theme's
-            // pause icon is a disc of its own), listen otherwise.
+            // The theme's pause icon is a disc of its own: two bars instead.
             Icon {
                 anchors.centerIn: parent
                 width: Theme.iconSizeLarge

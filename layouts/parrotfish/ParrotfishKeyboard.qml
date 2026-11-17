@@ -1,17 +1,9 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// A Parrotfish layout: one keyboard for any Latin-script typing language;
-// the engine picks the language, this only gives the keys. Each of
-// Jolla's entries (layouts_parrotfish.conf: parrotfish.qml,
-// parrotfish_qwertz.qml...) is this with its `arrangementKey` (qwerty,
-// qwertz, azerty: arrangements.js), so that Jolla's keyboard
-// switches between them. The keys can have subtle backgrounds
-// (KeyBackground.qml, dconf /apps/parrotfish-keyboard/key-fill, key-border). The
-// rows can be shorter than Jolla's (/apps/parrotfish-keyboard/key-height in
-// portrait, key-height-landscape: 80-100 percent).
-// The letter keys' long-press menus show the typing languages' accented
-// letters, the others behind › (parrotfish/LongPressMenu.qml).
+// A Parrotfish layout, for any Latin-script typing language (the engine
+// picks the language). Each of Jolla's entries (layouts_parrotfish.conf) is
+// this with its `arrangementKey` (arrangements.js).
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import com.meego.maliitquick 1.0
@@ -25,17 +17,13 @@ import "voice"
 KeyboardLayout {
     id: parrotfishLayout
 
-    // A row of digits above the letters (/apps/parrotfish-keyboard/number-row),
-    // /apps/parrotfish-keyboard/number-row-height percent as tall as the
-    // other rows (the settings write 100 or 75; default 75: "Smaller", with
-    // smaller digits).
+    // The number row, number-row-height percent as tall as the other rows.
     readonly property bool numberRowOn: numberRowConfig.value === true || numberRowConfig.value === "true"
     readonly property int numberRowPercent: {
         var p = parseInt(numberRowHeightConfig.value)
         return p >= 40 && p <= 100 ? p : 75
     }
-    // The sticky key (/apps/parrotfish-keyboard/sticky: true, the default;
-    // false: Jolla's rows, arrangements.js).
+    // Off: Jolla's rows (arrangements.js).
     readonly property bool stickyOn: stickyOnConfig.value !== false && stickyOnConfig.value !== "false"
     // The keys: set by each entry's file.
     property string arrangementKey: "qwerty"
@@ -44,42 +32,30 @@ KeyboardLayout {
                                                         languageKeysOn, languageKeysSideConfig.value,
                                                         _anyLastRowLetter)
 
-    // Language keys (since 1.1; the Look page's "Language
-    // keys"): three keys whose letters are those of the typing language
-    // (LANG.language's extra-keys), tinted (KeyBackground's groupLook). They follow the language the handler remembers after
-    // each committed word it is sure of (last-language), so they change
-    // only between words; a language without such letters (English) leaves
-    // them as they are. Shown only if a typing language has such letters.
+    // The language keys' language (LANG.language's extra-keys): the one the
+    // handler remembers (last-language), so that they change between words.
     property string groupLanguage: ""
     readonly property string groupLetters: groupLanguage !== "" ? Languages.extraKeys(groupLanguage) : ""
     property bool _anyGroupLanguage: false
     // A typing language has a letter for the sticky key's place (the 5th of
-    // its extra-keys): only then does that place get a language key while
-    // the sticky key is off.
+    // its extra-keys).
     property bool _anyLastRowLetter: false
-    // language-keys: false (the default: they narrow the letters on QWERTY
-    // and AZERTY), true.
     readonly property bool languageKeysOn: String(languageKeysConfig.value) === "true"
                                            && _anyGroupLanguage
-    // Bumped when the keys' letters change without a rebuild, so that the
-    // handler reads the keys again (its quick check only compares places).
+    // Bumped when letters change in place: the handler's check compares places only.
     property int keysRevision: 0
     onGroupLettersChanged: keysRevision++
     // Shown on the spacebar until the engine knows the language.
     readonly property string arrangementName: arrangement.name
 
-    // Key backgrounds (parrotfish/KeyBackground.qml): fill and border are
-    // set separately; the number row's keys look like the others.
+    // Key backgrounds (parrotfish/KeyBackground.qml).
     property string keyFill: keyFillConfig.value
     property string keyBorder: keyBorderConfig.value
-    // The mark on keys with a long-press menu (parrotfish/LongPressHint.qml):
-    // "dot" or "off".
+    // The mark on keys with a long-press menu (parrotfish/LongPressHint.qml).
     readonly property bool longPressHint: longPressHintConfig.value !== "off"
     // The comma's and the period's long-press menus, by typing language.
     readonly property var punctuation: Languages.punctuation(Languages.selected(languagesConfig.value))
-    // The accented letters the letter keys' menus show first (the others
-    // are behind ⋯): the typing languages'. The rows are rebuilt when they
-    // change.
+    // The accented letters the long-press menus show first; a change rebuilds the rows.
     readonly property string accentLetters: Languages.menuLetters(Languages.selected(languagesConfig.value))
 
     // The sign of the sticky key: the one last picked from its long press.
@@ -99,21 +75,16 @@ KeyboardLayout {
         return p >= 82 && p <= 118 ? p : 100
     }
 
-    // The space around each key background, the same across and down: a
-    // share of the row height (/apps/parrotfish-keyboard/key-gap percent,
-    // default 5), so that shorter rows keep most of their background.
-    // Jolla's is fixed (paddingMedium down, paddingSmall across): at 80%
-    // rows it took a third of a row.
+    // The space around each key background, a share of the row height
+    // (Jolla's fixed padding took a third of an 80% row).
     readonly property real _gapShare: {
         var p = parseFloat(keyGapConfig.value)
         return p >= 0 && p <= 20 ? p / 100 : 0.05
     }
     readonly property int keyGap: Math.max(1, Math.round(keyHeight * _gapShare))
 
-    // A sticky key or a language key in the bottom letter row (QWERTZ,
-    // QWERTY with the language keys): Shift and Backspace take
-    // Jolla's narrow width, as on its layouts with more keys there (tr.qml,
-    // uk.qml), so that the letters keep their width.
+    // A sticky or language key in the bottom letter row: Shift and Backspace
+    // take Jolla's narrow width (as in its tr.qml, uk.qml).
     readonly property bool _narrowEnds: {
         var last = arrangement.rows[arrangement.rows.length - 1].keys
         for (var i = 0; i < last.length; ++i)
@@ -122,33 +93,27 @@ KeyboardLayout {
         return false
     }
 
-    // Shift's and Backspace's width. In split landscape, with six keys on a
-    // half of the bottom letter row (the emoji key, and a language key or
-    // the sticky key there), as wide as a letter key of a six-key half, so
-    // that the letters keep their width.
+    // Keys in the bottom letter row: in split landscape, with six on a half,
+    // Shift and Backspace are as wide as a letter.
     property int _row3Count: 0
     function _endWidth() {
         return splitActive && _row3Count >= 11 ? (width - avoidanceWidth) / 12
                                                : _narrowEnds ? shiftKeyWidthNarrow : shiftKeyWidth
     }
 
-    // The emoji panel (emoji/EmojiPanel.qml) instead of the rows; off when
-    // the keyboard closes or Jolla's handler takes over (passwords, numbers).
+    // The emoji panel (emoji/EmojiPanel.qml) instead of the rows.
     property bool emojiView: false
-    // Voice input's panel (voice/VoicePanel.qml) instead of the rows: set by
-    // the handler while it records.
+    // Voice input's panel (voice/VoicePanel.qml) instead of the rows.
     property bool voiceView: false
-    // Voice input is offered: the voice package is installed, the model
-    // downloaded, and /apps/parrotfish-keyboard/voice isn't off.
+    // The voice package and its model are installed, and voice isn't off.
     readonly property bool voiceEnabled: Voice.available && voiceConfig.value !== false && voiceConfig.value !== "false"
     ConfigurationValue {
         id: voiceConfig
         key: "/apps/parrotfish-keyboard/voice"
         defaultValue: true
     }
-    // Automatic capitals (/apps/parrotfish-keyboard/automatic-capitals,
-    // Typing aids): Jolla's keyboard has no switch for them, so while this
-    // layout is in use and they are off, its autocaps is set back to false.
+    // Jolla's keyboard has no switch for automatic capitals: off, its
+    // autocaps is set back to false while this layout is in use.
     readonly property bool automaticCapitals: autocapsConfig.value !== false && autocapsConfig.value !== "false"
     readonly property bool layoutInUse: typeof keyboard !== "undefined" && keyboard.layout === parrotfishLayout
     onAutomaticCapitalsChanged: _updateAutocaps()
@@ -174,14 +139,12 @@ KeyboardLayout {
         }
     }
     readonly property bool _rowsShown: !emojiView && !voiceView
-    // The recent emoji: read when the panel opens, so that they don't move
-    // while it is open.
+    // Read when the panel opens, so that they don't move while it's open.
     property var emojiRecent: []
     onEmojiViewChanged: if (emojiView) emojiRecent = EmojiUtil.recentList(emojiRecentConfig.value)
     function emojiUsed(emoji) {
         emojiRecentConfig.value = EmojiUtil.recentUse(emojiRecentConfig.value, emoji)
     }
-    // Removed from the recent emoji by hand: gone from the panel at once.
     function emojiForget(emoji) {
         emojiRecentConfig.value = EmojiUtil.recentForget(emojiRecentConfig.value, emoji)
         emojiRecent = EmojiUtil.recentList(emojiRecentConfig.value)
@@ -226,10 +189,9 @@ KeyboardLayout {
         _anyLastRowLetter = lastRow
     }
 
-    // The letter of a language key: its place in the language's letters
-    // (0-2 the group, 3 the number row's last key, 4 the sticky key's place;
-    // "-": none, the key types `fallback`). Its long-press menus are those of
-    // the key that has the letter among its accents (è: E's).
+    // The letter of a language key at `slot` of the language's letters (0-2
+    // the group, 3 the number row's last key, 4 the sticky key's place), or
+    // `fallback` for "-".
     function _slotLetter(slot, fallback) {
         var c = groupLetters.charAt(slot)
         return c !== "" && c !== "-" ? c : fallback
@@ -251,18 +213,16 @@ KeyboardLayout {
         key.moreAccents = Qt.binding(function() { return menus().more })
         key.moreAccentsShifted = Qt.binding(function() { return menus().moreShifted })
     }
-    // Jolla's updateSizes() sets keyHeight and then sizes the rows from it:
-    // replacing the value here, as it is set, makes the rows use ours. Its
-    // value only counts as set if it changes: so scale first, then size.
+    // Jolla's updateSizes() sets keyHeight, then sizes the rows from it:
+    // replaced here as it is set, the rows use ours.
     onKeyHeightChanged: _scaleKeyHeight()
     onKeyHeightPercentChanged: {
         _scaleKeyHeight()
         updateSizes()
     }
     onSpaceWidthPercentChanged: updateSizes()
-    // Jolla's keyboard picks the handler again when the field's hints change
-    // (jolla-keyboard.qml: updateInputHandler()), but can read `handler`
-    // before it follows them, and keep the wrong one: pick again.
+    // jolla-keyboard.qml's updateInputHandler() can read `handler` before it
+    // follows the field's hints, and keep the wrong one: pick again.
     onHandlerChanged: {
         if (typeof keyboard !== "undefined" && keyboard.layout === parrotfishLayout
                 && keyboard.allowLayoutChanges && keyboard.inputHandler !== handler
@@ -368,9 +328,8 @@ KeyboardLayout {
         defaultValue: "75"
     }
 
-    // The number row: not one of Jolla's rows (their sizing doesn't fit a
-    // shorter row), so its keys are placed by _placeNumbers(), with the
-    // split gap of the letter rows in landscape.
+    // Not one of Jolla's rows, whose sizing doesn't fit a shorter row: placed
+    // by _placeNumbers().
     readonly property int _numberRowHeight: numberRowOn ? Math.round(keyHeight * numberRowPercent / 100) : 0
 
     Item {
@@ -381,15 +340,14 @@ KeyboardLayout {
         onHeightChanged: parrotfishLayout._placeNumbers()
     }
 
-    // The letter rows are filled by _build(), in order, so that the keys'
-    // order (and the split index) is the arrangement's.
+    // Filled by _build().
     KeyboardRow { id: row1; visible: parrotfishLayout._rowsShown }
     KeyboardRow { id: row2; visible: parrotfishLayout._rowsShown }
     KeyboardRow {
         id: row3
         visible: parrotfishLayout._rowsShown
-        // KeyboardRow's, with Shift's and Backspace's widths set first: a
-        // binding could still have the layout's previous width.
+        // KeyboardRow's, with Shift's and Backspace's widths set first (a
+        // binding could still have the previous width).
         function maximumBasicButtonWidth(shareableWidth) {
             var end = parrotfishLayout._endWidth()
             if (children[0].implicitWidth !== end)
@@ -410,8 +368,6 @@ KeyboardLayout {
 
     BottomRow { visible: parrotfishLayout._rowsShown }
 
-    // As tall as what it replaces: the number row, three letter rows and the
-    // bottom row.
     EmojiPanel {
         visible: parrotfishLayout.emojiView
         keyHeight: parrotfishLayout.keyHeight
@@ -481,9 +437,7 @@ KeyboardLayout {
         LetterKey {}
     }
 
-    // The emoji key of split landscape (emoji/EmojiButtonKey.qml), where there is
-    // no suggestion bar for the handler's emoji button: in the bottom letter
-    // row, at the inner edge of its half with fewer keys.
+    // The emoji key of split landscape, which has no suggestion bar.
     Component {
         id: emojiKeyComponent
         EmojiButtonKey { layout: parrotfishLayout }
@@ -494,9 +448,8 @@ KeyboardLayout {
         BackspaceKey {}
     }
 
-    // A build can be asked for while one is running (creating keys can
-    // change accentLetters while the layout loads): then it runs again
-    // when that one is done, so that no keys are left behind.
+    // Creating keys can change accentLetters, asking for a build during one:
+    // it runs again afterwards.
     property bool _building: false
     property bool _buildAgain: false
     function _build() {
@@ -526,11 +479,9 @@ KeyboardLayout {
             }
             var spec = arrangement.rows[r]
             var keys = []
-            // The split: as many keys on each half (Arrangements.evenSplit).
-            // Row 3 counts Shift and Backspace, and gets the emoji key at the
-            // inner edge of its shorter half; if even, on the language keys'
-            // side, where the other rows have their extra key (right without
-            // them), so that every row's fuller half is on the same side.
+            // The split (Arrangements.evenSplit). Row 3 counts Shift and
+            // Backspace; its emoji key goes to the shorter half, if even to the
+            // language keys' side, so every row's fuller half is on one side.
             var last = rows[r] === row3
             var count = spec.keys.length + (last ? 2 : 0)
             var split = Arrangements.evenSplit(count, spec.split)
@@ -597,10 +548,8 @@ KeyboardLayout {
         _numberKeys = numbers
         _placeNumbers()
         updateSizes()
-        // Shift's and Backspace's widths (_narrowEnds) are bindings that can
-        // update after this updateSizes() has placed the keys (seen when the
-        // language keys are turned off: keys overlapped until the next
-        // resize). Place them again once all bindings have their values.
+        // Shift's and Backspace's widths are bindings that can update after
+        // the keys are placed: place them again once they have.
         _relayoutLater.restart()
     }
 
@@ -610,8 +559,7 @@ KeyboardLayout {
             return
         var gap = avoidanceWidth > 0 ? avoidanceWidth : 0
         var half = arrangement.numbersSplit !== undefined ? arrangement.numbersSplit : Math.floor(n / 2)
-        // Split: each half on its side of the gap, its keys as wide as those
-        // of the fuller half and centred, as Jolla's rows place theirs.
+        // Split: keys as wide as the fuller half's, centred, as Jolla's rows.
         var side = (numberRow.width - gap) / 2
         var w = gap > 0 ? side / Math.max(half, n - half) : numberRow.width / n
         for (var i = 0; i < n; ++i) {
@@ -626,8 +574,7 @@ KeyboardLayout {
         }
     }
 
-    // A row height setting: 80-100 percent (older values from 50 kept),
-    // else `fallback`.
+    // A row height setting (50-100 percent), else `fallback`.
     function _percent(value, fallback) {
         var p = parseInt(value)
         return p >= 50 && p <= 100 ? p : fallback

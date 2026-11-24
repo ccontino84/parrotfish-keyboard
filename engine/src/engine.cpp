@@ -64,7 +64,7 @@ std::u32string Engine::fold(const std::u32string &word) const
     for (char32_t c : word) {
         const char32_t l = utf8::toLower(c);
         auto it = m_base.find(l);
-        out.push_back(it == m_base.end() ? l : it->second);
+        out.push_back(it == m_base.end() ? utf8::latinBase(l) : it->second);
     }
     return out;
 }

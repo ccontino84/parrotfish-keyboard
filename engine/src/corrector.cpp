@@ -56,7 +56,7 @@ Corrector::Corrector(const Dictionary &dict, const KeyModel &keys, CorrectorPara
 char32_t Corrector::baseOf(char32_t ch) const
 {
     auto it = m_baseOf.find(ch);
-    return it == m_baseOf.end() ? ch : it->second;
+    return it == m_baseOf.end() ? utf8::latinBase(ch) : it->second;
 }
 
 struct Corrector::Search

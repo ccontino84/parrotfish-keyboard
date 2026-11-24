@@ -3,6 +3,8 @@
 
 #include "parrotfish/utf8.h"
 
+#include <algorithm>
+
 namespace parrotfish {
 namespace utf8 {
 
@@ -120,6 +122,19 @@ char32_t toUpper(char32_t c)
 bool isUpper(char32_t c)
 {
     return toLower(c) != c;
+}
+
+char32_t latinBase(char32_t c)
+{
+    // Sorted; generated with unicodedata (NFD) from U+00E0-U+017F.
+    static const char32_t accented[] =
+        U"àáâãäåæçèéêëìíîïñòóôõöøùúûüýÿāăąćĉċčďēĕėęěĝğġģĥĩīĭįĵķĺļľńņňōŏőœŕŗřśŝşšţťũūŭůűųŵŷźżž";
+    static const char32_t base[] =
+        U"aaaaaaaceeeeiiiinoooooouuuuyyaaaccccdeeeeegggghiiiijklllnnnoooorrrssssttuuuuuuwyzzz";
+    static_assert(sizeof(accented) == sizeof(base), "one base per letter");
+    const char32_t *end = accented + sizeof(accented) / sizeof(char32_t) - 1;
+    const char32_t *it = std::lower_bound(accented, end, c);
+    return it != end && *it == c ? base[it - accented] : c;
 }
 
 } // namespace utf8

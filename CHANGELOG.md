@@ -5,6 +5,13 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Changelog
 
+## 1.4.0 (unreleased)
+
+### Improved
+
+- **Accented letters of other languages** are corrected too: a typo with
+  à in Dutch text is now fixed like one with the language's own accents.
+
 ## 1.3.0 (2026-11-17)
 
 ### New

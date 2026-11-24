@@ -93,6 +93,10 @@ void testUtf8()
     CHECK(utf8::toLower(U'ß') == U'ß');
     CHECK(utf8::toUpper(U'ß') == U'ß');
     CHECK(utf8::isUpper(U'É'));
+    CHECK(utf8::latinBase(U'ù') == U'u');
+    CHECK(utf8::latinBase(U'ø') == U'o');
+    CHECK(utf8::latinBase(U'ß') == U'ß');
+    CHECK(utf8::latinBase(U'u') == U'u');
 }
 
 void testWords()
@@ -169,6 +173,9 @@ void testCorrections()
     CHECK_EQ(en.first("dont"), "don't");
     CHECK_EQ(en.space("form"), "form");     // valid words are never replaced
     CHECK_EQ(en.space("ot"), "ot");         // Gentle leaves 2-letter input alone
+    // A wrong accent, also one no loaded language has (a language key's).
+    CHECK_EQ(en.first("bùt"), "but");
+    CHECK_EQ(en.first("intø"), "into");
 
     Setup it({"it"});
     CHECK_EQ(it.space("perche"), "perché");

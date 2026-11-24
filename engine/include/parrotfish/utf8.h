@@ -18,5 +18,10 @@ char32_t toLower(char32_t c);
 char32_t toUpper(char32_t c);
 bool isUpper(char32_t c);
 
+// The plain letter of a lowercase Latin letter with an accent (à → a,
+// ø → o), as tools/data/build-dict.py's base_char; else `c`. For letters
+// no loaded dictionary has.
+char32_t latinBase(char32_t c);
+
 } // namespace utf8
 } // namespace parrotfish

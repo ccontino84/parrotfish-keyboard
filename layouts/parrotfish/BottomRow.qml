@@ -6,12 +6,14 @@
 // jolla-keyboard 0.10.4 (Jolla Ltd., BSD-3-Clause). Changes: comma and
 // period with a KeyBackground, a LongPressHint and the typing languages'
 // signs on long press (the comma's too); the layout's gap; the widths set
-// by the layout; the mic glyph.
+// by the layout; the mic glyph; the numpad's 0 and a sign after the
+// spacebar.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
 import Parrotfish.Keyboard 1.0
 import "../.."
+import "arrangements.js" as Arrangements
 
 KeyboardRow {
     id: bottomRow
@@ -35,6 +37,9 @@ KeyboardRow {
     }
 
     readonly property var _punctuation: parent && parent.punctuation !== undefined ? parent.punctuation : null
+    readonly property bool _numpad: !!parent && parent.numpadShown === true
+    readonly property string _numpadBottom: Arrangements.numpad.bottom
+    readonly property bool _voice: !!parent && parent.voiceEnabled === true
 
     // Outside split landscape. Set when the layout sizes the rows: bindings
     // may not have followed the setting or the layout's width yet.
@@ -42,7 +47,9 @@ KeyboardRow {
         var percent = parent && parent.spaceWidthPercent !== undefined ? parent.spaceWidthPercent : 100
         var punctuation = splitActive ? punctuationKeyWidth : width / 10
         var space = (width - 2 * (functionKeyWidth + punctuationKeyWidth)) * percent / 100
-        var end = splitActive ? functionKeyWidth : Math.max(shiftKeyWidth, (width - space) / 2 - punctuation)
+        // The numpad's 0 under its 8: the ends 1.5 keys wide, as 1/2 and Backspace.
+        var end = splitActive ? functionKeyWidth : _numpad ? width / 10 * 1.5
+                                                 : Math.max(shiftKeyWidth, (width - space) / 2 - punctuation)
         if (comma.implicitWidth !== punctuation)
             comma.implicitWidth = punctuation
         if (period.implicitWidth !== punctuation)
@@ -51,6 +58,10 @@ KeyboardRow {
             symbol.implicitWidth = end
         if (enter.implicitWidth !== end)
             enter.implicitWidth = end
+        var keys = [afterSpace1, afterSpace2]
+        for (var i = 0; i < keys.length; ++i)
+            if (keys[i].implicitWidth !== punctuation)
+                keys[i].implicitWidth = punctuation
     }
     // KeyboardRow's, with the widths set first: the layout reads them
     // before it calls relayout().
@@ -89,8 +100,9 @@ KeyboardRow {
         LongPressHint { frame: commaBackground }
     }
     SpacebarKey {
+        id: space
         Icon {
-            visible: !!bottomRow.parent && bottomRow.parent.voiceEnabled === true
+            visible: bottomRow._voice
             anchors { right: parent.right; rightMargin: Theme.paddingLarge; verticalCenter: parent.verticalCenter }
             width: Math.round(parent.height * 0.42)
             height: width
@@ -99,6 +111,23 @@ KeyboardRow {
             source: "image://theme/icon-m-mic"
             opacity: 0.6
         }
+    }
+    // The numpad's bottom keys.
+    LetterKey {
+        id: afterSpace1
+        active: bottomRow._numpad
+        caption: bottomRow._numpadBottom.charAt(0)
+        captionShifted: caption
+        fixedWidth: true
+        pad: caption === "0"
+    }
+    LetterKey {
+        id: afterSpace2
+        active: afterSpace1.active
+        caption: bottomRow._numpadBottom.charAt(1)
+        captionShifted: caption
+        fixedWidth: true
+        pad: caption === "0"
     }
     SpacebarKey {
         active: splitActive

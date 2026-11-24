@@ -13,9 +13,12 @@ Rectangle {
     readonly property Item key: parent
     readonly property Item layout: key && key.parent ? key.parent.parent : null
     property bool functionLook: false
-    // A language key: 0.07 more fill, whatever the key fill.
+    // A language key or a numpad digit: the ambience's highlight at the
+    // layout's accentTint, whatever the key fill.
     property bool groupLook: false
-    readonly property real _groupExtra: groupLook ? 0.07 : 0
+    readonly property color _base: groupLook ? key.palette.highlightBackgroundColor : key.palette.primaryColor
+    readonly property real _fill: !groupLook ? strengths.fill
+                                : layout && layout.accentTint !== undefined ? layout.accentTint : 0.25
     readonly property bool shown: styled || groupLook
     readonly property string fillStyle: functionLook ? "flat" : _setting("keyFill", ["none", "flat", "shaded"], "none")
     readonly property string borderStyle: functionLook ? "none" : _setting("keyBorder", ["none", "line", "raised"], "none")
@@ -25,8 +28,8 @@ Rectangle {
     readonly property int borderWidth: Math.max(1, Math.round(Theme.pixelRatio))
     // Lighter at the top: with light text (dark ambience) more alpha is lighter.
     readonly property real _shadeSign: key.palette.colorScheme === Theme.LightOnDark ? 1 : -1
-    readonly property real _topAlpha: Math.max(0, strengths.fill + _groupExtra + _shadeSign * strengths.shade / 2)
-    readonly property real _bottomAlpha: Math.max(0, strengths.fill + _groupExtra - _shadeSign * strengths.shade / 2)
+    readonly property real _topAlpha: Math.max(0, _fill + _shadeSign * strengths.shade / 2)
+    readonly property real _bottomAlpha: Math.max(0, _fill - _shadeSign * strengths.shade / 2)
     // The rim of "raised" is drawn by a shader; plain border if it fails.
     // Qt 5 can report Error with an empty log for a shader that works.
     readonly property bool _rimShader: raised && !(rim.status === ShaderEffect.Error && rim.log !== "")
@@ -64,15 +67,15 @@ Rectangle {
     }
     radius: geometry.keyRadius
     color: key.pressed ? Theme.rgba(key.palette.highlightBackgroundColor, 0.6)
-                       : Theme.rgba(key.palette.primaryColor, strengths.fill + _groupExtra)
+                       : Theme.rgba(_base, _fill)
     gradient: !key.pressed && strengths.shade !== 0 ? shadeGradient : null
     border.width: !key.pressed && !_rimShader && strengths.border > 0 ? borderWidth : 0
     border.color: Theme.rgba(key.palette.primaryColor, strengths.border)
 
     Gradient {
         id: shadeGradient
-        GradientStop { position: 0; color: Theme.rgba(keyBackground.key.palette.primaryColor, keyBackground._topAlpha) }
-        GradientStop { position: 1; color: Theme.rgba(keyBackground.key.palette.primaryColor, keyBackground._bottomAlpha) }
+        GradientStop { position: 0; color: Theme.rgba(keyBackground._base, keyBackground._topAlpha) }
+        GradientStop { position: 1; color: Theme.rgba(keyBackground._base, keyBackground._bottomAlpha) }
     }
 
     ShaderEffect {

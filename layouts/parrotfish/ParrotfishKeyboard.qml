@@ -17,8 +17,15 @@ import "voice"
 KeyboardLayout {
     id: parrotfishLayout
 
+    // The numpad on the symbol view's first page, instead of the number row.
+    readonly property bool numpadOn: numpadConfig.value === true || numpadConfig.value === "true"
+    // Not in split landscape, which keeps Jolla's page.
+    readonly property bool numpadShown: numpadOn && _rowsShown && !splitActive
+                                        && attributes.inSymView && !attributes.inSymView2
+    // Later: the bottom row's 0 and second spacebar follow it by binding.
+    onNumpadShownChanged: _relayoutLater.restart()
     // The number row, number-row-height percent as tall as the other rows.
-    readonly property bool numberRowOn: numberRowConfig.value === true || numberRowConfig.value === "true"
+    readonly property bool numberRowOn: !numpadOn && (numberRowConfig.value === true || numberRowConfig.value === "true")
     readonly property int numberRowPercent: {
         var p = parseInt(numberRowHeightConfig.value)
         return p >= 40 && p <= 100 ? p : 75
@@ -82,6 +89,11 @@ KeyboardLayout {
         return p >= 0 && p <= 20 ? p / 100 : 0.05
     }
     readonly property int keyGap: Math.max(1, Math.round(keyHeight * _gapShare))
+    // The highlight tint of language keys and numpad digits (no setting page).
+    readonly property real accentTint: {
+        var p = parseFloat(accentTintConfig.value)
+        return p >= 0 && p <= 100 ? p / 100 : 0.25
+    }
 
     // A sticky or language key in the bottom letter row: Shift and Backspace
     // take Jolla's narrow width (as in its tr.qml, uk.qml).
@@ -166,6 +178,7 @@ KeyboardLayout {
     Component.onCompleted: {
         _updateGroupLanguage()
         _build()
+        _buildNumpad()
         if (layoutInUse && !automaticCapitals)
             keyboard.autocaps = false
     }
@@ -287,6 +300,12 @@ KeyboardLayout {
     }
 
     ConfigurationValue {
+        id: accentTintConfig
+        key: "/apps/parrotfish-keyboard/accent-tint"   // percent opacity, 0-100 (default 25)
+        defaultValue: ""
+    }
+
+    ConfigurationValue {
         id: keyGapConfig
         key: "/apps/parrotfish-keyboard/key-gap"   // percent of the row height, 0-10 (default 5)
         defaultValue: ""
@@ -323,6 +342,12 @@ KeyboardLayout {
     }
 
     ConfigurationValue {
+        id: numpadConfig
+        key: "/apps/parrotfish-keyboard/numpad"   // false, true
+        defaultValue: false
+    }
+
+    ConfigurationValue {
         id: numberRowHeightConfig
         key: "/apps/parrotfish-keyboard/number-row-height"   // 100, 75 (any 40-100)
         defaultValue: "75"
@@ -341,11 +366,11 @@ KeyboardLayout {
     }
 
     // Filled by _build().
-    KeyboardRow { id: row1; visible: parrotfishLayout._rowsShown }
-    KeyboardRow { id: row2; visible: parrotfishLayout._rowsShown }
+    KeyboardRow { id: row1; visible: parrotfishLayout._rowsShown && !parrotfishLayout.numpadShown }
+    KeyboardRow { id: row2; visible: parrotfishLayout._rowsShown && !parrotfishLayout.numpadShown }
     KeyboardRow {
         id: row3
-        visible: parrotfishLayout._rowsShown
+        visible: parrotfishLayout._rowsShown && !parrotfishLayout.numpadShown
         // KeyboardRow's, with Shift's and Backspace's widths set first (a
         // binding could still have the previous width).
         function maximumBasicButtonWidth(shareableWidth) {
@@ -363,7 +388,18 @@ KeyboardLayout {
             }
             return _maximumButtonWidthPart(shareableWidth, 0, children.length)
         }
-        ShiftKey {}
+        ShiftKey {
+            Component.onCompleted: parrotfishLayout.useKeyGap(this)
+        }
+    }
+
+    // In place of the three rows while numpadShown; placed by _placeNumpad().
+    Item {
+        id: numpadRows
+        visible: parrotfishLayout.numpadShown
+        height: 3 * parrotfishLayout.keyHeight
+        onWidthChanged: parrotfishLayout._placeNumpad()
+        onHeightChanged: parrotfishLayout._placeNumpad()
     }
 
     BottomRow { visible: parrotfishLayout._rowsShown }
@@ -411,7 +447,10 @@ KeyboardLayout {
     Timer {
         id: _relayoutLater
         interval: 0
-        onTriggered: parrotfishLayout.updateSizes()
+        onTriggered: {
+            parrotfishLayout.updateSizes()
+            parrotfishLayout._placeNumpad()
+        }
     }
 
     ConfigurationValue {
@@ -445,7 +484,98 @@ KeyboardLayout {
 
     Component {
         id: backspaceKeyComponent
-        BackspaceKey {}
+        BackspaceKey {
+            Component.onCompleted: parrotfishLayout.useKeyGap(this)
+        }
+    }
+
+    Component {
+        id: shiftKeyComponent
+        ShiftKey {
+            Component.onCompleted: parrotfishLayout.useKeyGap(this)
+        }
+    }
+
+    // A function key's background (1/2, Backspace) with the layout's gap
+    // instead of Jolla's paddingMedium, as the bottom row's and the letters'.
+    function useKeyGap(key) {
+        for (var j = 0; j < key.children.length; ++j) {
+            var item = key.children[j]
+            if (item.radius !== undefined && item.styled === undefined && item.anchors
+                    && item.anchors.margins === Theme.paddingMedium)
+                item.anchors.margins = Qt.binding(function() { return parrotfishLayout.keyGap })
+        }
+    }
+
+    // The numpad's keys per row: {item, part: "shift", "key" or "backspace"}.
+    property var _numpadKeys: []
+
+    function _buildNumpad() {
+        var spec = Arrangements.numpad
+        var rows = []
+        for (var r = 0; r < spec.rows.length; ++r) {
+            var last = r === spec.rows.length - 1
+            var keys = []
+            if (last)
+                keys.push({"item": shiftKeyComponent.createObject(numpadRows), "part": "shift"})
+            for (var i = 0; i < spec.rows[r].length; ++i) {
+                var c = spec.rows[r].charAt(i)
+                keys.push({"item": letterKeyComponent.createObject(numpadRows, {
+                    "caption": c, "captionShifted": c, "accents": "", "accentsShifted": "",
+                    "pad": c >= "0" && c <= "9", "leftPadding": 0, "rightPadding": 0
+                }), "part": "key"})
+            }
+            if (last)
+                keys.push({"item": backspaceKeyComponent.createObject(numpadRows), "part": "backspace"})
+            rows.push(keys)
+        }
+        _numpadKeys = rows
+        _placeNumpad()
+    }
+
+    // Keys a tenth of the width; rows 1-2 start half a key in, their end
+    // keys padded to the edges (as Jolla's a-l row), so that row 3, between
+    // 1/2 and Backspace 1.5 keys wide, lines up with them.
+    function _placeNumpad() {
+        var width = numpadRows.width
+        if (width <= 0 || _numpadKeys.length === 0)
+            return
+        var w = width / 10
+        for (var r = 0; r < _numpadKeys.length; ++r) {
+            var keys = _numpadKeys[r]
+            var ended = keys[0].part === "shift"
+            for (var i = 0; i < keys.length; ++i) {
+                var k = keys[i], key = k.item
+                var x, kw = w, padLeft = 0, padRight = 0
+                if (k.part === "shift") {
+                    x = 0
+                    kw = 1.5 * w
+                } else if (k.part === "backspace") {
+                    x = width - 1.5 * w
+                    kw = 1.5 * w
+                } else if (ended) {
+                    x = 1.5 * w + (i - 1) * w
+                } else {
+                    x = 0.5 * w + i * w
+                    if (i === 0) {
+                        x = 0
+                        padLeft = 0.5 * w
+                    } else if (i === keys.length - 1) {
+                        padRight = 0.5 * w
+                    }
+                    kw = w + padLeft + padRight
+                }
+                key.x = x
+                key.y = r * keyHeight
+                key.width = kw
+                key.height = keyHeight
+                if (key.symView !== undefined) {
+                    key.leftPadding = padLeft
+                    key.rightPadding = padRight
+                    key.implicitSeparator = i !== keys.length - 1
+                }
+            }
+        }
     }
 
     // Creating keys can change accentLetters, asking for a build during one:

@@ -1096,8 +1096,8 @@ InputHandler {
     // costs 2-3 ms on the phone, so two are checked and all read if either moved.
     function _updateLayout() {
         var layout = keyboard.layout
-        if (!layout)
-            return
+        if (!layout || layout.numpadShown === true)
+            return   // the numpad hides the letter rows: keep their keys
         var started = Date.now()
         if (layout === _probeLayout && _probeFirstAt !== ""
                 && _geometry(_probeFirst, layout) === _probeFirstAt

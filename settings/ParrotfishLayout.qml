@@ -17,6 +17,12 @@ Page {
     }
 
     ConfigurationValue {
+        id: numpadConfig
+        key: "/apps/parrotfish-keyboard/numpad"
+        defaultValue: false
+    }
+
+    ConfigurationValue {
         id: numberRowHeightConfig
         key: "/apps/parrotfish-keyboard/number-row-height"
         defaultValue: "75"
@@ -69,34 +75,46 @@ Page {
                 page: page
             }
 
-            // Two keys, one choice: number-row (on, off) and its height.
+            // Three keys, one choice: number-row (on, off), its height, and
+            // numpad (which turns the number row off).
             ComboBox {
                 id: numberRowBox
 
+                readonly property bool numpad: String(numpadConfig.value) === "true"
                 readonly property bool on: numberRowConfig.value !== false && numberRowConfig.value !== "false"
                 readonly property bool smaller: String(numberRowHeightConfig.value) !== "100"
 
                 width: parent.width
-                label: qsTr("Number row")
-                currentIndex: !on ? 0 : smaller ? 2 : 1
+                label: qsTr("Digits")
+                description: numpad ? qsTr("A keypad behind the ?123 key") : !on ? qsTr("Digits behind the ?123 key") : ""
+                currentIndex: numpad ? 3 : !on ? 0 : smaller ? 2 : 1
                 menu: ContextMenu {
                     MenuItem {
-                        text: qsTr("Off", "number row")
-                        onClicked: numberRowConfig.value = false
+                        text: qsTr("No row")
+                        onClicked: {
+                            numpadConfig.value = false
+                            numberRowConfig.value = false
+                        }
                     }
                     MenuItem {
-                        text: qsTr("Normal", "number row")
+                        text: qsTr("Normal row")
                         onClicked: {
+                            numpadConfig.value = false
                             numberRowHeightConfig.value = "100"
                             numberRowConfig.value = true
                         }
                     }
                     MenuItem {
-                        text: qsTr("Smaller")
+                        text: qsTr("Smaller row")
                         onClicked: {
+                            numpadConfig.value = false
                             numberRowHeightConfig.value = "75"
                             numberRowConfig.value = true
                         }
+                    }
+                    MenuItem {
+                        text: qsTr("Numpad")
+                        onClicked: numpadConfig.value = true
                     }
                 }
             }

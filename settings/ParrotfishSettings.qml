@@ -29,6 +29,12 @@ Column {
     }
 
     ConfigurationValue {
+        id: numpadConfig
+        key: "/apps/parrotfish-keyboard/numpad"
+        defaultValue: false
+    }
+
+    ConfigurationValue {
         id: languageKeysConfig
         key: "/apps/parrotfish-keyboard/language-keys"
         defaultValue: false
@@ -95,7 +101,9 @@ Column {
         label: qsTr("Layout")
         value: {
             var on = []
-            if (numberRowConfig.value !== false && numberRowConfig.value !== "false")
+            if (String(numpadConfig.value) === "true")
+                on.push(qsTr("numpad", "in a list"))
+            else if (numberRowConfig.value !== false && numberRowConfig.value !== "false")
                 on.push(qsTr("number row", "in a list"))
             if (String(languageKeysConfig.value) === "true")
                 on.push(qsTr("language keys", "in a list"))

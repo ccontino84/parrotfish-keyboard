@@ -402,6 +402,12 @@ function evenSplit(count, split) {
 // The second symbol page's first row with the number row (11 for 11-key rows).
 var freeRow = "¹ ² ³ ½ ¼ ¾ ± ≈ – … ≠"
 
+// The symbol view's first page with the numpad: rows 1-2 nine keys (the
+// ends padded to the edges), row 3 seven between 1/2 and Backspace, the
+// digits next to Backspace; `bottom`, after the spacebar, puts 0 under 8.
+// Jolla's signs keep their row where they can.
+var numpad = {"rows": ["()~;:123!", "*#+-=456?", "@&/\\789"], "bottom": "'0"}
+
 // `a` with a number row: the first symbol page's digits, in every view;
 // the second page's first row moves to the first page, freeRow takes its place.
 function withNumberRow(a) {

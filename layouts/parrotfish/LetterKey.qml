@@ -3,7 +3,9 @@
 //
 // Jolla's CharacterKey with a KeyBackground and a LongPressHint.
 // moreAccents(Shifted): the letters behind › (LongPressMenu.qml); numberRow:
-// a key of the number row; group: a language key.
+// a key of the number row; group: a language key; popupAlways: its
+// long press works in the symbol view too (as Jolla's PeriodKey); pad: a
+// numpad digit, with a language key's look.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
@@ -15,6 +17,8 @@ CharacterKey {
     property string moreAccentsShifted
     property bool numberRow: false
     property bool group: false
+    property bool popupAlways: false
+    property bool pad: false
     readonly property bool _small: numberRow && keyBackground.layout !== null
                                    && keyBackground.layout.numberRowPercent < 100
     // The sticky key looks like a function key in the letter view only.
@@ -30,7 +34,7 @@ CharacterKey {
     KeyBackground {
         id: keyBackground
         functionLook: parent.sticky && !parent._symbols
-        groupLook: parent.group && !parent._symbols
+        groupLook: (parent.group && !parent._symbols) || parent.pad
     }
     LongPressHint { frame: keyBackground }
 }

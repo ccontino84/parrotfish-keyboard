@@ -62,10 +62,11 @@ QStringList KeyboardInfo::settingKeys()
 {
     return {QStringLiteral("languages"), QStringLiteral("autocorrect"),
             QStringLiteral("learning"), QStringLiteral("number-row"), QStringLiteral("number-row-height"),
+            QStringLiteral("numpad"),
             QStringLiteral("sticky"), QStringLiteral("sticky-side"), QStringLiteral("swipe"),
             QStringLiteral("language-keys"), QStringLiteral("language-keys-side"),
             QStringLiteral("key-height"), QStringLiteral("key-height-landscape"), QStringLiteral("key-gap"),
-            QStringLiteral("key-fill"), QStringLiteral("key-border"), QStringLiteral("long-press-hint"),
+            QStringLiteral("key-fill"), QStringLiteral("key-border"), QStringLiteral("accent-tint"), QStringLiteral("long-press-hint"),
             QStringLiteral("automatic-capitals"), QStringLiteral("double-space-period"),
             QStringLiteral("space-before-punctuation"), QStringLiteral("replace-emoticons"), QStringLiteral("voice")};
 }

@@ -13,6 +13,9 @@ SPDX-License-Identifier: LGPL-2.1-or-later
   back, underlined, and the suggestions offer replacements; after a space,
   they offer the next word. In Android apps, a picked replacement can
   leave an extra space.
+- **Numpad:** the Layout page's new *Digits* setting offers a numpad on the
+  ?123 page, with 0 under the 8, besides the number row (normal or
+  smaller) or none.
 
 ### Improved
 

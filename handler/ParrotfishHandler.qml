@@ -80,6 +80,11 @@ InputHandler {
     property var _contextBefore: null
     // The word being typed when the keyboard last closed.
     property string _interrupted: ""
+    // A word taken back where the cursor was put ({ word, next }; next: the
+    // character after it, "" if unknown), or null.
+    property var _tappedBack: null
+    // When a key, a pick or a commit of ours last changed the field (ms).
+    property double _ownChangeTime: 0
     // An emoji being deleted ({ rest, before }), or null: apps delete one
     // code point per Backspace event, so the next is sent once one is done.
     property var _emojiDeleting: null
@@ -208,6 +213,7 @@ InputHandler {
     }
 
     onSelect: {
+        _ownChangeTime = Date.now()
         if (showApplicationSuggestions) {
             MInputMethodQuick.sendCommit(text, -MInputMethodQuick.cursorPosition,
                                          MInputMethodQuick.surroundingText.length)
@@ -218,12 +224,14 @@ InputHandler {
     }
 
     onRemove: {
+        _ownChangeTime = Date.now()
         // We're using an unused key modifier flag as a back channel.
         MInputMethodQuick.sendKey(Qt.Key_Delete, 0x80000000, text)
         _awaitingReport = false
     }
 
     onPaste: {
+        inputHandler._ownChangeTime = Date.now()
         inputHandler.commit(inputHandler.preedit)
         MInputMethodQuick.sendCommit(Clipboard.text)
         inputHandler._awaitingReport = false
@@ -251,6 +259,7 @@ InputHandler {
         if (active) {
             _updateLayout()
             _contextChanged("open")
+            takeBackCheck.restart()
         }
     }
 
@@ -271,6 +280,8 @@ InputHandler {
             _setContext(_textBefore(), "deleted")
         }
         _lastPreedit = preedit
+        if (preedit === "")
+            _tappedBack = null
         var keys = _tapKeys.slice(0, preedit.length)
         while (keys.length < preedit.length)
             keys.push("")
@@ -289,12 +300,14 @@ InputHandler {
                 predictionEngine.endText()
             inputHandler._fieldHadText = !empty
             inputHandler._contextChanged("text")
+            takeBackCheck.restart()
             if (inputHandler._emojiDeleting !== null)
                 emojiDeletingCheck.restart()
         }
         onCursorPositionChanged: {
             inputHandler._awaitingReport = false
             inputHandler._contextChanged("cursor")
+            takeBackCheck.restart()
             if (inputHandler._emojiDeleting !== null)
                 emojiDeletingCheck.restart()
         }
@@ -336,7 +349,7 @@ InputHandler {
             return Theme.highlightText(text, combinedText, palette.highlightColor)
         }
 
-        if (preedit !== "" && text === predictionEngine.autocorrection) {
+        if (preedit !== "" && text === predictionEngine.autocorrection && _autocorrects()) {
             // What Space will type: highlighted as a whole.
             return "<b><font color=\"" + palette.highlightColor + "\">" + _escape(text) + "</font></b>"
         }
@@ -386,9 +399,15 @@ InputHandler {
         if (!_checkManual(replacement, true) && picked)
             predictionEngine.logSlips(typed, replacement, "picked")
         predictionEngine.countUse(typed === "" ? "next" : "picked", replacement)
-        replacement = replacement + " "
+        // A word taken back in the text keeps a sign after it (a space is
+        // replaced by the pick's, in commit()).
+        var spaced = _tappedBack === null || _tappedBack.next === "" || _tappedBack.next === " "
+        if (spaced)
+            replacement = replacement + " "
         var before = _textBefore()
         commit(replacement)
+        if (!spaced)
+            return
         _autoSpaced = replacement
         _autoSpacedBefore = before
         _autoSpacedSign = false
@@ -404,6 +423,7 @@ InputHandler {
     }
 
     function handleKeyClick() {
+        _ownChangeTime = Date.now()
         var handled = false
         var correction = _correction
         _correction = null   // Backspace can only undo straight after
@@ -707,6 +727,55 @@ InputHandler {
         return ""
     }
 
+    // The cursor was put right after a word (its letters before the cursor):
+    // the word is taken back as preedit, for the bar's corrections.
+    function _takeBackAtCursor() {
+        if (!active || preedit !== "" || Voice.state !== "off" || _emojiDeleting !== null
+                || Date.now() - _ownChangeTime < 500
+                || !MInputMethodQuick.surroundingTextValid || MInputMethodQuick.hasSelection
+                || (keyboard.layout && keyboard.layout.emojiView === true))
+            return
+        var text = MInputMethodQuick.surroundingText
+        var cursor = MInputMethodQuick.cursorPosition
+        var pos = cursor
+        while (pos > 0 && cursor - pos < 40 && isInputCharacter(text.charAt(pos - 1)))
+            --pos
+        if (pos === cursor || (pos > 0 && isInputCharacter(text.charAt(pos - 1))))
+            return
+        var word = text.substring(pos, cursor)
+        var letters = false
+        for (var i = 0; i < word.length; ++i)
+            letters = letters || predictionEngine.isLetter(word.charAt(i))
+        if (!letters)
+            return
+        _reopened = { "word": word }
+        _interrupted = ""
+        _afterDigit = _isDigit(text.charAt(pos - 1))
+        _contextBefore = text.substring(Math.max(0, pos - 1000), pos)
+        predictionEngine.dropKept(word)   // only if it is the last word committed
+        predictionEngine.log("take back: " + word.length + " letters, field " + text.length + ", cursor " + cursor
+                             + (cursor >= text.length ? ", end unknown" : ""))
+        MInputMethodQuick.sendPreedit(word, undefined, -word.length, word.length)
+        preedit = word
+        _tappedBack = { "word": word, "next": text.charAt(cursor) }
+    }
+
+    // Space autocorrects a word taken back only once changed, and only where
+    // its end is known (a sign after it): else it may be inside a word.
+    function _autocorrects() {
+        return _tappedBack === null
+                || (preedit !== _tappedBack.word && _tappedBack.next !== "" && !isInputCharacter(_tappedBack.next))
+    }
+
+    // Only once the field is quiet: a tap on a word being shown is reported
+    // in steps (its commit, then the new cursor), and a take-back between
+    // them would replace letters at the new cursor.
+    Timer {
+        id: takeBackCheck
+        interval: 400
+        onTriggered: inputHandler._takeBackAtCursor()
+    }
+
     function isInputCharacter(character) {
         return character !== "" && (predictionEngine.isLetter(character) || "\'-".indexOf(character) >= 0)
     }
@@ -732,6 +801,7 @@ InputHandler {
         if (text === "")
             return
         var sent = _voicePrefix + text
+        _ownChangeTime = Date.now()
         MInputMethodQuick.sendCommit(sent)
         _committedContext = (_voiceBefore + sent).slice(-1000)
         _awaitingReport = true
@@ -761,6 +831,8 @@ InputHandler {
     }
 
     function reset() {
+        if (preedit !== "")
+            predictionEngine.log("reset: preedit of " + preedit.length + (_tappedBack !== null ? " taken back" : ""))
         preedit = ""
         _correction = null
         _reopened = null
@@ -775,9 +847,15 @@ InputHandler {
         // Some apps report the word being typed in their text, others don't.
         var base = preedit !== "" ? _wordContext : _currentTextBefore()
         _committedContext = (base + text).slice(-1000)   // as _textBefore()
-        predictionEngine.committed(base, text)   // learned once kept
+        var back = _tappedBack
+        if (back === null || preedit !== back.word || text.substr(0, preedit.length) !== preedit)
+            predictionEngine.committed(base, text)   // learned once kept (not again if taken back unchanged)
         _awaitingReport = true
-        MInputMethodQuick.sendCommit(text)
+        // A word taken back before a space: a space typed after it replaces that one.
+        if (back !== null && preedit !== "" && back.next === " " && text.slice(-1) === " ")
+            MInputMethodQuick.sendCommit(text, 0, 1)
+        else
+            MInputMethodQuick.sendCommit(text)
         _committedDigit = _isDigit(text.slice(-1))
         preedit = ""
         _committing = false
@@ -790,7 +868,8 @@ InputHandler {
     function _commitWord(suffix) {
         predictionEngine.flush()
         var typed = preedit
-        var word = predictionEngine.autocorrection !== "" && !_afterDigit ? predictionEngine.autocorrection : typed
+        var word = predictionEngine.autocorrection !== "" && !_afterDigit && _autocorrects()
+                ? predictionEngine.autocorrection : typed
         // A single letter only at Space: i. (i.e.) and i) (a list) stay.
         if (typed.length === 1 && suffix !== " ")
             word = typed

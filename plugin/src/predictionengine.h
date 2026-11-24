@@ -131,7 +131,8 @@ public:
     // The autocorrection to `corrected` was undone: the word kept is `typed`.
     Q_INVOKABLE void replaceKept(const QString &corrected, const QString &typed);
     // The last word committed is being typed again: not learned as it was.
-    Q_INVOKABLE void dropKept();
+    // Only if the kept word is `word`, when given.
+    Q_INVOKABLE void dropKept(const QString &word = QString());
     // The text ended: saves what was learned. `closed`: the keyboard closed,
     // the time for Learned::maintain.
     Q_INVOKABLE void endText(bool closed = false);

@@ -670,6 +670,69 @@ Item {
             compare(MInputMethodQuick.preedits[0], ["s", undefined, undefined, undefined])
         }
 
+        // The user puts the cursor at `pos` of `text` (no key of ours).
+        function putCursor(text, pos) {
+            field(text)
+            handler.reset()
+            MInputMethodQuick.preedits = []
+            MInputMethodQuick.committedText = ""
+            handler._ownChangeTime = 0
+            MInputMethodQuick.cursorPosition = pos
+            wait(450)
+        }
+
+        function test_takeBackAtCursor() {
+            context("I think ")
+            // Right after a word in the text: taken back with its corrections.
+            putCursor("I think teh cat", 11)
+            compare(handler.preedit, "teh")
+            compare(MInputMethodQuick.preedits[0], ["teh", -3, 3, undefined])
+            compare(bar().split(" ")[0], "the")
+            compare(handler.formatText("the").indexOf("<b>"), -1, "not what Space types")
+            MInputMethodQuick.commits = []
+            compare(type(" "), "teh ", "unchanged: Space leaves it")
+            compare(MInputMethodQuick.commits[0], [0, 1, undefined], "its space replaces the one after it")
+            // A pick: the same.
+            putCursor("I think teh cat", 11)
+            MInputMethodQuick.commits = []
+            handler.applyPrediction("the", 0)
+            compare(MInputMethodQuick.committedText, "the ")
+            compare(MInputMethodQuick.commits[0], [0, 1, undefined])
+            // Before a sign: the pick adds no space.
+            putCursor("I think teh, cat", 11)
+            MInputMethodQuick.commits = []
+            handler.applyPrediction("the", 0)
+            compare(MInputMethodQuick.committedText, "the")
+            compare(MInputMethodQuick.commits[0], [undefined, undefined, undefined])
+            // Changed, with its end known: autocorrected as usual.
+            putCursor("I think tg cat", 10)
+            compare(handler.preedit, "tg")
+            compare(type("e "), "the ")
+            // At the end of the reported text (an Android app: maybe inside
+            // a word): offered, never autocorrected; a pick adds the space.
+            putCursor("I think tg", 10)
+            compare(type("e "), "tge ")
+            putCursor("I think teh", 11)
+            MInputMethodQuick.commits = []
+            handler.applyPrediction("the", 0)
+            compare(MInputMethodQuick.committedText, "the ")
+            compare(MInputMethodQuick.commits[0], [undefined, undefined, undefined], "nothing known after it")
+            // Only the letters before the cursor.
+            putCursor("I think hello", 11)
+            compare(handler.preedit, "hel")
+            // Not after a space, nor right after our own change.
+            putCursor("I think ", 8)
+            compare(handler.preedit, "")
+            handler.reset()
+            field("I think hel")
+            MInputMethodQuick.cursorPosition = 10
+            handler._ownChangeTime = Date.now()
+            MInputMethodQuick.cursorPosition = 11
+            wait(450)
+            compare(handler.preedit, "", "the app reporting our own commit")
+            handler.reset()
+        }
+
         function test_uncertainTap() {
             context("I think that ")
             MInputMethodQuick.committedText = ""

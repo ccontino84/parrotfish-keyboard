@@ -127,9 +127,10 @@ void PredictionEngine::replaceKept(const QString &corrected, const QString &type
         m_kept.word = toU32(typed);
 }
 
-void PredictionEngine::dropKept()
+void PredictionEngine::dropKept(const QString &word)
 {
-    m_kept.valid = false;
+    if (word.isEmpty() || m_kept.word == toU32(word))
+        m_kept.valid = false;
 }
 
 void PredictionEngine::endText(bool closed)

@@ -7,6 +7,13 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 ## 1.4.0 (unreleased)
 
+### New
+
+- **Put the cursor right after a word to correct it:** the word is taken
+  back, underlined, and the suggestions offer replacements; after a space,
+  they offer the next word. In Android apps, a picked replacement can
+  leave an extra space.
+
 ### Improved
 
 - **Accented letters of other languages** are corrected too: a typo with

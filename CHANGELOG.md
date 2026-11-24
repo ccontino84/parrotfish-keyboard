@@ -5,60 +5,41 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 # Changelog
 
-## 1.4.0 (unreleased)
+## 1.4.0 (2026-11-24)
 
 ### New
 
-- **Download languages from the settings.** *Typing languages* lists every
-  language: tap one to download it (2–5 MB; on mobile data, tap twice),
-  switch the ones on the phone on or off, and delete downloaded ones with a
-  long press. Newer dictionaries are listed under *Updates*, with *Update
-  all* in the pull-down menu. The keyboard itself still never connects to
-  the internet: a download you start in the settings is the only network
-  access, and only the files this version lists are accepted, checked by
-  SHA-256. The language packages stay, for installing without a
-  connection; a downloaded language is used instead of the package's.
-  When a layout has no language of its alphabet, or a language needs an
-  update, the suggestion bar says so.
-- **Cyrillic and Greek.** Two new layouts with Jolla's keys, *Auto
-  (ЙЦУКЕН)* for Russian and Ukrainian (experimental) and *Auto
-  (Ελληνικά)* for Greek (experimental), downloadable in the settings or
-  in two new packages, `parrotfish-keyboard-languages-cyrillic` and
-  `parrotfish-keyboard-languages-greek`. Each layout types the languages of
-  its alphabet. With both Russian and Ukrainian, a globe key switches
-  between their keys, and the other language's letters are on long press
-  (ы і, э є, ъ ї, г ґ, е ё). Greek: the final ς and the accents are added as
-  you type, and Jolla's tonos key is there too.
-- **Numpad:** the Layout page's new *Digits* setting offers a numpad on the
-  ?123 page, with 0 under the 8, besides the number row (normal or
-  smaller) or none.
-- **Put the cursor right after a word to correct it:** the word is taken
-  back, underlined, and the suggestions offer replacements; after a space,
-  they offer the next word. In Android apps, a picked replacement can
-  leave an extra space.
+- **Languages from the settings:** *Typing languages* lists every
+  language; tap one to download it (twice on mobile data), and update or
+  delete it there. The keyboard itself still never goes online: these
+  downloads are the only network access, checked by SHA-256. The language
+  packages remain as the other way to install languages.
+- **Cyrillic and Greek:** *Auto (ЙЦУКЕН)* for Russian and Ukrainian
+  (experimental), with a globe key to switch between them, and *Auto
+  (Ελληνικά)* for Greek (experimental). Download them in the settings, or
+  install the new packages `parrotfish-keyboard-languages-cyrillic` and
+  `-greek`.
+- **Numpad** on the ?123 page: *Digits*, on the Layout page.
+- **Correct a word** by putting the cursor right after it. In Android
+  apps, a replacement can leave an extra space.
 
 ### Improved
 
-- **Accented letters of other languages** are corrected too: a typo with
-  à in Dutch text is now fixed like one with the language's own accents.
-- **Voice input is part of the keyboard** (aarch64): the update replaces
-  `parrotfish-keyboard-voice` and keeps the downloaded speech model.
-- Each layout remembers its last language, so French can stay on AZERTY
-  and German on QWERTZ.
-- *Typing languages* is grouped by alphabet. When an alphabet's Parrotfish
-  layouts are all off in Keyboards, its languages are off and greyed out
-  (your choice comes back with the layout); each alphabet keeps one
-  language on.
-- *Look & feel* is now *Appearance*, and *Swipe to switch keyboards* is in
-  *Layout*.
-- *Space before ! ? : ;* applies to French text only, and can be turned
-  on when French is a typing language.
-- The sticky key is for the Latin layouts.
-- Diagnostics list the dictionaries in use and the speech model.
-- The settings are translated into Russian, Ukrainian and Greek too.
+- Typos with other languages' accents (à in Dutch text) are corrected.
+- Voice input is part of the keyboard (aarch64): the update replaces the
+  voice package and keeps the speech model.
+- Each layout remembers its last language.
+- *Typing languages* is grouped by alphabet; an alphabet whose layouts
+  are all off is off too.
+- *Look & feel* is now *Appearance*; *Swipe to switch keyboards* is on
+  the Layout page.
+- *Space before ! ? : ;* applies to French text only; the sticky key is
+  for the Latin layouts.
+- The settings are translated into Russian, Ukrainian and Greek.
 
-The new settings texts were translated without native speakers:
-corrections are welcome.
+The Latin language packages are unchanged apart from the version. The new
+settings texts were translated without native speakers: corrections are
+welcome.
 
 ## 1.3.0 (2026-11-17)
 

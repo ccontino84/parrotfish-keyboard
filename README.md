@@ -84,8 +84,10 @@ the 32-bit build (armv7hl) is untested, reports are welcome.
    download them (2–5 MB each). For voice input, download the speech model
    in *Voice input* (Wi-Fi is better).
 
-**Without a connection,** install the language packages from the same
-release after the keyboard: `parrotfish-keyboard-languages-latin` (Czech,
+**Language packages** are the other way to get the languages: download
+them from the same release and install them after the keyboard, for
+example to set up several phones or one that is rarely online:
+`parrotfish-keyboard-languages-latin` (Czech,
 Dutch, English, French, German, Italian, Polish, Portuguese, Slovenian,
 Spanish), `parrotfish-keyboard-languages-latin-experimental` (Croatian,
 Danish, Finnish, Norwegian, Romanian, Swedish),

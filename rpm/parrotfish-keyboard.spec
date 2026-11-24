@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 Name:       parrotfish-keyboard
-Version:    1.3.0
+Version:    1.4.0
 Release:    1
 Summary:    Better suggestions and autocorrect for the Sailfish OS keyboard
 URL:        https://github.com/ccontino84/parrotfish-keyboard
@@ -76,8 +76,8 @@ AZERTY, ЙЦУКЕН, Greek) to the stock keyboard, with a prediction handler an
 a settings section in Text input; no system files are modified, and Jolla's
 own layouts are left as they are.
 
-The languages are downloaded from the settings, or installed without a
-connection from the language packages by script:
+The languages are downloaded from the settings, or installed from the
+language packages by script:
 parrotfish-keyboard-languages-latin,
 parrotfish-keyboard-languages-latin-experimental,
 parrotfish-keyboard-languages-cyrillic and

@@ -53,6 +53,12 @@ Page {
     }
 
     ConfigurationValue {
+        id: activeLayoutConfig
+        key: "/sailfish/text_input/active_layout"   // Jolla's: the layout in use (parrotfish_jcuken.qml)
+        defaultValue: ""
+    }
+
+    ConfigurationValue {
         id: stickySideConfig
         key: "/apps/parrotfish-keyboard/sticky-side"
         defaultValue: "right"
@@ -157,13 +163,17 @@ Page {
                 }
             }
 
-            // Two keys, one choice: sticky (on, off) and sticky-side.
+            // Two keys, one choice: sticky (on, off) and sticky-side. Not for
+            // the other scripts' layouts, which keep Jolla's keys.
             ComboBox {
                 readonly property bool on: stickyConfig.value !== false && stickyConfig.value !== "false"
+                readonly property bool otherScript: /parrotfish_(jcuken|greek)/.test(String(activeLayoutConfig.value))
 
                 width: parent.width
+                enabled: !otherScript
                 label: qsTr("Sticky key")
-                description: qsTr("Keeps the last sign picked from its long press")
+                description: otherScript ? qsTr("Only for the Latin layouts")
+                                         : qsTr("Keeps the last sign picked from its long press")
                 currentIndex: !on ? 0 : stickySideConfig.value === "left" ? 2 : 1
                 menu: ContextMenu {
                     MenuItem {

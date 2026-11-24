@@ -16,7 +16,7 @@ has a word spelled the same but for accents, ß/ss or Romanian ş/ș, ţ/ț
 (Mendonca, colônia in pt_PT, noştri): such a word is a variant of a known
 one, and changing it is no error. In languages with `no-misspellings` (sv,
 da, nb, fi), å, ä, ö, æ, ø count as letters of their own (förlägen is not
-förlagen). Old spellings (daß, paa, idéia) are in .respellings already.
+förlagen), and so do the letters of `own-letters LETTERS` (Russian й). Old spellings (daß, paa, idéia) are in .respellings already.
 
 Both sources: Common Voice has many names and rare words (Wikipedia
 sentences), but in some languages mostly old literature (Danish: skulde,
@@ -28,9 +28,17 @@ import gzip
 import re
 import unicodedata
 
-OWN_LETTERS = "åäöæø"
-# Letters without a Unicode decomposition, typed as a plain letter.
-BASE_EXTRA = {"ø": "o", "æ": "a", "œ": "o"}
+OWN_LETTERS = "åäöæø"   # with `no-misspellings`
+# Letters without a Unicode decomposition, typed as a plain letter (as
+# build-dict.py).
+BASE_EXTRA = {"ø": "o", "æ": "a", "œ": "o", "ς": "σ"}
+
+
+def own_letters(rules):
+    """The letters of their own of a rules file's lines (split): those of
+    `own-letters`, and OWN_LETTERS with `no-misspellings`."""
+    own = "".join("".join(r[1:]) for r in rules if r[0] == "own-letters").lower()
+    return own + (OWN_LETTERS if any(r[0] == "no-misspellings" for r in rules) else "")
 
 
 def fold(word, keep=""):
@@ -76,7 +84,7 @@ def main():
 
     rules = [l.split() for l in read_list(f"{args.rules_dir}/{args.lang}.rules")]
     floor = max([int(r[1]) for r in rules if r[0] == "min-freq"] or [0])
-    keep = OWN_LETTERS if any(r[0] == "no-misspellings" for r in rules) else ""
+    keep = own_letters(rules)
 
     known = set()
     with gzip.open(args.wordlist, "rt", encoding="utf-8") as fh:

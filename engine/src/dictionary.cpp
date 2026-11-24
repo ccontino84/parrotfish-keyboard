@@ -3,6 +3,7 @@
 
 #include "parrotfish/dictionary.h"
 #include "parrotfish/utf8.h"
+#include "engine-internal.h"
 
 #include <algorithm>
 #include <cmath>
@@ -420,6 +421,9 @@ uint32_t Dictionary::find(const std::u32string &word, std::u32string *stored) co
     // so search all of them and prefer an exact-case match.
     uint32_t best = 0;
     bool bestExact = false;
+    // A word in capitals is also read as Greek writes one (ΚΑΛΑ: καλά, ΟΔΟΣ: οδός).
+    const bool capitals = word.size() >= 2
+                          && std::none_of(word.begin(), word.end(), [](char32_t c) { return utf8::toUpper(c) != c; });
     struct Item { uint32_t node; std::u32string path; bool exact; };
     std::vector<Item> stack{{0, {}, true}};
     while (!stack.empty()) {
@@ -438,10 +442,11 @@ uint32_t Dictionary::find(const std::u32string &word, std::u32string *stored) co
         uint32_t c = firstChild(it.node);
         if (c == 0)
             continue;
-        const uint32_t want = utf8::toLower(word[pos]);
+        const char32_t typed = word[pos];
+        const uint32_t want = utf8::toLower(typed);
         for (;; ++c) {
             const format::AlphabetEntry &l = m_alphabet[m_nodes[c].ch];
-            if (l.lower == want) {
+            if (l.lower == want || (capitals && internal::upperInCapitals(l.lower) == typed)) {
                 Item next{c, it.path, it.exact && l.cp == word[pos]};
                 next.path.push_back(l.cp);
                 stack.push_back(std::move(next));

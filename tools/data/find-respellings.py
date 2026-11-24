@@ -57,16 +57,18 @@ import sys
 import unicodedata
 
 
-def fold(word):
-    """Lowercase, without accents, ß as ss."""
-    s = unicodedata.normalize("NFD", word.lower())
+def fold(word, own=""):
+    """Lowercase, without accents (but on the letters of `own`), ß as ss."""
+    s = "".join(c if c in own else unicodedata.normalize("NFD", c) for c in word.lower())
     s = "".join(c for c in s if unicodedata.category(c) != "Mn")
     return s.replace("ß", "ss")
 
 
-def marks(word):
-    """The number of accents and other marks of a word."""
-    return sum(1 for c in unicodedata.normalize("NFD", word) if unicodedata.category(c) == "Mn") \
+def marks(word, own=""):
+    """The number of accents and other marks of a word (not on the letters
+    of `own`)."""
+    return sum(1 for c in word if c.lower() not in own
+               for m in unicodedata.normalize("NFD", c) if unicodedata.category(m) == "Mn") \
         + word.count("ß")
 
 
@@ -95,8 +97,9 @@ def read_wordlist(path):
 
 def read_rules(path):
     """[(compiled pattern, replacement, flags)] from the `respell` lines,
-    and the `min-freq` floor."""
-    rules, floor, accents = [], 0, []
+    the `min-freq` floor, the `respell-accent` rules and the letters of
+    `own-letters` (letters of their own, not accented ones)."""
+    rules, floor, accents, own = [], 0, [], ""
     for line in read_list(path):
         parts = line.split()
         if parts[0] == "respell-accent":
@@ -109,7 +112,9 @@ def read_rules(path):
             rules.append((re.compile(parts[1]), parts[2], set(parts[3:])))
         elif parts[0] == "min-freq":
             floor = int(parts[1])
-    return rules, floor, accents
+        elif parts[0] == "own-letters":
+            own += "".join(parts[1:]).lower()
+    return rules, floor, accents, own
 
 
 def respell(rules, word, in_list, both):
@@ -140,7 +145,7 @@ def main():
     ap.add_argument("-v", "--verbose", action="store_true", help="print the candidates left out")
     args = ap.parse_args()
 
-    rules, floor, accents = read_rules(f"{args.rules_dir}/{args.lang}.rules")
+    rules, floor, accents, own = read_rules(f"{args.rules_dir}/{args.lang}.rules")
     words, missp = read_wordlist(args.wordlist)
     words = {w: f for w, f in words.items() if f >= floor}
     missp |= {l.split("\t")[0] for l in read_list(f"{args.rules_dir}/{args.lang}.manual-misspellings")}
@@ -159,7 +164,7 @@ def main():
 
     folded = {}
     for w in words:
-        folded.setdefault(fold(w), set()).add(w)
+        folded.setdefault(fold(w, own), set()).add(w)
 
     found, skipped = {}, {"evidence": 0, "keep": 0, "no-current": 0, "variant": 0}
     # Words of the list, then words of the corpus the list lacks (in the
@@ -197,8 +202,8 @@ def main():
                 continue
             new = current
         top = max(words.get(old, 0), words.get(new, 0))
-        if not both and any(w not in (old, new) and words[w] >= top and marks(w) > marks(new)
-                            for w in folded.get(fold(new), ())):
+        if not both and any(w not in (old, new) and words[w] >= top and marks(w, own) > marks(new, own)
+                            for w in folded.get(fold(new, own), ())):
             # A commoner word of the list is spelled so with more accents:
             # the old form is a misspelling of that (algúem, heróina: alguém,
             # heroína; not alguem, heroina). Fewer accents is another word
@@ -224,15 +229,15 @@ def main():
     # respell-accent: list words without accents, the corpus's accented form.
     by_fold = {}
     for k, (c, cased) in counts.items():
-        by_fold.setdefault(fold(k), []).append((c, cased))
+        by_fold.setdefault(fold(k, own), []).append((c, cased))
     for w in words:
-        if w in found or w in missp or marks(w) or not accents:
+        if w in found or w in missp or marks(w, own) or not accents:
             continue
         for suffix_re, accented_re in accents:
             # Any split into a stem that is a word and a suffix.
             if not any(w[:i] in words and suffix_re.fullmatch(w[i:]) for i in range(2, len(w) - 1)):
                 continue
-            forms = [(c, f) for c, f in by_fold.get(fold(w), ()) if f != w and accented_re.search(f)]
+            forms = [(c, f) for c, f in by_fold.get(fold(w, own), ()) if f != w and accented_re.search(f)]
             if not forms:
                 continue
             cn, new = max(forms)

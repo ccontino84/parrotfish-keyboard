@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# A tiny Russian list in the AOSP format for engine-test (tests/CMakeLists.txt),
+# built as ru (with ru.rules) and as xx (no rules).
+dictionary=main:ru,locale=ru,description=test,date=0,version=1
+ word=и,f=220
+ word=не,f=215
+ word=мой,f=200
+ word=свой,f=190
+ word=свои,f=185
+ word=ещё,f=180
+ word=ёлка,f=120

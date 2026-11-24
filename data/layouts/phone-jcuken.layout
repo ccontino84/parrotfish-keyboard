@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# Parrotfish's ЙЦУКЕН keys (Jolla's ru.qml rows) by the QWERTY phone
+# geometry: twelve keys across, so keys are 5/6 as wide and rows 2.0 key
+# widths apart; the sticky key (') in the bottom row after ?123.
+pitch 2.0
+0    1 йцукенгшщзхъ
+0.5  1 фывапролджэ
+1.5  1 ячсмитьбю
+2.38 1.2 '

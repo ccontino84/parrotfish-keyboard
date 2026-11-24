@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Experimental</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latin</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Chirilic</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Grec</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Dezactivată</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Doar pentru aranjamentele latine</translation>
     </message>
 </context>
 <context>
@@ -470,8 +486,12 @@
         <translation>Două spații după un cuvânt scriu un punct</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Păstrează spațiul după o sugestie aleasă, ca în franceză</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>În textul francez, păstrează spațiul după o sugestie aleasă</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Doar cu franceza printre limbile de tastare</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

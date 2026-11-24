@@ -63,7 +63,8 @@ constexpr uint32_t LinkLastSibling = 1u << 31;
 struct AlphabetEntry {
     uint32_t cp;            // the character as stored
     uint32_t lower;         // lowercase form
-    uint32_t base;          // lowercase without accents (é → e, ø → o, æ → a, œ → o; ß stays ß)
+    uint32_t base;          // lowercase without accents (é → e, ø → o, æ → a, œ → o, ς → σ; ß and
+                            // the letters of `own-letters` in LANG.rules stay)
 };
 
 enum AttrFlag : uint32_t {

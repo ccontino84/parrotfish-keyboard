@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Experimentální</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latinka</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Cyrilice</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Řecké písmo</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Vypnuto</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Jen pro latinková rozložení</translation>
     </message>
 </context>
 <context>
@@ -470,8 +486,12 @@
         <translation>Dvě mezery za slovem napíšou tečku</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Ponechá mezeru po vybraném návrhu, jako ve francouzštině</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>V francouzském textu ponechá mezeru po vybraném návrhu</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Jen s francouzštinou mezi jazyky psaní</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

@@ -301,30 +301,32 @@ void PredictionEngine::setLanguages(const QString &languages)
     setContext(m_context);
 }
 
+void PredictionEngine::setScript(const QString &script)
+{
+    flush();
+    if (script == m_script)
+        return;
+    m_script = script;
+    emit scriptChanged();
+    loadLanguages();
+    m_contextValid = false;
+    setContext(m_context);
+}
+
 void PredictionEngine::loadLanguages()
 {
     auto dict = [this](const QString &code) {
         return m_dataDir + QLatin1Char('/') + code + QStringLiteral(".pfd");
     };
-    QStringList codes = m_languages.split(QLatin1Char(' '));
-    codes.removeAll(QString());
-    if (codes.isEmpty())
-        codes = Languages::instance().defaultLanguages();   // the system language's, else English
+    // Known, installed codes in the layout's script, else its default.
+    const QStringList codes = Languages::instance().selected(m_languages, m_script);
     m_engine.clearLanguages();
     m_results.clear();
     for (const QString &code : codes) {
-        if (!QFile::exists(dict(code)))
-            continue;
         std::string error;
         if (!m_engine.addLanguage(dict(code).toStdString(), &error))
             qWarning("parrotfish: %s", error.c_str());
     }
-    if (m_engine.languageCount() == 0)   // none of the codes installed
-        for (const QString &code : Languages::instance().defaultLanguages()) {
-            std::string error;
-            if (!m_engine.addLanguage(dict(code).toStdString(), &error))
-                qWarning("parrotfish: %s", error.c_str());
-        }
     if (m_debug)
         qInfo("parrotfish: %d typing languages", static_cast<int>(m_engine.languageCount()));
 }

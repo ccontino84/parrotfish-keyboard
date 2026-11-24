@@ -40,7 +40,9 @@ What it adds to Jolla's keyboard:
 - **Typing aids,** each one on or off: automatic capitals, a period on
   double space, a space before ! ? : ; (as in French), and emoticons
   replaced by their emoji.
-- **Three arrangements:** QWERTY, QWERTZ and AZERTY, for any language.
+- **Five arrangements:** QWERTY, QWERTZ and AZERTY for any Latin-script
+  language, ЙЦУКЕН for Russian and Ukrainian (Jolla's keys for each: they
+  change with the language you type), and Greek.
   Optional language keys put the most used accented letters of the
   language you are typing on keys of their own (å ö ä for Swedish, ł ę ż
   for Polish), and change with it. A dot marks the keys with more characters; a long press
@@ -53,9 +55,10 @@ What it adds to Jolla's keyboard:
 Languages: Czech, Dutch, English, French, German, Italian, Polish,
 Portuguese (Brazil and Portugal), Slovenian, Spanish. Experimental:
 Croatian, Danish, Finnish, Norwegian Bokmål, Romanian, Swedish, in a
-separate package. There is too little public text
+separate package. In their own packages: Russian, and experimental
+Ukrainian (Cyrillic), and experimental Greek. There is too little public text
 to build and test these as well as the others; feedback from native speakers
-is welcome. The settings are translated into all of them.
+is welcome. The settings are translated into all the Latin-script ones.
 
 **Status:** 1.3. Tested on Sailfish OS 5.2 (aarch64);
 the 32-bit build (armv7hl) is untested, reports are welcome.
@@ -72,14 +75,18 @@ the 32-bit build (armv7hl) is untested, reports are welcome.
      Spanish;
    - for Croatian, Danish, Finnish, Norwegian, Romanian or Swedish, also
      `parrotfish-keyboard-languages-latin-experimental-<version>.noarch`;
+   - for Russian or Ukrainian,
+     `parrotfish-keyboard-languages-cyrillic-<version>.noarch`; for Greek,
+     `parrotfish-keyboard-languages-greek-<version>.noarch`;
    - for voice input, also `parrotfish-keyboard-voice-<version>.aarch64`.
 2. In **Settings > Untrusted software**, turn on *Allow untrusted software*.
 3. Open the downloaded files (from the browser's downloads or the Files app)
    and install them, `parrotfish-keyboard` first. The keyboard restarts by
    itself. Without a language package it types without suggestions.
 4. In **Settings > Text input > Keyboards**, turn on the Parrotfish layout
-   for your arrangement, for example *Auto (QWERTY)*. The *Auto* layouts are
-   at the top of the list. Switch to it as to any other keyboard: long-press
+   for your arrangement, for example *Auto (QWERTY)*, and *Auto (ЙЦУКЕН)* or
+   *Auto (Ελληνικά)* for Cyrillic or Greek. The *Auto* layouts are at the
+   top of the list. Each one types the languages of its alphabet. Switch to it as to any other keyboard: long-press
    the spacebar, or swipe.
 5. Its settings are under **Settings > Text input**, in the Parrotfish
    section. Start with *Typing languages*. With the voice package, download
@@ -106,6 +113,7 @@ From a terminal (Developer mode):
 ```sh
 devel-su pkcon remove parrotfish-keyboard-voice                          # if installed
 devel-su pkcon remove parrotfish-keyboard-languages-latin-experimental   # if installed
+devel-su pkcon remove parrotfish-keyboard-languages-cyrillic parrotfish-keyboard-languages-greek   # if installed
 devel-su pkcon remove parrotfish-keyboard-languages-latin parrotfish-keyboard
 ```
 

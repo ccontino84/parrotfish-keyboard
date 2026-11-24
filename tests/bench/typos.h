@@ -68,7 +68,8 @@ inline std::u32string lower(std::u32string s)
 
 inline bool isLetter(char32_t c)
 {
-    return parrotfish::utf8::toLower(c) != parrotfish::utf8::toUpper(c) || c == U'ß';
+    return parrotfish::utf8::toLower(c) != parrotfish::utf8::toUpper(c) || c == U'ß'
+        || c == 0x390 || c == 0x3B0;   // ΐ ΰ: no capitals
 }
 
 // The words of a line as the benches type them: parrotfish::words() (letters

@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Kokeellinen</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latinalainen</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Kyrillinen</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Kreikkalainen</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Pois</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Vain latinalaisille asetteluille</translation>
     </message>
 </context>
 <context>
@@ -469,8 +485,12 @@
         <translation>Kaksi välilyöntiä sanan jälkeen lisää pisteen</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Säilyttää välilyönnin valitun ehdotuksen jälkeen, kuten ranskassa</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>Säilyttää ranskankielisessä tekstissä välilyönnin valitun ehdotuksen jälkeen</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Vain kun ranska on kirjoituskielenä</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

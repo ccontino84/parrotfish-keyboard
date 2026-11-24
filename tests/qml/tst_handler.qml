@@ -242,18 +242,22 @@ Item {
             context("I think it is ")
             compare(pickThen("good", "?"), ["? ", true], "default: the space goes")
             compare(pickThen("good", ":"), [": ", true])
-            var values = { "/apps/parrotfish-keyboard/languages": "en",
+            var values = { "/apps/parrotfish-keyboard/languages": "fr en",
                            "/apps/parrotfish-keyboard/autocorrect": "normal" }
             values[key] = true
             Dconf.values = values
-            compare(pickThen("good", "?"), ["? ", false], "on: kept, whatever the language")
-            compare(pickThen("good", "!"), ["! ", false])
-            compare(pickThen("good", ":"), [": ", false])
-            compare(pickThen("good", ";"), ["; ", false])
-            compare(pickThen("good", ","), [", ", true], "never before a comma")
-            compare(pickThen("good", "."), [". ", true])
+            context("Je pense que c'est ")
+            compare(pickThen("bien", "?"), ["? ", false], "on: kept in French text")
+            compare(pickThen("bien", "!"), ["! ", false])
+            compare(pickThen("bien", ":"), [": ", false])
+            compare(pickThen("bien", ";"), ["; ", false])
+            compare(pickThen("bien", ","), [", ", true], "never before a comma")
+            compare(pickThen("bien", "."), [". ", true])
+            context("I think it is really ")
+            compare(pickThen("good", "?"), ["? ", true], "on: not in English text")
             values[key] = "true"   // as dconf may hand it back
             Dconf.values = values
+            context("Je pense que c'est ")
             compare(pickThen("bien", "?"), ["? ", false])
             Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
                              "/apps/parrotfish-keyboard/autocorrect": "normal" }
@@ -276,15 +280,15 @@ Item {
             handler.applyPrediction("good", 0)
             type("?!")
             compare(handler._currentTextBefore(), "Really good?! ")
-            var values = { "/apps/parrotfish-keyboard/languages": "en",
+            var values = { "/apps/parrotfish-keyboard/languages": "fr en",
                            "/apps/parrotfish-keyboard/autocorrect": "normal",
                            "/apps/parrotfish-keyboard/space-before-punctuation": true }
             Dconf.values = values
-            context("Vraiment ")
+            context("Je le trouve vraiment ")
             handler._awaitingReport = false
             handler.applyPrediction("bien", 0)
             type("?!")
-            compare(handler._currentTextBefore(), "Vraiment bien ?! ")
+            compare(handler._currentTextBefore(), "Je le trouve vraiment bien ?! ")
             Dconf.values = { "/apps/parrotfish-keyboard/languages": "en",
                              "/apps/parrotfish-keyboard/autocorrect": "normal" }
         }
@@ -617,6 +621,38 @@ Item {
             compare(type("i."), "i.", "i. as in i.e.")
             context("Yesterday after work ")
             compare(type("i)"), "i)")
+        }
+
+        // A layout types the languages of its script only; the defaults
+        // follow the system language within each script.
+        function test_scripts() {
+            compare(Languages.script("ru"), "Cyrl")
+            compare(Languages.script("el"), "Grek")
+            compare(Languages.script("en"), "Latn")
+            compare(Languages.selected("en ru el", "Cyrl").join(" "), "ru")
+            compare(Languages.selected("en ru el").join(" "), "en")
+            compare(Languages.selectedAll("en ru el").join(" "), "en el ru")   // by name: English, Ελληνικά, Русский
+            Languages.setSystemLocale("ru_RU")
+            compare(Languages.selected("", "Cyrl").join(" "), "ru", "the system language in its script")
+            compare(Languages.selected("", "Latn").join(" "), "en", "else the fallback")
+            compare(Languages.selected("", "Grek").join(" "), "", "no Greek default")
+            Languages.setSystemLocale("en_GB")
+            compare(Languages.selected("", "Cyrl").join(" "), "")
+
+            var e = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; PredictionEngine { languages: "en ru el" }', root)
+            e.setContext("Я думаю, что ")
+            compare(e.leadingLanguage, "en", "Latin layout: only en loaded")
+            e.script = "Cyrl"
+            e.setContext("Я думаю, что ")
+            compare(e.leadingLanguage, "ru")
+            e.script = "Grek"
+            e.setContext("Νομίζω ότι ")
+            compare(e.leadingLanguage, "el")
+            e.preedit = "καλα"
+            e.flush()
+            compare(e.autocorrection, "καλά")
+            e.preedit = ""
+            e.destroy()
         }
 
         // Types `before`, closes the keyboard (the word is committed as it

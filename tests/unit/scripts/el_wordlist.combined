@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# A tiny Greek list in the AOSP format for engine-test (tests/CMakeLists.txt).
+# καὶ and τῶν (polytonic) and οδόs (a Latin s) are left out by `letters`.
+dictionary=main:el,locale=el,description=test,date=0,version=1
+ word=και,f=215
+ word=της,f=209
+ word=τους,f=200
+ word=καλά,f=180
+ word=καλή,f=170
+ word=άλλος,f=170
+ word=κόσμος,f=165
+ word=οδός,f=150
+ word=πρωτεΐνη,f=120
+ word=καὶ,f=210
+ word=τῶν,f=205
+ word=οδόs,f=150

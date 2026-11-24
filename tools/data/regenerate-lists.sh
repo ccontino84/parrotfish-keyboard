@@ -18,15 +18,17 @@ shift
 cd "$(dirname "$0")/../.."
 mkdir -p "$C" build/data
 
-ALL="en it de es fr pt_BR pt_PT nl sv da nb ro fi pl cs sl hr"
+ALL="en it de es fr pt_BR pt_PT nl sv da nb ro fi pl cs sl hr ru uk el"
 
 # The corpus language of a dictionary: both Portuguese lists share one.
 src() { case $1 in pt_*) echo pt ;; *) echo $1 ;; esac; }
 cvdir() { case $1 in sv) echo sv-SE ;; nb) echo nb-NO ;; *) src $1 ;; esac; }
-# The wordlist of a language (data/CMakeLists.txt): AOSP's, or sl's from Sloleks.
+# The wordlist of a language (data/CMakeLists.txt): AOSP's, sl's from
+# Sloleks, uk's from Leipzig counts.
 aosp() {
     case $1 in
         en) echo data/aosp/en_US_wordlist.combined.gz ;; sl) echo data/sloleks/sl_wordlist.combined.gz ;;
+        uk) echo data/leipzig/uk_wordlist.combined.gz ;;
         *) echo data/aosp/$1_wordlist.combined.gz ;;
     esac
 }
@@ -35,6 +37,7 @@ tatoeba() {
         en) echo eng ;; it) echo ita ;; de) echo deu ;; es) echo spa ;; fr) echo fra ;; pt) echo por ;;
         nl) echo nld ;; sv) echo swe ;; da) echo dan ;; nb) echo nob ;; ro) echo ron ;; fi) echo fin ;;
         pl) echo pol ;; cs) echo ces ;; sl) echo slv ;; hr) echo hrv ;;
+        ru) echo rus ;; uk) echo ukr ;; el) echo ell ;;
     esac
 }
 # Common Voice files that are not running text: lists of foreign phrases,

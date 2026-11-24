@@ -52,7 +52,8 @@ std::u32string lower(std::u32string s)
 
 bool isLetter(char32_t c)
 {
-    return utf8::toLower(c) != utf8::toUpper(c) || c == U'ß';
+    return utf8::toLower(c) != utf8::toUpper(c) || c == U'ß'
+        || c == 0x390 || c == 0x3B0;   // ΐ ΰ: no capitals
 }
 
 // Accent-stripped form via the dictionary's alphabet table (ß → ss).

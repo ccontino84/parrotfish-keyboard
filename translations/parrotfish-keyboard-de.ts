@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Experimentell</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Lateinisch</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Kyrillisch</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Griechisch</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Aus</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Nur für die lateinischen Layouts</translation>
     </message>
 </context>
 <context>
@@ -469,8 +485,12 @@
         <translation>Zweimal Leertaste nach einem Wort setzt einen Punkt</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Behält das Leerzeichen nach einem gewählten Vorschlag, wie im Französischen</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>Behält in französischem Text das Leerzeichen nach einem gewählten Vorschlag</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Nur mit Französisch als Eingabesprache</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

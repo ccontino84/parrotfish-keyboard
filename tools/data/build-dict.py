@@ -6,6 +6,13 @@
 Usage: build-dict.py LANG WORDLIST.combined.gz RULES_DIR OUT.pfd [--pairs PAIRS.tsv.gz]
                      [--letter-order N] [--letter-min-count N]
 
+Settings in RULES_DIR/LANG.rules read here besides the spelling rules:
+`own-letters LETTERS` (letters of their own, never an accented form of
+another: Russian й is not и with an accent, so свой and свои are two
+words; their base letter is themselves) and `letters LETTERS` (the
+lowercase letters a word may have besides ' and -: words with any other
+letter are left out, such as Greek polytonic forms).
+
 The output is a little-endian binary file that the engine memory-maps.
 The layout is documented in engine/include/parrotfish/dictformat.h; keep
 both in sync (FORMAT_VERSION).
@@ -58,20 +65,25 @@ LETTER_ORDER = 4        # 3 letters of context (5: no better, three times the si
 LETTER_MIN_COUNT = 2
 
 
-def fold(word):
-    """Lowercase, strip combining marks, ß→ss: the key for accent pairs."""
-    s = unicodedata.normalize("NFD", word.lower())
+def fold(word, own=""):
+    """Lowercase, strip combining marks, ß→ss: the key for accent pairs.
+    The letters in `own` (lowercase) keep their marks."""
+    s = "".join(c if c in own else unicodedata.normalize("NFD", c) for c in word.lower())
     s = "".join(c for c in s if unicodedata.category(c) != "Mn")
     return s.replace("ß", "ss")
 
 
 # Letters with no Unicode decomposition that are typed as a plain letter
-# when the keyboard lacks them (Danish/Norwegian ø, æ; French œ).
-BASE_EXTRA = {"ø": "o", "æ": "a", "œ": "o"}
+# when the keyboard lacks them (Danish/Norwegian ø, æ; French œ); a Greek
+# final sigma typed inside a word is a slip for σ.
+BASE_EXTRA = {"ø": "o", "æ": "a", "œ": "o", "ς": "σ"}
 
 
-def base_char(c):
-    """Lowercase base letter of one character, for accent-free matching."""
+def base_char(c, own=""):
+    """Lowercase base letter of one character, for accent-free matching.
+    The letters in `own` (lowercase) are their own base."""
+    if c.lower() in own:
+        return c.lower()
     if c.lower() in BASE_EXTRA:
         return BASE_EXTRA[c.lower()]
     d = unicodedata.normalize("NFD", c.lower())
@@ -80,10 +92,12 @@ def base_char(c):
 
 
 def parse_aosp(path):
-    """Return {word: entry}; entry = dict(f, attrs, target)."""
+    """Return {word: entry}; entry = dict(f, attrs, target). The list may
+    be gzipped (.gz) or plain."""
     words = {}
     last = None
-    with gzip.open(path, "rt", encoding="utf-8") as fh:
+    opener = gzip.open if path.endswith(".gz") else open
+    with opener(path, "rt", encoding="utf-8") as fh:
         for line in fh:
             if line.startswith(" word="):
                 fields = dict(kv.split("=", 1) for kv in line.strip().split(","))
@@ -124,15 +138,18 @@ def read_list(path):
         return []
 
 
-def add_supplement(words, path):
-    """Add RULES_DIR/LANG.supplement (from find-supplement.py)."""
-    added = 0
+def add_supplement(words, path, letters=None):
+    """Add RULES_DIR/LANG.supplement (from find-supplement.py), only words
+    of `letters` if given. Returns (added, left out for their letters)."""
+    added = foreign = 0
     for line in read_list(path):
         w, f = line.split("\t")[:2]
-        if w not in words:
+        if letters is not None and not of_letters(w, letters):
+            foreign += 1
+        elif w not in words:
             words[w] = {"f": int(f), "attrs": 0, "target": None}
             added += 1
-    return added
+    return added, foreign
 
 
 def apply_respellings(words, path):
@@ -232,7 +249,7 @@ def read_rules(path):
         parts = line.split()
         if parts[0] in ("paradigm", "paradigm-plain", "only-marks", "no-misspellings",
                         "capitalised-nouns", "min-freq", "one-source", "supplement-min-total", "suffix", "compound",
-                        "final-apostrophe", "respell", "respell-accent"):
+                        "final-apostrophe", "respell", "respell-accent", "own-letters", "letters", "both-spellings"):
             continue   # settings for the generators (min-freq; suffix, compound, capitalised-nouns: also main())
         flags = RULE_FINAL if "final" in parts[2:] else 0
         if not 1 <= len(parts[0]) <= 3 or len(parts[1]) != 1:
@@ -246,6 +263,21 @@ def word_parts(path):
     file, for the engine (dictformat.h: Header::wordParts), or "" if none."""
     return "\n".join(" ".join(line.split()) for line in read_list(path)
                      if line.split()[0] in ("suffix", "compound", "capitalised-nouns"))
+
+
+def letters_setting(path, name):
+    """The letters of a `NAME LETTERS...` setting of a rules file, in
+    lowercase, or None if it has none."""
+    for line in read_list(path):
+        parts = line.split()
+        if parts[0] == name:
+            return "".join(parts[1:]).lower()
+    return None
+
+
+def of_letters(word, letters):
+    """Whether every letter of `word` (in lowercase) is in `letters`."""
+    return all(c.lower() in letters for c in word if c.isalpha())
 
 
 def min_freq(path):
@@ -309,7 +341,7 @@ def read_pairs(path, words, order):
     return rows, trust
 
 
-def letter_model(words, order, min_count):
+def letter_model(words, order, min_count, own=""):
     """The letter-pattern model of the language (dictformat.h: LetterModel).
 
     A character n-gram over the word list's distinct words, lowercase and
@@ -327,7 +359,7 @@ def letter_model(words, order, min_count):
     for w, e in words.items():
         if e["attrs"] & ATTR_MISSPELLING or not all(c.isalpha() or c in "'-" for c in w):
             continue
-        train.add("".join(base_char(c) for c in w.lower()))
+        train.add("".join(base_char(c, own) for c in w.lower()))
     train = sorted(train)   # the same file from the same list
     freq = collections.Counter(c for w in train for c in w)
     if len(freq) > LETTER_SYMBOLS - 2:
@@ -498,16 +530,26 @@ def main():
         sys.exit("--letter-order: 1 to 5")
 
     words = parse_aosp(args.wordlist)
+    rules_path = f"{args.rules_dir}/{args.lang}.rules"
     # `min-freq N` in LANG.rules drops the rare entries of a list padded
     # with generated forms (ro); the supplement adds back those in use.
-    floor = min_freq(f"{args.rules_dir}/{args.lang}.rules")
+    floor = min_freq(rules_path)
     dropped = 0
     if floor:
         for w in [w for w, e in words.items() if e["f"] < floor and not e["attrs"] & ATTR_MISSPELLING]:
             del words[w]
             dropped += 1
-    supplemented = add_supplement(words, f"{args.rules_dir}/{args.lang}.supplement")
-    forms = add_supplement(words, f"{args.rules_dir}/{args.lang}.forms")
+    own = letters_setting(rules_path, "own-letters") or ""
+    letters = letters_setting(rules_path, "letters")
+    foreign = 0
+    if letters is not None:
+        letters = set(letters)
+        for w in [w for w in words if not of_letters(w, letters)]:
+            del words[w]
+            foreign += 1
+    supplemented, n = add_supplement(words, f"{args.rules_dir}/{args.lang}.supplement", letters)
+    forms, m = add_supplement(words, f"{args.rules_dir}/{args.lang}.forms", letters)
+    foreign += n + m
     respelled_new, respelled = apply_respellings(words, f"{args.rules_dir}/{args.lang}.respellings")
     marked = mark_misspellings(words, f"{args.rules_dir}/{args.lang}.misspellings")
     marked += mark_misspellings(words, f"{args.rules_dir}/{args.lang}.manual-misspellings")
@@ -574,7 +616,7 @@ def main():
     alpha = bytearray()
     for c in alphabet:
         alpha += struct.pack("<III", ord(c), ord(c.lower()) if len(c.lower()) == 1 else ord(c),
-                             ord(base_char(c)))
+                             ord(base_char(c, own)))
 
     attr_bytes = b"".join(struct.pack("<III", *a) for a in attrs)
 
@@ -598,8 +640,8 @@ def main():
             entry_bytes += struct.pack("<I", offset | f << 24)
             entries += 1
 
-    letters, letter_ngrams, letter_mean = letter_model(words, args.letter_order, args.letter_min_count)
-    optional = [(SECTION_LETTERS, letters)]
+    model, letter_ngrams, letter_mean = letter_model(words, args.letter_order, args.letter_min_count, own)
+    optional = [(SECTION_LETTERS, model)]
 
     lang = args.lang.encode()[:7].ljust(8, b"\0")
     header_fmt = "<8sII8sIfIIIIIIIIIIIIIIIIII"
@@ -636,13 +678,14 @@ def main():
     with open(args.out, "wb") as fh:
         fh.write(out)
 
-    print(f"{args.lang}: {len(words)} entries ({dropped} below min-freq dropped, {supplemented} supplement, {forms} verb forms, "
+    print(f"{args.lang}: {len(words)} entries ({dropped} below min-freq dropped, "
+          f"{foreign} with other letters dropped, {supplemented} supplement, {forms} verb forms, "
           f"{raised} raised, {lowered} lowered, {lowercase} lowercase, {shorthands} shorthands), "
           f"{len(order)} nodes, "
           f"{len(alphabet)} chars, {len(attrs)} attrs ({marked} accent misspellings, "
           f"{respelled} old spellings, {respelled_new} current forms added), "
           f"{len(rules)} rules, {len(pair_rows)} pair rows ({entries} next words), "
-          f"letter model {letter_ngrams} n-grams ({len(letters) / 1e6:.2f} MB, {letter_mean:.2f} nats a letter), "
+          f"letter model {letter_ngrams} n-grams ({len(model) / 1e6:.2f} MB, {letter_mean:.2f} nats a letter), "
           f"{len(out) / 1e6:.1f} MB")
 
 

@@ -37,6 +37,7 @@ Languages::Languages(QObject *parent)
         Language l;
         l.code = it.key();
         l.name = o.value(QStringLiteral("name")).toString();
+        l.script = o.value(QStringLiteral("script")).toString(QStringLiteral("Latn"));
         l.experimental = o.value(QStringLiteral("experimental")).toBool();
         l.fallback = o.value(QStringLiteral("fallback")).toBool();
         l.menuLetters = o.value(QStringLiteral("menuLetters")).toString();
@@ -52,7 +53,7 @@ Languages::Languages(QObject *parent)
     });
     for (const Language &l : m_languages)
         m_all << QVariantMap{{QStringLiteral("code"), l.code}, {QStringLiteral("name"), l.name},
-                             {QStringLiteral("experimental"), l.experimental}};
+                             {QStringLiteral("experimental"), l.experimental}, {QStringLiteral("script"), l.script}};
 }
 
 const Languages &Languages::instance()
@@ -74,32 +75,59 @@ void Languages::setSystemLocale(const QString &name)
     m_locale = name;
 }
 
-QStringList Languages::selected(const QString &value) const
+QStringList Languages::selected(const QString &value, const QString &script) const
 {
     const QStringList parts = value.split(QLatin1Char(' '));   // (Qt 5.6: no Qt::SkipEmptyParts)
     QStringList codes;
     for (const Language &l : m_languages)
-        if (parts.contains(l.code))
+        if (l.script == script && parts.contains(l.code))
             codes << l.code;
-    return codes.isEmpty() ? defaultLanguages() : codes;
+    return codes.isEmpty() ? defaultLanguages(script) : codes;
 }
 
-QStringList Languages::defaultLanguages() const
+QStringList Languages::defaultLanguages(const QString &script) const
 {
     // The locale itself (pt_BR), its language (it_IT: it), or the language
     // it stands for (no: nb).
-    if (find(m_locale))
+    const auto inScript = [&](const Language *l) { return l && l->script == script; };
+    if (inScript(find(m_locale)))
         return {m_locale};
     const QString lang = m_locale.section(QLatin1Char('_'), 0, 0);
-    if (find(lang))
+    if (inScript(find(lang)))
         return {lang};
     for (const Language &l : m_languages)
-        if (l.systemLanguages.contains(lang))
+        if (l.script == script && l.systemLanguages.contains(lang))
+            return {l.code};
+    if (script != QLatin1String("Latn"))
+        return {};   // chosen in the settings
+    for (const Language &l : m_languages)
+        if (l.fallback && l.script == script)
             return {l.code};
     for (const Language &l : m_languages)
-        if (l.fallback)
+        if (l.script == script)
             return {l.code};
-    return m_languages.isEmpty() ? QStringList() : QStringList{m_languages.first().code};
+    return {};
+}
+
+QStringList Languages::selectedAll(const QString &value) const
+{
+    QStringList scripts, codes;
+    for (const Language &l : m_languages)
+        if (!scripts.contains(l.script))
+            scripts << l.script;
+    for (const QString &script : scripts)
+        codes += selected(value, script);
+    QStringList out;
+    for (const Language &l : m_languages)
+        if (codes.contains(l.code))
+            out << l.code;
+    return out;
+}
+
+QString Languages::script(const QString &code) const
+{
+    const Language *l = find(code);
+    return l ? l->script : QStringLiteral("Latn");
 }
 
 QString Languages::names(const QStringList &codes) const

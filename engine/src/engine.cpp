@@ -98,6 +98,9 @@ Engine::Context Engine::parseContext(const std::u32string &textBefore)
             break;
         if (c == U'.' || c == U'!' || c == U'?' || c == U'\n' || c == U'…')
             return ctx;   // a new sentence
+        // The Greek question mark: ; (U+037E, or the ; it normalises to) after a Greek letter.
+        if ((c == U';' || c == 0x37E) && end >= 2 && internal::isGreekLetter(textBefore[end - 2]))
+            return ctx;
         sawSpace = true;
         --end;
     }
@@ -415,7 +418,7 @@ std::u32string applyCase(const std::u32string &word, const std::vector<Tap> &tap
                                                           [](const Tap &t) { return t.upper; });
     if (allUpper) {
         for (char32_t &c : out)
-            c = utf8::toUpper(c);
+            c = internal::upperInCapitals(c);
     } else if (taps[0].upper) {
         out[0] = utf8::toUpper(out[0]);
     }

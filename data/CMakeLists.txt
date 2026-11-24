@@ -3,8 +3,9 @@
 
 # Dictionaries: <lang>:<wordlist>, the wordlist's name in aosp/ (the AOSP
 # LatinIME lists) or its folder/name (sl: sloleks/sl, from the Sloleks
-# lexicon, CC BY-SA 4.0: tools/data/sloleks-wordlist.py).
-set(PARROTFISH_LANGUAGES en:en_US it:it de:de es:es fr:fr pt_BR:pt_BR pt_PT:pt_PT nl:nl sv:sv da:da nb:nb ro:ro fi:fi pl:pl cs:cs sl:sloleks/sl hr:hr)
+# lexicon, CC BY-SA 4.0: tools/data/sloleks-wordlist.py; uk: leipzig/uk, from
+# Leipzig Corpora Collection counts, CC BY: tools/data/leipzig-wordlist.py).
+set(PARROTFISH_LANGUAGES en:en_US it:it de:de es:es fr:fr pt_BR:pt_BR pt_PT:pt_PT nl:nl sv:sv da:da nb:nb ro:ro fi:fi pl:pl cs:cs sl:sloleks/sl hr:hr ru:ru uk:leipzig/uk el:el)
 
 # The inputs of each dictionary, and a fingerprint of all of them
 # (inputs.sha256): `tools/pf rpm` puts dictionaries built on the PC in

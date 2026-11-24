@@ -42,6 +42,7 @@ if(PARROTFISH_PLUGIN)
     # One package for all versions: each loads the copy in its own directory.
     install(FILES handler/ParrotfishHandler.qml DESTINATION ${PARROTFISH_OLD_HANDLER_DIR})
     install(FILES layouts/parrotfish.qml layouts/parrotfish_qwertz.qml layouts/parrotfish_azerty.qml
+                  layouts/parrotfish_jcuken.qml layouts/parrotfish_greek.qml
                   layouts/layouts_parrotfish.conf
             DESTINATION ${PARROTFISH_LAYOUT_DIR})
     install(DIRECTORY layouts/parrotfish DESTINATION ${PARROTFISH_LAYOUT_DIR})

@@ -22,6 +22,9 @@ its accented form only when all of these hold:
    nb: å, ä, ö, æ, ø are letters of their own, har/här are two words);
 5. the plain form is not an acronym (dell'ETA) and not in RULES_DIR/LANG.keep.
 
+The letters of `own-letters LETTERS` in LANG.rules are letters of their own,
+not accented forms (Russian й: свой and свои are no accent pair).
+
 The list is read as build-dict.py makes it with LANG.respellings: an old
 spelling (idéia) is a misspelling of the current one already.
 
@@ -36,8 +39,8 @@ import sys
 import unicodedata
 
 
-def fold(word):
-    s = unicodedata.normalize("NFD", word.lower())
+def fold(word, own=""):
+    s = "".join(c if c in own else unicodedata.normalize("NFD", c) for c in word.lower())
     s = "".join(c for c in s if unicodedata.category(c) != "Mn")
     return s.replace("ß", "ss")
 
@@ -102,9 +105,12 @@ def main():
     plain_paradigms = []
     only_marks = None
     marking = True
+    own = ""
     for line in read_list(f"{args.rules_dir}/{args.lang}.rules"):
         parts = line.split()
-        if parts[0] == "paradigm":
+        if parts[0] == "own-letters":
+            own += "".join(parts[1:]).lower()
+        elif parts[0] == "paradigm":
             paradigms.append((parts[1], parts[2:]))
         elif parts[0] == "paradigm-plain":
             plain_paradigms.append((parts[1], parts[2:]))
@@ -125,12 +131,12 @@ def main():
 
     by_fold = {}
     for w in words:
-        by_fold.setdefault(fold(w), []).append(w)
+        by_fold.setdefault(fold(w, own), []).append(w)
 
     marked, skipped = [], {"keep": 0, "marks": 0, "dict": 0, "count": 0, "ratio": 0, "paradigm": 0}
     for group in by_fold.values():
-        accented = [w for w in group if fold(w) != w.lower()]
-        plain = [w for w in group if fold(w) == w.lower()]
+        accented = [w for w in group if fold(w, own) != w.lower()]
+        plain = [w for w in group if fold(w, own) == w.lower()]
         if not accented or not plain:
             continue
         acc = max(accented, key=lambda w: words[w])
@@ -157,7 +163,7 @@ def main():
             else:
                 marked.append((p, acc, f"dict {words[p]}/{words[acc]} corpus {cp}/{ca}"))
 
-    marked.sort(key=lambda m: fold(m[0]))
+    marked.sort(key=lambda m: fold(m[0], own))
     with open(args.out, "w", encoding="utf-8") as fh:
         # The header of the written file, split so that reuse doesn't take it as this file's.
         fh.write("# SPDX-" "FileCopyrightText: 2026 ccontino84\n"

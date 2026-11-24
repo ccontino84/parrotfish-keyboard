@@ -9,6 +9,15 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 ### New
 
+- **Cyrillic and Greek.** Two new layouts with Jolla's keys, *Auto
+  (ЙЦУКЕН)* for Russian and Ukrainian (experimental) and *Auto
+  (Ελληνικά)* for Greek (experimental), in two new packages,
+  `parrotfish-keyboard-languages-cyrillic` and
+  `parrotfish-keyboard-languages-greek`. Each layout types the languages of
+  its alphabet. With both Russian and Ukrainian, a globe key switches
+  between their keys, and the other language's letters are on long press
+  (ы і, э є, ъ ї, г ґ, е ё). Greek: the final ς and the accents are added as
+  you type, and Jolla's tonos key is there too.
 - **Put the cursor right after a word to correct it:** the word is taken
   back, underlined, and the suggestions offer replacements; after a space,
   they offer the next word. In Android apps, a picked replacement can
@@ -21,6 +30,10 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 
 - **Accented letters of other languages** are corrected too: a typo with
   à in Dutch text is now fixed like one with the language's own accents.
+- *Typing languages* is grouped by alphabet.
+- *Space before ! ? : ;* applies to French text only, and can be turned
+  on when French is a typing language.
+- The sticky key is for the Latin layouts.
 
 ## 1.3.0 (2026-11-17)
 

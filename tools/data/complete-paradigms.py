@@ -20,7 +20,8 @@ unless they differ only by accents from an existing word that is not a form
 of the same verb (de: fahrst next to fährst; it: parlo stays next to parlò)
 or are listed in the skip file. When two classes share an
 infinitive ending (it: dormire, finire), each tense takes the class with
-more attested forms of its own.
+more attested forms of its own. The letters of `own-letters LETTERS` in
+RULES_DIR/LANG.rules are letters of their own here, not accented ones.
 
 COUNTS.tsv (count-words.py counts of proofread sentences) separates forms
 seen in real text, which get a frequency from a fit like find-supplement.py,
@@ -36,8 +37,8 @@ import sys
 import unicodedata
 
 
-def fold(word):
-    s = unicodedata.normalize("NFD", word.lower())
+def fold(word, own=""):
+    s = "".join(c if c in own else unicodedata.normalize("NFD", c) for c in word.lower())
     s = "".join(c for c in s if unicodedata.category(c) != "Mn")
     return s.replace("ß", "ss")
 
@@ -117,9 +118,11 @@ def main():
         w, f = line.split("\t")[:2]
         words.setdefault(w, int(f))
     known = set(words)
+    own_letters = "".join("".join(l.split()[1:]) for l in read_list(f"{args.rules_dir}/{args.lang}.rules")
+                          if l.split()[0] == "own-letters").lower()
     folded = {}
     for w in words:
-        folded.setdefault(fold(w), set()).add(w)
+        folded.setdefault(fold(w, own_letters), set()).add(w)
     skip = set(read_list(f"{args.rules_dir}/{args.lang}.paradigm-skip"))
 
     counts = {}
@@ -180,7 +183,7 @@ def main():
                 for f in forms:
                     if f in known or f in skip or f in generated:
                         continue
-                    if folded.get(fold(f), set()) - paradigm:
+                    if folded.get(fold(f, own_letters), set()) - paradigm:
                         continue   # an accent variant of another existing word
                     seen = counts.get(f, 0)
                     freq = max(1, min(150, round(a + b * math.log(seen / total * 1e6)))) if seen else 1

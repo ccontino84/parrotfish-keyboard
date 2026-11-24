@@ -7,7 +7,8 @@
 // period with a KeyBackground, a LongPressHint and the typing languages'
 // signs on long press (the comma's too); the layout's gap; the widths set
 // by the layout; the mic glyph; the numpad's 0 and a sign after the
-// spacebar.
+// spacebar; ЙЦУКЕН's - or ' after the symbol key, as on Jolla's ru.qml and
+// uk.qml, with more signs on long press.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
@@ -18,7 +19,7 @@ import "arrangements.js" as Arrangements
 KeyboardRow {
     id: bottomRow
 
-    splitIndex: 3
+    splitIndex: 4   // the extra key counts, shown or not
 
     // The layout's gap instead of Jolla's paddingMedium, so that the rows line up.
     Component.onCompleted: {
@@ -54,8 +55,12 @@ KeyboardRow {
             comma.implicitWidth = punctuation
         if (period.implicitWidth !== punctuation)
             period.implicitWidth = punctuation
-        if (symbol.implicitWidth !== end)
-            symbol.implicitWidth = end
+        if (extra.implicitWidth !== punctuation)
+            extra.implicitWidth = punctuation
+        // With the extra key, ?123 is narrow, as on Jolla's ru.qml.
+        var symbolWidth = extra.active && !splitActive ? symbolKeyWidthNarrow : end
+        if (symbol.implicitWidth !== symbolWidth)
+            symbol.implicitWidth = symbolWidth
         if (enter.implicitWidth !== end)
             enter.implicitWidth = end
         var keys = [afterSpace1, afterSpace2]
@@ -89,6 +94,19 @@ KeyboardRow {
 
     SymbolKey {
         id: symbol
+        symbolCaption: bottomRow.parent && bottomRow.parent.arrangement
+                       && bottomRow.parent.arrangement.symbolCaption ? bottomRow.parent.arrangement.symbolCaption : "ABC"
+    }
+    LetterKey {
+        id: extra
+        readonly property var _layout: bottomRow.parent
+        readonly property var _a: _layout && _layout.arrangement ? _layout.arrangement : null
+        active: _a !== null && _a.bottomSign !== undefined
+        caption: active ? _a.bottomSign : ""
+        captionShifted: caption
+        accents: active ? Arrangements.signsAfter(caption) : ""
+        accentsShifted: accents
+        fixedWidth: !splitActive
     }
     ContextAwareCommaKey {
         id: comma

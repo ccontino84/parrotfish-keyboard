@@ -83,12 +83,28 @@ char32_t toLower(char32_t c)
         return 0xFF;
     if (c >= 0x179 && c <= 0x17E)
         return (c & 1) ? c + 1 : c;
-    if (c >= 0x391 && c <= 0x3A9 && c != 0x3A2)
+    if (c < 0x386)
+        return c;
+    if (c == 0x386)
+        return 0x3AC;
+    if (c >= 0x388 && c <= 0x38A)
+        return c + 37;
+    if (c == 0x38C)
+        return 0x3CC;
+    if (c == 0x38E || c == 0x38F)
+        return c + 63;
+    if (c >= 0x391 && c <= 0x3AB && c != 0x3A2)
         return c + 32;
     if (c >= 0x410 && c <= 0x42F)
         return c + 32;
     if (c >= 0x400 && c <= 0x40F)
         return c + 80;
+    if ((c >= 0x460 && c <= 0x481) || (c >= 0x48A && c <= 0x4BF) || (c >= 0x4D0 && c <= 0x52F))
+        return c | 1;
+    if (c == 0x4C0)
+        return 0x4CF;
+    if (c >= 0x4C1 && c <= 0x4CE)
+        return (c & 1) ? c + 1 : c;
     return c;
 }
 
@@ -110,12 +126,30 @@ char32_t toUpper(char32_t c)
         return c & ~char32_t(1);
     if (c >= 0x179 && c <= 0x17E)
         return (c & 1) ? c : c - 1;
-    if (c >= 0x3B1 && c <= 0x3C9 && c != 0x3C2)
+    if (c < 0x3AC)
+        return c;
+    if (c == 0x3AC)
+        return 0x386;
+    if (c >= 0x3AD && c <= 0x3AF)
+        return c - 37;
+    if (c == 0x3C2)
+        return 0x3A3;   // final sigma
+    if (c >= 0x3B1 && c <= 0x3CB)
         return c - 32;
+    if (c == 0x3CC)
+        return 0x38C;
+    if (c == 0x3CD || c == 0x3CE)
+        return c - 63;
     if (c >= 0x430 && c <= 0x44F)
         return c - 32;
     if (c >= 0x450 && c <= 0x45F)
         return c - 80;
+    if ((c >= 0x460 && c <= 0x481) || (c >= 0x48A && c <= 0x4BF) || (c >= 0x4D0 && c <= 0x52F))
+        return c & ~char32_t(1);
+    if (c == 0x4CF)
+        return 0x4C0;
+    if (c >= 0x4C1 && c <= 0x4CE)
+        return (c & 1) ? c : c - 1;
     return c;
 }
 

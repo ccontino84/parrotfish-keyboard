@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Expérimental</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latin</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Cyrillique</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Grec</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Désactivée</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Seulement pour les dispositions latines</translation>
     </message>
 </context>
 <context>
@@ -469,8 +485,12 @@
         <translation>Deux espaces après un mot insèrent un point</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Garde l'espace après une suggestion choisie, comme en français</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>En français, garde l'espace après une suggestion choisie</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Seulement avec le français parmi les langues de saisie</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

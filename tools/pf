@@ -136,28 +136,38 @@ def parse_summary(text, setting=None):
     return m
 
 
-# The 13 typing languages, and the texts of each (pt serves pt_BR and pt_PT).
-LANGUAGES = ["en", "it", "de", "fr", "es", "pt_BR", "pt_PT", "nl", "sv", "da", "nb", "fi", "ro", "pl", "cs", "sl", "hr"]
+# The typing languages, and the texts of each (pt serves pt_BR and pt_PT).
+LANGUAGES = ["en", "it", "de", "fr", "es", "pt_BR", "pt_PT", "nl", "sv", "da", "nb", "fi", "ro", "pl", "cs", "sl", "hr",
+             "ru", "uk", "el"]
+# Languages of other scripts: their layout loads only their script's languages.
+NOT_LATIN = {"ru", "uk", "el"}
 
 
 def language_group(lang, first=False):
     """The dictionaries loaded with `lang` in the suite: a typical set of
     typing languages; in the group's order, or `lang` first. The order
     matters (the typos use the first dictionary's letters)."""
-    for group in (["en", "it", "de"], ["fr", "es", "en"], ["hr", "sl", "en"]):
+    for group in (["en", "it", "de"], ["fr", "es", "en"], ["hr", "sl", "en"], ["ru", "uk"]):
         if lang in group:
+            group = [l for l in group if l in LANGUAGES]
             return [lang] + [l for l in group if l != lang] if first else group
-    return [lang, "en"]
+    return [lang] if lang in NOT_LATIN else [lang, "en"]
 
 
 def layout_of(lang):
     """The keyboard the suite types `lang` on: QWERTY (ÅÖÄ) for the Nordic
     languages, QWERTZ for cs, sl and hr (their national layouts), else
-    QWERTY (also for de and fr)."""
+    QWERTY (also for de and fr); ЙЦУКЕН and Greek for their languages."""
     if lang in ("sv", "da", "nb", "fi"):
         return "data/layouts/phone-nordic.layout"
     if lang in ("cs", "sl", "hr"):
         return "data/layouts/phone-qwertz.layout"
+    if lang == "ru":
+        return "data/layouts/phone-jcuken.layout"
+    if lang == "uk":
+        return "data/layouts/phone-jcuken-uk.layout"
+    if lang == "el":
+        return "data/layouts/phone-greek.layout"
     return PHONE_LAYOUT
 
 
@@ -200,7 +210,7 @@ def suite_cases(build_dir, cfg, tmp):
                           d(["en", "it", "de"]) + ["-m", a, "-r", "0"], ["correct_changed"]))
     # ... and between English and each other language, with that language's
     # group loaded.
-    for lang in LANGUAGES[3:]:
+    for lang in [l for l in LANGUAGES[3:] if l not in NOT_LATIN]:
         for a, b in [(lang, "en"), ("en", lang)]:
             for kind in ["insert", "switch"]:
                 path = os.path.join(tmp, f"{kind}-{a}-{b}.txt")

@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 // Unit tests for the engine. Run with ctest; needs the built dictionaries.
-//   engine-test DICT_DIR LAYOUT_DIR
+//   engine-test DICT_DIR LAYOUT_DIR [SCRIPT_DICT_DIR]
+// SCRIPT_DICT_DIR: the Greek and Russian test dictionaries (unit/scripts).
 
 #include "parrotfish/engine.h"
 #include "parrotfish/learned.h"
@@ -23,7 +24,7 @@ using namespace parrotfish;
 namespace {
 
 int failures = 0;
-std::string dictDir, layoutDir;
+std::string dictDir, layoutDir, scriptDir;
 
 #define CHECK(cond) check((cond), #cond, __FILE__, __LINE__)
 #define CHECK_EQ(a, b) checkEq((a), (b), #a, __FILE__, __LINE__)
@@ -97,6 +98,169 @@ void testUtf8()
     CHECK(utf8::latinBase(U'ø') == U'o');
     CHECK(utf8::latinBase(U'ß') == U'ß');
     CHECK(utf8::latinBase(U'u') == U'u');
+}
+
+void testScriptCase()
+{
+    // Pairs checked against Python's str.lower/str.upper (Unicode 16).
+    const std::u32string pairs[] = {
+        U"Άά", U"Έέ", U"Ήή", U"Ίί", U"Όό", U"Ύύ", U"Ώώ", U"Ϊϊ", U"Ϋϋ", U"Αα", U"Σσ", U"Ωω",
+        U"Ёё", U"Йй", U"Її", U"Ўў", U"Ґґ", U"Ѣѣ", U"Ѵѵ", U"Ҋҋ", U"Әә", U"Ғғ", U"Ққ", U"Ңң",
+        U"Өө", U"Ұұ", U"Үү", U"Һһ", U"Җҗ", U"Ӏӏ", U"Ӂӂ", U"Ӎӎ", U"Ӑӑ", U"Ӹӹ", U"Ԁԁ", U"Ԯԯ",
+    };
+    for (const std::u32string &p : pairs) {
+        CHECK_EQ(s8(std::u32string(1, utf8::toLower(p[0]))), s8(p.substr(1)));
+        CHECK_EQ(s8(std::u32string(1, utf8::toUpper(p[1]))), s8(p.substr(0, 1)));
+        CHECK(utf8::isUpper(p[0]) && !utf8::isUpper(p[1]));
+    }
+    CHECK(utf8::toUpper(U'ς') == U'Σ' && utf8::toLower(U'Σ') == U'σ' && !utf8::isUpper(U'ς'));
+    CHECK(utf8::toUpper(U'ΐ') == U'ΐ' && utf8::toUpper(U'ΰ') == U'ΰ');   // no capital of their own
+    CHECK(utf8::toLower(U'҂') == U'҂' && utf8::toUpper(U'҂') == U'҂');
+    // Every pair both ways (ς apart).
+    for (char32_t c = 0x370; c <= 0x52F; ++c) {
+        const char32_t l = utf8::toLower(c), up = utf8::toUpper(c);
+        if (l != c && utf8::toUpper(l) != c)
+            CHECK_EQ(s8(std::u32string(1, utf8::toUpper(l))), s8(std::u32string(1, c)));
+        if (up != c && c != U'ς' && utf8::toLower(up) != c)
+            CHECK_EQ(s8(std::u32string(1, utf8::toLower(up))), s8(std::u32string(1, c)));
+    }
+}
+
+void testScriptWords()
+{
+    auto split = [](const std::string &text) {
+        std::vector<std::string> got;
+        for (const auto &x : words(u(text)))
+            got.push_back(s8(x));
+        return got;
+    };
+    // ; ; · ΄ ΅ are no letters; ΐ ΰ ς are.
+    CHECK(split("Τι κάνεις; Καλά· εσύ;ναι ΐ ΰ πρωτεΐνη ΄ ΅ σ' ") ==
+          (std::vector<std::string>{"Τι", "κάνεις", "Καλά", "εσύ", "ναι", "ΐ", "ΰ", "πρωτεΐνη", "σ"}));
+    CHECK(split("м'ясо м’ясо мʼясо, ґанок Їжак қазақ ӏ") ==
+          (std::vector<std::string>{"м'ясо", "м'ясо", "м'ясо", "ґанок", "Їжак", "қазақ", "ӏ"}));
+    CHECK(split("καὶ τῶν") == (std::vector<std::string>{"καὶ", "τῶν"}));
+}
+
+void testScriptSentences()
+{
+    // The Greek question mark ends a sentence after a Greek letter; the
+    // ano teleia (·) and a Latin ; don't.
+    CHECK_EQ(s8(Engine::previousWord(u("Τι κάνεις; "))), "");
+    CHECK_EQ(s8(Engine::previousWord(u("Τι κάνεις\u037E "))), "");
+    CHECK_EQ(s8(Engine::previousWord(u("Τι κάνεις;"))), "");
+    CHECK_EQ(s8(Engine::previousWord(u("Καλά· "))), "Καλά");
+    CHECK_EQ(s8(Engine::previousWord(u("Fine; "))), "Fine");
+    CHECK_EQ(s8(Engine::previousWord(u("2; "))), "");
+}
+
+void testScriptApplyCase()
+{
+    auto cased = [](const std::string &word, const std::string &typed) {
+        return s8(applyCase(u(word), tapsFor(u(typed))));
+    };
+    // In capitals Greek drops the tonos, keeps the dialytika.
+    CHECK_EQ(cased("καλά", "ΚΑΛΑ"), "ΚΑΛΑ");
+    CHECK_EQ(cased("οδός", "ΟΔΟΣ"), "ΟΔΟΣ");
+    CHECK_EQ(cased("Άλλος", "ΑΛΛΟΣ"), "ΑΛΛΟΣ");
+    CHECK_EQ(cased("πρωτεΐνη", "ΠΡΩΤΕΙΝΗ"), "ΠΡΩΤΕΪΝΗ");
+    CHECK_EQ(cased("ΰύώ", "ΥΥΩ"), "ΫΥΩ");
+    CHECK_EQ(cased("ϊϋ", "ΙΥ"), "ΪΫ");
+    // A capital first letter keeps it.
+    CHECK_EQ(cased("άλλος", "Αλλος"), "Άλλος");
+    CHECK_EQ(cased("ґанок", "ГАНОК"), "ҐАНОК");
+    CHECK_EQ(cased("città", "CITTA"), "CITTÀ");
+}
+
+// An engine with one test dictionary of SCRIPT_DICT_DIR on `rows`
+// (KeyModel::parse), at Normal.
+struct ScriptSetup {
+    Engine engine;
+    ScriptSetup(const std::string &lang, const std::string &rows)
+    {
+        std::string error;
+        if (!engine.addLanguage(scriptDir + "/" + lang + ".pfd", &error))
+            std::printf("cannot load %s: %s\n", lang.c_str(), error.c_str());
+        engine.setLayout(KeyModel::parse(rows));
+        engine.setStrength(Strength::Normal);
+        engine.startText({}, {1.0});
+    }
+    std::string space(const std::string &typed)
+    {
+        const Result r = engine.process(tapsFor(u(typed)));
+        return r.autocorrect >= 0 ? s8(r.suggestions[r.autocorrect].word) : typed;
+    }
+    std::string first(const std::string &typed)
+    {
+        const Result r = engine.process(tapsFor(u(typed)));
+        return r.suggestions.empty() ? std::string() : s8(r.suggestions[0].word);
+    }
+};
+
+const char *GreekRows = "0 1 ;ςερτυθιοπ\n0.5 1 ασδφγηξκλ\n1.5 1 ζχψωβνμ\n";
+const char *CyrillicRows = "0 1 йцукенгшщзх\n0 1 фывапролджэ\n0.5 1 ячсмитьбю\n";
+
+char32_t baseOf(const Dictionary &d, char32_t c)
+{
+    for (uint32_t i = 0; i < d.alphabetSize(); ++i)
+        if (d.letter(i).cp == c)
+            return d.letter(i).base;
+    return 0;
+}
+
+void testGreekDictionary()
+{
+    Dictionary el;
+    const bool opened = el.open(scriptDir + "/el.pfd");
+    CHECK(opened);
+    if (!opened)
+        return;
+    // `letters` in el.rules: polytonic forms and a Latin s are left out.
+    CHECK(el.find(u("οδός")) != 0);
+    CHECK(el.find(u("καὶ")) == 0 && el.find(u("τῶν")) == 0 && el.find(u("οδόs")) == 0);
+    CHECK(baseOf(el, U'ς') == U'σ' && baseOf(el, U'ά') == U'α' && baseOf(el, U'ΐ') == U'ι');
+    // A word in capitals without its tonos and final sigma is the word; a
+    // capital first letter keeps the tonos.
+    CHECK(el.find(u("ΚΑΛΑ")) != 0 && el.find(u("ΟΔΟΣ")) != 0 && el.find(u("ΠΡΩΤΕΪΝΗ")) != 0);
+    CHECK(el.find(u("Άλλος")) != 0 && el.find(u("ΆΛΛΟΣ")) != 0);
+    CHECK(el.find(u("Αλλος")) == 0 && el.find(u("καλα")) == 0 && el.find(u("ΟΔΟσ")) == 0);
+
+    // `σ ς final`: a word-final σ is ς; elsewhere σ stays.
+    ScriptSetup g("el", GreekRows);
+    CHECK_EQ(g.space("τησ"), "της");
+    CHECK_EQ(g.space("τουσ"), "τους");
+    CHECK_EQ(g.space("οδοσ"), "οδός");
+    CHECK_EQ(g.space("κοσμοσ"), "κόσμος");
+    CHECK_EQ(g.space("κοςμος"), "κόσμος");   // ς inside a word: a slip for σ
+    CHECK_EQ(g.space("Οδοσ"), "Οδός");
+    CHECK_EQ(g.space("ΟΔΟΣ"), "ΟΔΟΣ");
+    CHECK_EQ(g.space("ΚΟΣΜΟΣ"), "ΚΟΣΜΟΣ");
+    CHECK_EQ(g.first("καλα"), "καλά");   // the tonos left out
+    CHECK_EQ(g.space("καλα"), "καλά");
+    CHECK_EQ(g.space("ΚΑΛΑ"), "ΚΑΛΑ");
+    CHECK(g.engine.process(tapsFor(u("ΚΑΛΗ"))).typedIsWord);
+    CHECK(g.engine.isKnown(u("ΤΟΥΣ")));
+    CHECK_EQ(g.space("Αλλος"), "Άλλος");
+    CHECK_EQ(g.space("πρωτεινη"), "πρωτεΐνη");
+}
+
+void testOwnLetters()
+{
+    // ru.rules: `own-letters й`; xx is the same list without it.
+    Dictionary ru, xx;
+    const bool opened = ru.open(scriptDir + "/ru.pfd") && xx.open(scriptDir + "/xx.pfd");
+    CHECK(opened);
+    if (!opened)
+        return;
+    CHECK(baseOf(ru, U'й') == U'й' && baseOf(xx, U'й') == U'и');
+    CHECK(baseOf(ru, U'ё') == U'е' && baseOf(xx, U'ё') == U'е');
+
+    // й is not и with an accent: мои isn't мой with the accent left out.
+    ScriptSetup r("ru", CyrillicRows), x("xx", CyrillicRows);
+    CHECK_EQ(x.space("мои"), "мой");
+    CHECK_EQ(r.space("мои"), "мои");
+    CHECK_EQ(r.space("свои"), "свои");
+    CHECK_EQ(r.space("елка"), "ёлка");
 }
 
 void testWords()
@@ -1105,7 +1269,18 @@ int main(int argc, char **argv)
     }
     dictDir = argv[1];
     layoutDir = argv[2];
+    scriptDir = argc > 3 ? argv[3] : "";
     testUtf8();
+    testScriptCase();
+    testScriptWords();
+    testScriptSentences();
+    testScriptApplyCase();
+    if (!scriptDir.empty()) {
+        testGreekDictionary();
+        testOwnLetters();
+    } else {
+        std::printf("no SCRIPT_DICT_DIR: Greek and Russian dictionary tests skipped\n");
+    }
     testWords();
     testDictionary();
     testKeyModel();

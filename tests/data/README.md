@@ -43,6 +43,10 @@ of 2026-11-09. sl and hr have little text: sentences-sl has 93,
 sentences-hr 41, tatoeba-sl 105 and tatoeba-hr 240, so their benchmarks
 are rough.
 
+ru, uk and el were drawn the same way on 2026-11-22, from the same Common
+Voice commit and the Tatoeba exports of that day (sentences-el has 192,
+tatoeba-el 1650; Common Voice's ru `singleword-benchmark.txt` left out).
+
 Both sets are left out of every word count (`--exclude` in
 `tools/data/regenerate-lists.sh`), so the benchmarks don't test on data the
 dictionaries were built from.

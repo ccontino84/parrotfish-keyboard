@@ -91,7 +91,7 @@ Column {
 
     ValueButton {
         label: qsTr("Typing")
-        value: Languages.names(Languages.selected(languagesConfig.value))
+        value: Languages.names(Languages.selectedAll(languagesConfig.value))
                        || qsTr("No languages installed")
         onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishTyping.qml"))
     }

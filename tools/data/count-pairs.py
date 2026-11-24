@@ -35,7 +35,8 @@ import gzip
 import re
 
 TOKEN = re.compile(r"[^\W\d_]+(?:['\-][^\W\d_]+)*'?")
-SENTENCE_END = re.compile(r"[.!?…]+[\"'»”)]*\s+(?=\S)")
+# Also the Greek question mark (;, or the ; it normalises to) after a Greek letter.
+SENTENCE_END = re.compile(r"(?:[.!?…]+|(?<=[\u0370-\u03ff\u1f00-\u1fff])[;\u037e])[\"'»”)]*\s+(?=\S)")
 
 
 def lines(path):

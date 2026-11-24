@@ -7,6 +7,8 @@ plugin's Languages singleton tells the layout and the settings.
 
 LANG.language, one setting a line (# comments):
   name NAME                  its name in the language ("Deutsch")
+  script CODE                its alphabet, ISO 15924: Latn (the default),
+                             Cyrl, Grek; a layout types the languages of its script
   experimental               too little text to build and test its data well
   menu-letters LETTERS       the accented letters its long-press menus show
                              first (about 0.05 % of everyday words or more)
@@ -33,7 +35,7 @@ import sys
 
 
 def read(path):
-    out = {"name": "", "experimental": False, "menuLetters": "", "commaExtra": "", "periodBefore": "",
+    out = {"name": "", "script": "Latn", "experimental": False, "menuLetters": "", "commaExtra": "", "periodBefore": "",
            "periodAfter": "", "systemLanguages": [], "fallback": False, "extraKeys": ""}
     with open(path, encoding="utf-8") as f:
         for n, line in enumerate(f, 1):
@@ -44,6 +46,10 @@ def read(path):
             value = value.strip()
             if key == "name":
                 out["name"] = value
+            elif key == "script":
+                if value not in ("Latn", "Cyrl", "Grek"):
+                    sys.exit(f"{path}:{n}: unknown script {value!r}")
+                out["script"] = value
             elif key in ("experimental", "fallback"):
                 out[key] = True
             elif key in ("menu-letters", "comma-extra", "period-before", "period-after"):

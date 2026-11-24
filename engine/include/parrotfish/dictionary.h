@@ -50,8 +50,10 @@ public:
     // log P(word) in this language for a frequency 0..255.
     double logProb(uint8_t freq) const;
 
-    // Node of the word typed exactly, ignoring case only (0 if absent).
-    // An exact-case match wins; `stored` gets the word as stored.
+    // Node of the word typed exactly, ignoring case only (0 if absent); a
+    // word in capitals also without the tonos and final sigma Greek drops
+    // there (ΚΑΛΑ: καλά). An exact-case match wins; `stored` gets the word
+    // as stored.
     uint32_t find(const std::u32string &word, std::u32string *stored = nullptr) const;
     // Highest frequency of the words starting with `prefix`, ignoring case
     // (-1 if no word starts with it).

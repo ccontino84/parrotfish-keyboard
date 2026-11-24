@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# й is a letter of its own (its own key), not и with a mark: свои and свой
+# are two words.
+own-letters й
+
+# Russian writes ё or е (еще, ещё): both spellings are words, so none is
+# marked as a misspelling of the other.
+no-misspellings
+
+# The letters of Russian words (the list has a few with ѓ).
+letters абвгдеёжзийклмнопрстуфхцчшщъыьэюя
+
+# find-supplement.py: ё is written or left out at will, so a spelling
+# without it is a word too (еще beside ещё), not a variant to skip.
+both-spellings ё

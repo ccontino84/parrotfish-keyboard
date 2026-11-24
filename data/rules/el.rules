@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# Sigma is ς at the end of a word, σ elsewhere: a σ typed last reads as ς.
+σ ς final
+
+# Elided words end in an apostrophe (σ' αγαπώ, μ' αρέσει, τ' όνομα): kept in
+# the dictionary (find-supplement.py).
+final-apostrophe
+
+# The letters of modern (monotonic) Greek: the list's polytonic words (καὶ,
+# τῶν) are left out.
+letters αβγδεζηθικλμνξοπρσςτυφχψωάέήίόύώϊϋΐΰ
+
+# find-supplement.py: Common Voice has little Greek text (41k words), so a
+# word form seen this many times in Common Voice and Tatoeba together is
+# enough, as for fi.
+one-source 3

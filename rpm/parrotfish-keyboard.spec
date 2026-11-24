@@ -60,15 +60,16 @@ Provides:   parrotfish-dictionary-format = %{dictformat}
 %description
 Word suggestions, autocorrect with undo, learning and next-word prediction
 for the Sailfish OS keyboard, in several languages at once: the typing
-language follows the text, and emoji. Adds three layouts (QWERTY, QWERTZ,
-AZERTY) to the stock keyboard, with a prediction handler and a settings
-section in Text input; no system files are modified, and Jolla's own
-layouts are left as they are.
+language follows the text, and emoji. Adds layouts (QWERTY, QWERTZ,
+AZERTY, ЙЦУКЕН, Greek) to the stock keyboard, with a prediction handler and
+a settings section in Text input; no system files are modified, and Jolla's
+own layouts are left as they are.
 
-The dictionaries come in language packages: install
+The dictionaries come in language packages by script:
 parrotfish-keyboard-languages-latin,
-parrotfish-keyboard-languages-latin-experimental or both. Each one installs
-the keyboard too.
+parrotfish-keyboard-languages-latin-experimental,
+parrotfish-keyboard-languages-cyrillic and
+parrotfish-keyboard-languages-greek. Each one installs the keyboard too.
 
 %if 0%{?_chum}
 Title: Parrotfish Keyboard
@@ -145,6 +146,59 @@ Links:
   Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
 %endif
 
+%package languages-cyrillic
+Summary:    Cyrillic languages for Parrotfish Keyboard: Russian, Ukrainian
+# The Ukrainian wordlist comes from Leipzig Corpora Collection counts (CC BY 4.0).
+License:    Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR AND CC-BY-4.0
+BuildArch:  noarch
+Requires:   %{name}
+Requires:   parrotfish-dictionary-format = %{dictformat}
+Provides:   parrotfish-dictionaries
+
+%description languages-cyrillic
+Dictionaries and word-pair data for Parrotfish Keyboard, for languages
+written in the Cyrillic script: Russian and Ukrainian (experimental). They
+are typed on the Auto (ЙЦУКЕН) layout. Installs Parrotfish Keyboard too.
+
+%if 0%{?_chum}
+Title: Parrotfish Cyrillic
+Type: addon
+DeveloperName: ccontino84
+Categories:
+ - Utility
+Custom:
+  Repo: https://github.com/ccontino84/parrotfish-keyboard
+Links:
+  Homepage: https://github.com/ccontino84/parrotfish-keyboard
+  Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
+%endif
+
+%package languages-greek
+Summary:    Greek for Parrotfish Keyboard
+License:    Apache-2.0 AND CC0-1.0 AND LicenseRef-CC-BY-2.0-FR
+BuildArch:  noarch
+Requires:   %{name}
+Requires:   parrotfish-dictionary-format = %{dictformat}
+Provides:   parrotfish-dictionaries
+
+%description languages-greek
+The Greek dictionary and word-pair data for Parrotfish Keyboard
+(experimental), typed on the Auto (Ελληνικά) layout. Installs Parrotfish
+Keyboard too.
+
+%if 0%{?_chum}
+Title: Parrotfish Greek
+Type: addon
+DeveloperName: ccontino84
+Categories:
+ - Utility
+Custom:
+  Repo: https://github.com/ccontino84/parrotfish-keyboard
+Links:
+  Homepage: https://github.com/ccontino84/parrotfish-keyboard
+  Bugtracker: https://github.com/ccontino84/parrotfish-keyboard/issues
+%endif
+
 %if %{voice}
 %package voice
 Summary:    Offline voice input for Parrotfish Keyboard
@@ -205,6 +259,22 @@ if [ $1 -eq 0 ]; then
     systemctl-user try-restart maliit-server.service || :
 fi
 
+%posttrans languages-cyrillic
+systemctl-user try-restart maliit-server.service || :
+
+%postun languages-cyrillic
+if [ $1 -eq 0 ]; then
+    systemctl-user try-restart maliit-server.service || :
+fi
+
+%posttrans languages-greek
+systemctl-user try-restart maliit-server.service || :
+
+%postun languages-greek
+if [ $1 -eq 0 ]; then
+    systemctl-user try-restart maliit-server.service || :
+fi
+
 %files -f main-excludes.files
 %license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE
 %{_libdir}/qt5/qml/Parrotfish
@@ -225,6 +295,12 @@ fi
 %license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE
 
 %files languages-latin-experimental -f latin-experimental.files
+%license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE
+
+%files languages-cyrillic -f cyrillic.files
+%license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE
+
+%files languages-greek -f greek.files
 %license LICENSES/* THIRD-PARTY.md data/aosp/NOTICE
 
 %if %{voice}

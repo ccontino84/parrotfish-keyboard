@@ -49,7 +49,7 @@ know the language. Building and testing are described in
 | File | What to put in it |
 |---|---|
 | `data/aosp/xx_wordlist.combined.gz` | the AOSP list, from the commit in DEVELOPMENT.md's "Dictionary data" table (or a newer one, noted there) |
-| `data/rules/xx.language` | name, `experimental`, `menu-letters`, `extra-keys`, punctuation, `system-languages` (format: `tools/data/language-list.py`) |
+| `data/rules/xx.language` | name, `script`, `experimental`, `menu-letters`, `extra-keys`, punctuation, `system-languages` (format: `tools/data/language-list.py`) |
 | `data/rules/xx.rules` | spelling rules and generator settings (DEVELOPMENT.md, "Dictionary data"); for languages with many forms per word, `suffix` and `compound` rules |
 | `data/rules/xx.keep`, `.lowercase`, `.shorthands`, `.paradigms` | optional, by hand (same table) |
 | `data/CMakeLists.txt` | `xx:<AOSP name>` in `PARROTFISH_LANGUAGES` (`xx:<folder>/xx` for a list outside `data/aosp/`) |
@@ -59,8 +59,27 @@ know the language. Building and testing are described in
 
 Letters that are letters of their own, not accented forms (sv `å ä ö`):
 `no-misspellings` in `xx.rules`, so `har` and `här` both stay words.
-`tools/data/make-oov-list.py` knows only `åäöæø` as such letters
-(`OWN_LETTERS`), so extend it for others.
+`tools/data/make-oov-list.py` and `find-supplement.py` treat `åäöæø` as
+such letters with it (`OWN_LETTERS`). For other letters with a key of
+their own that Unicode writes as an accented letter (Russian `й`,
+Ukrainian `ї`, Belarusian `ў`), add `own-letters LETTERS` (`own-letters й`):
+they are then never typed from the plain letter's key as an accent left out
+(`свои` is not `свой`), and the list generators don't take them for
+accents.
+
+A language in another script: `letters LETTERS` in `xx.rules` lists the
+lowercase letters its words may have (besides `'` and `-`), and
+`build-dict.py` leaves out the list's words with any other letter (Greek
+polytonic forms, Cyrillic words with a Latin look-alike). Greek writes a
+final `ς` for `σ`: the rule `σ ς final` reads a word-final `σ` as `ς`.
+`tools/pf` and the benchmarks need a layout file for the script in
+`data/layouts/`. Set `script` in `xx.language` (`Cyrl`, `Grek`): a layout
+types its script's languages only. The keys come from Jolla's layout for
+the language, as they are (`jcuken` and `greek` in `arrangements.js`); a
+language that shares a script's keys but for a few letters gets its own
+rows under the arrangement's `languages` (uk on ЙЦУКЕН), shown while it is
+typed. A mark that is written or left out at will (Russian `ё`):
+`both-spellings ё`, so both spellings are words.
 
 **3. Generate and review the lists.**
 

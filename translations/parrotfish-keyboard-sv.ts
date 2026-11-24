@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Experimentellt</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latinsk</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Kyrillisk</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Grekisk</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Av</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Bara för de latinska layouterna</translation>
     </message>
 </context>
 <context>
@@ -469,8 +485,12 @@
         <translation>Två mellanslag efter ett ord skriver en punkt</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Behåller blanksteget efter ett valt förslag, som på franska</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>Behåller i fransk text blanksteget efter ett valt förslag</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Bara med franska som skrivspråk</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

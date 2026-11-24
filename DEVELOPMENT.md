@@ -86,13 +86,16 @@ byte for byte the same either way; the RPM takes about 40 s instead of
 10 minutes. `pf rpm --from-source` builds them in the SDK, as a release build
 (no `prebuilt/`) does.
 
-The suite, for all 17 languages: typos in running text with the number row,
+The suite, for all 20 languages: typos in running text with the number row,
 uncertain taps and names mixed in; codes with a digit; words of another
 language in mixed texts; next words and keystrokes saved; real misspellings
 from your own lists. Each language is typed with a typical set of
 dictionaries loaded (en, it, de together; fr, es, en; the others with en)
 on QWERTY; sv, da, nb and fi on `phone-nordic.layout` (QWERTY with å ö ä
-where their language keys put them), cs, sl and hr on QWERTZ. `pf table [LABEL]` shows a
+where their language keys put them), cs, sl and hr on QWERTZ; ru and uk
+together on `phone-jcuken.layout` (Ukrainian: `phone-jcuken-uk.layout`, the
+rows the layout shows while it is typed), el alone on `phone-greek.layout`
+(a layout loads its script's languages only). `pf table [LABEL]` shows a
 run's main numbers, one line per language; `pf compare` marks the cases
 one of the runs lacks or failed. Each run stores its wall and CPU time
 (per case too); the cases run longest first.
@@ -258,11 +261,11 @@ with a `~` also gets `PARROTFISH_DEVTOOLS=ON` (the spec decides): `pf-query`
 and the benchmarks in `/usr/libexec/parrotfish-keyboard/`, with their test
 sentences. Release builds leave them out.
 
-Three packages: `parrotfish-keyboard` (no dictionaries), and two noarch
-language packages named by script (Latin: every language so far; later
-`-cyrillic` and the like), `parrotfish-keyboard-languages-latin` and
-`parrotfish-keyboard-languages-latin-experimental` (the languages marked
-experimental in `data/rules/*.language`; named after the keyboard, so that
+Five packages: `parrotfish-keyboard` (no dictionaries), and four noarch
+language packages named by script, `parrotfish-keyboard-languages-latin`,
+`parrotfish-keyboard-languages-latin-experimental` (the Latin languages marked
+experimental in `data/rules/*.language`), `-languages-cyrillic` and
+`-languages-greek` (named after the keyboard, so that
 installers taking a release's packages together, such as Harpoon, accept
 them; `parrotfish-languages-*` until 1.2, which they obsolete); the spec's file lists come from
 `languages.json` (`tools/split-languages.py`). On aarch64 a fourth,
@@ -301,17 +304,31 @@ same language is fixed too, `strongMargin`; `normal`, the default;
 a full keyboard width); a long press on the spacebar opens Jolla's menu of
 layouts either way. An empty field leans
 towards the language the last text was in:
-`/apps/parrotfish-keyboard/last-language` (written by the handler).
+`/apps/parrotfish-keyboard/last-language` (written by the handler; one per
+script: `last-language-cyrl`, `last-language-grek`).
 `/apps/parrotfish-keyboard/languages` holds the typing languages, codes
 separated by spaces (`"en it de"`); empty, the default, means the system
 language only (English if there is no dictionary for it); others are added
-in the settings. Every enabled language is searched on each keystroke, the
+in the settings. A layout types the languages of its script (`script` in
+`LANG.language`; the arrangement's in `arrangements.js`): the plugin's
+`Languages.selected(value, script)`, `PredictionEngine.script`; a script
+with none of them chosen has the system language if it is written in it,
+else none (Latin: English). Every enabled language is searched on each keystroke, the
 likeliest first, the others only for words that can still compete
 (`searchMargin`) (settings page: `settings/ParrotfishLanguages.qml`).
 The keys: one layout in Jolla's list per
 arrangement (`layouts/layouts_parrotfish.conf`: Auto (QWERTY), Auto
-(QWERTZ), Auto (AZERTY)), each `layouts/parrotfish/ParrotfishKeyboard.qml` with its
-`arrangementKey` (`layouts/parrotfish*.qml`); any typing language on each.
+(QWERTZ), Auto (AZERTY), Auto (ЙЦУКЕН), Auto (Ελληνικά)), each
+`layouts/parrotfish/ParrotfishKeyboard.qml` with its `arrangementKey`
+(`layouts/parrotfish*.qml`); any typing language of its script on each. The
+Cyrillic and Greek ones are Jolla's ru.qml and el.qml rows as they are;
+ЙЦУКЕН shows uk.qml's rows while Ukrainian is typed (`languages` in its
+arrangement, picked by the per-script last language between words); their
+sticky key takes the place of the bottom row's `-` or `'` (`bottomKey`, shown
+plain with the sticky key off; `sticky-key-cyrl`, `sticky-key-grek` keep
+their sign); Greek has Jolla's tonos dead key (`DeadLetterKey.qml`; letter
+keys are Jolla's AccentedCharacterKey) and capitals after its question mark
+`;`.
 Jolla's keyboard switches between the enabled ones (spacebar long press,
 swipe); they are switched on in Jolla's own Keyboards page, as any other
 (the diagnostics show Jolla's enabled and active layouts). The look of the
@@ -486,11 +503,12 @@ Sources (THIRD-PARTY.md has their licences):
 
 | Source | Taken from | Version |
 |---|---|---|
-| AOSP LatinIME wordlists (en_US, it, de; es, fr, pt_BR, pt_PT, nl, sv, da, nb, ro; fi; pl, cs, hr) | `android.googlesource.com/platform/packages/inputmethods/LatinIME`, `dictionaries/` | commit `127336e9f29d69607eab55982324b210279ae8c5` (fetched 2026-10-08, the second group 2026-10-26, fi 2026-10-28, pl, cs and hr 2026-11-10; list versions 44–54, from 2014) |
+| AOSP LatinIME wordlists (en_US, it, de; es, fr, pt_BR, pt_PT, nl, sv, da, nb, ro; fi; pl, cs, hr; ru, el) | `android.googlesource.com/platform/packages/inputmethods/LatinIME`, `dictionaries/` | commit `127336e9f29d69607eab55982324b210279ae8c5` (fetched 2026-10-08, the second group 2026-10-26, fi 2026-10-28, pl, cs and hr 2026-11-10, ru and el 2026-11-22; list versions 44–54, from 2014) |
+| Leipzig Corpora Collection (the uk and bg wordlists, `data/leipzig/`, CC BY; `tools/data/leipzig-wordlist.py`; AOSP has no uk or bg list) | `downloads.wortschatz-leipzig.de/corpora/`: `ukr_news_{2020,2022,2023,2024}_1M`, `ukr_newscrawl_2011_1M`; `bul_news_{2019,2020,2022}_1M`, `bul_newscrawl_{2011,2017}_1M` (`tar.gz`), with the Russian AOSP list as `--foreign` and frequency scale | fetched 2026-11-22 (ukr_news_2024 built 2025-02-13) |
 | Sloleks Morphological Lexicon of Slovene (the sl wordlist, `data/sloleks/`, CC BY-SA 4.0; `tools/data/sloleks-wordlist.py`; the AOSP sl list has 60k words and missed 7–10% of Slovenian text) | `hdl.handle.net/11356/2080` (CLARIN.SI), `Sloleks.3.1.zip` | 3.1 (2026-02), fetched 2026-11-10 |
-| Common Voice sentences | `github.com/common-voice/common-voice`, `server/data/<lang>/` | en, it, de: commit `a28a4cbf9188dafac0cb266f90bc9938f8418564` (2026-10-08); es, fr, pt, nl, sv-SE, da, nb-NO, ro, fi: commit `4c9c6a9c9b0561e029f1d65448edaf62947e12ec` (2026-10-26, fi 2026-10-28); pl, cs, sl, hr: commit `b24381ce7136f2524a1128cb605b49111f79dbea` (2026-11-09) |
-| Tatoeba sentences | `downloads.tatoeba.org/exports/per_language/<lang>/` | eng, ita, deu: 2026-10-08; spa, fra, por, nld, swe, dan, nob, ron: 2026-10-26; fin: 2026-10-28; pol, ces, slv, hrv: 2026-11-09 |
-| Jolla keyboard | Sailfish OS 5.2.0.17 RPMs `jolla-keyboard` (`PreeditHandler.qml`) and `jolla-keyboard-layout-western` | 0.10.4 |
+| Common Voice sentences | `github.com/common-voice/common-voice`, `server/data/<lang>/` | en, it, de: commit `a28a4cbf9188dafac0cb266f90bc9938f8418564` (2026-10-08); es, fr, pt, nl, sv-SE, da, nb-NO, ro, fi: commit `4c9c6a9c9b0561e029f1d65448edaf62947e12ec` (2026-10-26, fi 2026-10-28); pl, cs, sl, hr: commit `b24381ce7136f2524a1128cb605b49111f79dbea` (2026-11-09); ru, uk, el: the same commit (2026-11-22) |
+| Tatoeba sentences | `downloads.tatoeba.org/exports/per_language/<lang>/` | eng, ita, deu: 2026-10-08; spa, fra, por, nld, swe, dan, nob, ron: 2026-10-26; fin: 2026-10-28; pol, ces, slv, hrv: 2026-11-09; rus, ukr, ell: 2026-11-22 |
+| Jolla keyboard | Sailfish OS 5.2.0.17 RPMs `jolla-keyboard` (`PreeditHandler.qml`) and `jolla-keyboard-layout-western` (uk.qml, el.qml too); ru.qml from Sailfish OS 5.1.0.11 | 0.10.4 |
 
 The counts come from `tools/data/count-words.py` and `count-pairs.py`; the
 derived lists from `find-boosts.py`, `find-supplement.py` and
@@ -517,10 +535,10 @@ goverment), not a new word. It reads, from
 
 | File | Content | Made by |
 |---|---|---|
-| `<lang>.rules` | spelling rules (`ae ä`, `e' è final`, `ş ș`); settings for the generators: `paradigm`/`paradigm-plain` (real verb forms that are not accent misspellings), `only-marks`, `no-misspellings`, `capitalised-nouns`, `min-freq` (drop the padding of a list; ro), `one-source` (a supplement word needs only N sightings in both corpora together; fi, sl, hr); word forms the list lacks, for the engine (`Dictionary::isWordForm`; fi): `suffix ENDING... [after=LETTERS] [drop=LETTERS]` (endings on a word: kännykkä → kännykkänsä; `drop`: talon → taloni) and `compound MIN PARTS` (up to PARTS words of at least MIN letters, and hyphenated parts). Such forms stand when typed (never autocorrected, and count for their language) but are never suggested | hand |
+| `<lang>.rules` | spelling rules (`ae ä`, `e' è final`, `ş ș`); settings for the generators: `paradigm`/`paradigm-plain` (real verb forms that are not accent misspellings), `only-marks`, `no-misspellings`, `capitalised-nouns`, `min-freq` (drop the padding of a list; ro), `one-source` (a supplement word needs only N sightings in both corpora together; fi, sl, hr, el), `own-letters` (letters with a key of their own that Unicode writes as an accented letter, ru `й`, uk `йї`: their base is themselves, so свои is not an accent slip for свой), `letters` (the letters a word may have besides ' and -: other words are left out, el polytonic καὶ, Latin look-alikes), `both-spellings` (a mark written or left out at will, ru `ё`: the spelling without it is added as a word, not skipped as a variant); word forms the list lacks, for the engine (`Dictionary::isWordForm`; fi): `suffix ENDING... [after=LETTERS] [drop=LETTERS]` (endings on a word: kännykkä → kännykkänsä; `drop`: talon → taloni) and `compound MIN PARTS` (up to PARTS words of at least MIN letters, and hyphenated parts). Such forms stand when typed (never autocorrected, and count for their language) but are never suggested | hand |
 | `<lang>.lowercase` | abbreviations the list has only in capitals that are often typed in lower case (`OK`, `SMS`): the lowercase spelling is added as a word too, so typed that way it stands (optional) | hand |
 | `<lang>.shorthands` | chat shorthands the list lacks in lower case (`idk`, `btw`): added as words that stand when typed but are never suggested (optional) | hand |
-| `<lang>.keep` | plain spellings that are words of their own, never marked as misspellings (pt `forca`, ro `frumoasa`); also words the supplement keeps even where another language's text uses them more (de `Tja`, en `wad`) | hand |
+| `<lang>.keep` | plain spellings that are words of their own, never marked as misspellings (pt `forca`, ro `frumoasa`); also words the supplement keeps even where another language's text uses them more (de `Tja`, en `wad`), or that are a single letter or another word's accent variant (el `η`) | hand |
 | `<lang>.misspellings` | accent-less spellings that are not words (`perche` → `perché`) | `tools/data/find-accent-misspellings.py`, reviewed |
 | `<lang>.supplement` | common words missing from the AOSP list (`uomo`, `überhaupt`) | `tools/data/find-supplement.py`, reviewed |
 | `<lang>.boost` | everyday frequencies: raised for words common in Tatoeba (`I'm`, `guess`), lowered for written-text function words (`in`, `of`); rank mapping, see the script | `tools/data/find-boosts.py`, reviewed |

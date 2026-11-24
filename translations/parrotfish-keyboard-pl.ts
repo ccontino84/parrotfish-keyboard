@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Eksperymentalne</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Łacinka</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Cyrylica</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Pismo greckie</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Wyłączony</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Tylko dla układów łacińskich</translation>
     </message>
 </context>
 <context>
@@ -470,8 +486,12 @@
         <translation>Dwie spacje po słowie wstawiają kropkę</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Zostawia spację po wybranej podpowiedzi, jak w języku francuskim</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>W tekście francuskim zostawia spację po wybranej podpowiedzi</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Tylko z francuskim wśród języków pisania</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

@@ -1,5 +1,6 @@
 .pragma library
 // SPDX-FileCopyrightText: Jolla Ltd.
+// SPDX-FileCopyrightText: Oleksii Serdiuk
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: BSD-3-Clause AND LGPL-2.1-or-later
 //
@@ -10,15 +11,21 @@
 // sticky = the sticky key (stickySigns).
 //
 // From en.qml (QWERTY), de.qml (QWERTZ) and fr.qml (AZERTY) of
-// jolla-keyboard 0.10.4 (Jolla Ltd., BSD-3-Clause, notice below). Changes:
+// jolla-keyboard 0.10.4 (Jolla Ltd., BSD-3-Clause, notice below); ЙЦУКЕН
+// from ru.qml (Jolla Ltd., as on Sailfish OS 5.1) and uk.qml (Oleksii Serdiuk
+// and Jolla Ltd., notice below), Greek from el.qml (Jolla Ltd.). Changes:
 // QWERTY: a full-width apostrophe key (the sticky key) ends the middle row,
 // whose symbol view is it.qml's with en.qml's `; M's second-page ~ is ×.
 // AZERTY: the apostrophe (the sticky key) takes ç's place after N, ç goes to
-// C's long press; ' on B and " on C's second page (÷ dropped). All: more
-// accents, from Jolla's da/fr/pt/ro and pl/cs/sl layouts.
+// C's long press; ' on B and " on C's second page (÷ dropped). All Latin:
+// more accents, from Jolla's da/fr/pt/ro and pl/cs/sl layouts. ЙЦУКЕН: the
+// sticky key in place of the bottom row's - (ru) or ' (uk), the other
+// language's letters on long press (ы: і, і: ы; э є, ъ ї, г ґ, е ё), a key
+// switching between the two (a 12th in row 2; ґ then on г's long press).
+// Greek: ; types ; also shifted (: on its long press, with ' and ·).
 
 /*
- * Copyright (C) 2012-2013 Jolla ltd and/or its subsidiary(-ies). All rights reserved.
+ * Copyright (C) 2012-2016 Jolla ltd and/or its subsidiary(-ies). All rights reserved.
  *
  * Contact: Pekka Vuorela <pekka.vuorela@jollamobile.com>
  *
@@ -42,6 +49,39 @@
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+
+/*
+ * Copyright (c) 2013 – 2015, Oleksii Serdiuk
+ * Copyright (c) 2013 – 2022, Jolla Ltd.
+ * All rights reserved.
+ *
+ * Contact: Pekka Vuorela <pekka.vuorela@jolla.com>
+ * Contact: Oleksii Serdiuk <contacts[at]oleksii[dot]name>
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Jolla Ltd. nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
@@ -160,11 +200,139 @@ var arrangements = {
             {"c": "n", "s": "N", "y": ";", "y2": "„", "a": "nñńň", "A": "NÑŃŇ"},
             {"c": "'", "s": "'", "y": ":", "y2": "‰", "sticky": true}
         ] }
+    ] },
+    // Other scripts: Jolla's rows as they are, with the bottom row's extra
+    // key (`bottomKey`; not a sticky key: ' is part of Ukrainian words).
+    // `languages`: the rows of the typing
+    // language's own layout (uk.qml); `switchLabels`: the languages the
+    // switch key cycles through, with a name for each (other()).
+    "jcuken": { "name": "ЙЦУКЕН", "script": "Cyrl", "bottomKey": "-", "narrowEnds": true, "symbolCaption": "АБВ",
+                "switchLabels": {"ru": "РУС", "uk": "УКР"}, "rows": [
+        { "split": 6, "keys": [
+            {"c": "й", "s": "Й", "y": "1", "y2": "€"},
+            {"c": "ц", "s": "Ц", "y": "2", "y2": "£"},
+            {"c": "у", "s": "У", "y": "3", "y2": "$", "a": "уў", "A": "УЎ"},
+            {"c": "к", "s": "К", "y": "4", "y2": "¥"},
+            {"c": "е", "s": "Е", "y": "5", "y2": "₹", "a": "ёе€", "A": "ЁЕ€"},
+            {"c": "н", "s": "Н", "y": "6", "y2": "₽"},
+            {"c": "г", "s": "Г", "y": "7", "y2": "<", "a": "гґ", "A": "ГҐ"},
+            {"c": "ш", "s": "Ш", "y": "8", "y2": ">"},
+            {"c": "щ", "s": "Щ", "y": "9", "y2": "["},
+            {"c": "з", "s": "З", "y": "0", "y2": "]"},
+            {"c": "х", "s": "Х", "y": "№", "y2": "¢"},
+            {"c": "ъ", "s": "Ъ", "y": "%", "y2": "‰", "a": "ъї", "A": "ЪЇ", "fit": true}
+        ] },
+        { "split": 5, "keys": [
+            {"c": "ф", "s": "Ф", "y": "*", "y2": "`"},
+            {"c": "ы", "s": "Ы", "y": "#", "y2": "√", "a": "ыі", "A": "ЫІ"},
+            {"c": "в", "s": "В", "y": "+", "y2": "±"},
+            {"c": "а", "s": "А", "y": "×", "y2": "_"},
+            {"c": "п", "s": "П", "y": "=", "y2": "≈"},
+            {"c": "р", "s": "Р", "y": "(", "y2": "{"},
+            {"c": "о", "s": "О", "y": ")", "y2": "}"},
+            {"c": "л", "s": "Л", "y": "\"", "y2": "°"},
+            {"c": "д", "s": "Д", "y": "~", "y2": "·"},
+            {"c": "ж", "s": "Ж", "y": "!", "y2": "¡"},
+            {"c": "э", "s": "Э", "y": "?", "y2": "¿", "a": "эє", "A": "ЭЄ"}
+        ] },
+        { "split": 6, "keys": [
+            {"c": "я", "s": "Я", "y": "@", "y2": "«"},
+            {"c": "ч", "s": "Ч", "y": "&", "y2": "»"},
+            {"c": "с", "s": "С", "y": "/", "y2": "÷"},
+            {"c": "м", "s": "М", "y": "\\", "y2": "“"},
+            {"c": "и", "s": "И", "y": "'", "y2": "”"},
+            {"c": "т", "s": "Т", "y": ";", "y2": "„"},
+            {"c": "ь", "s": "Ь", "y": ":", "y2": "©"},
+            {"c": "б", "s": "Б", "y": "^", "y2": "®"},
+            {"c": "ю", "s": "Ю", "y": "|", "y2": "§"}
+        ] }
+    ], "languages": { "uk": { "bottomKey": "'", "rows": [
+        { "split": 6, "keys": [
+            {"c": "й", "s": "Й", "y": "1", "y2": "€"},
+            {"c": "ц", "s": "Ц", "y": "2", "y2": "£"},
+            {"c": "у", "s": "У", "y": "3", "y2": "$"},
+            {"c": "к", "s": "К", "y": "4", "y2": "¥"},
+            {"c": "е", "s": "Е", "y": "5", "y2": "₹", "a": "её", "A": "ЕЁ"},
+            {"c": "н", "s": "Н", "y": "6", "y2": "₴"},
+            {"c": "г", "s": "Г", "y": "7", "y2": "<", "a": "гґ₴", "A": "ГҐ₴"},
+            {"c": "ш", "s": "Ш", "y": "8", "y2": ">"},
+            {"c": "щ", "s": "Щ", "y": "9", "y2": "["},
+            {"c": "з", "s": "З", "y": "0", "y2": "]"},
+            {"c": "х", "s": "Х", "y": "№", "y2": "¢"},
+            {"c": "ї", "s": "Ї", "y": "%", "y2": "‰", "a": "їъ", "A": "ЇЪ", "fit": true}
+        ] },
+        { "split": 6, "keys": [
+            {"c": "ф", "s": "Ф", "y": "*", "y2": "`"},
+            {"c": "і", "s": "І", "y": "#", "y2": "√", "a": "іы", "A": "ІЫ"},
+            {"c": "в", "s": "В", "y": "+", "y2": "±"},
+            {"c": "а", "s": "А", "y": "×", "y2": "_"},
+            {"c": "п", "s": "П", "y": "=", "y2": "≈"},
+            {"c": "р", "s": "Р", "y": "(", "y2": "{"},
+            {"c": "о", "s": "О", "y": ")", "y2": "}"},
+            {"c": "л", "s": "Л", "y": "\"", "y2": "°"},
+            {"c": "д", "s": "Д", "y": "~", "y2": "·"},
+            {"c": "ж", "s": "Ж", "y": "²", "y2": "³"},
+            {"c": "є", "s": "Є", "y": "!", "y2": "¡", "a": "єэ", "A": "ЄЭ"},
+            {"c": "ґ", "s": "Ґ", "y": "?", "y2": "¿", "switchSlot": true}
+        ] },
+        { "split": 6, "keys": [
+            {"c": "я", "s": "Я", "y": "@", "y2": "«"},
+            {"c": "ч", "s": "Ч", "y": "&", "y2": "»"},
+            {"c": "с", "s": "С", "y": "/", "y2": "÷"},
+            {"c": "м", "s": "М", "y": "\\", "y2": "“"},
+            {"c": "и", "s": "И", "y": "-", "y2": "”"},
+            {"c": "т", "s": "Т", "y": ";", "y2": "„"},
+            {"c": "ь", "s": "Ь", "y": ":", "y2": "©"},
+            {"c": "б", "s": "Б", "y": "^", "y2": "®"},
+            {"c": "ю", "s": "Ю", "y": "|", "y2": "§"}
+        ] }
+    ] } } },
+    // d, D: the letter after Jolla's tonos dead key (`dead`).
+    "greek": { "name": "Ελληνικά", "script": "Grek", "symbolCaption": "ΑΒΓ", "rows": [
+        { "split": 5, "keys": [
+            {"c": ";", "s": ";", "y": "1", "y2": "€", "a": ";'·:", "A": ";'·:"},
+            {"c": "ς", "s": "ς", "y": "2", "y2": "£"},
+            {"c": "ε", "s": "Ε", "y": "3", "y2": "$", "a": "έε€", "A": "ΈΕ€", "d": "΄έ", "D": "΄Έ"},
+            {"c": "ρ", "s": "Ρ", "y": "4", "y2": "¥"},
+            {"c": "τ", "s": "Τ", "y": "5", "y2": "₹"},
+            {"c": "υ", "s": "Υ", "y": "6", "y2": "%", "a": "ύυϋΰ", "A": "ΎΥΫ", "d": "΄ύ", "D": "΄Ύ"},
+            {"c": "θ", "s": "Θ", "y": "7", "y2": "<"},
+            {"c": "ι", "s": "Ι", "y": "8", "y2": ">", "a": "ίιϊΐ", "A": "ΊΙΪ", "d": "΄ί", "D": "΄Ί"},
+            {"c": "ο", "s": "Ο", "y": "9", "y2": "[", "a": "όο", "A": "ΌΟ", "d": "΄ό", "D": "΄Ό"},
+            {"c": "π", "s": "Π", "y": "0", "y2": "]"}
+        ] },
+        { "split": 5, "keys": [
+            {"c": "α", "s": "Α", "y": "*", "y2": "`", "a": "αά", "A": "ΑΆ", "d": "΄ά", "D": "΄Ά"},
+            {"c": "σ", "s": "Σ", "y": "#", "y2": "^"},
+            {"c": "δ", "s": "Δ", "y": "+", "y2": "|"},
+            {"c": "φ", "s": "Φ", "y": "-", "y2": "_"},
+            {"c": "γ", "s": "Γ", "y": "=", "y2": "§"},
+            {"c": "η", "s": "Η", "y": "(", "y2": "{", "a": "ηή", "A": "ΗΉ", "d": "΄ή", "D": "΄Ή"},
+            {"c": "ξ", "s": "Ξ", "y": ")", "y2": "}"},
+            {"c": "κ", "s": "Κ", "y": "!", "y2": "¡"},
+            {"c": "λ", "s": "Λ", "y": "?", "y2": "¿"},
+            {"c": "΄", "s": "΄", "dead": true}
+        ] },
+        { "split": 5, "keys": [
+            {"c": "ζ", "s": "Ζ", "y": "@", "y2": "«"},
+            {"c": "χ", "s": "Χ", "y": "&", "y2": "»"},
+            {"c": "ψ", "s": "Ψ", "y": "/", "y2": "\""},
+            {"c": "ω", "s": "Ω", "y": "\\", "y2": "“", "a": "ωώ", "A": "ΩΏ", "d": "΄ώ", "D": "΄Ώ"},
+            {"c": "β", "s": "Β", "y": "'", "y2": "”"},
+            {"c": "ν", "s": "Ν", "y": ";", "y2": "„"},
+            {"c": "μ", "s": "Μ", "y": ":", "y2": "~"}
+        ] }
     ] }
 }
 
 // What the sticky key can type, in its long-press menu's order.
 var stickySigns = "'\"-_@#/"
+
+// The long-press menu of a key typing `sign`: it first, then the sticky
+// key's other signs.
+function signsAfter(sign) {
+    return sign + stickySigns.replace(sign, "")
+}
 
 // The sticky key on the `side` of its row. Without an apostrophe key
 // (QWERTZ, QWERTY with the language keys) it goes in the bottom letter row,
@@ -371,17 +539,77 @@ function menusOf(a, letter, letters) {
         for (var i = 0; i < a.rows[r].keys.length; ++i) {
             var k = a.rows[r].keys[i]
             if (k.slot === undefined && k.a && k.a.indexOf(letter) >= 0)
-                return accentMenus(k.a, k.A || "", letters)
+                return accentMenus(k.a, k.A || "", letters, k.c)
         }
     return {"a": "", "A": "", "more": "", "moreShifted": ""}
 }
 
+// The script of the arrangement called `name` (ISO 15924).
+function scriptOf(name) {
+    var a = arrangements[name]
+    return a && a.script ? a.script : "Latn"
+}
+
+// The languages of `codes` the arrangement called `name` has a switch key
+// label for (ЙЦУКЕН: ru, uk), in the order of `codes`.
+function switchable(name, codes) {
+    var a = arrangements[name], out = []
+    for (var i = 0; a && a.switchLabels && i < codes.length; ++i)
+        if (a.switchLabels[codes[i]])
+            out.push(codes[i])
+    return out
+}
+
+// `language` if the arrangement called `name` has rows of its own for it, else "".
+function variantOf(name, language) {
+    var a = arrangements[name]
+    return a && a.languages && a.languages[language] ? language : ""
+}
+
+// An arrangement of another script: its rows (or `variant`'s), the bottom
+// row's extra key (`bottomSign`; none without one: Greek),
+// the number row; `switchTo`: the language a key at the end of row 2 shows
+// the keys of (ЙЦУКЕН with Russian and Ukrainian), in place of a
+// `switchSlot` key (ґ, then on г's long press);
+// `narrowEnds`: Shift and Backspace at Jolla's narrow width (ru.qml);
+// `symbolCaption`: the symbol key's label back to the letters (АБВ).
+function other(a, variant, numberRow, switchTo) {
+    var v = variant !== "" && a.languages ? a.languages[variant] : null
+    var rows = v ? v.rows : a.rows
+    if (switchTo && a.switchLabels && a.switchLabels[switchTo]) {
+        var keys = []
+        for (var i = 0; i < rows[1].keys.length; ++i)
+            if (!rows[1].keys[i].switchSlot)
+                keys.push(rows[1].keys[i])
+        keys.push({"c": a.switchLabels[switchTo], "s": a.switchLabels[switchTo], "switchTo": switchTo, "fit": true})
+        rows = [rows[0], {"split": rows[1].split, "keys": keys}].concat(rows.slice(2))
+    }
+    var sign = v && v.bottomKey ? v.bottomKey : a.bottomKey
+    var b = {"name": a.name, "script": a.script, "rows": rows, "bottomSign": sign,
+             "narrowEnds": a.narrowEnds === true,
+             "symbolCaption": a.symbolCaption}
+    return numberRow ? carry(b, withNumberRow(b)) : b
+}
+
+// `to` with the bottom-row fields of `from`.
+function carry(from, to) {
+    var fields = ["script", "bottomSign", "narrowEnds", "symbolCaption"]
+    for (var i = 0; i < fields.length; ++i)
+        if (from[fields[i]] !== undefined)
+            to[fields[i]] = from[fields[i]]
+    return to
+}
+
 // The arrangement called `name` (else QWERTY) with the layout's settings;
-// `lastRowLetter`: a typing language has a letter for the sticky key's place.
-function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide, lastRowLetter) {
+// `lastRowLetter`: a typing language has a letter for the sticky key's place;
+// `variant`: the typing language whose own rows to show (variantOf());
+// `switchTo`: other().
+function get(name, numberRow, stickySide, stickyOn, languageKeys, languageSide, lastRowLetter, variant, switchTo) {
     var a = arrangements[name] || arrangements["qwerty"]
     if (!arrangements[name])
         name = "qwerty"
+    if (scriptOf(name) !== "Latn")
+        return other(a, variant || "", numberRow, switchTo || "")
     a = languageKeys ? withLanguageKeys(a) : withoutLanguageKeys(name, a)
     if (languageKeys && stickyOn === false)
         a = withLanguageKeyInLastRow(a, lastRowLetter === true)
@@ -447,12 +675,14 @@ var back = "\u22ee"   // ⋮, drawn as ‹ (with a key's other letters)
 
 // A key's long-press menus for the typing languages' `letters`: {a, A,
 // more, moreShifted}; the other letters go behind `more`.
-function accentMenus(a, A, letters) {
+function accentMenus(a, A, letters, plain) {
+    var own = plain ? plain.toLowerCase() : ""
     var split = function(accents) {
         var keep = "", rest = ""
         for (var i = 0; i < accents.length; ++i) {
             var c = accents.charAt(i), lower = c.toLowerCase()
-            if (lower === c.toUpperCase() || (lower >= "a" && lower <= "z") || letters.indexOf(lower) >= 0)
+            if (lower === c.toUpperCase() || (lower >= "a" && lower <= "z") || lower === own
+                    || letters.indexOf(lower) >= 0)
                 keep += c   // a sign, the plain letter or a typing language's letter
             else
                 rest += c

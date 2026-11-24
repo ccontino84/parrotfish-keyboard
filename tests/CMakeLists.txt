@@ -13,10 +13,33 @@ target_link_libraries(sentence-bench PRIVATE parrotfish-engine)
 add_executable(nextword-bench bench/nextword-bench.cpp)
 target_link_libraries(nextword-bench PRIVATE parrotfish-engine)
 
+# Tiny Greek and Russian dictionaries (unit/scripts) for engine-test; xx is
+# the Russian list without its rules.
+set(script_dir ${CMAKE_CURRENT_SOURCE_DIR}/unit/scripts)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/scripts)
+set(script_dicts)
+foreach(entry el:el ru:ru xx:ru)
+    string(REPLACE ":" ";" parts ${entry})
+    list(GET parts 0 lang)
+    list(GET parts 1 src)
+    set(out ${CMAKE_CURRENT_BINARY_DIR}/scripts/${lang}.pfd)
+    add_custom_command(
+        OUTPUT ${out}
+        COMMAND ${Python3_EXECUTABLE} -I ${PROJECT_SOURCE_DIR}/tools/data/build-dict.py
+                ${lang} ${script_dir}/${src}_wordlist.combined ${script_dir} ${out}
+        DEPENDS ${PROJECT_SOURCE_DIR}/tools/data/build-dict.py ${script_dir}/${src}_wordlist.combined
+                ${script_dir}/el.rules ${script_dir}/ru.rules
+        COMMENT "Building the ${lang} test dictionary"
+        VERBATIM)
+    list(APPEND script_dicts ${out})
+endforeach()
+add_custom_target(test-dictionaries DEPENDS ${script_dicts})
+
 add_executable(engine-test unit/engine-test.cpp)
 target_link_libraries(engine-test PRIVATE parrotfish-engine)
-add_dependencies(engine-test dictionaries)
-add_test(NAME engine COMMAND engine-test ${PROJECT_BINARY_DIR}/data ${PROJECT_SOURCE_DIR}/data/layouts)
+add_dependencies(engine-test dictionaries test-dictionaries)
+add_test(NAME engine COMMAND engine-test ${PROJECT_BINARY_DIR}/data ${PROJECT_SOURCE_DIR}/data/layouts
+                             ${CMAKE_CURRENT_BINARY_DIR}/scripts)
 # sentence-bench -W: real misspellings typed after a few words of context.
 add_test(NAME sentence-bench-misspellings
          COMMAND sentence-bench -l ${PROJECT_SOURCE_DIR}/data/layouts/phone-qwerty.layout

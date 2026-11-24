@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Jolla's CharacterKey with a KeyBackground and a LongPressHint.
+// Jolla's AccentedCharacterKey (a CharacterKey that also types the letter
+// after a dead key: deadKeyAccents) with a KeyBackground and a LongPressHint.
 // moreAccents(Shifted): the letters behind › (LongPressMenu.qml); numberRow:
 // a key of the number row; group: a language key; popupAlways: its
 // long press works in the symbol view too (as Jolla's PeriodKey); pad: a
@@ -11,7 +12,7 @@ import Sailfish.Silica 1.0
 import com.jolla.keyboard 1.0
 import "../.."
 
-CharacterKey {
+AccentedCharacterKey {
     property bool sticky: false
     property string moreAccents
     property string moreAccentsShifted

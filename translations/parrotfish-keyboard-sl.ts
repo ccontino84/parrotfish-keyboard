@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Preizkusni</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latinica</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Cirilica</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Grška pisava</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Izklopljeno</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Samo za latinične razporeditve</translation>
     </message>
 </context>
 <context>
@@ -471,8 +487,12 @@
         <translation>Dva presledka za besedo vstavita piko</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Ohrani presledek po izbranem predlogu, kot v francoščini</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>V francoskem besedilu ohrani presledek po izbranem predlogu</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Samo s francoščino med jeziki pisanja</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

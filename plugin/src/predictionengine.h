@@ -31,6 +31,8 @@ class PredictionEngine : public QAbstractListModel
     // The typing languages ("en it pt_BR"); empty: the system language, else
     // English. Codes without a dictionary are skipped.
     Q_PROPERTY(QString languages READ languages WRITE setLanguages NOTIFY languagesChanged)
+    // The layout's script ("Latn", "Cyrl", "Grek"): only its languages are loaded.
+    Q_PROPERTY(QString script READ script WRITE setScript NOTIFY scriptChanged)
     // The layout's language code (EN, IT, DE): a weak hint for the start.
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
     // The language the last text was in: the starting lean for an empty field.
@@ -74,6 +76,8 @@ public:
     void setPreeditKeys(const QStringList &keys);
     QString languages() const { return m_languages; }
     void setLanguages(const QString &languages);
+    QString script() const { return m_script; }
+    void setScript(const QString &script);
     QString language() const { return m_language; }
     void setLanguage(const QString &language);
     QString leadingLanguage() const;
@@ -145,6 +149,7 @@ signals:
     void preeditChanged();
     void preeditKeysChanged();
     void languagesChanged();
+    void scriptChanged();
     void languageChanged();
     void leadingLanguageChanged();
     void strengthChanged();
@@ -172,6 +177,7 @@ private:
     QString m_preedit;
     QStringList m_preeditKeys;
     QString m_languages;
+    QString m_script = QStringLiteral("Latn");
     QString m_language;
     QString m_context;
     std::vector<double> m_contextPrior;   // the starting leans m_context was read with

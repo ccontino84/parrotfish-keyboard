@@ -62,6 +62,18 @@
         <source>Experimental</source>
         <translation>Experimenteel</translation>
     </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latijns</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Cyrillisch</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Grieks</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishLearned</name>
@@ -167,6 +179,10 @@
         <source>Off</source>
         <comment>sticky key</comment>
         <translation>Uit</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Alleen voor de Latijnse indelingen</translation>
     </message>
 </context>
 <context>
@@ -469,8 +485,12 @@
         <translation>Twee keer spatie na een woord typt een punt</translation>
     </message>
     <message>
-        <source>Keeps the space after a picked suggestion, as in French</source>
-        <translation>Houdt de spatie na een gekozen suggestie, zoals in het Frans</translation>
+        <source>In French text, keeps the space after a picked suggestion</source>
+        <translation>Houdt in Franse tekst de spatie na een gekozen suggestie</translation>
+    </message>
+    <message>
+        <source>Only with French as a typing language</source>
+        <translation>Alleen met Frans als typtaal</translation>
     </message>
     <message>
         <source>Space turns :-) into 🙂. Otherwise the emoji button offers it</source>

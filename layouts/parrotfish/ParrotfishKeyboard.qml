@@ -34,10 +34,19 @@ KeyboardLayout {
     readonly property bool stickyOn: stickyOnConfig.value !== false && stickyOnConfig.value !== "false"
     // The keys: set by each entry's file.
     property string arrangementKey: "qwerty"
+    // Its script (Latn, Cyrl, Grek): the typing languages of this layout.
+    readonly property string script: Arrangements.scriptOf(arrangementKey)
+    // The typing language whose own rows are shown (uk.qml's on ЙЦУКЕН), or "".
+    readonly property string _variant: script !== "Latn" ? Arrangements.variantOf(arrangementKey, groupLanguage) : ""
+    // The language the switch key shows the keys of (Russian and Ukrainian
+    // both typing languages), or "". The keys change only by that key.
+    property string _switchTo: ""
+    // Other scripts: the language of the keys shown, a hint for the engine.
+    readonly property string keysLanguage: script !== "Latn" ? groupLanguage : ""
     readonly property var arrangement: Arrangements.get(arrangementKey, numberRowOn,
                                                         stickySideConfig.value, stickyOn,
                                                         languageKeysOn, languageKeysSideConfig.value,
-                                                        _anyLastRowLetter)
+                                                        _anyLastRowLetter, _variant, _switchTo)
 
     // The language keys' language (LANG.language's extra-keys): the one the
     // handler remembers (last-language), so that they change between words.
@@ -48,7 +57,7 @@ KeyboardLayout {
     // its extra-keys).
     property bool _anyLastRowLetter: false
     readonly property bool languageKeysOn: String(languageKeysConfig.value) === "true"
-                                           && _anyGroupLanguage
+                                           && _anyGroupLanguage && script === "Latn"
     // Bumped when letters change in place: the handler's check compares places only.
     property int keysRevision: 0
     onGroupLettersChanged: keysRevision++
@@ -61,9 +70,9 @@ KeyboardLayout {
     // The mark on keys with a long-press menu (parrotfish/LongPressHint.qml).
     readonly property bool longPressHint: longPressHintConfig.value !== "off"
     // The comma's and the period's long-press menus, by typing language.
-    readonly property var punctuation: Languages.punctuation(Languages.selected(languagesConfig.value))
+    readonly property var punctuation: Languages.punctuation(Languages.selected(languagesConfig.value, script))
     // The accented letters the long-press menus show first; a change rebuilds the rows.
-    readonly property string accentLetters: Languages.menuLetters(Languages.selected(languagesConfig.value))
+    readonly property string accentLetters: Languages.menuLetters(Languages.selected(languagesConfig.value, script))
 
     // The sign of the sticky key: the one last picked from its long press.
     readonly property string stickySign: {
@@ -98,6 +107,8 @@ KeyboardLayout {
     // A sticky or language key in the bottom letter row: Shift and Backspace
     // take Jolla's narrow width (as in its tr.qml, uk.qml).
     readonly property bool _narrowEnds: {
+        if (arrangement.narrowEnds)
+            return true
         var last = arrangement.rows[arrangement.rows.length - 1].keys
         for (var i = 0; i < last.length; ++i)
             if (last[i].sticky || last[i].slot !== undefined)
@@ -143,6 +154,25 @@ KeyboardLayout {
         key: "/apps/parrotfish-keyboard/automatic-capitals"   // true (the default), false
         defaultValue: true
     }
+    // Greek ends a question with ; which Jolla's automatic capitals don't
+    // know: checked after Jolla's (KeyboardBase.applyAutocaps).
+    Timer {
+        id: greekCapsCheck
+        interval: 5
+        onTriggered: {
+            if (!parrotfishLayout.layoutInUse || !parrotfishLayout.automaticCapitals || keyboard.autocaps
+                    || !MInputMethodQuick.surroundingTextValid || MInputMethodQuick.hiddenText)
+                return
+            var text = MInputMethodQuick.surroundingText.substring(0, MInputMethodQuick.cursorPosition)
+            if (/[\u0370-\u03ff\u1f00-\u1fff][;\u037e] $/.test(text))
+                keyboard.autocaps = true
+        }
+    }
+    Connections {
+        target: parrotfishLayout.script === "Grek" ? MInputMethodQuick : null
+        onCursorPositionChanged: greekCapsCheck.restart()
+    }
+
     Connections {
         target: typeof keyboard !== "undefined" ? keyboard : null
         onAutocapsChanged: {
@@ -184,7 +214,21 @@ KeyboardLayout {
     }
 
     function _updateGroupLanguage() {
-        var codes = Languages.selected(languagesConfig.value)
+        var codes = Languages.selected(languagesConfig.value, script)
+        if (script !== "Latn") {
+            // The keys chosen with the switch key, else the last text's
+            // language, else the first.
+            var switchable = Arrangements.switchable(arrangementKey, codes)
+            var chosen = String(keysConfig.value), remembered = String(lastLanguageConfig.value)
+            groupLanguage = switchable.indexOf(chosen) >= 0 ? chosen
+                          : codes.indexOf(remembered) >= 0 ? remembered
+                          : codes.length > 0 ? codes[0] : ""
+            var at = switchable.indexOf(groupLanguage)
+            _switchTo = switchable.length > 1 && at >= 0 ? switchable[(at + 1) % switchable.length] : ""
+            _anyGroupLanguage = false
+            _anyLastRowLetter = false
+            return
+        }
         var claim = [], lastRow = false
         for (var i = 0; i < codes.length; ++i) {
             var letters = Languages.extraKeys(codes[i])
@@ -265,9 +309,24 @@ KeyboardLayout {
 
     ConfigurationValue {
         id: lastLanguageConfig
-        key: "/apps/parrotfish-keyboard/last-language"   // written by the handler
+        // Written by the handler; one per script (last-language-cyrl).
+        key: "/apps/parrotfish-keyboard/last-language" + (parrotfishLayout.script === "Latn" ? ""
+                                                          : "-" + parrotfishLayout.script.toLowerCase())
         defaultValue: ""
         onValueChanged: parrotfishLayout._updateGroupLanguage()
+    }
+
+    ConfigurationValue {
+        id: keysConfig
+        // The switch key's choice (ru, uk); one per script (keys-cyrl).
+        key: "/apps/parrotfish-keyboard/keys-" + parrotfishLayout.script.toLowerCase()
+        defaultValue: ""
+        onValueChanged: parrotfishLayout._updateGroupLanguage()
+    }
+
+    // The switch key: the keys of `code` from now on.
+    function switchKeys(code) {
+        keysConfig.value = code
     }
 
     ConfigurationValue {
@@ -476,6 +535,16 @@ KeyboardLayout {
         LetterKey {}
     }
 
+    Component {
+        id: deadKeyComponent
+        DeadLetterKey {}
+    }
+
+    Component {
+        id: switchKeyComponent
+        SwitchKey {}
+    }
+
     // The emoji key of split landscape, which has no suggestion bar.
     Component {
         id: emojiKeyComponent
@@ -624,12 +693,18 @@ KeyboardLayout {
                 if (i + 1 === emojiAt)
                     keys.push(emojiKeyComponent.createObject(row3))
                 var k = spec.keys[i]
-                var menus = Arrangements.accentMenus(k.a || "", k.A || "", accentLetters)
-                var key = letterKeyComponent.createObject(rows[r], {
+                var menus = Arrangements.accentMenus(k.a || "", k.A || "", accentLetters, k.c)
+                if (k.switchTo) {
+                    keys.push(switchKeyComponent.createObject(rows[r], {"caption": k.c, "target": k.switchTo,
+                                                                        "layout": parrotfishLayout}))
+                    continue
+                }
+                var key = (k.dead ? deadKeyComponent : letterKeyComponent).createObject(rows[r], {
                     "caption": k.c, "captionShifted": k.s,
                     "symView": k.y || "", "symView2": k.y2 || "",
                     "accents": menus.a, "accentsShifted": menus.A,
-                    "moreAccents": menus.more, "moreAccentsShifted": menus.moreShifted
+                    "moreAccents": menus.more, "moreAccentsShifted": menus.moreShifted,
+                    "deadKeyAccents": k.d || "", "deadKeyAccentsShifted": k.D || ""
                 })
                 if (k.fit)
                     key.fontSizeMode = Text.HorizontalFit

@@ -46,7 +46,8 @@ frequency comes from a fit over both sources counted as one.
 `supplement-min-total N` in LANG.rules sets --min-total for a language
 with little text (Romanian: niciuna 10 times). With
 `no-misspellings`, å, ä, ö, æ and ø are letters of their own (vaara and
-väärä are two words): rule 2 doesn't count them as accent variants.
+väärä are two words): rule 2 doesn't count them as accent variants; so are
+the letters of `own-letters LETTERS` (Russian й: свой, свои).
 
 Words below `min-freq N` in LANG.rules count as missing from the list
 (build-dict.py leaves them out).
@@ -63,7 +64,14 @@ import sys
 import unicodedata
 
 
-OWN_LETTERS = "åäöæø"
+OWN_LETTERS = "åäöæø"   # with `no-misspellings`
+
+
+def own_letters(rules):
+    """The letters of their own of a rules file's lines (split): those of
+    `own-letters`, and OWN_LETTERS with `no-misspellings`."""
+    own = "".join("".join(r[1:]) for r in rules if r[0] == "own-letters").lower()
+    return own + (OWN_LETTERS if any(r[0] == "no-misspellings" for r in rules) else "")
 
 
 def fold(word, keep=""):
@@ -145,7 +153,10 @@ def main():
     # déjame, cuéntame: conversation, rare in Common Voice's read text,
     # whose own words are encyclopaedic: demersal, óblast).
     tatoeba_only = any(r[0] == "one-source" and "tatoeba" in r[2:] for r in rules)
-    keep = OWN_LETTERS if any(r[0] == "no-misspellings" for r in rules) else ""
+    keep = own_letters(rules)
+    # `both-spellings ё`: a mark written or left out at will (Russian еще,
+    # ещё): a spelling without it is a word too, not a variant to skip.
+    variant_keep = keep + "".join("".join(r[1:]) for r in rules if r[0] == "both-spellings").lower()
     # Words ending in an apostrophe (Italian po', mo'): elsewhere a final
     # apostrophe is a closing quote or a plural possessive (dogs').
     final_apostrophe = any(r[0] == "final-apostrophe" for r in rules)
@@ -165,7 +176,7 @@ def main():
         lower[w.lower()] = max(f, lower.get(w.lower(), 0))
     folded = {}
     for w in words:
-        folded.setdefault(fold(w, keep), set()).add(w.lower())
+        folded.setdefault(fold(w, variant_keep), set()).add(w.lower())
     # The other languages' common words; with --other-counts, how often
     # their texts use each.
     if args.other_counts and len(args.other_counts) != len(args.other):
@@ -237,8 +248,8 @@ def main():
                 and commonest[fold(w, keep)][0] >= 3 * c2:
             skipped["variant"] += 1
             continue
-        if len(w) < 2:
-            continue
+        if len(w) < 2 and w not in own:
+            continue   # a letter on its own, unless LANG.keep has it (Greek η)
         if w.endswith("'"):
             # Common Voice also splits elided articles from their word (dell'
             # anno): such a form must be common in both sources.
@@ -251,7 +262,7 @@ def main():
         # compare the spelling; elsewhere, compare in lowercase.
         if (cased in words) if capitalised_nouns else (w in lower):
             continue
-        if any(v != w for v in folded.get(fold(w, keep), ())):
+        if w not in own and any(v != w for v in folded.get(fold(w, variant_keep), ())):
             skipped["variant"] += 1
             continue
         here = rate(w) if both else rate_one(w)

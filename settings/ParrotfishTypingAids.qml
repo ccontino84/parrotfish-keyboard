@@ -4,9 +4,19 @@
 // Typing aids, opened from the Typing page.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Nemo.Configuration 1.0
+import Parrotfish.Keyboard 1.0
 
 Page {
     id: page
+
+    readonly property bool french: Languages.selectedAll(languagesConfig.value).indexOf("fr") >= 0
+
+    ConfigurationValue {
+        id: languagesConfig
+        key: "/apps/parrotfish-keyboard/languages"
+        defaultValue: ""
+    }
 
     SilicaFlickable {
         anchors.fill: parent
@@ -35,10 +45,13 @@ Page {
                 description: qsTr("Space twice after a word types a period")
             }
 
+            // The handler applies it to French text only.
             SettingSwitch {
                 key: "space-before-punctuation"
+                enabled: page.french
                 text: qsTr("Space before ! ? : ;")
-                description: qsTr("Keeps the space after a picked suggestion, as in French")
+                description: page.french ? qsTr("In French text, keeps the space after a picked suggestion")
+                                         : qsTr("Only with French as a typing language")
             }
 
             SettingSwitch {

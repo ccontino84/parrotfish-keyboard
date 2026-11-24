@@ -124,10 +124,16 @@ InputHandler {
     property string _voicePrefix: ""
     readonly property bool voiceActive: Voice.state !== "off"
 
+    // The layout's script (Latn, Cyrl, Grek): its typing languages are loaded.
+    readonly property string _script: keyboard.layout && typeof keyboard.layout.script === "string"
+                                      ? keyboard.layout.script : "Latn"
+
     PredictionEngine {
         id: predictionEngine
-        language: inputHandler.language
+        // Other scripts: the language of the keys shown (ЙЦУКЕН: ru or uk).
+        language: keyboard.layout && keyboard.layout.keysLanguage ? keyboard.layout.keysLanguage : inputHandler.language
         languages: languagesConfig.value
+        script: inputHandler._script
         strength: strengthConfig.value
         capitals: !keyboard.layout || keyboard.layout.automaticCapitals !== false
         learning: learningConfig.value
@@ -149,7 +155,9 @@ InputHandler {
 
     ConfigurationValue {
         id: lastLanguageConfig
-        key: "/apps/parrotfish-keyboard/last-language"   // en, it, pt_BR...
+        // en, it, pt_BR...; one per script (last-language-cyrl), as the layout's.
+        key: "/apps/parrotfish-keyboard/last-language" + (inputHandler._script === "Latn" ? ""
+                                                          : "-" + inputHandler._script.toLowerCase())
         defaultValue: ""
     }
 
@@ -941,9 +949,11 @@ InputHandler {
         return before.slice(-1) === " " && (predictionEngine.isLetter(last) || _isDigit(last))
     }
 
-    // Whether the sign is written after a space (space-before-punctuation).
+    // Whether the sign is written after a space (space-before-punctuation):
+    // in French text only, so with French and English both on English
+    // keeps its spacing (and Greek its ; question mark).
     function _spaceBefore(sign) {
-        return "!?:;".indexOf(sign) >= 0
+        return "!?:;".indexOf(sign) >= 0 && predictionEngine.leadingLanguage === "fr"
                 && (spaceBeforeConfig.value === true || spaceBeforeConfig.value === "true")
     }
 
@@ -1046,7 +1056,7 @@ InputHandler {
     function _isLetterKey(item) {
         return item.keyType !== undefined && typeof item.caption === "string"
                 && item.caption.length === 1
-                && (item.caption.toLowerCase() !== item.caption.toUpperCase() || item.caption === "'"
+                && (predictionEngine.isLetter(item.caption) || item.caption === "'"
                     || item.sticky === true || _isDigit(item.caption))
                 && item.visible && item.width > 0
     }

@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# Parrotfish's Greek keys (Jolla's el.qml rows) by the QWERTY phone geometry:
+# ; before ς and the tonos dead key after λ are not letters; the sticky key
+# (') in the bottom row after ?123.
+pitch 1.67
+1    1 ςερτυθιοπ
+0    1 ασδφγηξκλ
+1.5  1 ζχψωβνμ
+1.98 1 '

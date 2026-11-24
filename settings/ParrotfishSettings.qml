@@ -23,6 +23,12 @@ Column {
     }
 
     ConfigurationValue {
+        id: enabledLayoutsConfig
+        key: "/sailfish/text_input/enabled_layouts"
+        defaultValue: []
+    }
+
+    ConfigurationValue {
         id: numberRowConfig
         key: "/apps/parrotfish-keyboard/number-row"
         defaultValue: true
@@ -91,8 +97,13 @@ Column {
 
     ValueButton {
         label: qsTr("Typing")
-        value: Languages.names(Languages.selectedAll(languagesConfig.value))
-                       || qsTr("No languages installed")
+        value: {
+            var revision = Languages.revision
+            var codes = Languages.typingAll(languagesConfig.value, enabledLayoutsConfig.value)
+            if (codes.length === 0)
+                return qsTr("No languages")
+            return Languages.names(codes)
+        }
         onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishTyping.qml"))
     }
 
@@ -118,9 +129,9 @@ Column {
     ValueButton {
         readonly property var fills: ({ "none": qsTr("No fill"), "flat": qsTr("Flat"), "shaded": qsTr("Shaded") })
         readonly property var borders: ({ "none": qsTr("no border"), "line": qsTr("line"), "raised": qsTr("raised") })
-        label: qsTr("Look & feel")
+        label: qsTr("Appearance")
         value: (fills[fillConfig.value] || fills["none"]) + ", " + (borders[borderConfig.value] || borders["none"])
-        onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishLook.qml"))
+        onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishAppearance.qml"))
     }
 
     ValueButton {

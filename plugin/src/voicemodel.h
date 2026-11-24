@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 #pragma once
 
+#include "downloadjob.h"
+
 #include <QObject>
-#include <QProcess>
 #include <QString>
 
 // The speech model for the settings (QML singleton VoiceModel): whether it
-// is downloaded, and its download through the voice package's downloader
-// (parrotfish-voice-download), which does the network part.
+// is downloaded, and its download (DownloadJob).
 class VoiceModel : public QObject
 {
     Q_OBJECT
-    // The voice package is installed.
+    // Voice input is installed (aarch64 builds).
     Q_PROPERTY(bool installed READ installed CONSTANT)
     // The model is downloaded and checked.
     Q_PROPERTY(bool ready READ ready NOTIFY changed)
@@ -32,10 +32,10 @@ public:
 
     bool installed() const;
     bool ready() const;
-    QString state() const { return m_state; }
-    QString error() const { return m_error; }
-    qint64 received() const { return m_received; }
-    qint64 total() const { return m_total; }
+    QString state() const { return m_job.state(); }
+    QString error() const { return m_job.error(); }
+    qint64 received() const { return m_job.received(); }
+    qint64 total() const { return m_job.total(); }
     qint64 diskUsage() const;
 
     Q_INVOKABLE void download();
@@ -48,12 +48,5 @@ signals:
     void changed();
 
 private:
-    void readLines();
-
-    QProcess *m_process = nullptr;
-    QByteArray m_buffer;
-    QString m_state;
-    QString m_error;
-    qint64 m_received = 0;
-    qint64 m_total = 0;
+    DownloadJob m_job;
 };

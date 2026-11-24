@@ -196,6 +196,21 @@ Page {
                     }
                 }
             }
+
+            // dconf swipe: "normal" or "off" (anything else: on).
+            TextSwitch {
+                automaticCheck: false
+                text: qsTr("Swipe to switch keyboards")
+                description: qsTr("Long-press the spacebar to switch too")
+                checked: swipeConfig.value !== "off"
+                onClicked: swipeConfig.value = swipeConfig.value === "off" ? "normal" : "off"
+
+                ConfigurationValue {
+                    id: swipeConfig
+                    key: "/apps/parrotfish-keyboard/swipe"
+                    defaultValue: "normal"
+                }
+            }
         }
 
         VerticalScrollDecorator {}

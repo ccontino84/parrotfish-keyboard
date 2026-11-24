@@ -28,7 +28,11 @@ LANG.language, one setting a line (# comments):
                              language leaves the keys as they are (en, nl).
                              In languages.json: 5 characters, "-" for none.
 
-usage: language-list.py RULES_DIR OUT.json LANG...
+With PINNED (data/dictionaries.json, tools/data/languages-release.py),
+each language also gets "download": {url, size, sha256, pfdSize,
+pfdSha256}, what the settings download (downloader/).
+
+usage: language-list.py RULES_DIR OUT.json [--pinned PINNED] LANG...
 """
 import json
 import sys
@@ -71,7 +75,16 @@ def read(path):
 
 def main():
     rules, out, langs = sys.argv[1], sys.argv[2], sys.argv[3:]
+    pinned = {}
+    if langs[:1] == ["--pinned"]:
+        with open(langs[1], encoding="utf-8") as f:
+            pinned = json.load(f)
+        langs = langs[2:]
     data = {lang: read(f"{rules}/{lang}.language") for lang in langs}
+    for lang, p in pinned.get("languages", {}).items():
+        if lang in data:
+            data[lang]["download"] = {"url": f"{pinned['base']}/{p['tag']}/{lang}.pfd.gz", "size": p["size"],
+                                      "sha256": p["sha256"], "pfdSize": p["pfdSize"], "pfdSha256": p["pfdSha256"]}
     if sum(1 for d in data.values() if d["fallback"]) != 1:
         sys.exit("language-list.py: exactly one language must be the fallback")
     with open(out, "w", encoding="utf-8") as f:

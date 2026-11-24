@@ -40,6 +40,10 @@ class PredictionEngine : public QAbstractListModel
                NOTIFY rememberedLanguageChanged)
     // The language the text seems to be in (en, it, de), and how sure.
     Q_PROPERTY(QString leadingLanguage READ leadingLanguage NOTIFY leadingLanguageChanged)
+    // "none": no dictionary installed; "unusable": a typing language's
+    // dictionaries were all refused (downloaded before a format change);
+    // else "".
+    Q_PROPERTY(QString dictionaryProblem READ dictionaryProblem NOTIFY dictionaryProblemChanged)
     Q_PROPERTY(double confidence READ confidence NOTIFY leadingLanguageChanged)
     // Autocorrect strength: "off", "gentle", "normal" or "strong".
     Q_PROPERTY(QString strength READ strength WRITE setStrength NOTIFY strengthChanged)
@@ -74,6 +78,7 @@ public:
     void setPreedit(const QString &preedit);
     QStringList preeditKeys() const { return m_preeditKeys; }
     void setPreeditKeys(const QStringList &keys);
+    QString dictionaryProblem() const { return m_dictionaryProblem; }
     QString languages() const { return m_languages; }
     void setLanguages(const QString &languages);
     QString script() const { return m_script; }
@@ -144,6 +149,8 @@ public:
     Q_INVOKABLE void opened();
     // The settings page changed learning.db: read it again.
     Q_INVOKABLE void reloadLearned();
+    // Dictionaries downloaded or deleted (from the settings): reads them again.
+    Q_INVOKABLE void reloadDictionaries();
 
 signals:
     void preeditChanged();
@@ -152,6 +159,7 @@ signals:
     void scriptChanged();
     void languageChanged();
     void leadingLanguageChanged();
+    void dictionaryProblemChanged();
     void strengthChanged();
     void capitalsChanged();
     void rememberedLanguageChanged();
@@ -178,6 +186,7 @@ private:
     QStringList m_preeditKeys;
     QString m_languages;
     QString m_script = QStringLiteral("Latn");
+    QString m_dictionaryProblem;
     QString m_language;
     QString m_context;
     std::vector<double> m_contextPrior;   // the starting leans m_context was read with

@@ -123,7 +123,12 @@ InputHandler {
     property string _voiceBefore: ""
     property string _voicePrefix: ""
     readonly property bool voiceActive: Voice.state !== "off"
+    readonly property bool _emptyField: preedit === "" && MInputMethodQuick.surroundingText === ""
 
+    // The layout's arrangement (qwerty, azerty, jcuken...): the language it
+    // was last used for is remembered per layout.
+    readonly property string _layoutKey: keyboard.layout && typeof keyboard.layout.arrangementKey === "string"
+                                         ? keyboard.layout.arrangementKey : "qwerty"
     // The layout's script (Latn, Cyrl, Grek): its typing languages are loaded.
     readonly property string _script: keyboard.layout && typeof keyboard.layout.script === "string"
                                       ? keyboard.layout.script : "Latn"
@@ -155,9 +160,9 @@ InputHandler {
 
     ConfigurationValue {
         id: lastLanguageConfig
-        // en, it, pt_BR...; one per script (last-language-cyrl), as the layout's.
-        key: "/apps/parrotfish-keyboard/last-language" + (inputHandler._script === "Latn" ? ""
-                                                          : "-" + inputHandler._script.toLowerCase())
+        // en, it, pt_BR...; one per layout (last-language-azerty), as the layout's.
+        key: "/apps/parrotfish-keyboard/last-language" + (inputHandler._layoutKey === "qwerty" ? ""
+                                                          : "-" + inputHandler._layoutKey)
         defaultValue: ""
     }
 
@@ -166,6 +171,13 @@ InputHandler {
         // "en it de": the typing languages; "": the system language
         key: "/apps/parrotfish-keyboard/languages"
         defaultValue: ""
+    }
+
+    ConfigurationValue {
+        // Written by the settings after a dictionary download or delete.
+        key: "/apps/parrotfish-keyboard/dictionaries-changed"
+        defaultValue: ""
+        onValueChanged: predictionEngine.reloadDictionaries()
     }
 
     ConfigurationValue {
@@ -1268,10 +1280,47 @@ InputHandler {
                 }
             }
 
+            // No dictionary, or one to update: in an empty field, else only in an
+            // empty bar. Centred with an icon, unlike a suggestion.
+            Item {
+                id: hintArea
+                anchors { left: parent.left; right: emojiButton.left; top: parent.top; bottom: parent.bottom }
+                visible: predictionEngine.dictionaryProblem !== "" && !inputHandler.voiceActive
+                         && (inputHandler._emptyField || predictionList.count === 0)
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: Theme.paddingSmall
+
+                    Icon {
+                        id: hintIcon
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: Theme.iconSizeSmall
+                        height: Theme.iconSizeSmall
+                        sourceSize.width: Theme.iconSizeSmall
+                        sourceSize.height: Theme.iconSizeSmall
+                        color: Theme.secondaryHighlightColor
+                        source: predictionEngine.dictionaryProblem === "none" ? "image://theme/icon-m-about"
+                                                                               : "image://theme/icon-m-warning"
+                    }
+                    Label {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: Math.min(implicitWidth,
+                                        hintArea.width - 2 * Theme.paddingMedium - hintIcon.width - Theme.paddingSmall)
+                        truncationMode: TruncationMode.Fade
+                        color: Theme.secondaryHighlightColor
+                        font.pixelSize: Theme.fontSizeSmall
+                        text: predictionEngine.dictionaryProblem === "none" ? qsTr("Add a language in Settings")
+                                                                             : qsTr("Update languages in Settings")
+                    }
+                }
+            }
+
             HorizontalPredictionListView {
                 id: predictionList
 
                 visible: !inputHandler.voiceActive
+                         && !(predictionEngine.dictionaryProblem !== "" && inputHandler._emptyField)
                 anchors.fill: undefined
                 anchors { left: parent.left; top: parent.top; bottom: parent.bottom; right: emojiButton.left }
                 clip: true

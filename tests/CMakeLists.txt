@@ -71,11 +71,40 @@ if(PARROTFISH_PLUGIN)
     add_test(NAME voicetext COMMAND voicetext-test)
 endif()
 
+# Packaged and downloaded dictionaries (plugin/src/languages.cpp).
+if(PARROTFISH_PLUGIN)
+    find_package(Qt5 REQUIRED COMPONENTS Core)
+    add_executable(languages-test unit/languages-test.cpp ${PROJECT_SOURCE_DIR}/plugin/src/languages.cpp
+                                  ${PROJECT_SOURCE_DIR}/plugin/src/languages.h)
+    set_target_properties(languages-test PROPERTIES AUTOMOC ON)
+    target_include_directories(languages-test PRIVATE ${PROJECT_SOURCE_DIR}/plugin/src)
+    target_compile_definitions(languages-test PRIVATE QT_NO_CAST_FROM_ASCII PARROTFISH_DATA_DIR="/nonexistent")
+    target_link_libraries(languages-test PRIVATE Qt5::Core)
+    add_test(NAME languages COMMAND languages-test)
+endif()
+
+# parrotfish-download language CODE against a local server.
+if(PARROTFISH_PLUGIN)
+    add_test(NAME downloader COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/downloader/test-download.py
+                                     $<TARGET_FILE:parrotfish-download>)
+endif()
+
+# The keyboard itself has no network access (only parrotfish-download).
+if(PARROTFISH_PLUGIN)
+    add_test(NAME no-network COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/no-network.py
+                                     $<TARGET_FILE:parrotfishkeyboard> ${PROJECT_SOURCE_DIR})
+endif()
+
 # parrotfish candidates / learned on a small learning.db.
 if(PARROTFISH_PLUGIN)
     add_test(NAME cli COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/cli/test-cli.py
                               $<TARGET_FILE:parrotfish-cli>)
 endif()
+
+# The built dictionaries are the published ones (data/dictionaries.json).
+add_test(NAME dictionaries-pinned COMMAND ${Python3_EXECUTABLE} -I
+         ${PROJECT_SOURCE_DIR}/tools/data/languages-release.py check
+         ${PROJECT_BINARY_DIR}/data ${PROJECT_SOURCE_DIR}/data/dictionaries.json)
 
 # The spec's dictformat is the engine's dictionary format (the language
 # packages depend on it).
@@ -89,6 +118,14 @@ find_program(QMLTESTRUNNER NAMES qmltestrunner-qt5 qmltestrunner)
 if(PARROTFISH_PLUGIN AND QMLTESTRUNNER)
     add_test(NAME qml COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/qml/run.sh ${PROJECT_BINARY_DIR})
     set_tests_properties(qml PROPERTIES ENVIRONMENT "QMLTESTRUNNER=${QMLTESTRUNNER}")
+endif()
+
+# The settings pages (tests/settings), in a private D-Bus session with dconf.
+find_program(DBUS_RUN_SESSION dbus-run-session)
+find_program(DCONF_TOOL dconf)
+if(PARROTFISH_PLUGIN AND QMLTESTRUNNER AND DBUS_RUN_SESSION AND DCONF_TOOL)
+    add_test(NAME settings COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/settings/run.sh ${PROJECT_BINARY_DIR})
+    set_tests_properties(settings PROPERTIES ENVIRONMENT "QMLTESTRUNNER=${QMLTESTRUNNER}")
 endif()
 
 if(PARROTFISH_DEVTOOLS)

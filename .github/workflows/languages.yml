@@ -1,0 +1,57 @@
+# SPDX-FileCopyrightText: 2026 ccontino84
+# SPDX-License-Identifier: LGPL-2.1-or-later
+#
+# Run by hand (Actions > Languages > Run workflow) when dictionaries
+# changed: builds them, publishes the changed and new ones as release TAG
+# (languages-N, never the latest release) with the licence texts, and
+# keeps the updated data/dictionaries.json as the artifact "pinned", to
+# commit before the next keyboard release (DEVELOPMENT.md, "Publishing
+# dictionaries").
+name: Languages
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The release's tag, languages-N
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check the tag
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          [[ "$TAG" =~ ^languages-[0-9]+$ ]] || { echo "tag must be languages-N"; exit 1; }
+          ! grep -q "\"$TAG\"" data/dictionaries.json || { echo "$TAG is already pinned"; exit 1; }
+      - name: Build the dictionaries
+        run: |
+          sudo apt-get install -y --no-install-recommends ninja-build > /dev/null
+          cmake -S . -B build -G Ninja -DPARROTFISH_PLUGIN=OFF -DPARROTFISH_TESTS=OFF
+          ninja -C build dictionaries
+      - name: Prepare
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          python3 -I tools/data/languages-release.py prepare build/data data/dictionaries.json "$TAG" out
+          ls out/*.pfd.gz > /dev/null || { echo "no dictionary changed"; exit 1; }
+          cp LICENSES/* THIRD-PARTY.md data/aosp/NOTICE out/
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          gh release create "$TAG" out/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --latest=false --title "Dictionaries ($TAG)" \
+            --notes "Dictionaries downloaded from Parrotfish's settings. Their sources and licences: THIRD-PARTY.md."
+      - uses: actions/upload-artifact@v7
+        with:
+          name: pinned
+          path: data/dictionaries.json
+          if-no-files-found: error

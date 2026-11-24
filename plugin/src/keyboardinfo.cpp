@@ -6,10 +6,13 @@
 #include <dconf.h>
 
 #include "keyboardinfo.h"
+#include "languages.h"
+#include "voicepaths.h"
 #include "learningstore.h"
 
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QRegularExpression>
 #include <QtDebug>
 
@@ -33,6 +36,22 @@ QString readKey(DConfClient *client, const QString &key)
     }
     g_variant_unref(v);
     return out;
+}
+
+// The installed dictionaries: p from a package, d downloaded, ! an update.
+QString dictionaries()
+{
+    Languages::instance().refresh();
+    QStringList out;
+    for (const QVariant &v : Languages::instance().all()) {
+        const QVariantMap l = v.toMap();
+        if (l.value(QStringLiteral("installed")).toBool())
+            out << l.value(QStringLiteral("code")).toString() + QLatin1Char(':')
+                           + QLatin1String(l.value(QStringLiteral("packaged")).toBool() ? "p" : "")
+                           + QLatin1String(l.value(QStringLiteral("downloaded")).toBool() ? "d" : "")
+                           + QLatin1String(l.value(QStringLiteral("update")).toBool() ? "!" : "");
+    }
+    return QStringLiteral("dictionaries ") + (out.isEmpty() ? QStringLiteral("-") : out.join(QLatin1Char(' ')));
 }
 
 QString systemName()
@@ -66,7 +85,8 @@ QStringList KeyboardInfo::settingKeys()
             QStringLiteral("sticky"), QStringLiteral("sticky-side"), QStringLiteral("swipe"),
             QStringLiteral("language-keys"), QStringLiteral("language-keys-side"),
             QStringLiteral("key-height"), QStringLiteral("key-height-landscape"), QStringLiteral("key-gap"),
-            QStringLiteral("key-fill"), QStringLiteral("key-border"), QStringLiteral("accent-tint"), QStringLiteral("long-press-hint"),
+            QStringLiteral("key-fill"), QStringLiteral("key-border"), QStringLiteral("accent-tint"),
+            QStringLiteral("long-press-hint"),
             QStringLiteral("automatic-capitals"), QStringLiteral("double-space-period"),
             QStringLiteral("space-before-punctuation"), QStringLiteral("replace-emoticons"), QStringLiteral("voice")};
 }
@@ -89,7 +109,24 @@ QString KeyboardInfo::diagnostics() const
     }
     for (const QString &key : settingKeys()) {
         const QString value = readKey(client, key);
-        lines << key + QLatin1Char(' ') + (value.isEmpty() ? QStringLiteral("-") : value);
+        QString line = key + QLatin1Char(' ') + (value.isEmpty() ? QStringLiteral("-") : value);
+        if (key == QLatin1String("languages")) {
+            // Codes kept after their package was removed.
+            Languages::instance().refresh();
+            QStringList missing;
+            for (const QString &code : value.split(QLatin1Char(' ')))
+                if (!code.isEmpty() && !Languages::instance().isInstalled(code))
+                    missing << code;
+            if (!missing.isEmpty())
+                line += QStringLiteral(" (no dictionary: ") + missing.join(QLatin1Char(' ')) + QLatin1Char(')');
+        }
+        if (key == QLatin1String("voice"))
+            line += !QFileInfo(VoicePaths::helper()).isExecutable() ? QStringLiteral(", not in this build")
+                  : VoicePaths::modelReady() ? QStringLiteral(", model ") + QFileInfo(VoicePaths::modelDir()).fileName()
+                                             : QStringLiteral(", no model");
+        lines << line;
+        if (key == QLatin1String("languages"))
+            lines << dictionaries();
     }
     g_object_unref(client);
     lines << QString();

@@ -10,26 +10,26 @@ Better typing for the Sailfish OS keyboard, in several languages at once.
 **Why Parrotfish?** Writing in more than one language on Sailfish means
 switching keyboards again and again, often in the middle of a sentence.
 Parrotfish follows the language you are writing instead. And it stays just
-a keyboard: fully open source, it changes nothing in the system, never goes
-online (one exception: the optional voice input's speech model, downloaded
-once when you ask for it), and leaves out everything that isn't about typing.
+a keyboard: fully open source, it changes nothing in the system, never
+goes online by itself (the only network access is a download you start in
+the settings: a language or the speech model), and leaves out everything
+that isn't about typing.
 
 What it adds to Jolla's keyboard:
 
-- **Your languages, word by word.** Pick them in the settings: suggestions,
-  corrections and learning follow the language of each word, so one message
-  can mix them.
+- **Your languages, word by word.** Pick them in the settings, and
+  download more there: suggestions, corrections and learning follow the
+  language of each word, so one message can mix them.
 - **Suggestions, autocorrect and learning.** Corrections (even of two words
   typed without a space) and next words, improved by what you type, learned
   only on the phone. One Backspace undoes a correction, and one you keep
   undoing stops. Four strengths, from Strong (also fixes real words typed by
-  mistake) to Off.
+  mistake) to Off. Put the cursor right after a word to correct it.
 - **Emoji.** A button at the end of the suggestion bar opens an emoji
   panel, with your recent emoji first, skin tones and gender forms on long
   press, in colour. Type an emoticon such as `:-)` and the button offers
   its emoji.
-- **Voice input,** recognised on the phone, in an optional package
-  (aarch64): hold the spacebar and lift the finger on the microphone. The
+- **Voice input,** recognised on the phone (aarch64): hold the spacebar and lift the finger on the microphone. The
   text appears as you speak, phrase by phrase, and is typed when you tap ✓.
   Tap or drag over words and say the replacement; undo takes back the last
   change. The speech model, NVIDIA's Parakeet (670 MB), is downloaded once
@@ -38,64 +38,66 @@ What it adds to Jolla's keyboard:
   Polish, Portuguese and Spanish, less well in Danish, Romanian, Slovenian
   and Swedish; Norwegian isn't supported.
 - **Typing aids,** each one on or off: automatic capitals, a period on
-  double space, a space before ! ? : ; (as in French), and emoticons
+  double space, a space before ! ? : ; (in French text), and emoticons
   replaced by their emoji.
-- **Five arrangements:** QWERTY, QWERTZ and AZERTY for any Latin-script
-  language, ЙЦУКЕН for Russian and Ukrainian (Jolla's keys for each: they
-  change with the language you type), and Greek.
+- **Five arrangements,** with Jolla's keys: QWERTY, QWERTZ and AZERTY for
+  any Latin-script language, ЙЦУКЕН for Russian and Ukrainian (with both,
+  a globe key switches between their keys), and Greek.
   Optional language keys put the most used accented letters of the
   language you are typing on keys of their own (å ö ä for Swedish, ł ę ż
-  for Polish), and change with it. A dot marks the keys with more characters; a long press
-  shows your languages' accents first, and the sticky key keeps the last
-  sign you picked.
+  for Polish), and change with it. A dot marks the keys with more
+  characters; a long press shows your languages' accents first, and the
+  sticky key keeps the last sign you picked. Digits come in a number row
+  or as a numpad on the ?123 page.
 - **Customizable, and at home on Sailfish:** it looks like Jolla's keyboard,
   and key fill, border, height, spacing, the width of the space key, the
-  number row and hints can be changed, with a live preview.
+  digits and hints can be changed, with a live preview.
 
 Languages: Czech, Dutch, English, French, German, Italian, Polish,
 Portuguese (Brazil and Portugal), Slovenian, Spanish. Experimental:
-Croatian, Danish, Finnish, Norwegian Bokmål, Romanian, Swedish, in a
-separate package. In their own packages: Russian, and experimental
-Ukrainian (Cyrillic), and experimental Greek. There is too little public text
-to build and test these as well as the others; feedback from native speakers
-is welcome. The settings are translated into all the Latin-script ones.
+Croatian, Danish, Finnish, Norwegian Bokmål, Romanian, Swedish. In other
+scripts: Russian; experimental: Ukrainian, Greek. There is too little
+public text to build and test the experimental ones as well as the others;
+feedback from native speakers is welcome. The settings are translated into
+all of them.
 
-**Status:** 1.3. Tested on Sailfish OS 5.2 (aarch64);
+**Status:** 1.4. Tested on Sailfish OS 5.2 (aarch64);
 the 32-bit build (armv7hl) is untested, reports are welcome.
 
 ## Install
 
 1. From the
    [latest release](https://github.com/ccontino84/parrotfish-keyboard/releases/latest),
-   download:
-   - `parrotfish-keyboard-<version>` for your device: `aarch64` for most
-     current devices, `armv7hl` for 32-bit installations;
-   - `parrotfish-keyboard-languages-latin-<version>.noarch`: Czech, Dutch,
-     English, French, German, Italian, Polish, Portuguese, Slovenian,
-     Spanish;
-   - for Croatian, Danish, Finnish, Norwegian, Romanian or Swedish, also
-     `parrotfish-keyboard-languages-latin-experimental-<version>.noarch`;
-   - for Russian or Ukrainian,
-     `parrotfish-keyboard-languages-cyrillic-<version>.noarch`; for Greek,
-     `parrotfish-keyboard-languages-greek-<version>.noarch`;
-   - for voice input, also `parrotfish-keyboard-voice-<version>.aarch64`.
+   download `parrotfish-keyboard-<version>` for your device: `aarch64` for
+   most current devices (with voice input), `armv7hl` for 32-bit
+   installations.
 2. In **Settings > Untrusted software**, turn on *Allow untrusted software*.
-3. Open the downloaded files (from the browser's downloads or the Files app)
-   and install them, `parrotfish-keyboard` first. The keyboard restarts by
-   itself. Without a language package it types without suggestions.
+3. Open the downloaded file (from the browser's downloads or the Files app)
+   and install it. The keyboard restarts by itself.
 4. In **Settings > Text input > Keyboards**, turn on the Parrotfish layout
    for your arrangement, for example *Auto (QWERTY)*, and *Auto (ЙЦУКЕН)* or
    *Auto (Ελληνικά)* for Cyrillic or Greek. The *Auto* layouts are at the
-   top of the list. Each one types the languages of its alphabet. Switch to it as to any other keyboard: long-press
-   the spacebar, or swipe.
+   top of the list. Each one types the languages of its alphabet. Switch
+   to it as to any other keyboard: long-press the spacebar, or swipe.
 5. Its settings are under **Settings > Text input**, in the Parrotfish
-   section. Start with *Typing languages*. With the voice package, download
-   the speech model in *Voice input* (Wi-Fi is better).
+   section. In *Typing languages*, tap the languages you type in to
+   download them (2–5 MB each). For voice input, download the speech model
+   in *Voice input* (Wi-Fi is better).
 
-**Upgrading** works the same way: install the new RPMs over the old ones,
-`parrotfish-keyboard` first. The language packages only need updating when
-the release notes say so.
-Your settings and learned words are kept.
+**Without a connection,** install the language packages from the same
+release after the keyboard: `parrotfish-keyboard-languages-latin` (Czech,
+Dutch, English, French, German, Italian, Polish, Portuguese, Slovenian,
+Spanish), `parrotfish-keyboard-languages-latin-experimental` (Croatian,
+Danish, Finnish, Norwegian, Romanian, Swedish),
+`parrotfish-keyboard-languages-cyrillic` (Russian, Ukrainian) and
+`parrotfish-keyboard-languages-greek`. A language downloaded in
+the settings is used instead of the package's.
+
+**Upgrading** works the same way: install the new RPM over the old one.
+A language with a newer dictionary is listed under *Updates* in *Typing
+languages*, and the suggestion bar says so.
+Your settings and learned words are kept. Voice input is part of the
+keyboard since 1.4: the update replaces the old voice package by itself.
 
 With Developer mode, the same from a terminal:
 
@@ -103,22 +105,22 @@ With Developer mode, the same from a terminal:
 devel-su pkcon install-local parrotfish-*.rpm
 ```
 
-[Harpoon](https://github.com/JuhaniLehtimaeki/Harpoon) can't install the
-language packages yet, only the keyboard: use one of the ways above.
+[Harpoon](https://github.com/JuhaniLehtimaeki/Harpoon) installs the
+keyboard too; the languages then come from the settings.
 
 ## Uninstall
 
 From a terminal (Developer mode):
 
 ```sh
-devel-su pkcon remove parrotfish-keyboard-voice                          # if installed
 devel-su pkcon remove parrotfish-keyboard-languages-latin-experimental   # if installed
+devel-su pkcon remove parrotfish-keyboard-languages-latin                # if installed
 devel-su pkcon remove parrotfish-keyboard-languages-cyrillic parrotfish-keyboard-languages-greek   # if installed
-devel-su pkcon remove parrotfish-keyboard-languages-latin parrotfish-keyboard
+devel-su pkcon remove parrotfish-keyboard
 ```
 
-Settings stay in dconf, learned words and the speech model in your home
-directory. To remove them too:
+Settings stay in dconf; learned words, downloaded languages and the speech
+model in your home directory. To remove them too:
 
 ```sh
 dconf reset -f /apps/parrotfish-keyboard/
@@ -127,12 +129,14 @@ rm -r ~/.local/share/parrotfish-keyboard
 
 ## Safety and privacy
 
-- **Nothing leaves the phone.** The keyboard makes no network connections.
-  The one exception is in the optional voice package: its settings page
-  downloads the speech model from Hugging Face once, when you tap
-  *Download*, through a separate program (the pinned files, checked by
-  SHA-256). Speech is recognised on the phone, by a process that can't use
-  the network; the audio is neither sent nor saved.
+- **Nothing leaves the phone.** The keyboard itself never connects to the
+  internet. The only access is a download you start in the settings:
+  languages from Parrotfish's GitHub releases, the speech model from
+  Hugging Face. A separate program downloads them, and accepts only the
+  files this version lists, checked by SHA-256. GitHub and Hugging Face
+  see the download, as for any download. Speech is recognised on the
+  phone, by a process that can't use the network; the audio is neither
+  sent nor saved.
   Learned words are stored only on the phone. *Clear all learned data*, in
   the settings, removes them. Recent emoji are kept with the settings; a
   long press in the panel removes one.

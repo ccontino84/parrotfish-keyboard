@@ -106,8 +106,10 @@ set(language_list ${CMAKE_CURRENT_BINARY_DIR}/languages.json)
 add_custom_command(
     OUTPUT ${language_list}
     COMMAND ${Python3_EXECUTABLE} -I ${PROJECT_SOURCE_DIR}/tools/data/language-list.py
-            ${CMAKE_CURRENT_SOURCE_DIR}/rules ${language_list} ${langs}
+            ${CMAKE_CURRENT_SOURCE_DIR}/rules ${language_list}
+            --pinned ${CMAKE_CURRENT_SOURCE_DIR}/dictionaries.json ${langs}
     DEPENDS ${PROJECT_SOURCE_DIR}/tools/data/language-list.py ${language_files}
+            ${CMAKE_CURRENT_SOURCE_DIR}/dictionaries.json
     COMMENT "Writing the language list"
     VERBATIM)
 add_custom_target(dictionaries ALL DEPENDS ${dicts} ${language_list})

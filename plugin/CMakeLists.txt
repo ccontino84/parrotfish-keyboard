@@ -13,8 +13,10 @@ pkg_check_modules(EMOJI REQUIRED IMPORTED_TARGET cairo freetype2 harfbuzz fontco
 set(CMAKE_AUTOMOC ON)
 
 add_library(parrotfishkeyboard MODULE
+    src/downloadjob.cpp
     src/emojiimageprovider.cpp
     src/keyboardinfo.cpp
+    src/languagedownloads.cpp
     src/languages.cpp
     src/learnedwords.cpp
     src/learningstore.cpp
@@ -31,6 +33,7 @@ target_compile_definitions(parrotfishkeyboard PRIVATE
     PARROTFISH_DATA_DIR="${PARROTFISH_DATA_DIR}"
     PARROTFISH_VERSION="${PARROTFISH_VERSION}"
     PARROTFISH_TRANSLATIONS_DIR="${CMAKE_INSTALL_FULL_DATADIR}/translations"
+    PARROTFISH_LIBEXEC_DIR="${CMAKE_INSTALL_FULL_LIBEXECDIR}/parrotfish-keyboard"
     PARROTFISH_VOICE_LIBEXEC_DIR="${CMAKE_INSTALL_FULL_LIBEXECDIR}/parrotfish-keyboard-voice"
     QT_NO_CAST_FROM_ASCII)
 target_compile_options(parrotfishkeyboard PRIVATE -Wall -Wextra)

@@ -1,0 +1,3 @@
+module MeeGo.Connman
+NetworkManager 0.2 NetworkManager.qml
+singleton MobileData 0.2 MobileData.qml

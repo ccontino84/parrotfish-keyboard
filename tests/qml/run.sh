@@ -24,6 +24,12 @@ cp "$SRC/plugin/qmldir" "$BUILD/plugin/libparrotfishkeyboard.so" "$TMP/imports/P
 ln -s "$SRC/handler/ParrotfishHandler.qml" "$TMP/handlers/ParrotfishHandler.qml"
 cp "$SRC/plugin/emoji/emojiutil.js" "$SRC/plugin/emoji/emoticons.js" "$TMP/imports/Parrotfish/Keyboard/"
 touch "$TMP/home/.local/share/parrotfish-keyboard/debug"
+# A downloaded en the engine refuses (not a dictionary): every test then
+# needs the keyboard to fall back to the package's.
+mkdir "$TMP/home/.local/share/parrotfish-keyboard/dictionaries"
+echo "not a dictionary" > "$TMP/home/.local/share/parrotfish-keyboard/dictionaries/en.pfd"
+sha256sum "$TMP/home/.local/share/parrotfish-keyboard/dictionaries/en.pfd" | cut -c1-64 \
+    > "$TMP/home/.local/share/parrotfish-keyboard/dictionaries/en.pfd.sha256"
 sed -e "s|HOMEPATH|$TMP/home|" "$HERE/tst_handler.qml" > "$TMP/tst_handler.qml"
 cd "$TMP"
 HOME="$TMP/home" QML_XHR_ALLOW_FILE_READ=1 PARROTFISH_DATA_DIR="$BUILD/data" \

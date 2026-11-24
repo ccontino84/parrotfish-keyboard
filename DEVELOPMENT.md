@@ -16,12 +16,13 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 | `docs/adding-a-language.md` | a contributor's guide to adding a typing language |
 | `plugin/` | QML module `Parrotfish.Keyboard` (Qt 5.6): the engine as the list model Jolla's `PreeditHandler` expects; the colour emoji images (`image://parrotfish-emoji`); in `emoji/`, the emoji code in plain JavaScript, `EmojiUtil` (code points, recent emoji, variant picks) and `Emoticons` (`:-)` → 🙂) |
 | `handler/` | `ParrotfishHandler.qml` and its `.conf` (registered only for our layout's code, PARROTFISH; Jolla's layouts keep XT9 or Hunspell) |
-| `layouts/` | the one "Auto (Parrotfish)" layout (`parrotfish.qml`, using our handler through `handler=` in `layouts_parrotfish.conf`; the name sorts it to the top of Jolla's keyboard list); its letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press), picked by `/apps/parrotfish-keyboard/layout`; the language keys (the typing language's `extra-keys`) placed by `placeLanguageKeys` there; optional key backgrounds in `parrotfish/`; the emoji panel in `parrotfish/emoji/` (`EmojiPanel.qml`, with the emoji list `emojidata.js` from `tools/data/emoji-list.py`; it gets its state through properties and reports through signals, so any layout can host it) |
-| `voice/` | the voice package: `helper/` (`parrotfish-voice`, recognition in its own process: microphone, Silero VAD, Parakeet through sherpa-onnx's C API, phrase by phrase; a line protocol on stdin/stdout, described in `main.cpp`; no network, through a seccomp filter), `downloader/` (`parrotfish-voice-download`, the model download from the settings: pinned revision, SHA-256, resumable), `licenses/`; `fetch-deps.sh` downloads the prebuilt aarch64 libraries into `deps/` (not in the repository) |
-| `plugin/src/voice*` | voice on the keyboard's side: `VoiceInput` (the helper process, QML singleton `Voice`), `VoiceText` (the text, its edits and undo; unit test `voicetext`), `VoiceModel` (the download, singleton `VoiceModel`); the panel and the space key's menu in `layouts/parrotfish/voice/` |
-| `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`; the list comes from the plugin's `Languages`) |
+| `layouts/` | the "Auto" layouts, one file per arrangement (`parrotfish.qml` for QWERTY, `parrotfish_qwertz.qml`, `parrotfish_azerty.qml`, `parrotfish_jcuken.qml`, `parrotfish_greek.qml`: `parrotfish/ParrotfishKeyboard.qml` with its `arrangementKey`), using our handler through `handler=` in `layouts_parrotfish.conf` (the name sorts them to the top of Jolla's keyboard list); their letter rows are built from `parrotfish/arrangements.js` (QWERTY: Jolla's en keys plus a full-width apostrophe ending the middle row; QWERTZ: Jolla's de keys; AZERTY: Jolla's fr keys with the apostrophe in place of ç, which moves to C's long press); the numpad (`numpad` there) replaces the ?123 page's rows when `/apps/parrotfish-keyboard/numpad` is on, not in split landscape; the language last typed is remembered per layout (`last-language`, `last-language-azerty`, ...); the language keys (the typing language's `extra-keys`) placed by `placeLanguageKeys` there; optional key backgrounds in `parrotfish/`; the emoji panel in `parrotfish/emoji/` (`EmojiPanel.qml`, with the emoji list `emojidata.js` from `tools/data/emoji-list.py`; it gets its state through properties and reports through signals, so any layout can host it); other scripts (`parrotfish_jcuken.qml`, `parrotfish_greek.qml`): Jolla's ru.qml/uk.qml and el.qml rows as they are (`jcuken`, `greek` in `arrangements.js`, `script` Cyrl/Grek: `PredictionEngine.script`: the plugin loads one language of that script, the keys' (the switch key's choice), from its typing languages or, if none is chosen, every installed one), ЙЦУКЕН's rows by language (`languages`) with a globe key cycling through them when both Russian and Ukrainian are typing languages or installed (`SwitchKey.qml`, dconf `keys-jcuken`; no automatic switching), Greek's tonos dead key (`DeadLetterKey.qml`); the sticky key is for the Latin layouts only |
+| `voice/` | voice input (aarch64 builds): `helper/` (`parrotfish-voice`, recognition in its own process: microphone, Silero VAD, Parakeet through sherpa-onnx's C API, phrase by phrase; a line protocol on stdin/stdout, described in `main.cpp`; no network, through a seccomp filter), `licenses/`; `fetch-deps.sh` downloads the prebuilt aarch64 libraries into `deps/` (not in the repository) |
+| `downloader/` | `parrotfish-download`, the only program that uses the network, started by the settings: the speech model (pinned revision) and the dictionaries (as `languages.json` lists them); SHA-256 checked, resumable; a line protocol on stdout, described in `main.cpp`; test `downloader` (a local HTTP server); test `no-network` checks that the plugin and the keyboard's QML don't use the network |
+| `plugin/src/voice*` | voice on the keyboard's side: `VoiceInput` (the helper process, QML singleton `Voice`), `VoiceText` (the text, its edits and undo; unit test `voicetext`), `VoiceModel` (the download through `DownloadJob`, singleton `VoiceModel`); the panel and the space key's menu in `layouts/parrotfish/voice/` |
+| `settings/` | our section in Settings → Text input: `settings=` in both `.conf` files points to it, as XT9's does; the typing languages have their own page (`ParrotfishLanguages.qml`: the list and each dictionary's state from the plugin's `Languages`, the downloads through `LanguageDownloads`) |
 | `cli/` | `parrotfish`, a command that shows what the keyboard is learning (reads `learning.db`) |
-| `translations/` | the settings' and the voice panel's translations, `parrotfish-keyboard-<lang>.ts` (qsTr; the context is the QML file's name, a second argument tells gendered words apart: `qsTr("Off", "learning")`); new texts: `lupdate settings handler layouts -ts translations/*.ts`, then translate them (Qt Linguist or by hand) and put back the SPDX header lupdate drops. Built with the SDK's Qt 5 `lrelease` (none on the PC: skipped), installed in `/usr/share/translations`, loaded by the plugin |
+| `translations/` | the settings' and the voice panel's translations, `parrotfish-keyboard-<lang>.ts` (qsTr; the context is the QML file's name, a second argument tells gendered words apart: `qsTr("Off", "learning")`); new texts: `lupdate -no-obsolete -locations none settings handler layouts -ts translations/*.ts`, then translate them (Qt Linguist or by hand) and put back the SPDX header lupdate drops. Built with the SDK's Qt 5 `lrelease` (none on the PC: skipped), installed in `/usr/share/translations`, loaded by the plugin |
 | `rpm/` | RPM spec (also used by SailfishOS:Chum, below) |
 | `tools/split-languages.py` | the RPM's file lists: each dictionary to its language package |
 | `tools/pf` | the developer front door (below): tests, lint, benchmark suite, comparisons, RPM |
@@ -34,6 +35,7 @@ SPDX-License-Identifier: LGPL-2.1-or-later
 | `data/layouts/` | the keys of Parrotfish's four arrangements as on the phone, for the PC tests and benchmarks (`pitch`: keys taller than wide; QWERTY logged on a phone, the others by the same geometry); the phone gets `phone-qwerty.layout`, for the moment before the handler passes the real keys |
 | `tests/unit/` | unit tests (ctest) |
 | `tests/qml/` | the handler on the PC with the plugin, Sailfish OS's modules replaced by stand-ins (ctest `qml`, needs `qmltestrunner`) |
+| `tests/settings/` | every settings page on the PC with the plugin and stand-ins for Silica; any QML warning fails it (ctest `settings`, needs `qmltestrunner`, `dbus-run-session` and `dconf`) |
 | `tests/bench/` | accuracy benchmarks: typos and autocorrect in running text (`sentence-bench`), next words (`nextword-bench`), single words (`typo-bench`), mixed languages (`lang-bench`) |
 
 ## Comments
@@ -93,9 +95,9 @@ from your own lists. Each language is typed with a typical set of
 dictionaries loaded (en, it, de together; fr, es, en; the others with en)
 on QWERTY; sv, da, nb and fi on `phone-nordic.layout` (QWERTY with å ö ä
 where their language keys put them), cs, sl and hr on QWERTZ; ru and uk
-together on `phone-jcuken.layout` (Ukrainian: `phone-jcuken-uk.layout`, the
-rows the layout shows while it is typed), el alone on `phone-greek.layout`
-(a layout loads its script's languages only). `pf table [LABEL]` shows a
+together on `phone-jcuken.layout` (Ukrainian: `phone-jcuken-uk.layout`, its
+own rows), el alone on `phone-greek.layout` (a layout loads its script's
+languages only). `pf table [LABEL]` shows a
 run's main numbers, one line per language; `pf compare` marks the cases
 one of the runs lacks or failed. Each run stores its wall and CPU time
 (per case too); the cases run longest first.
@@ -250,7 +252,7 @@ Sanitizers: configure a second tree with
 ## Phone build (RPM)
 
 ```sh
-voice/fetch-deps.sh        # once: the voice package's prebuilt libraries (aarch64)
+voice/fetch-deps.sh        # once: voice input's prebuilt libraries (aarch64)
 sfdk config target=SailfishOS-5.1.0.11-aarch64
 sfdk build                 # RPM in RPMS/
 ```
@@ -263,159 +265,51 @@ sentences. Release builds leave them out.
 
 Five packages: `parrotfish-keyboard` (no dictionaries), and four noarch
 language packages named by script, `parrotfish-keyboard-languages-latin`,
-`parrotfish-keyboard-languages-latin-experimental` (the Latin languages marked
-experimental in `data/rules/*.language`), `-languages-cyrillic` and
+`parrotfish-keyboard-languages-latin-experimental` (the Latin languages
+marked experimental in `data/rules/*.language`), `-languages-cyrillic` and
 `-languages-greek` (named after the keyboard, so that
 installers taking a release's packages together, such as Harpoon, accept
 them; `parrotfish-languages-*` until 1.2, which they obsolete); the spec's file lists come from
-`languages.json` (`tools/split-languages.py`). On aarch64 a fourth,
-`parrotfish-keyboard-voice`: the voice helper, the model downloader,
-sherpa-onnx and onnxruntime (private copies in
-`/usr/lib64/parrotfish-keyboard-voice`, neither provided nor required) and
-Silero VAD; the keyboard shows the microphone only with it installed and the
-model downloaded (`~/.local/share/parrotfish-keyboard/voice/`). A language package requires
+`languages.json` (`tools/split-languages.py`, which also writes each
+dictionary's record, `CODE.pfd.sha256`). On aarch64 the keyboard package
+also holds voice input: the helper, sherpa-onnx and onnxruntime (private
+copies in `/usr/lib64/parrotfish-keyboard-voice`, neither provided nor
+required) and Silero VAD; it obsoletes the voice package of 1.3. The
+keyboard shows the microphone only once the model is downloaded
+(`~/.local/share/parrotfish-keyboard/voice/`).
+
+Dictionaries come from a language package or from the settings, which
+download them into `~/.local/share/parrotfish-keyboard/dictionaries/`
+(`CODE.pfd` and its record, written last). `Languages` (plugin) knows
+every language of `languages.json` and where its dictionary is; the
+engine tries this release's file first (the record matches the pinned
+hash), a download before a package's, and the next one if one is refused.
+The settings tell the keyboard about a download or a delete through the
+dconf key `dictionaries-changed`. With no dictionary, or only refused
+ones, the empty suggestion bar says so (`PredictionEngine`'s
+`dictionaryProblem`). A language package requires
 `parrotfish-keyboard` and `parrotfish-dictionary-format = N`, which the
 keyboard provides (the spec's `dictformat`, checked against the engine's
-`FormatVersion` by ctest `spec`): a keyboard update needs new language
-packages only when the format changes. The keyboard doesn't require a
+`FormatVersion` by ctest `spec`). The keyboard doesn't require a
 language package (one file at a time, from the Files app, neither could be
-installed first); without one it types without suggestions and the settings
-show "No languages installed". The plugin offers only the languages whose
-dictionary is installed; a typing language without one is skipped.
+installed first).
 
-`parrotfish candidates` lists the new words not learned yet (texts so far,
-uses, words left before the count starts over), `parrotfish learned` the
-learned new words (count, and the fadings and words of typing
-until one is forgotten if not used again; `--all` adds the dictionary words
-whose use was learned); `-l LANGUAGE` for one language. It reads
-`learning.db` read-only, with the engine's default `LearnParams`; the
-keyboard saves when it closes.
+### Publishing dictionaries
 
-How it runs: `ParrotfishHandler.qml` is Jolla's `PreeditHandler` with our
-`PredictionEngine` as its `engine`. When a word starts, the handler passes
-the letter keys of the current layout (centres and sizes) and the text
-before the cursor; then each change of the word being typed updates the
-suggestions. Autocorrect strength is the dconf key
-`/apps/parrotfish-keyboard/autocorrect` (`strong`: `normal`, and after a
-previous word a valid word one slip away from a far likelier word of the
-same language is fixed too, `strongMargin`; `normal`, the default;
-`gentle`, `off`); swiping to another layout can be switched off on our layouts:
-`/apps/parrotfish-keyboard/swipe` (`normal`, the default; `off` = a drag of
-a full keyboard width); a long press on the spacebar opens Jolla's menu of
-layouts either way. An empty field leans
-towards the language the last text was in:
-`/apps/parrotfish-keyboard/last-language` (written by the handler; one per
-script: `last-language-cyrl`, `last-language-grek`).
-`/apps/parrotfish-keyboard/languages` holds the typing languages, codes
-separated by spaces (`"en it de"`); empty, the default, means the system
-language only (English if there is no dictionary for it); others are added
-in the settings. A layout types the languages of its script (`script` in
-`LANG.language`; the arrangement's in `arrangements.js`): the plugin's
-`Languages.selected(value, script)`, `PredictionEngine.script`; a script
-with none of them chosen has the system language if it is written in it,
-else none (Latin: English). Every enabled language is searched on each keystroke, the
-likeliest first, the others only for words that can still compete
-(`searchMargin`) (settings page: `settings/ParrotfishLanguages.qml`).
-The keys: one layout in Jolla's list per
-arrangement (`layouts/layouts_parrotfish.conf`: Auto (QWERTY), Auto
-(QWERTZ), Auto (AZERTY), Auto (ЙЦУКЕН), Auto (Ελληνικά)), each
-`layouts/parrotfish/ParrotfishKeyboard.qml` with its `arrangementKey`
-(`layouts/parrotfish*.qml`); any typing language of its script on each. The
-Cyrillic and Greek ones are Jolla's ru.qml and el.qml rows as they are;
-ЙЦУКЕН shows uk.qml's rows while Ukrainian is typed (`languages` in its
-arrangement, picked by the per-script last language between words); their
-sticky key takes the place of the bottom row's `-` or `'` (`bottomKey`, shown
-plain with the sticky key off; `sticky-key-cyrl`, `sticky-key-grek` keep
-their sign); Greek has Jolla's tonos dead key (`DeadLetterKey.qml`; letter
-keys are Jolla's AccentedCharacterKey) and capitals after its question mark
-`;`.
-Jolla's keyboard switches between the enabled ones (spacebar long press,
-swipe); they are switched on in Jolla's own Keyboards page, as any other
-(the diagnostics show Jolla's enabled and active layouts). The look of the
-keys of our layouts (`layouts/parrotfish/`):
-`/apps/parrotfish-keyboard/key-fill` (`none` = the default, `flat`,
-`shaded`) and `/apps/parrotfish-keyboard/key-border` (`none` = the default;
-`line`; `raised`, a rim lit from above drawn by a shader), in any
-combination; both `none`, the default, is Jolla's look. Letter keys stay fainter than
-the spacebar. `/apps/parrotfish-keyboard/key-gap`: the space around each
-key background, across and down, in percent of the row height (0-10, `5` =
-the default; also for Jolla's backgrounds of `?123`, the spacebar and
-Enter). `/apps/parrotfish-keyboard/key-height` (portrait, 80-100, `85` =
-the default) and `key-height-landscape` (`100` = the default) shorten every
-row of our layout, in percent of Jolla's height (`layouts/parrotfish.qml`
-replaces `keyHeight` as Jolla's `updateSizes()` sets it).
-`/apps/parrotfish-keyboard/number-row` (`true` = the default, `false`) adds
-a row of digits above the letters (`withNumberRow()` in
-`layouts/parrotfish/arrangements.js`): the digit row of the first symbol
-page becomes that row; the first symbol page is then the second page's
-first two rows over the first page's other two, and the second page holds
-rare signs (fractions, quotes, maths, ©).
-`/apps/parrotfish-keyboard/number-row-height`: its height in percent of the
-other rows (`75` = the default, "Smaller", with smaller digits; `100`;
-any value from 40 works). `/apps/parrotfish-keyboard/sticky` (`true` = the
-default, `false` = Jolla's rows: `withoutSticky()`) and `sticky-side`
-(`right`, `left`): the sticky key, which keeps the sign last picked from its
-long press (`sticky-key`). `/apps/parrotfish-keyboard/language-keys`
-(`false` = the default, `true`) and `language-keys-side` (`right`, `left`):
-keys for the typing language's most used accented letters (`extra-keys` in
-`LANG.language`): three at the row ends where Jolla's QWERTZ has ü / ö ä
-(each arrangement's `slots`, `withLanguageKeys()`), at the row starts on the
-left (`placeLanguageKeys()`), plus up to two more at the end of the number
-row and in the sticky key's place when that key is off (that one only if an
-enabled language has a letter for it; AZERTY always, in place of its
-apostrophe key); they follow the
-language of the last word the keyboard was sure of, show only if an enabled language has them, and
-narrow Shift and Backspace, not the letters. The sticky key always stays
-outermost. `/apps/parrotfish-keyboard/long-press-hint`
-(`dot` = the default, `off`): a dot on keys with a long-press menu. The
-settings section (`settings/ParrotfishSettings.qml`) opens three pages:
-Typing, Layout (number row, language keys, sticky key) and Look & feel; each
-opens the keyboard, with a field to try it in (and a clear button) that it doesn't learn from
-(`settings/KeyboardPreview.qml`: its `__inputMethodExtensions` carry
-`parrotfishNoLearning`, which the handler passes to the plugin's
-`learnPaused`). Below the three rows, Reset unsets every key under
-`/apps/parrotfish-keyboard/`, as on a new installation (after a remorse
-timer; nothing learned is touched, nor the debug file). A double tap on
-the version opens the diagnostics: version, system, settings and learning
-counts, no words, to copy, or sent by Report a bug, which opens a new issue
-in the browser (the form in `.github/ISSUE_TEMPLATE/bug_report.yml`) with
-them filled in (`KeyboardInfo` in the
-plugin, which also lists the settings' keys and resets them). With `~/.local/share/parrotfish-keyboard/debug` present, the plugin logs
-timings (never the typed text) to the journal, and appends to
-`~/.local/share/parrotfish-keyboard/slips.log` the kind of slip behind every
-autocorrection kept or undone, every correction picked from the bar and
-every word changed by hand (Backspace back into a committed word):
-`kept key k l` (typed k, meant l), `kept space missing` and `kept space
-key n` (two words typed as one), `undone key j h`, `undone late key g h`
-(an autocorrection changed by hand after more typing; it also has a
-`kept` line), `redone key j h` (an undo taken back: Backspace into the
-restored word, then Space, a pick or retyping the correction; it is
-neither picked, kept nor manual), `manual key r e` (a word the engine left
-alone, fixed by hand; a quite different word is not logged), `picked swap`,
-`strong kept key d s margin=9.0` (a valid word fixed by Strong, with its
-margin in nats; also `strong undone`), `missing`,
-`missing-double`, `extra`, `extra-double`, `accent`, `other`. Letter pairs
-only, never words; it is the real tap data for the key model (which slips
-are common on the phone). A header line names the settings the lines below
-come from, written again whenever they change, each day and after a
-restart: `# 2026-11-10 1.1.0 QWERTY portrait height=90 normal
-pitch=1.67 learning=on` (date, version, arrangement, orientation, key
-height %, strength, rows apart in key widths as measured, learning). `words 50` lines count the words typed letter by
-letter under that header (in batches of 50, and the rest when the settings
-change; up to 49 are lost at a restart), so slips can be compared per word.
-
-The undo memory (typed words whose autocorrection was undone; two undos
-stop it, in text of the language the text was in when it was corrected)
-is kept between sessions in
-`~/.local/share/parrotfish-keyboard/learning.db` (SQLite, the system's
-`sqlite-libs`), whether or not the debug file is there: words, so no
-debug data. Every table has a cap (undos: the 1,000 used last) and freed
-space is given back. Deleting the file, with the keyboard closed (or
-before `systemctl --user restart maliit-server`), forgets everything.
-
-Plugin test on the PC: install to a staging dir (`DESTDIR=… cmake --install
-build`) and load it in `qmlscene-qt5` with `QML2_IMPORT_PATH` and
-`PARROTFISH_DATA_DIR` pointing there.
+The dictionaries build byte for byte the same on every machine. Each one
+the settings can download is pinned in `data/dictionaries.json`: the
+GitHub release that holds it (`languages-N`, never the latest release)
+and the SHA-256 of the compressed and the unpacked file; `languages.json`
+gets them as each language's `download`. Test `dictionaries-pinned` fails
+when a built dictionary isn't the pinned one. Then, before the next
+keyboard release: **Actions > Languages > Run workflow** with the next tag
+(`.github/workflows/languages.yml`): it builds the dictionaries, publishes
+the changed and new ones as that release with the licence texts, and
+keeps the updated `data/dictionaries.json` as the artifact `pinned`;
+commit it. Unchanged dictionaries keep their release, so a keyboard
+update downloads nothing for them. The same by hand:
+`tools/data/languages-release.py prepare build/data data/dictionaries.json
+languages-N out/`, then `gh release create languages-N out/* --latest=false`.
 
 ## Continuous integration and releases
 
@@ -439,7 +333,7 @@ Making a release:
    the RPMs for aarch64 and armv7hl against the Sailfish OS 5.1.0.11 SDK
    targets with the checks' dictionaries in `prebuilt/`. Finally it creates
    the release `v<Version>` for that commit, with the two
-   `parrotfish-keyboard` RPMs, the aarch64 voice package and the two noarch
+   `parrotfish-keyboard` RPMs and the four noarch
    language packages attached
    (the aarch64 build's copies; every package is checked with `rpm -K`
    before it is attached). The
@@ -486,7 +380,7 @@ repository, pinned to a release tag (`v<Version>`) or its commit:
   builds' developer tools stay out, as the version has no `~`.
 - The dictionaries are built from `data/` during the build (no `prebuilt/`),
   so it takes longer than the RPMs from GitHub; nothing is downloaded.
-- No voice package: its prebuilt libraries can't be downloaded during the
+- No voice input: its prebuilt libraries can't be downloaded during the
   build (the spec's `voice` is 0 with `_chum`).
 - One spec, three packages. Each `%description` ends with Chum's metadata,
   so the keyboard and both language packages show up in the Chum app;
@@ -504,7 +398,7 @@ Sources (THIRD-PARTY.md has their licences):
 | Source | Taken from | Version |
 |---|---|---|
 | AOSP LatinIME wordlists (en_US, it, de; es, fr, pt_BR, pt_PT, nl, sv, da, nb, ro; fi; pl, cs, hr; ru, el) | `android.googlesource.com/platform/packages/inputmethods/LatinIME`, `dictionaries/` | commit `127336e9f29d69607eab55982324b210279ae8c5` (fetched 2026-10-08, the second group 2026-10-26, fi 2026-10-28, pl, cs and hr 2026-11-10, ru and el 2026-11-22; list versions 44–54, from 2014) |
-| Leipzig Corpora Collection (the uk and bg wordlists, `data/leipzig/`, CC BY; `tools/data/leipzig-wordlist.py`; AOSP has no uk or bg list) | `downloads.wortschatz-leipzig.de/corpora/`: `ukr_news_{2020,2022,2023,2024}_1M`, `ukr_newscrawl_2011_1M`; `bul_news_{2019,2020,2022}_1M`, `bul_newscrawl_{2011,2017}_1M` (`tar.gz`), with the Russian AOSP list as `--foreign` and frequency scale | fetched 2026-11-22 (ukr_news_2024 built 2025-02-13) |
+| Leipzig Corpora Collection (the uk wordlist, `data/leipzig/`, CC BY; `tools/data/leipzig-wordlist.py`; AOSP has no uk list) | `downloads.wortschatz-leipzig.de/corpora/`: `ukr_news_{2020,2022,2023,2024}_1M`, `ukr_newscrawl_2011_1M` (`tar.gz`), with the Russian AOSP list as `--foreign` and frequency scale | fetched 2026-11-22 (ukr_news_2024 built 2025-02-13) |
 | Sloleks Morphological Lexicon of Slovene (the sl wordlist, `data/sloleks/`, CC BY-SA 4.0; `tools/data/sloleks-wordlist.py`; the AOSP sl list has 60k words and missed 7–10% of Slovenian text) | `hdl.handle.net/11356/2080` (CLARIN.SI), `Sloleks.3.1.zip` | 3.1 (2026-02), fetched 2026-11-10 |
 | Common Voice sentences | `github.com/common-voice/common-voice`, `server/data/<lang>/` | en, it, de: commit `a28a4cbf9188dafac0cb266f90bc9938f8418564` (2026-10-08); es, fr, pt, nl, sv-SE, da, nb-NO, ro, fi: commit `4c9c6a9c9b0561e029f1d65448edaf62947e12ec` (2026-10-26, fi 2026-10-28); pl, cs, sl, hr: commit `b24381ce7136f2524a1128cb605b49111f79dbea` (2026-11-09); ru, uk, el: the same commit (2026-11-22) |
 | Tatoeba sentences | `downloads.tatoeba.org/exports/per_language/<lang>/` | eng, ita, deu: 2026-10-08; spa, fra, por, nld, swe, dan, nob, ron: 2026-10-26; fin: 2026-10-28; pol, ces, slv, hrv: 2026-11-09; rus, ukr, ell: 2026-11-22 |

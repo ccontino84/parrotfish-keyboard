@@ -10,9 +10,11 @@
 # parrotfish-keyboard-languages-greek; the keyboard's package keeps none.
 #   split-languages.py INSTALLED_DATA_DIR DATA_DIR
 # writes latin.files, latin-experimental.files, cyrillic.files, greek.files
-# and main-excludes.files in the current directory. It lives outside rpm/
-# because SailfishOS:Chum's build service leaves rpm/ out of the sources
-# (DEVELOPMENT.md).
+# and main-excludes.files in the current directory, and each dictionary's
+# record (CODE.pfd.sha256: its SHA-256, how the keyboard tells this
+# release's files). It lives outside rpm/ because SailfishOS:Chum's build
+# service leaves rpm/ out of the sources (DEVELOPMENT.md).
+import hashlib
 import json
 import sys
 
@@ -28,11 +30,15 @@ packages = {
 }
 if sum(len(codes) for codes in packages.values()) != len(langs):
     sys.exit("split-languages.py: a language of another script")
+for c in langs:
+    with open(f"{installed}/{c}.pfd", "rb") as d, open(f"{installed}/{c}.pfd.sha256", "w") as r:
+        r.write(hashlib.sha256(d.read()).hexdigest() + "\n")
+files = lambda codes, prefix="": [f"{prefix}{path}/{c}.pfd{ext}\n" for c in codes for ext in ("", ".sha256")]
 for name, codes in packages.items():
     if not codes:
         sys.exit(f"split-languages.py: parrotfish-keyboard-languages-{name} would be empty")
     with open(f"{name}.files", "w") as f:
-        f.writelines(f"{path}/{c}.pfd\n" for c in codes)
+        f.writelines(files(codes))
     print(f"parrotfish-keyboard-languages-{name}:", " ".join(codes))
 with open("main-excludes.files", "w") as f:
-    f.writelines(f"%exclude {path}/{c}.pfd\n" for c in sorted(langs))
+    f.writelines(files(sorted(langs), "%exclude "))

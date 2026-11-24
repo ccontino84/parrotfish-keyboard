@@ -1,0 +1,145 @@
+{
+ "base": "https://github.com/ccontino84/parrotfish-keyboard/releases/download",
+ "languages": {
+  "cs": {
+   "tag": "languages-1",
+   "size": 2370513,
+   "sha256": "c457e6010635c6644785112b0197f188efce94de06e42ca4b2086a90a4bed69d",
+   "pfdSize": 4343624,
+   "pfdSha256": "a9b205db2b91c2ed1f203cc0584e86295b46282b913ba8339e40826f98c6570a"
+  },
+  "da": {
+   "tag": "languages-1",
+   "size": 2834392,
+   "sha256": "fcf009b2972649626f2065d84c7a215098bfb05d3638ce259f96d9fd88a4ab18",
+   "pfdSize": 5310464,
+   "pfdSha256": "ee771571e6b013682129765218e3e5cff3963771439bc892c588642424caf8fc"
+  },
+  "de": {
+   "tag": "languages-1",
+   "size": 5272352,
+   "sha256": "2f3087268e494fd125393ef396453544355e7818c245ad952a3eaa957c66ba87",
+   "pfdSize": 9099432,
+   "pfdSha256": "de9e55958129759e984fbc35ae75a486e4f12402be2477d87d4b275762bb282c"
+  },
+  "el": {
+   "tag": "languages-1",
+   "size": 2326931,
+   "sha256": "8bd30da93758abd920e060740c1e4ce8a77ca001751f7bb619e280b16b1c27f2",
+   "pfdSize": 4647032,
+   "pfdSha256": "19d58089b9ecdf58a42b93e78df30bce490654d07c78273d3fc55e5a0084f829"
+  },
+  "en": {
+   "tag": "languages-1",
+   "size": 3500203,
+   "sha256": "ae976e69b80750363d61a7daad6f675515302abcecd9dee85995de2429584bc5",
+   "pfdSize": 6092784,
+   "pfdSha256": "5ec5490f8f2913dbf227d8b3830d7c2466bed8d7e3cd590fdb9711f3755c5577"
+  },
+  "es": {
+   "tag": "languages-1",
+   "size": 3193229,
+   "sha256": "45bcd128c9f9429670b16248310070251ef4aed87afab92b242f7f36e59c8c3f",
+   "pfdSize": 5924856,
+   "pfdSha256": "d98140a6300776fa3735d32b6a911ff8991f7f7e232827cd62f7552d0960f327"
+  },
+  "fi": {
+   "tag": "languages-1",
+   "size": 3199031,
+   "sha256": "9fea6ac6e47782723f8e4d764ca551db3b72cfca8d9bebf96fd2da67797e3518",
+   "pfdSize": 6042440,
+   "pfdSha256": "91cd680a35e8c47d1945af162370196ea2e7af08415549dfbd47475dab36492c"
+  },
+  "fr": {
+   "tag": "languages-1",
+   "size": 4065549,
+   "sha256": "5abcf7668a5b90d80dc7080eccb75a244b750a6989a830cecbd07a39f4243f9d",
+   "pfdSize": 7134984,
+   "pfdSha256": "2fde43969782feb0c4a983e6977ce3a4e7f8bd1f1e70ebf5e7a61e45ca7bb7a3"
+  },
+  "hr": {
+   "tag": "languages-1",
+   "size": 1694560,
+   "sha256": "4d9e456f1165d4e8cdca50f2e6456f43a13855b24c023a391814404574d1a8c3",
+   "pfdSize": 3571624,
+   "pfdSha256": "157059573f1863c197c75962c25b9456b201b7a64231d2d538274bab17ad6fcb"
+  },
+  "it": {
+   "tag": "languages-1",
+   "size": 3404795,
+   "sha256": "2714203d41ab6da8eded05cb73c7c7eab181ed6770d19c3032343a835100e1c5",
+   "pfdSize": 6247936,
+   "pfdSha256": "0bd35674913c06ad12ff3306833405564b0a6c6359102df6f897ba499cf95c7f"
+  },
+  "nb": {
+   "tag": "languages-1",
+   "size": 2417660,
+   "sha256": "cd0a11b363603ad16521730dc101fa0bea7ab5ebb83da846e48b46bbce3354b7",
+   "pfdSize": 4512864,
+   "pfdSha256": "f4576b5f77c9c1007fe32b4c579341aba49b8cd0ecb22dcf2fed5cb693cfc76a"
+  },
+  "nl": {
+   "tag": "languages-1",
+   "size": 3532220,
+   "sha256": "ed77671162ae9ab9f6642c62682bc7a3d5ab142a7ade76658dfa5a17efb6d861",
+   "pfdSize": 6340816,
+   "pfdSha256": "9c7115a5dcc86c40228356eeda4442b15fe624b46b91becbc050748da086214a"
+  },
+  "pl": {
+   "tag": "languages-1",
+   "size": 2481638,
+   "sha256": "0897b6560197c210c90f66d1ed4a02eabcb4ec061b071446e68c682c1ef959b6",
+   "pfdSize": 4597056,
+   "pfdSha256": "164bd7f2a1a9441fd7ee1a6f137be074945c5f4685ee2255d89cc80c0a1cba63"
+  },
+  "pt_BR": {
+   "tag": "languages-1",
+   "size": 2401820,
+   "sha256": "a9cf6d9443dafa26b3f59472fce336c3e72d713ceded4d04389882419f07fc00",
+   "pfdSize": 4540976,
+   "pfdSha256": "78ff1ca799d7487a5e625f0f0968d4f973fe96599b7f6fc45af5a1dc4fca23ad"
+  },
+  "pt_PT": {
+   "tag": "languages-1",
+   "size": 3018822,
+   "sha256": "66ba993872119049241f783ef93f502b62daae9e5216af5a25a8802a53b47738",
+   "pfdSize": 5879408,
+   "pfdSha256": "26a09e54fac7fdbbe43ec5b7ac01a076cb27bddb55064962b427d132b623072c"
+  },
+  "ro": {
+   "tag": "languages-1",
+   "size": 3179603,
+   "sha256": "b5842c49c22fe904aedc41cd680d035ad98108317e2014f1a6e9cb8cc1aa724c",
+   "pfdSize": 9183544,
+   "pfdSha256": "3bc23ac8d7f5ae00d44b0a70058aa1a99b311e0e8f930ece84d533085c765631"
+  },
+  "ru": {
+   "tag": "languages-1",
+   "size": 3025910,
+   "sha256": "419fd118869bff126918f16a71ef63304c7a63de226fa1093ba93fa3c667f9f3",
+   "pfdSize": 5651048,
+   "pfdSha256": "0189b2a344e3bf0652889c752cf52ee91da9e3ab48b4d4cb65d7650ffd6ffa98"
+  },
+  "sl": {
+   "tag": "languages-1",
+   "size": 4910652,
+   "sha256": "b2c91a659256915700ab2af6a41497f8e26cf35144d66632510e410fae9e5bf9",
+   "pfdSize": 8442104,
+   "pfdSha256": "c9ea2b99ce1e88117e397565f8e425aa43a126bf349b6fb89e8239ce6def1bf7"
+  },
+  "sv": {
+   "tag": "languages-1",
+   "size": 2884221,
+   "sha256": "5146a2585f67d45e8b4ff45e4f56499149b03da23a21c541ada0385cf9fba57a",
+   "pfdSize": 5279840,
+   "pfdSha256": "0d8b15ba79348733428f9555d89bf9b2d7bb4bd3d46d8958b1150f46916f273d"
+  },
+  "uk": {
+   "tag": "languages-1",
+   "size": 2938458,
+   "sha256": "6ead03e465813346c7b1f2a142312548488829b5a2fb373a4436e1bf6cf929cd",
+   "pfdSize": 5592720,
+   "pfdSha256": "4cd071a767e498c1b7b6aa5e2afe7920cd518a4b628429a581824d30f4f2a18d"
+  }
+ }
+}

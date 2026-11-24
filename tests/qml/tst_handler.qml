@@ -632,12 +632,13 @@ Item {
             compare(Languages.selected("en ru el", "Cyrl").join(" "), "ru")
             compare(Languages.selected("en ru el").join(" "), "en")
             compare(Languages.selectedAll("en ru el").join(" "), "en el ru")   // by name: English, Ελληνικά, Русский
-            Languages.setSystemLocale("ru_RU")
-            compare(Languages.selected("", "Cyrl").join(" "), "ru", "the system language in its script")
+            // Other scripts, none chosen: every installed one, the system language's first.
+            Languages.setSystemLocale("uk_UA")
+            compare(Languages.selected("", "Cyrl").join(" "), "uk ru", "the system language first")
             compare(Languages.selected("", "Latn").join(" "), "en", "else the fallback")
-            compare(Languages.selected("", "Grek").join(" "), "", "no Greek default")
+            compare(Languages.selected("", "Grek").join(" "), "el", "the only Greek one")
             Languages.setSystemLocale("en_GB")
-            compare(Languages.selected("", "Cyrl").join(" "), "")
+            compare(Languages.selected("", "Cyrl").join(" "), "ru uk")
 
             var e = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; PredictionEngine { languages: "en ru el" }', root)
             e.setContext("Я думаю, что ")
@@ -653,6 +654,14 @@ Item {
             compare(e.autocorrection, "καλά")
             e.preedit = ""
             e.destroy()
+
+            // The switch key's language is the only one loaded: no automatic switching.
+            var c = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; PredictionEngine { languages: ""; script: "Cyrl"; language: "uk" }', root)
+            c.setContext("Я думаю, что ")
+            compare(c.leadingLanguage, "uk", "Russian text, Ukrainian keys")
+            c.language = "ru"
+            compare(c.leadingLanguage, "ru", "switched")
+            c.destroy()
         }
 
         // Types `before`, closes the keyboard (the word is committed as it
@@ -715,6 +724,29 @@ Item {
             handler._ownChangeTime = 0
             MInputMethodQuick.cursorPosition = pos
             wait(450)
+        }
+
+        function test_scriptChangesLeadingLanguage() {
+            // Another script's layout loads other dictionaries: the spacebar's language follows.
+            var engine = Qt.createQmlObject('import Parrotfish.Keyboard 1.0; PredictionEngine { languages: "en el" }', root)
+            engine.setContext("I think ", false)
+            compare(engine.leadingLanguage, "en")
+            var signals = 0
+            var count = function() { ++signals }
+            engine.leadingLanguageChanged.connect(count)
+            engine.script = "Grek"
+            compare(engine.leadingLanguage, "el")
+            verify(signals > 0, "leadingLanguageChanged on the reload")
+            engine.destroy()
+        }
+
+        function test_refusedDownload() {
+            // run.sh's downloaded en is refused: the package's is typed with, no problem shown.
+            compare(handler.engine.dictionaryProblem, "")
+            handler.engine.reloadDictionaries()
+            compare(handler.engine.dictionaryProblem, "")
+            context("I think ")
+            compare(bar().split(" ").length > 1, true)
         }
 
         function test_takeBackAtCursor() {

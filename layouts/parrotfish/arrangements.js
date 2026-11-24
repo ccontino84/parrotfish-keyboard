@@ -636,6 +636,12 @@ var freeRow = "¹ ² ³ ½ ¼ ¾ ± ≈ – … ≠"
 // Jolla's signs keep their row where they can.
 var numpad = {"rows": ["()~;:123!", "*#+-=456?", "@&/\\789"], "bottom": "'0"}
 
+// Signs of an arrangement's 123 page the numpad has no key for: on the
+// long press of a numpad key (key: its menu, the key's own sign first).
+var numpadMore = {
+    "jcuken": {"#": "#\u2116", "*": "*\u00d7", "+": "+%", "~": "~^", "\\": "\\|", "'": "'\""}
+}
+
 // `a` with a number row: the first symbol page's digits, in every view;
 // the second page's first row moves to the first page, freeRow takes its place.
 function withNumberRow(a) {

@@ -48,17 +48,21 @@ if(PARROTFISH_PLUGIN)
     install(DIRECTORY layouts/parrotfish DESTINATION ${PARROTFISH_LAYOUT_DIR})
     # the .conf files name this path for Settings > Text input
     install(FILES settings/ParrotfishSettings.qml settings/ParrotfishTyping.qml settings/ParrotfishTypingAids.qml
-                  settings/ParrotfishLayout.qml settings/ParrotfishLook.qml
+                  settings/ParrotfishLayout.qml settings/ParrotfishAppearance.qml
                   settings/ParrotfishDiagnostics.qml settings/ParrotfishLanguages.qml
                   settings/ParrotfishLearned.qml settings/SettingCombo.qml settings/SettingSwitch.qml
                   settings/SettingSlider.qml settings/KeyboardPreview.qml
-                  settings/ParrotfishVoice.qml settings/ParrotfishMobileData.qml
+                  settings/ParrotfishVoice.qml settings/ParrotfishMobileData.qml settings/LanguageGetItem.qml
             DESTINATION ${PARROTFISH_DATA_DIR}/settings)
 endif()
 
-# The voice package: aarch64 only, with prebuilt libraries that
+if(PARROTFISH_PLUGIN)
+    add_subdirectory(downloader)
+endif()
+
+# Voice input: aarch64 only, with prebuilt libraries that
 # voice/fetch-deps.sh downloads into voice/deps (the spec decides).
-option(PARROTFISH_VOICE "Build the voice package (aarch64, needs voice/deps)" OFF)
+option(PARROTFISH_VOICE "Build voice input (aarch64, needs voice/deps)" OFF)
 if(PARROTFISH_PLUGIN AND PARROTFISH_VOICE)
     if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/voice/deps/sherpa-onnx/lib/libsherpa-onnx-c-api.so)
         message(FATAL_ERROR "voice/deps is missing: run voice/fetch-deps.sh")

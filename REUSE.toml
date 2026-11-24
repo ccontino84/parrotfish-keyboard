@@ -14,7 +14,7 @@ SPDX-License-Identifier = "CC-BY-SA-4.0"
 
 [[annotations]]
 path = "data/leipzig/*_wordlist.combined.gz"
-SPDX-FileCopyrightText = "Leipzig Corpora Collection, Universität Leipzig / InfAI (ukr_news 2020, 2022, 2023, 2024, ukr_newscrawl 2011; bul_news 2019, 2020, 2022, bul_newscrawl 2011, 2017); 2026 ccontino84"
+SPDX-FileCopyrightText = "Leipzig Corpora Collection, Universität Leipzig / InfAI (ukr_news 2020, 2022, 2023, 2024, ukr_newscrawl 2011); 2026 ccontino84"
 SPDX-License-Identifier = "CC-BY-4.0"
 
 [[annotations]]
@@ -39,13 +39,13 @@ SPDX-FileCopyrightText = "Tatoeba contributors"
 SPDX-License-Identifier = "LicenseRef-CC-BY-2.0-FR"
 
 [[annotations]]
-path = "tests/qml/stubs/**"
+path = ["tests/qml/stubs/**", "tests/settings/stubs/**"]
 SPDX-FileCopyrightText = "2026 ccontino84"
 SPDX-License-Identifier = "LGPL-2.1-or-later"
 
-# No comments in these files (qmldir: Qt 5.6 on the phone; issue forms: GitHub).
+# No comments in these files (qmldir: Qt 5.6 on the phone; issue forms: GitHub; JSON).
 [[annotations]]
-path = ["plugin/qmldir", ".github/ISSUE_TEMPLATE/*.yml"]
+path = ["plugin/qmldir", ".github/ISSUE_TEMPLATE/*.yml", "data/dictionaries.json"]
 SPDX-FileCopyrightText = "2026 ccontino84"
 SPDX-License-Identifier = "LGPL-2.1-or-later"
 

@@ -40,6 +40,8 @@ KeyboardRow {
     readonly property var _punctuation: parent && parent.punctuation !== undefined ? parent.punctuation : null
     readonly property bool _numpad: !!parent && parent.numpadShown === true
     readonly property string _numpadBottom: Arrangements.numpad.bottom
+    readonly property var _numpadMore: parent && parent.arrangementKey !== undefined
+                                       ? Arrangements.numpadMore[parent.arrangementKey] || {} : {}
     readonly property bool _voice: !!parent && parent.voiceEnabled === true
 
     // Outside split landscape. Set when the layout sizes the rows: bindings
@@ -101,7 +103,7 @@ KeyboardRow {
         id: extra
         readonly property var _layout: bottomRow.parent
         readonly property var _a: _layout && _layout.arrangement ? _layout.arrangement : null
-        active: _a !== null && _a.bottomSign !== undefined
+        active: !bottomRow._numpad && _a !== null && _a.bottomSign !== undefined
         caption: active ? _a.bottomSign : ""
         captionShifted: caption
         accents: active ? Arrangements.signsAfter(caption) : ""
@@ -136,6 +138,9 @@ KeyboardRow {
         active: bottomRow._numpad
         caption: bottomRow._numpadBottom.charAt(0)
         captionShifted: caption
+        accents: bottomRow._numpadMore[caption] || ""
+        accentsShifted: accents
+        popupAlways: accents !== ""
         fixedWidth: true
         pad: caption === "0"
     }

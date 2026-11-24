@@ -16,6 +16,12 @@ Page {
         defaultValue: ""
     }
 
+    ConfigurationValue {
+        id: enabledLayoutsConfig
+        key: "/sailfish/text_input/enabled_layouts"
+        defaultValue: []
+    }
+
     LearnedWords {
         id: learnedWords
     }
@@ -62,8 +68,13 @@ Page {
 
             ValueButton {
                 label: qsTr("Typing languages")
-                value: Languages.names(Languages.selectedAll(languagesConfig.value))
-                       || qsTr("No languages installed")
+                value: {
+                    var revision = Languages.revision
+                    var codes = Languages.typingAll(languagesConfig.value, enabledLayoutsConfig.value)
+                    if (codes.length === 0)
+                        return qsTr("None", "typing languages")
+                    return Languages.names(codes)
+                }
                 onClicked: pageStack.animatorPush(Qt.resolvedUrl("ParrotfishLanguages.qml"))
             }
 

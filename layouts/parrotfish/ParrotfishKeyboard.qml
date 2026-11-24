@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// A Parrotfish layout, for any Latin-script typing language (the engine
-// picks the language). Each of Jolla's entries (layouts_parrotfish.conf) is
-// this with its `arrangementKey` (arrangements.js).
+// A Parrotfish layout: the engine picks the language among the typing
+// languages of its script. Each of Jolla's entries (layouts_parrotfish.conf)
+// is this with its `arrangementKey` (arrangements.js).
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import com.meego.maliitquick 1.0
@@ -22,7 +22,7 @@ KeyboardLayout {
     // Not in split landscape, which keeps Jolla's page.
     readonly property bool numpadShown: numpadOn && _rowsShown && !splitActive
                                         && attributes.inSymView && !attributes.inSymView2
-    // Later: the bottom row's 0 and second spacebar follow it by binding.
+    // Later: the bottom row's numpad keys follow it by binding.
     onNumpadShownChanged: _relayoutLater.restart()
     // The number row, number-row-height percent as tall as the other rows.
     readonly property bool numberRowOn: !numpadOn && (numberRowConfig.value === true || numberRowConfig.value === "true")
@@ -70,9 +70,14 @@ KeyboardLayout {
     // The mark on keys with a long-press menu (parrotfish/LongPressHint.qml).
     readonly property bool longPressHint: longPressHintConfig.value !== "off"
     // The comma's and the period's long-press menus, by typing language.
-    readonly property var punctuation: Languages.punctuation(Languages.selected(languagesConfig.value, script))
+    readonly property var punctuation: Languages.punctuation(_typingLanguages)
     // The accented letters the long-press menus show first; a change rebuilds the rows.
-    readonly property string accentLetters: Languages.menuLetters(Languages.selected(languagesConfig.value, script))
+    readonly property string accentLetters: Languages.menuLetters(_typingLanguages)
+    // Again after a download changes the default (revision).
+    readonly property var _typingLanguages: {
+        var revision = Languages.revision
+        return Languages.selected(languagesConfig.value, script)
+    }
 
     // The sign of the sticky key: the one last picked from its long press.
     readonly property string stickySign: {
@@ -216,6 +221,7 @@ KeyboardLayout {
     function _updateGroupLanguage() {
         var codes = Languages.selected(languagesConfig.value, script)
         if (script !== "Latn") {
+            codes = Languages.typing(languagesConfig.value, script)   // installed ones only
             // The keys chosen with the switch key, else the last text's
             // language, else the first.
             var switchable = Arrangements.switchable(arrangementKey, codes)
@@ -307,19 +313,24 @@ KeyboardLayout {
         onValueChanged: parrotfishLayout._updateGroupLanguage()
     }
 
+    Connections {
+        target: Languages
+        onChanged: parrotfishLayout._updateGroupLanguage()
+    }
+
     ConfigurationValue {
         id: lastLanguageConfig
-        // Written by the handler; one per script (last-language-cyrl).
-        key: "/apps/parrotfish-keyboard/last-language" + (parrotfishLayout.script === "Latn" ? ""
-                                                          : "-" + parrotfishLayout.script.toLowerCase())
+        // Written by the handler; one per layout (last-language-azerty; QWERTY's has no suffix).
+        key: "/apps/parrotfish-keyboard/last-language" + (parrotfishLayout.arrangementKey === "qwerty" ? ""
+                                                          : "-" + parrotfishLayout.arrangementKey)
         defaultValue: ""
         onValueChanged: parrotfishLayout._updateGroupLanguage()
     }
 
     ConfigurationValue {
         id: keysConfig
-        // The switch key's choice (ru, uk); one per script (keys-cyrl).
-        key: "/apps/parrotfish-keyboard/keys-" + parrotfishLayout.script.toLowerCase()
+        // The switch key's choice (ru, uk); one per layout (keys-jcuken).
+        key: "/apps/parrotfish-keyboard/keys-" + parrotfishLayout.arrangementKey
         defaultValue: ""
         onValueChanged: parrotfishLayout._updateGroupLanguage()
     }
@@ -581,6 +592,7 @@ KeyboardLayout {
 
     function _buildNumpad() {
         var spec = Arrangements.numpad
+        var more = Arrangements.numpadMore[arrangementKey] || {}
         var rows = []
         for (var r = 0; r < spec.rows.length; ++r) {
             var last = r === spec.rows.length - 1
@@ -589,9 +601,10 @@ KeyboardLayout {
                 keys.push({"item": shiftKeyComponent.createObject(numpadRows), "part": "shift"})
             for (var i = 0; i < spec.rows[r].length; ++i) {
                 var c = spec.rows[r].charAt(i)
+                var menu = more[c] || ""
                 keys.push({"item": letterKeyComponent.createObject(numpadRows, {
-                    "caption": c, "captionShifted": c, "accents": "", "accentsShifted": "",
-                    "pad": c >= "0" && c <= "9", "leftPadding": 0, "rightPadding": 0
+                    "caption": c, "captionShifted": c, "accents": menu, "accentsShifted": menu,
+                    "popupAlways": menu !== "", "pad": c >= "0" && c <= "9", "leftPadding": 0, "rightPadding": 0
                 }), "part": "key"})
             }
             if (last)

@@ -10,6 +10,8 @@ __pycache__/
 # the RPM's file lists (tools/split-languages.py)
 /latin.files
 /latin-experimental.files
+/cyrillic.files
+/greek.files
 /main-excludes.files
 
 # Dictionaries built on the PC for a local RPM (tools/pf rpm)

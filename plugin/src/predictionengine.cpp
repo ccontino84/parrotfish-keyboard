@@ -315,20 +315,56 @@ void PredictionEngine::setScript(const QString &script)
 
 void PredictionEngine::loadLanguages()
 {
-    auto dict = [this](const QString &code) {
-        return m_dataDir + QLatin1Char('/') + code + QStringLiteral(".pfd");
-    };
-    // Known, installed codes in the layout's script, else its default.
-    const QStringList codes = Languages::instance().selected(m_languages, m_script);
+    // Other dictionaries can change the leading language with no word typed
+    // (another script's layout): the spacebar shows it.
+    const QString lead = leadingLanguage();
+    const Languages &languages = Languages::instance();
+    // The layout's script's languages, else its default (the system
+    // language's; Latin: else English).
+    QStringList codes = languages.selected(m_languages, m_script);
+    // Other scripts: one installed language, the keys' (the switch key's).
+    if (m_script != QLatin1String("Latn")) {
+        codes = languages.typing(m_languages, m_script);
+        codes = codes.contains(m_language) ? QStringList{m_language} : codes.mid(0, 1);
+    }
     m_engine.clearLanguages();
     m_results.clear();
-    for (const QString &code : codes) {
-        std::string error;
-        if (!m_engine.addLanguage(dict(code).toStdString(), &error))
+    bool refused = false;
+    const auto add = [this, &languages, &refused](const QString &code) {
+        // The next file if one is refused (a download of another format).
+        const QStringList files = languages.dictionaryFiles(code);
+        for (const QString &file : files) {
+            std::string error;
+            if (m_engine.addLanguage(file.toStdString(), &error))
+                return;
             qWarning("parrotfish: %s", error.c_str());
+        }
+        refused = refused || !files.isEmpty();
+    };
+    for (const QString &code : codes)
+        add(code);
+    if (m_engine.languageCount() == 0)   // none of the codes installed
+        for (const QString &code : languages.defaultLanguages(m_script))
+            add(code);
+    const QString problem = refused ? QStringLiteral("unusable")
+                          : m_engine.languageCount() == 0 ? QStringLiteral("none") : QString();
+    if (problem != m_dictionaryProblem) {
+        m_dictionaryProblem = problem;
+        emit dictionaryProblemChanged();
     }
     if (m_debug)
         qInfo("parrotfish: %d typing languages", static_cast<int>(m_engine.languageCount()));
+    if (leadingLanguage() != lead)
+        emit leadingLanguageChanged();
+}
+
+void PredictionEngine::reloadDictionaries()
+{
+    Languages::instance().refresh();
+    flush();
+    loadLanguages();
+    m_contextValid = false;
+    setContext(m_context);
 }
 
 void PredictionEngine::setLanguage(const QString &language)
@@ -338,6 +374,11 @@ void PredictionEngine::setLanguage(const QString &language)
         return;
     m_language = language;
     emit languageChanged();
+    if (m_script != QLatin1String("Latn")) {   // the switch key: another dictionary
+        loadLanguages();
+        m_contextValid = false;
+        setContext(m_context);
+    }
 }
 
 QString PredictionEngine::leadingLanguage() const

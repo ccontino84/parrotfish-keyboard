@@ -6,18 +6,13 @@
 #include <QStandardPaths>
 #include <QString>
 
-// Where the optional voice package's programs are, and where the speech
+// Where the voice helper is, and where the speech
 // model is downloaded to (per user: the download needs no root).
 namespace VoicePaths {
 
 inline QString helper()
 {
     return QStringLiteral(PARROTFISH_VOICE_LIBEXEC_DIR "/parrotfish-voice");
-}
-
-inline QString downloader()
-{
-    return QStringLiteral(PARROTFISH_VOICE_LIBEXEC_DIR "/parrotfish-voice-download");
 }
 
 inline QString modelDir()

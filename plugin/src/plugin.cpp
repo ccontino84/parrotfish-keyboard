@@ -3,6 +3,7 @@
 
 #include "emojiimageprovider.h"
 #include "keyboardinfo.h"
+#include "languagedownloads.h"
 #include "languages.h"
 #include "learnedwords.h"
 #include "predictionengine.h"
@@ -31,12 +32,18 @@ public:
         qmlRegisterType<KeyboardInfo>(uri, 1, 0, "KeyboardInfo");
         qmlRegisterType<VoiceWave>(uri, 1, 0, "VoiceWave");
         qmlRegisterSingletonType<Languages>(uri, 1, 0, "Languages", [](QQmlEngine *, QJSEngine *) -> QObject * {
-            return new Languages;
+            // The engine's own, so that a rescan reaches both.
+            QQmlEngine::setObjectOwnership(&Languages::instance(), QQmlEngine::CppOwnership);
+            return &Languages::instance();
         });
         qmlRegisterSingletonType<VoiceInput>(uri, 1, 0, "Voice", [](QQmlEngine *, QJSEngine *) -> QObject * {
             return new VoiceInput;
         });
         // A singleton: the download goes on when its settings page closes.
+        qmlRegisterSingletonType<LanguageDownloads>(uri, 1, 0, "LanguageDownloads",
+                                                     [](QQmlEngine *, QJSEngine *) -> QObject * {
+            return new LanguageDownloads;
+        });
         qmlRegisterSingletonType<VoiceModel>(uri, 1, 0, "VoiceModel", [](QQmlEngine *, QJSEngine *) -> QObject * {
             return new VoiceModel;
         });

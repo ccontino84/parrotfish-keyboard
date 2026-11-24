@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 ccontino84
 // SPDX-License-Identifier: LGPL-2.1-or-later
 //
-// Look & feel: the keys' look and sizes, the long-press hint, swiping.
+// Appearance: the keys' look and sizes, the long-press hint.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Parrotfish.Keyboard 1.0
@@ -20,7 +20,7 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: qsTr("Look & feel")
+                title: qsTr("Appearance")
             }
 
             KeyboardPreview {
@@ -87,21 +87,6 @@ Page {
                     id: hintConfig
                     key: "/apps/parrotfish-keyboard/long-press-hint"
                     defaultValue: "dot"
-                }
-            }
-
-            // dconf swipe: "normal" or "off" (anything else: on).
-            TextSwitch {
-                automaticCheck: false
-                text: qsTr("Swipe to switch keyboards")
-                description: qsTr("Long-press the spacebar to switch too")
-                checked: swipeConfig.value !== "off"
-                onClicked: swipeConfig.value = swipeConfig.value === "off" ? "normal" : "off"
-
-                ConfigurationValue {
-                    id: swipeConfig
-                    key: "/apps/parrotfish-keyboard/swipe"
-                    defaultValue: "normal"
                 }
             }
         }

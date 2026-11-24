@@ -15,180 +15,28 @@
     </message>
 </context>
 <context>
-    <name>ParrotfishDiagnostics</name>
+    <name>LanguageGetItem</name>
     <message>
-        <source>Diagnostics</source>
-        <translation>Diagnosticare</translation>
+        <source>Tap to try again</source>
+        <translation>Atinge pentru a încerca din nou</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Copiază</translation>
+        <source>Mobile data: tap again to download (%1 MB)</source>
+        <translation>Date mobile: atinge din nou pentru a descărca (%1 MB)</translation>
     </message>
     <message>
-        <source>Report a bug</source>
-        <translation>Raportează o eroare</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishHandler</name>
-    <message>
-        <source>Finishing…</source>
-        <translation>Se finalizează…</translation>
-    </message>
-    <message>
-        <source>Paused</source>
-        <translation>În pauză</translation>
-    </message>
-    <message>
-        <source>Listening…</source>
-        <translation>Ascultă…</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLanguages</name>
-    <message>
-        <source>Typing languages</source>
-        <translation>Limbi de tastare</translation>
-    </message>
-    <message>
-        <source>The keyboard follows the one you type in.</source>
-        <translation>Tastatura urmează limba în care scrii.</translation>
-    </message>
-    <message>
-        <source>More than %1 can make typing slower.</source>
-        <translation>Mai mult de %1 pot încetini tastarea.</translation>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
     </message>
     <message>
         <source>Experimental</source>
         <translation>Experimental</translation>
     </message>
-    <message>
-        <source>Latin</source>
-        <translation>Latin</translation>
-    </message>
-    <message>
-        <source>Cyrillic</source>
-        <translation>Chirilic</translation>
-    </message>
-    <message>
-        <source>Greek</source>
-        <translation>Grec</translation>
-    </message>
 </context>
 <context>
-    <name>ParrotfishLearned</name>
+    <name>ParrotfishAppearance</name>
     <message>
-        <source>Clear one language</source>
-        <translation>Șterge o limbă</translation>
-    </message>
-    <message>
-        <source>Nothing learned yet</source>
-        <translation>Nimic învățat încă</translation>
-    </message>
-    <message>
-        <source>Clearing %1</source>
-        <translation>Se șterge %1</translation>
-    </message>
-    <message>
-        <source>Learned words</source>
-        <translation>Cuvinte învățate</translation>
-    </message>
-    <message>
-        <source>Clear one language…</source>
-        <translation>Șterge o limbă…</translation>
-    </message>
-    <message>
-        <source>Clear all learned data</source>
-        <translation>Șterge toate datele învățate</translation>
-    </message>
-    <message>
-        <source>Clearing learned data</source>
-        <translation>Se șterg datele învățate</translation>
-    </message>
-    <message>
-        <source>No learned words</source>
-        <translation>Niciun cuvânt învățat</translation>
-    </message>
-    <message>
-        <source>Words you keep typing appear here</source>
-        <translation>Cuvintele pe care le tot scrii apar aici</translation>
-    </message>
-    <message>
-        <source>Forget</source>
-        <translation>Uită</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLayout</name>
-    <message>
-        <source>Layout</source>
-        <translation>Aranjament</translation>
-    </message>
-    <message>
-        <source>Number row</source>
-        <translation>Rândul de cifre</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Dezactivat</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normal</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Mai mic</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Taste de limbă</translation>
-    </message>
-    <message>
-        <source>None of your typing languages uses them</source>
-        <translation>Niciuna dintre limbile tale de tastare nu le folosește</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Litere cu diacritice care urmează limba în care scrii</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Dezactivate</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>În dreapta</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>În stânga</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Tastă cu memorie</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Păstrează ultimul semn ales prin apăsare lungă</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Dezactivată</translation>
-    </message>
-    <message>
-        <source>Only for the Latin layouts</source>
-        <translation>Doar pentru aranjamentele latine</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLook</name>
-    <message>
-        <source>Look &amp; feel</source>
+        <source>Appearance</source>
         <translation>Aspect</translation>
     </message>
     <message>
@@ -249,6 +97,244 @@
         <source>A dot on keys with more characters</source>
         <translation>Un punct pe tastele cu mai multe caractere</translation>
     </message>
+</context>
+<context>
+    <name>ParrotfishDiagnostics</name>
+    <message>
+        <source>Diagnostics</source>
+        <translation>Diagnosticare</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copiază</translation>
+    </message>
+    <message>
+        <source>Report a bug</source>
+        <translation>Raportează o eroare</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Se finalizează…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>În pauză</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Ascultă…</translation>
+    </message>
+    <message>
+        <source>Add a language in Settings</source>
+        <translation>Adaugă o limbă în Setări</translation>
+    </message>
+    <message>
+        <source>Update languages in Settings</source>
+        <translation>Actualizează limbile în Setări</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLanguages</name>
+    <message>
+        <source>Typing languages</source>
+        <translation>Limbi de tastare</translation>
+    </message>
+    <message>
+        <source>More than %1 can make typing slower.</source>
+        <translation>Mai mult de %1 pot încetini tastarea.</translation>
+    </message>
+    <message>
+        <source>Experimental</source>
+        <translation>Experimental</translation>
+    </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latin</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Chirilic</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Grec</translation>
+    </message>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Spațiu insuficient: mai sunt necesari %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed</source>
+        <translation>Descărcarea a eșuat</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Un fișier descărcat era deteriorat</translation>
+    </message>
+    <message>
+        <source>The language couldn't be saved</source>
+        <translation>Limba nu a putut fi salvată</translation>
+    </message>
+    <message>
+        <source>Not available for download</source>
+        <translation>Nu este disponibilă pentru descărcare</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Descărcarea s-a oprit</translation>
+    </message>
+    <message>
+        <source>Waiting</source>
+        <translation>În așteptare</translation>
+    </message>
+    <message>
+        <source>Checking</source>
+        <translation>Se verifică</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 din %2 MB</translation>
+    </message>
+    <message>
+        <source>Downloaded</source>
+        <translation>Descărcată</translation>
+    </message>
+    <message>
+        <source>Package</source>
+        <translation>Pachet</translation>
+    </message>
+    <message>
+        <source>Update all on mobile data (%1 MB)</source>
+        <translation>Actualizează tot prin date mobile (%1 MB)</translation>
+    </message>
+    <message>
+        <source>Update all (%1 MB)</source>
+        <translation>Actualizează tot (%1 MB)</translation>
+    </message>
+    <message>
+        <source>No languages yet: download one below.</source>
+        <translation>Încă nicio limbă: descarcă una mai jos.</translation>
+    </message>
+    <message>
+        <source>Turn on %1 in Keyboards to type these.</source>
+        <translation>Activează %1 în Tastaturi pentru a scrie în acestea.</translation>
+    </message>
+    <message>
+        <source>Installed with a language package</source>
+        <translation>Instalată cu un pachet de limbi</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Șterge</translation>
+    </message>
+    <message>
+        <source>Back to the package's copy</source>
+        <translation>Înapoi la copia din pachet</translation>
+    </message>
+    <message>
+        <source>Deleted %1</source>
+        <translation>%1 ștearsă</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Actualizări</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Descarcă</translation>
+    </message>
+    <message>
+        <source>Languages from a package are removed by uninstalling the package, together with its other languages.</source>
+        <translation>Limbile dintr-un pachet se elimină dezinstalând pachetul, împreună cu celelalte limbi ale sale.</translation>
+    </message>
+    <message>
+        <source>Latin keyboards follow the language you type in.</source>
+        <translation>Tastaturile latine urmează limba în care scrii.</translation>
+    </message>
+    <message>
+        <source>The keyboard needs one language</source>
+        <translation>Tastatura are nevoie de o limbă</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Aranjament</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Taste de limbă</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Niciuna dintre limbile tale de tastare nu le folosește</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Litere cu diacritice care urmează limba în care scrii</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Dezactivate</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>În dreapta</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>În stânga</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Tastă cu memorie</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Păstrează ultimul semn ales prin apăsare lungă</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Dezactivată</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Doar pentru aranjamentele latine</translation>
+    </message>
+    <message>
+        <source>Digits</source>
+        <translation>Cifre</translation>
+    </message>
+    <message>
+        <source>A keypad behind the ?123 key</source>
+        <translation>O tastatură numerică în spatele tastei ?123</translation>
+    </message>
+    <message>
+        <source>Digits behind the ?123 key</source>
+        <translation>Cifre în spatele tastei ?123</translation>
+    </message>
+    <message>
+        <source>No row</source>
+        <translation>Fără rând</translation>
+    </message>
+    <message>
+        <source>Normal row</source>
+        <translation>Rând normal</translation>
+    </message>
+    <message>
+        <source>Smaller row</source>
+        <translation>Rând mai mic</translation>
+    </message>
+    <message>
+        <source>Numpad</source>
+        <translation>Tastatură numerică</translation>
+    </message>
     <message>
         <source>Swipe to switch keyboards</source>
         <translation>Glisează pentru a schimba tastatura</translation>
@@ -256,6 +342,49 @@
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Și apăsarea lungă pe bara de spațiu schimbă tastatura</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLearned</name>
+    <message>
+        <source>Clear one language</source>
+        <translation>Șterge o limbă</translation>
+    </message>
+    <message>
+        <source>Nothing learned yet</source>
+        <translation>Nimic învățat încă</translation>
+    </message>
+    <message>
+        <source>Clearing %1</source>
+        <translation>Se șterge %1</translation>
+    </message>
+    <message>
+        <source>Learned words</source>
+        <translation>Cuvinte învățate</translation>
+    </message>
+    <message>
+        <source>Clear one language…</source>
+        <translation>Șterge o limbă…</translation>
+    </message>
+    <message>
+        <source>Clear all learned data</source>
+        <translation>Șterge toate datele învățate</translation>
+    </message>
+    <message>
+        <source>Clearing learned data</source>
+        <translation>Se șterg datele învățate</translation>
+    </message>
+    <message>
+        <source>No learned words</source>
+        <translation>Niciun cuvânt învățat</translation>
+    </message>
+    <message>
+        <source>Words you keep typing appear here</source>
+        <translation>Cuvintele pe care le tot scrii apar aici</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Uită</translation>
     </message>
 </context>
 <context>
@@ -267,10 +396,6 @@
     <message>
         <source>Typing</source>
         <translation>Tastare</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Nicio limbă instalată</translation>
     </message>
     <message>
         <source>No fill</source>
@@ -321,10 +446,6 @@
         <translation>Dezactivat</translation>
     </message>
     <message>
-        <source>Look &amp; feel</source>
-        <translation>Aspect</translation>
-    </message>
-    <message>
         <source>Reset</source>
         <translation>Resetează</translation>
     </message>
@@ -354,6 +475,19 @@
         <comment>voice input</comment>
         <translation>Dezactivată</translation>
     </message>
+    <message>
+        <source>No languages</source>
+        <translation>Nicio limbă</translation>
+    </message>
+    <message>
+        <source>numpad</source>
+        <comment>in a list</comment>
+        <translation>tastatură numerică</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Aspect</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -364,10 +498,6 @@
     <message>
         <source>Typing languages</source>
         <translation>Limbi de tastare</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Nicio limbă instalată</translation>
     </message>
     <message>
         <source>Autocorrect</source>
@@ -453,6 +583,11 @@
             <numerusform>%n activate</numerusform>
             <numerusform>%n de activate</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>None</source>
+        <comment>typing languages</comment>
+        <translation>Niciuna</translation>
     </message>
 </context>
 <context>

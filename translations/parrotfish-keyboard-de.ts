@@ -15,180 +15,28 @@
     </message>
 </context>
 <context>
-    <name>ParrotfishDiagnostics</name>
+    <name>LanguageGetItem</name>
     <message>
-        <source>Diagnostics</source>
-        <translation>Diagnose</translation>
+        <source>Tap to try again</source>
+        <translation>Tippen, um es erneut zu versuchen</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Kopieren</translation>
+        <source>Mobile data: tap again to download (%1 MB)</source>
+        <translation>Mobile Daten: zum Herunterladen erneut tippen (%1 MB)</translation>
     </message>
     <message>
-        <source>Report a bug</source>
-        <translation>Fehler melden</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishHandler</name>
-    <message>
-        <source>Finishing…</source>
-        <translation>Wird abgeschlossen…</translation>
-    </message>
-    <message>
-        <source>Paused</source>
-        <translation>Pausiert</translation>
-    </message>
-    <message>
-        <source>Listening…</source>
-        <translation>Hört zu…</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLanguages</name>
-    <message>
-        <source>Typing languages</source>
-        <translation>Eingabesprachen</translation>
-    </message>
-    <message>
-        <source>The keyboard follows the one you type in.</source>
-        <translation>Die Tastatur folgt der Sprache, in der geschrieben wird.</translation>
-    </message>
-    <message>
-        <source>More than %1 can make typing slower.</source>
-        <translation>Mehr als %1 können die Eingabe verlangsamen.</translation>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
     </message>
     <message>
         <source>Experimental</source>
         <translation>Experimentell</translation>
     </message>
-    <message>
-        <source>Latin</source>
-        <translation>Lateinisch</translation>
-    </message>
-    <message>
-        <source>Cyrillic</source>
-        <translation>Kyrillisch</translation>
-    </message>
-    <message>
-        <source>Greek</source>
-        <translation>Griechisch</translation>
-    </message>
 </context>
 <context>
-    <name>ParrotfishLearned</name>
+    <name>ParrotfishAppearance</name>
     <message>
-        <source>Clear one language</source>
-        <translation>Eine Sprache löschen</translation>
-    </message>
-    <message>
-        <source>Nothing learned yet</source>
-        <translation>Noch nichts gelernt</translation>
-    </message>
-    <message>
-        <source>Clearing %1</source>
-        <translation>%1 wird gelöscht</translation>
-    </message>
-    <message>
-        <source>Learned words</source>
-        <translation>Gelernte Wörter</translation>
-    </message>
-    <message>
-        <source>Clear one language…</source>
-        <translation>Eine Sprache löschen…</translation>
-    </message>
-    <message>
-        <source>Clear all learned data</source>
-        <translation>Alle gelernten Daten löschen</translation>
-    </message>
-    <message>
-        <source>Clearing learned data</source>
-        <translation>Gelernte Daten werden gelöscht</translation>
-    </message>
-    <message>
-        <source>No learned words</source>
-        <translation>Keine gelernten Wörter</translation>
-    </message>
-    <message>
-        <source>Words you keep typing appear here</source>
-        <translation>Hier erscheinen Wörter, die immer wieder getippt werden</translation>
-    </message>
-    <message>
-        <source>Forget</source>
-        <translation>Vergessen</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLayout</name>
-    <message>
-        <source>Layout</source>
-        <translation>Layout</translation>
-    </message>
-    <message>
-        <source>Number row</source>
-        <translation>Zahlenreihe</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Aus</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normal</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Kleiner</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Sprachtasten</translation>
-    </message>
-    <message>
-        <source>None of your typing languages uses them</source>
-        <translation>Keine der Eingabesprachen nutzt sie</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Buchstaben mit Akzent, die der Sprache folgen, in der geschrieben wird</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Aus</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Rechts</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Links</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Merktaste</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Behält das zuletzt per langem Drücken gewählte Zeichen</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Aus</translation>
-    </message>
-    <message>
-        <source>Only for the Latin layouts</source>
-        <translation>Nur für die lateinischen Layouts</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLook</name>
-    <message>
-        <source>Look &amp; feel</source>
+        <source>Appearance</source>
         <translation>Aussehen</translation>
     </message>
     <message>
@@ -249,6 +97,244 @@
         <source>A dot on keys with more characters</source>
         <translation>Ein Punkt auf Tasten mit weiteren Zeichen</translation>
     </message>
+</context>
+<context>
+    <name>ParrotfishDiagnostics</name>
+    <message>
+        <source>Diagnostics</source>
+        <translation>Diagnose</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopieren</translation>
+    </message>
+    <message>
+        <source>Report a bug</source>
+        <translation>Fehler melden</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Wird abgeschlossen…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pausiert</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Hört zu…</translation>
+    </message>
+    <message>
+        <source>Add a language in Settings</source>
+        <translation>Sprache in den Einstellungen hinzufügen</translation>
+    </message>
+    <message>
+        <source>Update languages in Settings</source>
+        <translation>Sprachen in den Einstellungen aktualisieren</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLanguages</name>
+    <message>
+        <source>Typing languages</source>
+        <translation>Eingabesprachen</translation>
+    </message>
+    <message>
+        <source>More than %1 can make typing slower.</source>
+        <translation>Mehr als %1 können die Eingabe verlangsamen.</translation>
+    </message>
+    <message>
+        <source>Experimental</source>
+        <translation>Experimentell</translation>
+    </message>
+    <message>
+        <source>Latin</source>
+        <translation>Lateinisch</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Kyrillisch</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Griechisch</translation>
+    </message>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Nicht genug Speicher: %1 MB mehr nötig</translation>
+    </message>
+    <message>
+        <source>The download failed</source>
+        <translation>Der Download ist fehlgeschlagen</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Eine heruntergeladene Datei war beschädigt</translation>
+    </message>
+    <message>
+        <source>The language couldn't be saved</source>
+        <translation>Die Sprache konnte nicht gespeichert werden</translation>
+    </message>
+    <message>
+        <source>Not available for download</source>
+        <translation>Nicht zum Herunterladen verfügbar</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Der Download wurde unterbrochen</translation>
+    </message>
+    <message>
+        <source>Waiting</source>
+        <translation>Wartet</translation>
+    </message>
+    <message>
+        <source>Checking</source>
+        <translation>Wird geprüft</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 von %2 MB</translation>
+    </message>
+    <message>
+        <source>Downloaded</source>
+        <translation>Heruntergeladen</translation>
+    </message>
+    <message>
+        <source>Package</source>
+        <translation>Paket</translation>
+    </message>
+    <message>
+        <source>Update all on mobile data (%1 MB)</source>
+        <translation>Alle über mobile Daten aktualisieren (%1 MB)</translation>
+    </message>
+    <message>
+        <source>Update all (%1 MB)</source>
+        <translation>Alle aktualisieren (%1 MB)</translation>
+    </message>
+    <message>
+        <source>No languages yet: download one below.</source>
+        <translation>Noch keine Sprachen: lade unten eine herunter.</translation>
+    </message>
+    <message>
+        <source>Turn on %1 in Keyboards to type these.</source>
+        <translation>Schalte %1 unter Tastaturen ein, um sie zu verwenden.</translation>
+    </message>
+    <message>
+        <source>Installed with a language package</source>
+        <translation>Mit einem Sprachpaket installiert</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Löschen</translation>
+    </message>
+    <message>
+        <source>Back to the package's copy</source>
+        <translation>Zurück zur Kopie aus dem Paket</translation>
+    </message>
+    <message>
+        <source>Deleted %1</source>
+        <translation>%1 gelöscht</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Aktualisierungen</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Herunterladen</translation>
+    </message>
+    <message>
+        <source>Languages from a package are removed by uninstalling the package, together with its other languages.</source>
+        <translation>Sprachen aus einem Paket werden entfernt, indem man das Paket deinstalliert, zusammen mit seinen anderen Sprachen.</translation>
+    </message>
+    <message>
+        <source>Latin keyboards follow the language you type in.</source>
+        <translation>Lateinische Tastaturen folgen der Sprache, in der du schreibst.</translation>
+    </message>
+    <message>
+        <source>The keyboard needs one language</source>
+        <translation>Die Tastatur braucht eine Sprache</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Layout</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Sprachtasten</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Keine der Eingabesprachen nutzt sie</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Buchstaben mit Akzent, die der Sprache folgen, in der geschrieben wird</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Aus</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Rechts</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Links</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Merktaste</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Behält das zuletzt per langem Drücken gewählte Zeichen</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Aus</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Nur für die lateinischen Layouts</translation>
+    </message>
+    <message>
+        <source>Digits</source>
+        <translation>Ziffern</translation>
+    </message>
+    <message>
+        <source>A keypad behind the ?123 key</source>
+        <translation>Ein Ziffernblock hinter der Taste ?123</translation>
+    </message>
+    <message>
+        <source>Digits behind the ?123 key</source>
+        <translation>Ziffern hinter der Taste ?123</translation>
+    </message>
+    <message>
+        <source>No row</source>
+        <translation>Keine Reihe</translation>
+    </message>
+    <message>
+        <source>Normal row</source>
+        <translation>Normale Reihe</translation>
+    </message>
+    <message>
+        <source>Smaller row</source>
+        <translation>Kleinere Reihe</translation>
+    </message>
+    <message>
+        <source>Numpad</source>
+        <translation>Ziffernblock</translation>
+    </message>
     <message>
         <source>Swipe to switch keyboards</source>
         <translation>Wischen, um die Tastatur zu wechseln</translation>
@@ -256,6 +342,49 @@
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Auch langes Drücken der Leertaste wechselt</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLearned</name>
+    <message>
+        <source>Clear one language</source>
+        <translation>Eine Sprache löschen</translation>
+    </message>
+    <message>
+        <source>Nothing learned yet</source>
+        <translation>Noch nichts gelernt</translation>
+    </message>
+    <message>
+        <source>Clearing %1</source>
+        <translation>%1 wird gelöscht</translation>
+    </message>
+    <message>
+        <source>Learned words</source>
+        <translation>Gelernte Wörter</translation>
+    </message>
+    <message>
+        <source>Clear one language…</source>
+        <translation>Eine Sprache löschen…</translation>
+    </message>
+    <message>
+        <source>Clear all learned data</source>
+        <translation>Alle gelernten Daten löschen</translation>
+    </message>
+    <message>
+        <source>Clearing learned data</source>
+        <translation>Gelernte Daten werden gelöscht</translation>
+    </message>
+    <message>
+        <source>No learned words</source>
+        <translation>Keine gelernten Wörter</translation>
+    </message>
+    <message>
+        <source>Words you keep typing appear here</source>
+        <translation>Hier erscheinen Wörter, die immer wieder getippt werden</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Vergessen</translation>
     </message>
 </context>
 <context>
@@ -267,10 +396,6 @@
     <message>
         <source>Typing</source>
         <translation>Eingabe</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Keine Sprachen installiert</translation>
     </message>
     <message>
         <source>No fill</source>
@@ -321,10 +446,6 @@
         <translation>Aus</translation>
     </message>
     <message>
-        <source>Look &amp; feel</source>
-        <translation>Aussehen</translation>
-    </message>
-    <message>
         <source>Reset</source>
         <translation>Zurücksetzen</translation>
     </message>
@@ -354,6 +475,19 @@
         <comment>voice input</comment>
         <translation>Aus</translation>
     </message>
+    <message>
+        <source>No languages</source>
+        <translation>Keine Sprachen</translation>
+    </message>
+    <message>
+        <source>numpad</source>
+        <comment>in a list</comment>
+        <translation>Ziffernblock</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Aussehen</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -364,10 +498,6 @@
     <message>
         <source>Typing languages</source>
         <translation>Eingabesprachen</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Keine Sprachen installiert</translation>
     </message>
     <message>
         <source>Autocorrect</source>
@@ -452,6 +582,11 @@
             <numerusform>%n aktiv</numerusform>
             <numerusform>%n aktiv</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>None</source>
+        <comment>typing languages</comment>
+        <translation>Keine</translation>
     </message>
 </context>
 <context>

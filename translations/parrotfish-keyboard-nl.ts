@@ -15,180 +15,28 @@
     </message>
 </context>
 <context>
-    <name>ParrotfishDiagnostics</name>
+    <name>LanguageGetItem</name>
     <message>
-        <source>Diagnostics</source>
-        <translation>Diagnose</translation>
+        <source>Tap to try again</source>
+        <translation>Tik om het opnieuw te proberen</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Kopiëren</translation>
+        <source>Mobile data: tap again to download (%1 MB)</source>
+        <translation>Mobiele data: tik nogmaals om te downloaden (%1 MB)</translation>
     </message>
     <message>
-        <source>Report a bug</source>
-        <translation>Fout melden</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishHandler</name>
-    <message>
-        <source>Finishing…</source>
-        <translation>Afronden…</translation>
-    </message>
-    <message>
-        <source>Paused</source>
-        <translation>Gepauzeerd</translation>
-    </message>
-    <message>
-        <source>Listening…</source>
-        <translation>Luistert…</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLanguages</name>
-    <message>
-        <source>Typing languages</source>
-        <translation>Typtalen</translation>
-    </message>
-    <message>
-        <source>The keyboard follows the one you type in.</source>
-        <translation>Het toetsenbord volgt de taal waarin je typt.</translation>
-    </message>
-    <message>
-        <source>More than %1 can make typing slower.</source>
-        <translation>Meer dan %1 kan het typen vertragen.</translation>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
     </message>
     <message>
         <source>Experimental</source>
         <translation>Experimenteel</translation>
     </message>
-    <message>
-        <source>Latin</source>
-        <translation>Latijns</translation>
-    </message>
-    <message>
-        <source>Cyrillic</source>
-        <translation>Cyrillisch</translation>
-    </message>
-    <message>
-        <source>Greek</source>
-        <translation>Grieks</translation>
-    </message>
 </context>
 <context>
-    <name>ParrotfishLearned</name>
+    <name>ParrotfishAppearance</name>
     <message>
-        <source>Clear one language</source>
-        <translation>Eén taal wissen</translation>
-    </message>
-    <message>
-        <source>Nothing learned yet</source>
-        <translation>Nog niets geleerd</translation>
-    </message>
-    <message>
-        <source>Clearing %1</source>
-        <translation>%1 wissen</translation>
-    </message>
-    <message>
-        <source>Learned words</source>
-        <translation>Geleerde woorden</translation>
-    </message>
-    <message>
-        <source>Clear one language…</source>
-        <translation>Eén taal wissen…</translation>
-    </message>
-    <message>
-        <source>Clear all learned data</source>
-        <translation>Alle geleerde gegevens wissen</translation>
-    </message>
-    <message>
-        <source>Clearing learned data</source>
-        <translation>Geleerde gegevens wissen</translation>
-    </message>
-    <message>
-        <source>No learned words</source>
-        <translation>Geen geleerde woorden</translation>
-    </message>
-    <message>
-        <source>Words you keep typing appear here</source>
-        <translation>Woorden die je blijft typen verschijnen hier</translation>
-    </message>
-    <message>
-        <source>Forget</source>
-        <translation>Vergeten</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLayout</name>
-    <message>
-        <source>Layout</source>
-        <translation>Indeling</translation>
-    </message>
-    <message>
-        <source>Number row</source>
-        <translation>Cijferrij</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Uit</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normaal</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Kleiner</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Taaltoetsen</translation>
-    </message>
-    <message>
-        <source>None of your typing languages uses them</source>
-        <translation>Geen van je typtalen gebruikt ze</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Letters met accent die de taal volgen waarin je typt</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Uit</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Rechts</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Links</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Geheugentoets</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Onthoudt het laatste teken gekozen met lang drukken</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Uit</translation>
-    </message>
-    <message>
-        <source>Only for the Latin layouts</source>
-        <translation>Alleen voor de Latijnse indelingen</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLook</name>
-    <message>
-        <source>Look &amp; feel</source>
+        <source>Appearance</source>
         <translation>Uiterlijk</translation>
     </message>
     <message>
@@ -249,6 +97,244 @@
         <source>A dot on keys with more characters</source>
         <translation>Een stip op toetsen met meer tekens</translation>
     </message>
+</context>
+<context>
+    <name>ParrotfishDiagnostics</name>
+    <message>
+        <source>Diagnostics</source>
+        <translation>Diagnose</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopiëren</translation>
+    </message>
+    <message>
+        <source>Report a bug</source>
+        <translation>Fout melden</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Afronden…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Gepauzeerd</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Luistert…</translation>
+    </message>
+    <message>
+        <source>Add a language in Settings</source>
+        <translation>Voeg een taal toe in Instellingen</translation>
+    </message>
+    <message>
+        <source>Update languages in Settings</source>
+        <translation>Werk talen bij in Instellingen</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLanguages</name>
+    <message>
+        <source>Typing languages</source>
+        <translation>Typtalen</translation>
+    </message>
+    <message>
+        <source>More than %1 can make typing slower.</source>
+        <translation>Meer dan %1 kan het typen vertragen.</translation>
+    </message>
+    <message>
+        <source>Experimental</source>
+        <translation>Experimenteel</translation>
+    </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latijns</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Cyrillisch</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Grieks</translation>
+    </message>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Niet genoeg opslag: nog %1 MB nodig</translation>
+    </message>
+    <message>
+        <source>The download failed</source>
+        <translation>Het downloaden is mislukt</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Een gedownload bestand was beschadigd</translation>
+    </message>
+    <message>
+        <source>The language couldn't be saved</source>
+        <translation>De taal kon niet worden opgeslagen</translation>
+    </message>
+    <message>
+        <source>Not available for download</source>
+        <translation>Niet beschikbaar om te downloaden</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Het downloaden is gestopt</translation>
+    </message>
+    <message>
+        <source>Waiting</source>
+        <translation>Wacht</translation>
+    </message>
+    <message>
+        <source>Checking</source>
+        <translation>Controleren</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 van %2 MB</translation>
+    </message>
+    <message>
+        <source>Downloaded</source>
+        <translation>Gedownload</translation>
+    </message>
+    <message>
+        <source>Package</source>
+        <translation>Pakket</translation>
+    </message>
+    <message>
+        <source>Update all on mobile data (%1 MB)</source>
+        <translation>Alles bijwerken via mobiele data (%1 MB)</translation>
+    </message>
+    <message>
+        <source>Update all (%1 MB)</source>
+        <translation>Alles bijwerken (%1 MB)</translation>
+    </message>
+    <message>
+        <source>No languages yet: download one below.</source>
+        <translation>Nog geen talen: download er hieronder een.</translation>
+    </message>
+    <message>
+        <source>Turn on %1 in Keyboards to type these.</source>
+        <translation>Zet %1 aan bij Toetsenborden om ze te gebruiken.</translation>
+    </message>
+    <message>
+        <source>Installed with a language package</source>
+        <translation>Geïnstalleerd met een taalpakket</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Verwijderen</translation>
+    </message>
+    <message>
+        <source>Back to the package's copy</source>
+        <translation>Terug naar de kopie uit het pakket</translation>
+    </message>
+    <message>
+        <source>Deleted %1</source>
+        <translation>%1 verwijderd</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Updates</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Downloaden</translation>
+    </message>
+    <message>
+        <source>Languages from a package are removed by uninstalling the package, together with its other languages.</source>
+        <translation>Talen uit een pakket verwijder je door het pakket te verwijderen, samen met de andere talen erin.</translation>
+    </message>
+    <message>
+        <source>Latin keyboards follow the language you type in.</source>
+        <translation>Latijnse toetsenborden volgen de taal waarin je typt.</translation>
+    </message>
+    <message>
+        <source>The keyboard needs one language</source>
+        <translation>Het toetsenbord heeft één taal nodig</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Indeling</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Taaltoetsen</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Geen van je typtalen gebruikt ze</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Letters met accent die de taal volgen waarin je typt</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Uit</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Rechts</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Links</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Geheugentoets</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Onthoudt het laatste teken gekozen met lang drukken</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Uit</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Alleen voor de Latijnse indelingen</translation>
+    </message>
+    <message>
+        <source>Digits</source>
+        <translation>Cijfers</translation>
+    </message>
+    <message>
+        <source>A keypad behind the ?123 key</source>
+        <translation>Een cijferblok achter de ?123-toets</translation>
+    </message>
+    <message>
+        <source>Digits behind the ?123 key</source>
+        <translation>Cijfers achter de ?123-toets</translation>
+    </message>
+    <message>
+        <source>No row</source>
+        <translation>Geen rij</translation>
+    </message>
+    <message>
+        <source>Normal row</source>
+        <translation>Normale rij</translation>
+    </message>
+    <message>
+        <source>Smaller row</source>
+        <translation>Kleinere rij</translation>
+    </message>
+    <message>
+        <source>Numpad</source>
+        <translation>Cijferblok</translation>
+    </message>
     <message>
         <source>Swipe to switch keyboards</source>
         <translation>Veeg om van toetsenbord te wisselen</translation>
@@ -256,6 +342,49 @@
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Lang drukken op de spatiebalk wisselt ook</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLearned</name>
+    <message>
+        <source>Clear one language</source>
+        <translation>Eén taal wissen</translation>
+    </message>
+    <message>
+        <source>Nothing learned yet</source>
+        <translation>Nog niets geleerd</translation>
+    </message>
+    <message>
+        <source>Clearing %1</source>
+        <translation>%1 wissen</translation>
+    </message>
+    <message>
+        <source>Learned words</source>
+        <translation>Geleerde woorden</translation>
+    </message>
+    <message>
+        <source>Clear one language…</source>
+        <translation>Eén taal wissen…</translation>
+    </message>
+    <message>
+        <source>Clear all learned data</source>
+        <translation>Alle geleerde gegevens wissen</translation>
+    </message>
+    <message>
+        <source>Clearing learned data</source>
+        <translation>Geleerde gegevens wissen</translation>
+    </message>
+    <message>
+        <source>No learned words</source>
+        <translation>Geen geleerde woorden</translation>
+    </message>
+    <message>
+        <source>Words you keep typing appear here</source>
+        <translation>Woorden die je blijft typen verschijnen hier</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Vergeten</translation>
     </message>
 </context>
 <context>
@@ -267,10 +396,6 @@
     <message>
         <source>Typing</source>
         <translation>Typen</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Geen talen geïnstalleerd</translation>
     </message>
     <message>
         <source>No fill</source>
@@ -321,10 +446,6 @@
         <translation>Uit</translation>
     </message>
     <message>
-        <source>Look &amp; feel</source>
-        <translation>Uiterlijk</translation>
-    </message>
-    <message>
         <source>Reset</source>
         <translation>Herstellen</translation>
     </message>
@@ -354,6 +475,19 @@
         <comment>voice input</comment>
         <translation>Uit</translation>
     </message>
+    <message>
+        <source>No languages</source>
+        <translation>Geen talen</translation>
+    </message>
+    <message>
+        <source>numpad</source>
+        <comment>in a list</comment>
+        <translation>cijferblok</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Uiterlijk</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -364,10 +498,6 @@
     <message>
         <source>Typing languages</source>
         <translation>Typtalen</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Geen talen geïnstalleerd</translation>
     </message>
     <message>
         <source>Autocorrect</source>
@@ -452,6 +582,11 @@
             <numerusform>%n aan</numerusform>
             <numerusform>%n aan</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>None</source>
+        <comment>typing languages</comment>
+        <translation>Geen</translation>
     </message>
 </context>
 <context>

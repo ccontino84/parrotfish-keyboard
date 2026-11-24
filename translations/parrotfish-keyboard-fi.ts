@@ -15,180 +15,28 @@
     </message>
 </context>
 <context>
-    <name>ParrotfishDiagnostics</name>
+    <name>LanguageGetItem</name>
     <message>
-        <source>Diagnostics</source>
-        <translation>Diagnostiikka</translation>
+        <source>Tap to try again</source>
+        <translation>Yritä uudelleen napauttamalla</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Kopioi</translation>
+        <source>Mobile data: tap again to download (%1 MB)</source>
+        <translation>Mobiilidata: lataa napauttamalla uudelleen (%1 Mt)</translation>
     </message>
     <message>
-        <source>Report a bug</source>
-        <translation>Ilmoita virheestä</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishHandler</name>
-    <message>
-        <source>Finishing…</source>
-        <translation>Viimeistellään…</translation>
-    </message>
-    <message>
-        <source>Paused</source>
-        <translation>Tauolla</translation>
-    </message>
-    <message>
-        <source>Listening…</source>
-        <translation>Kuunnellaan…</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLanguages</name>
-    <message>
-        <source>Typing languages</source>
-        <translation>Kirjoituskielet</translation>
-    </message>
-    <message>
-        <source>The keyboard follows the one you type in.</source>
-        <translation>Näppäimistö seuraa kieltä, jolla kirjoitat.</translation>
-    </message>
-    <message>
-        <source>More than %1 can make typing slower.</source>
-        <translation>Yli %1 voi hidastaa kirjoittamista.</translation>
+        <source>%1 MB</source>
+        <translation>%1 Mt</translation>
     </message>
     <message>
         <source>Experimental</source>
         <translation>Kokeellinen</translation>
     </message>
-    <message>
-        <source>Latin</source>
-        <translation>Latinalainen</translation>
-    </message>
-    <message>
-        <source>Cyrillic</source>
-        <translation>Kyrillinen</translation>
-    </message>
-    <message>
-        <source>Greek</source>
-        <translation>Kreikkalainen</translation>
-    </message>
 </context>
 <context>
-    <name>ParrotfishLearned</name>
+    <name>ParrotfishAppearance</name>
     <message>
-        <source>Clear one language</source>
-        <translation>Tyhjennä yksi kieli</translation>
-    </message>
-    <message>
-        <source>Nothing learned yet</source>
-        <translation>Mitään ei ole vielä opittu</translation>
-    </message>
-    <message>
-        <source>Clearing %1</source>
-        <translation>Tyhjennetään %1</translation>
-    </message>
-    <message>
-        <source>Learned words</source>
-        <translation>Opitut sanat</translation>
-    </message>
-    <message>
-        <source>Clear one language…</source>
-        <translation>Tyhjennä yksi kieli…</translation>
-    </message>
-    <message>
-        <source>Clear all learned data</source>
-        <translation>Tyhjennä kaikki opitut tiedot</translation>
-    </message>
-    <message>
-        <source>Clearing learned data</source>
-        <translation>Tyhjennetään opitut tiedot</translation>
-    </message>
-    <message>
-        <source>No learned words</source>
-        <translation>Ei opittuja sanoja</translation>
-    </message>
-    <message>
-        <source>Words you keep typing appear here</source>
-        <translation>Usein kirjoittamasi sanat näkyvät tässä</translation>
-    </message>
-    <message>
-        <source>Forget</source>
-        <translation>Unohda</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLayout</name>
-    <message>
-        <source>Layout</source>
-        <translation>Asettelu</translation>
-    </message>
-    <message>
-        <source>Number row</source>
-        <translation>Numerorivi</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Pois</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normaali</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Pienempi</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Kielinäppäimet</translation>
-    </message>
-    <message>
-        <source>None of your typing languages uses them</source>
-        <translation>Mikään kirjoituskielistäsi ei käytä niitä</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Tarkkeelliset kirjaimet sen kielen mukaan, jolla kirjoitat</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Pois</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Oikealla</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Vasemmalla</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Muistinäppäin</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Muistaa viimeksi pitkällä painalluksella valitun merkin</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Pois</translation>
-    </message>
-    <message>
-        <source>Only for the Latin layouts</source>
-        <translation>Vain latinalaisille asetteluille</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLook</name>
-    <message>
-        <source>Look &amp; feel</source>
+        <source>Appearance</source>
         <translation>Ulkoasu</translation>
     </message>
     <message>
@@ -249,6 +97,244 @@
         <source>A dot on keys with more characters</source>
         <translation>Piste näppäimissä, joissa on lisää merkkejä</translation>
     </message>
+</context>
+<context>
+    <name>ParrotfishDiagnostics</name>
+    <message>
+        <source>Diagnostics</source>
+        <translation>Diagnostiikka</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopioi</translation>
+    </message>
+    <message>
+        <source>Report a bug</source>
+        <translation>Ilmoita virheestä</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Viimeistellään…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Tauolla</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Kuunnellaan…</translation>
+    </message>
+    <message>
+        <source>Add a language in Settings</source>
+        <translation>Lisää kieli asetuksissa</translation>
+    </message>
+    <message>
+        <source>Update languages in Settings</source>
+        <translation>Päivitä kielet asetuksissa</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLanguages</name>
+    <message>
+        <source>Typing languages</source>
+        <translation>Kirjoituskielet</translation>
+    </message>
+    <message>
+        <source>More than %1 can make typing slower.</source>
+        <translation>Yli %1 voi hidastaa kirjoittamista.</translation>
+    </message>
+    <message>
+        <source>Experimental</source>
+        <translation>Kokeellinen</translation>
+    </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latinalainen</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Kyrillinen</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Kreikkalainen</translation>
+    </message>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Tila ei riitä: tarvitaan vielä %1 Mt</translation>
+    </message>
+    <message>
+        <source>The download failed</source>
+        <translation>Lataus epäonnistui</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Ladattu tiedosto oli vioittunut</translation>
+    </message>
+    <message>
+        <source>The language couldn't be saved</source>
+        <translation>Kieltä ei voitu tallentaa</translation>
+    </message>
+    <message>
+        <source>Not available for download</source>
+        <translation>Ei ladattavissa</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Lataus keskeytyi</translation>
+    </message>
+    <message>
+        <source>Waiting</source>
+        <translation>Odottaa</translation>
+    </message>
+    <message>
+        <source>Checking</source>
+        <translation>Tarkistetaan</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 / %2 Mt</translation>
+    </message>
+    <message>
+        <source>Downloaded</source>
+        <translation>Ladattu</translation>
+    </message>
+    <message>
+        <source>Package</source>
+        <translation>Paketti</translation>
+    </message>
+    <message>
+        <source>Update all on mobile data (%1 MB)</source>
+        <translation>Päivitä kaikki mobiilidatalla (%1 Mt)</translation>
+    </message>
+    <message>
+        <source>Update all (%1 MB)</source>
+        <translation>Päivitä kaikki (%1 Mt)</translation>
+    </message>
+    <message>
+        <source>No languages yet: download one below.</source>
+        <translation>Ei vielä kieliä: lataa jokin alta.</translation>
+    </message>
+    <message>
+        <source>Turn on %1 in Keyboards to type these.</source>
+        <translation>Ota %1 käyttöön Näppäimistöissä kirjoittaaksesi näitä.</translation>
+    </message>
+    <message>
+        <source>Installed with a language package</source>
+        <translation>Asennettu kielipaketin mukana</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Poista</translation>
+    </message>
+    <message>
+        <source>Back to the package's copy</source>
+        <translation>Takaisin paketin kopioon</translation>
+    </message>
+    <message>
+        <source>Deleted %1</source>
+        <translation>%1 poistettu</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Päivitykset</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Lataa</translation>
+    </message>
+    <message>
+        <source>Languages from a package are removed by uninstalling the package, together with its other languages.</source>
+        <translation>Paketin kielet poistetaan poistamalla paketti, yhdessä sen muiden kielten kanssa.</translation>
+    </message>
+    <message>
+        <source>Latin keyboards follow the language you type in.</source>
+        <translation>Latinalaiset näppäimistöt seuraavat kieltä, jolla kirjoitat.</translation>
+    </message>
+    <message>
+        <source>The keyboard needs one language</source>
+        <translation>Näppäimistö tarvitsee yhden kielen</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Asettelu</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Kielinäppäimet</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Mikään kirjoituskielistäsi ei käytä niitä</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Tarkkeelliset kirjaimet sen kielen mukaan, jolla kirjoitat</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Pois</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Oikealla</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Vasemmalla</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Muistinäppäin</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Muistaa viimeksi pitkällä painalluksella valitun merkin</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Pois</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Vain latinalaisille asetteluille</translation>
+    </message>
+    <message>
+        <source>Digits</source>
+        <translation>Numerot</translation>
+    </message>
+    <message>
+        <source>A keypad behind the ?123 key</source>
+        <translation>Numeronäppäimistö ?123-näppäimen takana</translation>
+    </message>
+    <message>
+        <source>Digits behind the ?123 key</source>
+        <translation>Numerot ?123-näppäimen takana</translation>
+    </message>
+    <message>
+        <source>No row</source>
+        <translation>Ei riviä</translation>
+    </message>
+    <message>
+        <source>Normal row</source>
+        <translation>Normaali rivi</translation>
+    </message>
+    <message>
+        <source>Smaller row</source>
+        <translation>Pienempi rivi</translation>
+    </message>
+    <message>
+        <source>Numpad</source>
+        <translation>Numeronäppäimistö</translation>
+    </message>
     <message>
         <source>Swipe to switch keyboards</source>
         <translation>Pyyhkäise vaihtaaksesi näppäimistöä</translation>
@@ -256,6 +342,49 @@
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Myös välilyöntinäppäimen pitkä painallus vaihtaa</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLearned</name>
+    <message>
+        <source>Clear one language</source>
+        <translation>Tyhjennä yksi kieli</translation>
+    </message>
+    <message>
+        <source>Nothing learned yet</source>
+        <translation>Mitään ei ole vielä opittu</translation>
+    </message>
+    <message>
+        <source>Clearing %1</source>
+        <translation>Tyhjennetään %1</translation>
+    </message>
+    <message>
+        <source>Learned words</source>
+        <translation>Opitut sanat</translation>
+    </message>
+    <message>
+        <source>Clear one language…</source>
+        <translation>Tyhjennä yksi kieli…</translation>
+    </message>
+    <message>
+        <source>Clear all learned data</source>
+        <translation>Tyhjennä kaikki opitut tiedot</translation>
+    </message>
+    <message>
+        <source>Clearing learned data</source>
+        <translation>Tyhjennetään opitut tiedot</translation>
+    </message>
+    <message>
+        <source>No learned words</source>
+        <translation>Ei opittuja sanoja</translation>
+    </message>
+    <message>
+        <source>Words you keep typing appear here</source>
+        <translation>Usein kirjoittamasi sanat näkyvät tässä</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Unohda</translation>
     </message>
 </context>
 <context>
@@ -267,10 +396,6 @@
     <message>
         <source>Typing</source>
         <translation>Kirjoittaminen</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Ei asennettuja kieliä</translation>
     </message>
     <message>
         <source>No fill</source>
@@ -321,10 +446,6 @@
         <translation>Pois</translation>
     </message>
     <message>
-        <source>Look &amp; feel</source>
-        <translation>Ulkoasu</translation>
-    </message>
-    <message>
         <source>Reset</source>
         <translation>Palauta</translation>
     </message>
@@ -354,6 +475,19 @@
         <comment>voice input</comment>
         <translation>Pois</translation>
     </message>
+    <message>
+        <source>No languages</source>
+        <translation>Ei kieliä</translation>
+    </message>
+    <message>
+        <source>numpad</source>
+        <comment>in a list</comment>
+        <translation>numeronäppäimistö</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Ulkoasu</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -364,10 +498,6 @@
     <message>
         <source>Typing languages</source>
         <translation>Kirjoituskielet</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Ei asennettuja kieliä</translation>
     </message>
     <message>
         <source>Autocorrect</source>
@@ -452,6 +582,11 @@
             <numerusform>%n päällä</numerusform>
             <numerusform>%n päällä</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>None</source>
+        <comment>typing languages</comment>
+        <translation>Ei mitään</translation>
     </message>
 </context>
 <context>

@@ -15,180 +15,28 @@
     </message>
 </context>
 <context>
-    <name>ParrotfishDiagnostics</name>
+    <name>LanguageGetItem</name>
     <message>
-        <source>Diagnostics</source>
-        <translation>Diagnosticering</translation>
+        <source>Tap to try again</source>
+        <translation>Tryk for at prøve igen</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Kopiér</translation>
+        <source>Mobile data: tap again to download (%1 MB)</source>
+        <translation>Mobildata: tryk igen for at hente (%1 MB)</translation>
     </message>
     <message>
-        <source>Report a bug</source>
-        <translation>Rapportér en fejl</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishHandler</name>
-    <message>
-        <source>Finishing…</source>
-        <translation>Afslutter…</translation>
-    </message>
-    <message>
-        <source>Paused</source>
-        <translation>På pause</translation>
-    </message>
-    <message>
-        <source>Listening…</source>
-        <translation>Lytter…</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLanguages</name>
-    <message>
-        <source>Typing languages</source>
-        <translation>Skrivesprog</translation>
-    </message>
-    <message>
-        <source>The keyboard follows the one you type in.</source>
-        <translation>Tastaturet følger det sprog, du skriver på.</translation>
-    </message>
-    <message>
-        <source>More than %1 can make typing slower.</source>
-        <translation>Flere end %1 kan gøre skrivningen langsommere.</translation>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
     </message>
     <message>
         <source>Experimental</source>
         <translation>Eksperimentelt</translation>
     </message>
-    <message>
-        <source>Latin</source>
-        <translation>Latinsk</translation>
-    </message>
-    <message>
-        <source>Cyrillic</source>
-        <translation>Kyrillisk</translation>
-    </message>
-    <message>
-        <source>Greek</source>
-        <translation>Græsk</translation>
-    </message>
 </context>
 <context>
-    <name>ParrotfishLearned</name>
+    <name>ParrotfishAppearance</name>
     <message>
-        <source>Clear one language</source>
-        <translation>Ryd ét sprog</translation>
-    </message>
-    <message>
-        <source>Nothing learned yet</source>
-        <translation>Intet lært endnu</translation>
-    </message>
-    <message>
-        <source>Clearing %1</source>
-        <translation>Rydder %1</translation>
-    </message>
-    <message>
-        <source>Learned words</source>
-        <translation>Lærte ord</translation>
-    </message>
-    <message>
-        <source>Clear one language…</source>
-        <translation>Ryd ét sprog…</translation>
-    </message>
-    <message>
-        <source>Clear all learned data</source>
-        <translation>Ryd alle lærte data</translation>
-    </message>
-    <message>
-        <source>Clearing learned data</source>
-        <translation>Rydder lærte data</translation>
-    </message>
-    <message>
-        <source>No learned words</source>
-        <translation>Ingen lærte ord</translation>
-    </message>
-    <message>
-        <source>Words you keep typing appear here</source>
-        <translation>Ord, du bliver ved med at skrive, vises her</translation>
-    </message>
-    <message>
-        <source>Forget</source>
-        <translation>Glem</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLayout</name>
-    <message>
-        <source>Layout</source>
-        <translation>Layout</translation>
-    </message>
-    <message>
-        <source>Number row</source>
-        <translation>Talrække</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Fra</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normal</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Mindre</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Sprogtaster</translation>
-    </message>
-    <message>
-        <source>None of your typing languages uses them</source>
-        <translation>Ingen af dine skrivesprog bruger dem</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Bogstaver med accent, der følger det sprog, du skriver på</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Fra</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Til højre</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Til venstre</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Huske-tast</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Husker det sidste tegn valgt med langt tryk</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Fra</translation>
-    </message>
-    <message>
-        <source>Only for the Latin layouts</source>
-        <translation>Kun til de latinske layouts</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLook</name>
-    <message>
-        <source>Look &amp; feel</source>
+        <source>Appearance</source>
         <translation>Udseende</translation>
     </message>
     <message>
@@ -249,6 +97,244 @@
         <source>A dot on keys with more characters</source>
         <translation>En prik på taster med flere tegn</translation>
     </message>
+</context>
+<context>
+    <name>ParrotfishDiagnostics</name>
+    <message>
+        <source>Diagnostics</source>
+        <translation>Diagnosticering</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopiér</translation>
+    </message>
+    <message>
+        <source>Report a bug</source>
+        <translation>Rapportér en fejl</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Afslutter…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>På pause</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Lytter…</translation>
+    </message>
+    <message>
+        <source>Add a language in Settings</source>
+        <translation>Tilføj et sprog i Indstillinger</translation>
+    </message>
+    <message>
+        <source>Update languages in Settings</source>
+        <translation>Opdater sprog i Indstillinger</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLanguages</name>
+    <message>
+        <source>Typing languages</source>
+        <translation>Skrivesprog</translation>
+    </message>
+    <message>
+        <source>More than %1 can make typing slower.</source>
+        <translation>Flere end %1 kan gøre skrivningen langsommere.</translation>
+    </message>
+    <message>
+        <source>Experimental</source>
+        <translation>Eksperimentelt</translation>
+    </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latinsk</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Kyrillisk</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Græsk</translation>
+    </message>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Ikke nok lagerplads: der mangler %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed</source>
+        <translation>Download mislykkedes</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>En hentet fil var beskadiget</translation>
+    </message>
+    <message>
+        <source>The language couldn't be saved</source>
+        <translation>Sproget kunne ikke gemmes</translation>
+    </message>
+    <message>
+        <source>Not available for download</source>
+        <translation>Kan ikke hentes</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Download stoppede</translation>
+    </message>
+    <message>
+        <source>Waiting</source>
+        <translation>Venter</translation>
+    </message>
+    <message>
+        <source>Checking</source>
+        <translation>Kontrollerer</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 af %2 MB</translation>
+    </message>
+    <message>
+        <source>Downloaded</source>
+        <translation>Hentet</translation>
+    </message>
+    <message>
+        <source>Package</source>
+        <translation>Pakke</translation>
+    </message>
+    <message>
+        <source>Update all on mobile data (%1 MB)</source>
+        <translation>Opdater alle via mobildata (%1 MB)</translation>
+    </message>
+    <message>
+        <source>Update all (%1 MB)</source>
+        <translation>Opdater alle (%1 MB)</translation>
+    </message>
+    <message>
+        <source>No languages yet: download one below.</source>
+        <translation>Ingen sprog endnu: hent et nedenfor.</translation>
+    </message>
+    <message>
+        <source>Turn on %1 in Keyboards to type these.</source>
+        <translation>Slå %1 til under Tastaturer for at skrive dem.</translation>
+    </message>
+    <message>
+        <source>Installed with a language package</source>
+        <translation>Installeret med en sprogpakke</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Slet</translation>
+    </message>
+    <message>
+        <source>Back to the package's copy</source>
+        <translation>Tilbage til pakkens kopi</translation>
+    </message>
+    <message>
+        <source>Deleted %1</source>
+        <translation>%1 slettet</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Opdateringer</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Hent</translation>
+    </message>
+    <message>
+        <source>Languages from a package are removed by uninstalling the package, together with its other languages.</source>
+        <translation>Sprog fra en pakke fjernes ved at afinstallere pakken, sammen med dens andre sprog.</translation>
+    </message>
+    <message>
+        <source>Latin keyboards follow the language you type in.</source>
+        <translation>Latinske tastaturer følger det sprog, du skriver på.</translation>
+    </message>
+    <message>
+        <source>The keyboard needs one language</source>
+        <translation>Tastaturet skal have ét sprog</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Layout</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Sprogtaster</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Ingen af dine skrivesprog bruger dem</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Bogstaver med accent, der følger det sprog, du skriver på</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Fra</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Til højre</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Til venstre</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Huske-tast</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Husker det sidste tegn valgt med langt tryk</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Fra</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Kun til de latinske layouts</translation>
+    </message>
+    <message>
+        <source>Digits</source>
+        <translation>Tal</translation>
+    </message>
+    <message>
+        <source>A keypad behind the ?123 key</source>
+        <translation>Et numerisk tastatur bag ?123-tasten</translation>
+    </message>
+    <message>
+        <source>Digits behind the ?123 key</source>
+        <translation>Tal bag ?123-tasten</translation>
+    </message>
+    <message>
+        <source>No row</source>
+        <translation>Ingen række</translation>
+    </message>
+    <message>
+        <source>Normal row</source>
+        <translation>Normal række</translation>
+    </message>
+    <message>
+        <source>Smaller row</source>
+        <translation>Mindre række</translation>
+    </message>
+    <message>
+        <source>Numpad</source>
+        <translation>Numerisk tastatur</translation>
+    </message>
     <message>
         <source>Swipe to switch keyboards</source>
         <translation>Stryg for at skifte tastatur</translation>
@@ -256,6 +342,49 @@
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Langt tryk på mellemrumstasten skifter også</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLearned</name>
+    <message>
+        <source>Clear one language</source>
+        <translation>Ryd ét sprog</translation>
+    </message>
+    <message>
+        <source>Nothing learned yet</source>
+        <translation>Intet lært endnu</translation>
+    </message>
+    <message>
+        <source>Clearing %1</source>
+        <translation>Rydder %1</translation>
+    </message>
+    <message>
+        <source>Learned words</source>
+        <translation>Lærte ord</translation>
+    </message>
+    <message>
+        <source>Clear one language…</source>
+        <translation>Ryd ét sprog…</translation>
+    </message>
+    <message>
+        <source>Clear all learned data</source>
+        <translation>Ryd alle lærte data</translation>
+    </message>
+    <message>
+        <source>Clearing learned data</source>
+        <translation>Rydder lærte data</translation>
+    </message>
+    <message>
+        <source>No learned words</source>
+        <translation>Ingen lærte ord</translation>
+    </message>
+    <message>
+        <source>Words you keep typing appear here</source>
+        <translation>Ord, du bliver ved med at skrive, vises her</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Glem</translation>
     </message>
 </context>
 <context>
@@ -267,10 +396,6 @@
     <message>
         <source>Typing</source>
         <translation>Skrivning</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Ingen sprog installeret</translation>
     </message>
     <message>
         <source>No fill</source>
@@ -321,10 +446,6 @@
         <translation>Fra</translation>
     </message>
     <message>
-        <source>Look &amp; feel</source>
-        <translation>Udseende</translation>
-    </message>
-    <message>
         <source>Reset</source>
         <translation>Nulstil</translation>
     </message>
@@ -354,6 +475,19 @@
         <comment>voice input</comment>
         <translation>Fra</translation>
     </message>
+    <message>
+        <source>No languages</source>
+        <translation>Ingen sprog</translation>
+    </message>
+    <message>
+        <source>numpad</source>
+        <comment>in a list</comment>
+        <translation>numerisk tastatur</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Udseende</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -364,10 +498,6 @@
     <message>
         <source>Typing languages</source>
         <translation>Skrivesprog</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Ingen sprog installeret</translation>
     </message>
     <message>
         <source>Autocorrect</source>
@@ -452,6 +582,11 @@
             <numerusform>%n til</numerusform>
             <numerusform>%n til</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>None</source>
+        <comment>typing languages</comment>
+        <translation>Ingen</translation>
     </message>
 </context>
 <context>

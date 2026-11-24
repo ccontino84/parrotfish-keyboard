@@ -15,180 +15,28 @@
     </message>
 </context>
 <context>
-    <name>ParrotfishDiagnostics</name>
+    <name>LanguageGetItem</name>
     <message>
-        <source>Diagnostics</source>
-        <translation>Diagnostika</translation>
+        <source>Tap to try again</source>
+        <translation>Klepnutím zkusíte znovu</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Kopírovat</translation>
+        <source>Mobile data: tap again to download (%1 MB)</source>
+        <translation>Mobilní data: klepněte znovu pro stažení (%1 MB)</translation>
     </message>
     <message>
-        <source>Report a bug</source>
-        <translation>Nahlásit chybu</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishHandler</name>
-    <message>
-        <source>Finishing…</source>
-        <translation>Dokončování…</translation>
-    </message>
-    <message>
-        <source>Paused</source>
-        <translation>Pozastaveno</translation>
-    </message>
-    <message>
-        <source>Listening…</source>
-        <translation>Poslouchám…</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLanguages</name>
-    <message>
-        <source>Typing languages</source>
-        <translation>Jazyky psaní</translation>
-    </message>
-    <message>
-        <source>The keyboard follows the one you type in.</source>
-        <translation>Klávesnice se řídí jazykem, kterým píšete.</translation>
-    </message>
-    <message>
-        <source>More than %1 can make typing slower.</source>
-        <translation>Více než %1 může zpomalit psaní.</translation>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
     </message>
     <message>
         <source>Experimental</source>
         <translation>Experimentální</translation>
     </message>
-    <message>
-        <source>Latin</source>
-        <translation>Latinka</translation>
-    </message>
-    <message>
-        <source>Cyrillic</source>
-        <translation>Cyrilice</translation>
-    </message>
-    <message>
-        <source>Greek</source>
-        <translation>Řecké písmo</translation>
-    </message>
 </context>
 <context>
-    <name>ParrotfishLearned</name>
+    <name>ParrotfishAppearance</name>
     <message>
-        <source>Clear one language</source>
-        <translation>Vymazat jeden jazyk</translation>
-    </message>
-    <message>
-        <source>Nothing learned yet</source>
-        <translation>Zatím nic naučeno</translation>
-    </message>
-    <message>
-        <source>Clearing %1</source>
-        <translation>Mazání: %1</translation>
-    </message>
-    <message>
-        <source>Learned words</source>
-        <translation>Naučená slova</translation>
-    </message>
-    <message>
-        <source>Clear one language…</source>
-        <translation>Vymazat jeden jazyk…</translation>
-    </message>
-    <message>
-        <source>Clear all learned data</source>
-        <translation>Vymazat všechna naučená data</translation>
-    </message>
-    <message>
-        <source>Clearing learned data</source>
-        <translation>Mazání naučených dat</translation>
-    </message>
-    <message>
-        <source>No learned words</source>
-        <translation>Žádná naučená slova</translation>
-    </message>
-    <message>
-        <source>Words you keep typing appear here</source>
-        <translation>Zde se objeví slova, která často píšete</translation>
-    </message>
-    <message>
-        <source>Forget</source>
-        <translation>Zapomenout</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLayout</name>
-    <message>
-        <source>Layout</source>
-        <translation>Rozložení</translation>
-    </message>
-    <message>
-        <source>Number row</source>
-        <translation>Řada číslic</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Vypnuto</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normální</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Menší</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Jazykové klávesy</translation>
-    </message>
-    <message>
-        <source>None of your typing languages uses them</source>
-        <translation>Žádný z vašich jazyků psaní je nepoužívá</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Písmena s diakritikou podle jazyka, kterým píšete</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Vypnuto</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Vpravo</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Vlevo</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Paměťová klávesa</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Pamatuje si poslední znak vybraný dlouhým stiskem</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Vypnuto</translation>
-    </message>
-    <message>
-        <source>Only for the Latin layouts</source>
-        <translation>Jen pro latinková rozložení</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLook</name>
-    <message>
-        <source>Look &amp; feel</source>
+        <source>Appearance</source>
         <translation>Vzhled</translation>
     </message>
     <message>
@@ -249,6 +97,244 @@
         <source>A dot on keys with more characters</source>
         <translation>Tečka na klávesách s dalšími znaky</translation>
     </message>
+</context>
+<context>
+    <name>ParrotfishDiagnostics</name>
+    <message>
+        <source>Diagnostics</source>
+        <translation>Diagnostika</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopírovat</translation>
+    </message>
+    <message>
+        <source>Report a bug</source>
+        <translation>Nahlásit chybu</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Dokončování…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pozastaveno</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Poslouchám…</translation>
+    </message>
+    <message>
+        <source>Add a language in Settings</source>
+        <translation>Přidejte jazyk v Nastavení</translation>
+    </message>
+    <message>
+        <source>Update languages in Settings</source>
+        <translation>Aktualizujte jazyky v Nastavení</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLanguages</name>
+    <message>
+        <source>Typing languages</source>
+        <translation>Jazyky psaní</translation>
+    </message>
+    <message>
+        <source>More than %1 can make typing slower.</source>
+        <translation>Více než %1 může zpomalit psaní.</translation>
+    </message>
+    <message>
+        <source>Experimental</source>
+        <translation>Experimentální</translation>
+    </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latinka</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Cyrilice</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Řecké písmo</translation>
+    </message>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Nedostatek místa: je potřeba ještě %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed</source>
+        <translation>Stahování selhalo</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Stažený soubor byl poškozený</translation>
+    </message>
+    <message>
+        <source>The language couldn't be saved</source>
+        <translation>Jazyk se nepodařilo uložit</translation>
+    </message>
+    <message>
+        <source>Not available for download</source>
+        <translation>Nelze stáhnout</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Stahování se přerušilo</translation>
+    </message>
+    <message>
+        <source>Waiting</source>
+        <translation>Čeká</translation>
+    </message>
+    <message>
+        <source>Checking</source>
+        <translation>Kontrola</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 z %2 MB</translation>
+    </message>
+    <message>
+        <source>Downloaded</source>
+        <translation>Stažený</translation>
+    </message>
+    <message>
+        <source>Package</source>
+        <translation>Balíček</translation>
+    </message>
+    <message>
+        <source>Update all on mobile data (%1 MB)</source>
+        <translation>Aktualizovat vše přes mobilní data (%1 MB)</translation>
+    </message>
+    <message>
+        <source>Update all (%1 MB)</source>
+        <translation>Aktualizovat vše (%1 MB)</translation>
+    </message>
+    <message>
+        <source>No languages yet: download one below.</source>
+        <translation>Zatím žádné jazyky: stáhněte si některý níže.</translation>
+    </message>
+    <message>
+        <source>Turn on %1 in Keyboards to type these.</source>
+        <translation>Zapněte %1 v Klávesnicích, abyste jimi mohli psát.</translation>
+    </message>
+    <message>
+        <source>Installed with a language package</source>
+        <translation>Nainstalováno s jazykovým balíčkem</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Smazat</translation>
+    </message>
+    <message>
+        <source>Back to the package's copy</source>
+        <translation>Zpět na kopii z balíčku</translation>
+    </message>
+    <message>
+        <source>Deleted %1</source>
+        <translation>%1 smazána</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Aktualizace</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Stáhnout</translation>
+    </message>
+    <message>
+        <source>Languages from a package are removed by uninstalling the package, together with its other languages.</source>
+        <translation>Jazyky z balíčku se odstraní odinstalováním balíčku, spolu s jeho dalšími jazyky.</translation>
+    </message>
+    <message>
+        <source>Latin keyboards follow the language you type in.</source>
+        <translation>Latinkové klávesnice se řídí jazykem, kterým píšete.</translation>
+    </message>
+    <message>
+        <source>The keyboard needs one language</source>
+        <translation>Klávesnice potřebuje jeden jazyk</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Rozložení</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Jazykové klávesy</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Žádný z vašich jazyků psaní je nepoužívá</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Písmena s diakritikou podle jazyka, kterým píšete</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Vypnuto</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Vpravo</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Vlevo</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Paměťová klávesa</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Pamatuje si poslední znak vybraný dlouhým stiskem</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Vypnuto</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Jen pro latinková rozložení</translation>
+    </message>
+    <message>
+        <source>Digits</source>
+        <translation>Číslice</translation>
+    </message>
+    <message>
+        <source>A keypad behind the ?123 key</source>
+        <translation>Numerická klávesnice za klávesou ?123</translation>
+    </message>
+    <message>
+        <source>Digits behind the ?123 key</source>
+        <translation>Číslice za klávesou ?123</translation>
+    </message>
+    <message>
+        <source>No row</source>
+        <translation>Bez řady</translation>
+    </message>
+    <message>
+        <source>Normal row</source>
+        <translation>Normální řada</translation>
+    </message>
+    <message>
+        <source>Smaller row</source>
+        <translation>Menší řada</translation>
+    </message>
+    <message>
+        <source>Numpad</source>
+        <translation>Numerická klávesnice</translation>
+    </message>
     <message>
         <source>Swipe to switch keyboards</source>
         <translation>Přejetím přepnete klávesnici</translation>
@@ -256,6 +342,49 @@
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Přepnout lze i dlouhým stiskem mezerníku</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLearned</name>
+    <message>
+        <source>Clear one language</source>
+        <translation>Vymazat jeden jazyk</translation>
+    </message>
+    <message>
+        <source>Nothing learned yet</source>
+        <translation>Zatím nic naučeno</translation>
+    </message>
+    <message>
+        <source>Clearing %1</source>
+        <translation>Mazání: %1</translation>
+    </message>
+    <message>
+        <source>Learned words</source>
+        <translation>Naučená slova</translation>
+    </message>
+    <message>
+        <source>Clear one language…</source>
+        <translation>Vymazat jeden jazyk…</translation>
+    </message>
+    <message>
+        <source>Clear all learned data</source>
+        <translation>Vymazat všechna naučená data</translation>
+    </message>
+    <message>
+        <source>Clearing learned data</source>
+        <translation>Mazání naučených dat</translation>
+    </message>
+    <message>
+        <source>No learned words</source>
+        <translation>Žádná naučená slova</translation>
+    </message>
+    <message>
+        <source>Words you keep typing appear here</source>
+        <translation>Zde se objeví slova, která často píšete</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Zapomenout</translation>
     </message>
 </context>
 <context>
@@ -267,10 +396,6 @@
     <message>
         <source>Typing</source>
         <translation>Psaní</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Nejsou nainstalovány žádné jazyky</translation>
     </message>
     <message>
         <source>No fill</source>
@@ -321,10 +446,6 @@
         <translation>Vypnuto</translation>
     </message>
     <message>
-        <source>Look &amp; feel</source>
-        <translation>Vzhled</translation>
-    </message>
-    <message>
         <source>Reset</source>
         <translation>Obnovit</translation>
     </message>
@@ -354,6 +475,19 @@
         <comment>voice input</comment>
         <translation>Vypnuto</translation>
     </message>
+    <message>
+        <source>No languages</source>
+        <translation>Žádné jazyky</translation>
+    </message>
+    <message>
+        <source>numpad</source>
+        <comment>in a list</comment>
+        <translation>numerická klávesnice</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Vzhled</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -364,10 +498,6 @@
     <message>
         <source>Typing languages</source>
         <translation>Jazyky psaní</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Nejsou nainstalovány žádné jazyky</translation>
     </message>
     <message>
         <source>Autocorrect</source>
@@ -453,6 +583,11 @@
             <numerusform>%n zapnuté</numerusform>
             <numerusform>%n zapnutých</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>None</source>
+        <comment>typing languages</comment>
+        <translation>Žádné</translation>
     </message>
 </context>
 <context>

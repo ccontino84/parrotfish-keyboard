@@ -55,6 +55,10 @@ SPDX-License-Identifier: LGPL-2.1-or-later
   on when French is a typing language.
 - The sticky key is for the Latin layouts.
 - Diagnostics list the dictionaries in use and the speech model.
+- The settings are translated into Russian, Ukrainian and Greek too.
+
+The new settings texts were translated without native speakers:
+corrections are welcome.
 
 ## 1.3.0 (2026-11-17)
 

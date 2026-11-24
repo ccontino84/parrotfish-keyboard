@@ -15,180 +15,28 @@
     </message>
 </context>
 <context>
-    <name>ParrotfishDiagnostics</name>
+    <name>LanguageGetItem</name>
     <message>
-        <source>Diagnostics</source>
-        <translation>Dijagnostika</translation>
+        <source>Tap to try again</source>
+        <translation>Dodirnite za ponovni pokušaj</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Kopiraj</translation>
+        <source>Mobile data: tap again to download (%1 MB)</source>
+        <translation>Mobilni podaci: dodirnite ponovno za preuzimanje (%1 MB)</translation>
     </message>
     <message>
-        <source>Report a bug</source>
-        <translation>Prijavi pogrešku</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishHandler</name>
-    <message>
-        <source>Finishing…</source>
-        <translation>Završavanje…</translation>
-    </message>
-    <message>
-        <source>Paused</source>
-        <translation>Pauzirano</translation>
-    </message>
-    <message>
-        <source>Listening…</source>
-        <translation>Slušam…</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLanguages</name>
-    <message>
-        <source>Typing languages</source>
-        <translation>Jezici pisanja</translation>
-    </message>
-    <message>
-        <source>The keyboard follows the one you type in.</source>
-        <translation>Tipkovnica prati jezik kojim pišete.</translation>
-    </message>
-    <message>
-        <source>More than %1 can make typing slower.</source>
-        <translation>Više od %1 može usporiti pisanje.</translation>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
     </message>
     <message>
         <source>Experimental</source>
         <translation>Eksperimentalni</translation>
     </message>
-    <message>
-        <source>Latin</source>
-        <translation>Latinica</translation>
-    </message>
-    <message>
-        <source>Cyrillic</source>
-        <translation>Ćirilica</translation>
-    </message>
-    <message>
-        <source>Greek</source>
-        <translation>Grčko pismo</translation>
-    </message>
 </context>
 <context>
-    <name>ParrotfishLearned</name>
+    <name>ParrotfishAppearance</name>
     <message>
-        <source>Clear one language</source>
-        <translation>Očisti jedan jezik</translation>
-    </message>
-    <message>
-        <source>Nothing learned yet</source>
-        <translation>Još ništa naučeno</translation>
-    </message>
-    <message>
-        <source>Clearing %1</source>
-        <translation>Brisanje: %1</translation>
-    </message>
-    <message>
-        <source>Learned words</source>
-        <translation>Naučene riječi</translation>
-    </message>
-    <message>
-        <source>Clear one language…</source>
-        <translation>Očisti jedan jezik…</translation>
-    </message>
-    <message>
-        <source>Clear all learned data</source>
-        <translation>Očisti sve naučene podatke</translation>
-    </message>
-    <message>
-        <source>Clearing learned data</source>
-        <translation>Brisanje naučenih podataka</translation>
-    </message>
-    <message>
-        <source>No learned words</source>
-        <translation>Nema naučenih riječi</translation>
-    </message>
-    <message>
-        <source>Words you keep typing appear here</source>
-        <translation>Ovdje se pojavljuju riječi koje često pišete</translation>
-    </message>
-    <message>
-        <source>Forget</source>
-        <translation>Zaboravi</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLayout</name>
-    <message>
-        <source>Layout</source>
-        <translation>Raspored</translation>
-    </message>
-    <message>
-        <source>Number row</source>
-        <translation>Red brojeva</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>number row</comment>
-        <translation>Isključeno</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <comment>number row</comment>
-        <translation>Normalan</translation>
-    </message>
-    <message>
-        <source>Smaller</source>
-        <translation>Manji</translation>
-    </message>
-    <message>
-        <source>Language keys</source>
-        <translation>Tipke jezika</translation>
-    </message>
-    <message>
-        <source>None of your typing languages uses them</source>
-        <translation>Nijedan od vaših jezika pisanja ih ne koristi</translation>
-    </message>
-    <message>
-        <source>Accented letters that follow the language you type</source>
-        <translation>Slova s dijakriticima jezika kojim pišete</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>language keys</comment>
-        <translation>Isključeno</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Desno</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Lijevo</translation>
-    </message>
-    <message>
-        <source>Sticky key</source>
-        <translation>Tipka s memorijom</translation>
-    </message>
-    <message>
-        <source>Keeps the last sign picked from its long press</source>
-        <translation>Pamti zadnji znak odabran dugim pritiskom</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <comment>sticky key</comment>
-        <translation>Isključeno</translation>
-    </message>
-    <message>
-        <source>Only for the Latin layouts</source>
-        <translation>Samo za latinične rasporede</translation>
-    </message>
-</context>
-<context>
-    <name>ParrotfishLook</name>
-    <message>
-        <source>Look &amp; feel</source>
+        <source>Appearance</source>
         <translation>Izgled</translation>
     </message>
     <message>
@@ -249,6 +97,244 @@
         <source>A dot on keys with more characters</source>
         <translation>Točka na tipkama s više znakova</translation>
     </message>
+</context>
+<context>
+    <name>ParrotfishDiagnostics</name>
+    <message>
+        <source>Diagnostics</source>
+        <translation>Dijagnostika</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopiraj</translation>
+    </message>
+    <message>
+        <source>Report a bug</source>
+        <translation>Prijavi pogrešku</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishHandler</name>
+    <message>
+        <source>Finishing…</source>
+        <translation>Završavanje…</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>Pauzirano</translation>
+    </message>
+    <message>
+        <source>Listening…</source>
+        <translation>Slušam…</translation>
+    </message>
+    <message>
+        <source>Add a language in Settings</source>
+        <translation>Dodajte jezik u Postavkama</translation>
+    </message>
+    <message>
+        <source>Update languages in Settings</source>
+        <translation>Ažurirajte jezike u Postavkama</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLanguages</name>
+    <message>
+        <source>Typing languages</source>
+        <translation>Jezici pisanja</translation>
+    </message>
+    <message>
+        <source>More than %1 can make typing slower.</source>
+        <translation>Više od %1 može usporiti pisanje.</translation>
+    </message>
+    <message>
+        <source>Experimental</source>
+        <translation>Eksperimentalni</translation>
+    </message>
+    <message>
+        <source>Latin</source>
+        <translation>Latinica</translation>
+    </message>
+    <message>
+        <source>Cyrillic</source>
+        <translation>Ćirilica</translation>
+    </message>
+    <message>
+        <source>Greek</source>
+        <translation>Grčko pismo</translation>
+    </message>
+    <message>
+        <source>Not enough storage: %1 MB more needed</source>
+        <translation>Nema dovoljno prostora: potrebno je još %1 MB</translation>
+    </message>
+    <message>
+        <source>The download failed</source>
+        <translation>Preuzimanje nije uspjelo</translation>
+    </message>
+    <message>
+        <source>A downloaded file was damaged</source>
+        <translation>Preuzeta datoteka bila je oštećena</translation>
+    </message>
+    <message>
+        <source>The language couldn't be saved</source>
+        <translation>Jezik nije moguće spremiti</translation>
+    </message>
+    <message>
+        <source>Not available for download</source>
+        <translation>Nije dostupno za preuzimanje</translation>
+    </message>
+    <message>
+        <source>The download stopped</source>
+        <translation>Preuzimanje je prekinuto</translation>
+    </message>
+    <message>
+        <source>Waiting</source>
+        <translation>Čeka</translation>
+    </message>
+    <message>
+        <source>Checking</source>
+        <translation>Provjera</translation>
+    </message>
+    <message>
+        <source>%1 of %2 MB</source>
+        <translation>%1 od %2 MB</translation>
+    </message>
+    <message>
+        <source>Downloaded</source>
+        <translation>Preuzeto</translation>
+    </message>
+    <message>
+        <source>Package</source>
+        <translation>Paket</translation>
+    </message>
+    <message>
+        <source>Update all on mobile data (%1 MB)</source>
+        <translation>Ažuriraj sve putem mobilnih podataka (%1 MB)</translation>
+    </message>
+    <message>
+        <source>Update all (%1 MB)</source>
+        <translation>Ažuriraj sve (%1 MB)</translation>
+    </message>
+    <message>
+        <source>No languages yet: download one below.</source>
+        <translation>Još nema jezika: preuzmite jedan ispod.</translation>
+    </message>
+    <message>
+        <source>Turn on %1 in Keyboards to type these.</source>
+        <translation>Uključite %1 u Tipkovnicama za pisanje na njima.</translation>
+    </message>
+    <message>
+        <source>Installed with a language package</source>
+        <translation>Instalirano s jezičnim paketom</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Izbriši</translation>
+    </message>
+    <message>
+        <source>Back to the package's copy</source>
+        <translation>Natrag na kopiju iz paketa</translation>
+    </message>
+    <message>
+        <source>Deleted %1</source>
+        <translation>%1 izbrisan</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Ažuriranja</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Preuzmi</translation>
+    </message>
+    <message>
+        <source>Languages from a package are removed by uninstalling the package, together with its other languages.</source>
+        <translation>Jezici iz paketa uklanjaju se deinstalacijom paketa, zajedno s njegovim ostalim jezicima.</translation>
+    </message>
+    <message>
+        <source>Latin keyboards follow the language you type in.</source>
+        <translation>Latinične tipkovnice prate jezik kojim pišete.</translation>
+    </message>
+    <message>
+        <source>The keyboard needs one language</source>
+        <translation>Tipkovnica treba jedan jezik</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLayout</name>
+    <message>
+        <source>Layout</source>
+        <translation>Raspored</translation>
+    </message>
+    <message>
+        <source>Language keys</source>
+        <translation>Tipke jezika</translation>
+    </message>
+    <message>
+        <source>None of your typing languages uses them</source>
+        <translation>Nijedan od vaših jezika pisanja ih ne koristi</translation>
+    </message>
+    <message>
+        <source>Accented letters that follow the language you type</source>
+        <translation>Slova s dijakriticima jezika kojim pišete</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>language keys</comment>
+        <translation>Isključeno</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Desno</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Lijevo</translation>
+    </message>
+    <message>
+        <source>Sticky key</source>
+        <translation>Tipka s memorijom</translation>
+    </message>
+    <message>
+        <source>Keeps the last sign picked from its long press</source>
+        <translation>Pamti zadnji znak odabran dugim pritiskom</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <comment>sticky key</comment>
+        <translation>Isključeno</translation>
+    </message>
+    <message>
+        <source>Only for the Latin layouts</source>
+        <translation>Samo za latinične rasporede</translation>
+    </message>
+    <message>
+        <source>Digits</source>
+        <translation>Brojke</translation>
+    </message>
+    <message>
+        <source>A keypad behind the ?123 key</source>
+        <translation>Numerička tipkovnica iza tipke ?123</translation>
+    </message>
+    <message>
+        <source>Digits behind the ?123 key</source>
+        <translation>Brojke iza tipke ?123</translation>
+    </message>
+    <message>
+        <source>No row</source>
+        <translation>Bez reda</translation>
+    </message>
+    <message>
+        <source>Normal row</source>
+        <translation>Normalni red</translation>
+    </message>
+    <message>
+        <source>Smaller row</source>
+        <translation>Manji red</translation>
+    </message>
+    <message>
+        <source>Numpad</source>
+        <translation>Numerička tipkovnica</translation>
+    </message>
     <message>
         <source>Swipe to switch keyboards</source>
         <translation>Povucite za promjenu tipkovnice</translation>
@@ -256,6 +342,49 @@
     <message>
         <source>Long-press the spacebar to switch too</source>
         <translation>Promjena i dugim pritiskom razmaknice</translation>
+    </message>
+</context>
+<context>
+    <name>ParrotfishLearned</name>
+    <message>
+        <source>Clear one language</source>
+        <translation>Očisti jedan jezik</translation>
+    </message>
+    <message>
+        <source>Nothing learned yet</source>
+        <translation>Još ništa naučeno</translation>
+    </message>
+    <message>
+        <source>Clearing %1</source>
+        <translation>Brisanje: %1</translation>
+    </message>
+    <message>
+        <source>Learned words</source>
+        <translation>Naučene riječi</translation>
+    </message>
+    <message>
+        <source>Clear one language…</source>
+        <translation>Očisti jedan jezik…</translation>
+    </message>
+    <message>
+        <source>Clear all learned data</source>
+        <translation>Očisti sve naučene podatke</translation>
+    </message>
+    <message>
+        <source>Clearing learned data</source>
+        <translation>Brisanje naučenih podataka</translation>
+    </message>
+    <message>
+        <source>No learned words</source>
+        <translation>Nema naučenih riječi</translation>
+    </message>
+    <message>
+        <source>Words you keep typing appear here</source>
+        <translation>Ovdje se pojavljuju riječi koje često pišete</translation>
+    </message>
+    <message>
+        <source>Forget</source>
+        <translation>Zaboravi</translation>
     </message>
 </context>
 <context>
@@ -267,10 +396,6 @@
     <message>
         <source>Typing</source>
         <translation>Pisanje</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Nema instaliranih jezika</translation>
     </message>
     <message>
         <source>No fill</source>
@@ -321,10 +446,6 @@
         <translation>Isključeno</translation>
     </message>
     <message>
-        <source>Look &amp; feel</source>
-        <translation>Izgled</translation>
-    </message>
-    <message>
         <source>Reset</source>
         <translation>Vrati zadano</translation>
     </message>
@@ -354,6 +475,19 @@
         <comment>voice input</comment>
         <translation>Isključeno</translation>
     </message>
+    <message>
+        <source>No languages</source>
+        <translation>Nema jezika</translation>
+    </message>
+    <message>
+        <source>numpad</source>
+        <comment>in a list</comment>
+        <translation>numerička tipkovnica</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Izgled</translation>
+    </message>
 </context>
 <context>
     <name>ParrotfishTyping</name>
@@ -364,10 +498,6 @@
     <message>
         <source>Typing languages</source>
         <translation>Jezici pisanja</translation>
-    </message>
-    <message>
-        <source>No languages installed</source>
-        <translation>Nema instaliranih jezika</translation>
     </message>
     <message>
         <source>Autocorrect</source>
@@ -453,6 +583,11 @@
             <numerusform>%n uključene</numerusform>
             <numerusform>%n uključenih</numerusform>
         </translation>
+    </message>
+    <message>
+        <source>None</source>
+        <comment>typing languages</comment>
+        <translation>Nijedan</translation>
     </message>
 </context>
 <context>
